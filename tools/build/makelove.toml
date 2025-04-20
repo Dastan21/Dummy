@@ -1,0 +1,12 @@
+name = "Engine"
+default_targets = [
+  "win32",
+  "win64",
+  "macos",
+  # "lovejs" # not compatible with 12.0
+]
+build_directory = "../builds"
+love_files = [
+  "+*",
+  "-*/.*",
+]
