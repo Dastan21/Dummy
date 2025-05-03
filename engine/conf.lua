@@ -1,6 +1,14 @@
-local IS_DEBUG = os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" and arg[2] == "debug"
+local constants = require "engine.constants"
+
+IS_DEBUG = os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1"
 if IS_DEBUG then
   require("lldebugger").start()
+
+  lick = require "lib.lick"
+  lick.reset = true
+  lick.updateAllFiles = true
+  lick.clearPackages = true
+  lick.chunkLoadMessage = "[RELOADED]"
 
   function love.errorhandler(msg)
     error(msg, 2)
@@ -9,23 +17,21 @@ end
 
 -- https://love2d.org/wiki/Config_Files
 function love.conf(t)
-  t.identity              = nil
+  t.identity              = constants.name:lower()
   t.appendidentity        = false
-  t.version               = "12.0"
-  t.console               = true
+  t.version               = "11.5"
+  t.console               = false
   t.accelerometerjoystick = false
   t.externalstorage       = false
-  t.highdpi               = false
+  t.gammacorrect          = false
 
   t.audio.mic             = false
   t.audio.mixwithsystem   = true
 
-  t.graphics.gammacorrect = false
-
-  t.window.title          = "Undertale Battle Engine"
-  t.window.icon           = nil
-  t.window.width          = 800
-  t.window.height         = 600
+  t.window.title          = constants.name
+  t.window.icon           = "assets/icon.png"
+  t.window.width          = 640
+  t.window.height         = 480
   t.window.borderless     = false
   t.window.resizable      = false
   t.window.minwidth       = 1
@@ -36,7 +42,8 @@ function love.conf(t)
   t.window.msaa           = 0
   t.window.depth          = nil
   t.window.stencil        = nil
-  t.window.displayindex   = 1
+  t.window.display        = 1
+  t.window.highdpi        = false
   t.window.usedpiscale    = true
   t.window.x              = nil
   t.window.y              = nil

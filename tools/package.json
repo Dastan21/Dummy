@@ -1,6 +1,0 @@
-{
-  "scripts": {
-    "run": "lovec .",
-    "build": "cd ../engine && makelove --config ../tools/build/makelove.toml"
-  }
-}

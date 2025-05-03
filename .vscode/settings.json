@@ -3,6 +3,8 @@
     "${3rd}/love2d/library",
     "lib"
   ],
-  "Lua.runtime.version": "Lua 5.4",
   "Lua.workspace.checkThirdParty": false,
+  "Lua.diagnostics.disable": [
+    "lowercase-global"
+  ]
 }
