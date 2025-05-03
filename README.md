@@ -1,11 +1,7 @@
 # DUMMY
 
+DUMMY is a UNDERTALE fangame and battle engine, made with [LÖVE](https://love2d.org/).
+
 ## Credits
 
-### UNDERTALE
-
 All UNDERTALE assets are by Toby Fox (https://undertale.com/)
-
-### Libraries
-
-- [anim8](https://github.com/kikito/anim8)
