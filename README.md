@@ -4,4 +4,6 @@ DUMMY is a UNDERTALE fangame and battle engine, made with [LÖVE](https://love2d
 
 ## Credits
 
-All UNDERTALE assets are by Toby Fox (https://undertale.com/)
+Some assets are from [UNDERTALE](https://undertale.com) by Toby Fox.
+
+Project inspired by [Kristal](https://github.com/KristalTeam/Kristal) and [CreateYourFrisk](https://github.com/RhenaudTheLukark/CreateYourFrisk).

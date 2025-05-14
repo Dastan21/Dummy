@@ -1,25 +1,31 @@
-local next_time = 0
-
-local window = {
-  width = 640,
-  height = 480
+local dummy = {
+  window = {
+    width = 640,
+    height = 480,
+    translate_x = 0,
+    translate_y = 0,
+    scale = 1,
+  },
+  next_time = 0
 }
 
 Config = {
   language = "en",
   fps = 30,
+  fullscreen = false
 }
 
-require "engine.utils"
+JSON = require "engine.lib.json"
+Timer = require "engine.lib.timer"
 
-JSON = require "lib.json"
-
+Utils = require "engine.utils"
 Audio = require "engine.audio"
 Input = require "engine.input"
 Lang = require "engine.lang"
 Font = require "engine.font"
-Sprite = require "engine.sprite"
-Text = require "engine.text"
+Drawable = require "engine.drawable.drawable"
+Sprite = require "engine.drawable.sprite"
+Text = require "engine.drawable.text"
 Debug = require "engine.debug"
 Scene = require "engine.scene"
 
@@ -44,53 +50,70 @@ function love.load()
 
   loadConfig()
 
+  if Config["fullscreen"] == true then
+    love.window.setFullscreen(true)
+  end
+
   Input.load()
   Lang.load()
   Font.load()
   Debug.load()
-  Scene.load("main_menu")
+  Scene.load()
+  Scene.change("MAIN_MENU")
 
-  next_time = love.timer.getTime()
+  dummy.next_time = love.timer.getTime()
 end
 
 local function checkFullscreen()
-  if Input.isKeyPressed("f4") or (Input.isKeyDown("lalt") and Input.isKeyPressed("return")) then
-    love.window.setFullscreen(not love.window.getFullscreen())
+  if Input.isPressed("f4") or (Input.isDown("lalt") and Input.isPressed("return")) then
+    local is_fullscreen = love.window.getFullscreen()
+    love.window.setFullscreen(not is_fullscreen)
+    Config["fullscreen"] = not is_fullscreen
   end
 end
 
 function love.update(dt)
-  next_time = next_time + (1 / Config["fps"])
+  dummy.next_time = dummy.next_time + (1 / Config["fps"])
 
   Input.update()
   Debug.update()
   Scene.update(dt)
 
   checkFullscreen()
+  Timer.update(dt)
 end
 
 local function limitFPS()
   local cur_time = love.timer.getTime()
-  if next_time <= cur_time then
-    next_time = cur_time
+  if dummy.next_time <= cur_time then
+    dummy.next_time = cur_time
     return
   end
-  love.timer.sleep(next_time - cur_time)
+  love.timer.sleep(dummy.next_time - cur_time)
 end
 
 function love.draw()
+  if not love.graphics.isActive() then return end
+
   limitFPS()
-  love.graphics.translate((window.translateX or 0), (window.translateY or 0))
-  love.graphics.scale(window.scale or 1)
+  love.graphics.translate(dummy.window.translate_x, dummy.window.translate_y)
+  love.graphics.scale(dummy.window.scale)
 
   Scene.draw()
   Debug.draw()
+
+  love.graphics.setColor(0, 0, 0)
+  love.graphics.rectangle("fill", -dummy.window.translate_x, 0, dummy.window.translate_x, dummy.window.height)
+  love.graphics.rectangle("fill", dummy.window.width, 0, dummy.window.translate_x,
+    dummy.window.height)
+  love.graphics.setColor(1, 1, 1)
 end
 
-function love.resize(w, h)
-  local w1, h1 = window.width, window.height
-  local scale = math.min(w / w1, h / h1)
-  window.translateX, window.translateY, window.scale = (w - w1 * scale) / 2, (h - h1 * scale) / 2, scale
+function love.resize(width, height)
+  local target_width, target_height = dummy.window.width, dummy.window.height
+  local scale = math.min(width / target_width, height / target_height)
+  dummy.window.translate_x, dummy.window.translate_y, dummy.window.scale = (width - target_width * scale) / 2,
+      (height - target_height * scale) / 2, scale
 end
 
 function love.quit()

@@ -18,30 +18,42 @@ local function getFilenameWithExt(name)
 end
 
 local function playAudio(folder, audio_name, type, play, loop)
-  if Scene.audios[audio_name] ~= nil then return Scene.audios[audio_name] end
-
   local filename = getFilenameWithExt(folder .. audio_name)
   local source = love.audio.newSource(filename, type)
-  Scene.audios[audio_name] = source
+  Scene.addAudio(source)
 
-  play = play == nil and true or play
-  loop = loop == nil and true or loop
   if loop then source:setLooping(loop) end
   if play then source:play() end
 
   return source
 end
 
+--- Plays a music
+---@param music_name string
+---@param play? boolean (Defaults to `true`)
+---@param loop? boolean (Defaults to `true`)
+---@return love.Source
 function self.playMusic(music_name, play, loop)
+  play = Utils.getOrDefault(play, true)
+  loop = Utils.getOrDefault(loop, true)
   return playAudio("assets/music/", music_name, "stream", play, loop)
 end
 
+--- Plays a sound
+---@param sound_name string
+---@param play? boolean (Defaults to `true`)
+---@param loop? boolean (Defaults to `false`)
+---@return love.Source
 function self.playSound(sound_name, play, loop)
+  play = Utils.getOrDefault(play, true)
+  loop = Utils.getOrDefault(loop, false)
   return playAudio("assets/sounds/", sound_name, "static", play, loop)
 end
 
-function self.stop()
+--- Stops and clear all audios
+function self.clear()
   love.audio.stop()
+  Scene.cleanAudios()
 end
 
 return self

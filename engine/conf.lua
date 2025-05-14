@@ -1,9 +1,9 @@
-local constants = require "engine.constants"
+Constants = require "engine.constants"
 
-IS_DEBUG = os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1"
-if IS_DEBUG then
+if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   require("lldebugger").start()
 
+  IS_DEBUG = true
   lick = require "lib.lick"
   lick.reset = true
   lick.updateAllFiles = true
@@ -17,7 +17,7 @@ end
 
 -- https://love2d.org/wiki/Config_Files
 function love.conf(t)
-  t.identity              = constants.name:lower()
+  t.identity              = Constants.CREDITS.NAME:lower()
   t.appendidentity        = false
   t.version               = "11.5"
   t.console               = false
@@ -28,7 +28,7 @@ function love.conf(t)
   t.audio.mic             = false
   t.audio.mixwithsystem   = true
 
-  t.window.title          = constants.name
+  t.window.title          = Constants.CREDITS.NAME
   t.window.icon           = "assets/icon.png"
   t.window.width          = 640
   t.window.height         = 480

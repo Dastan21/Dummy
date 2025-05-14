@@ -1,37 +1,130 @@
-local constants = require "engine.constants"
 local mod_list = require "mod.mod_list"
 
+---@alias Dummy.Menu table<number, Dummy.Menu.Option>
+
+---@class Dummy.Menu.Option
+---
+---@field text Dummy.Text text to display
+---@field action fun(self: Dummy.Text)|nil callback when the option is confirmed
+---@field draw fun(self: Dummy.Text)|nil draw along the option
+---@field disabled boolean|nil wether the option is disabled
+---@field menu Dummy.Menu|nil option children menu
+---@field parent Dummy.Menu.Option|nil option parent menu
+
+---@class Dummy.MainMenu
+---
+---@field private options Dummy.Menu
+---@field private current_menu Dummy.Menu
+---@field private logo Dummy.Sprite
 local self = {}
 
-function self.prepareModListMenu()
+function self.load()
+  self.logo = Sprite.new("logo")
+  self.logo:setPosition(320, 80)
+  self.logo:setScale(6)
+
+  self.credits = Text.new(Constants.CREDITS.NAME ..
+    " v" .. Constants.CREDITS.VERSION .. " " .. Constants.CREDITS.AUTHOR .. " " .. Constants.CREDITS.YEAR)
+  self.credits:setFont(Font.FONT.SMALL)
+  self.credits:setColor(0.5, 0.5, 0.5)
+  self.credits:setPosition(320, 476)
+  self.credits:setOrigin(0.5, 1)
+  self.credits:setScale(2)
+
+  ---@type Dummy.Menu
+  self.options = {}
+
   mod_list.load()
 
-  local play_menu_item = self.options[1]
-  play_menu_item.menu = {}
-  local index = 0
-  for mod_dir, mod in pairs(mod_list.mods) do
-    local mod_title = mod and mod.name or { "MAIN_MENU_MODLIST_MOD_ERROR", mod_dir }
-    local mod_text = Text.createText(mod_title)
-    mod_text.x = 320
-    mod_text.y = 240 + (index * 40)
-    table.insert(play_menu_item.menu, {
-      text = mod_text,
-      action = function(_)
-        if mod then
-          mod.load()
-          Scene.load("battle")
-        end
-      end,
+  if not mod_list.standalone then
+    table.insert(self.options, {
+      text = Text.new("MAIN_MENU_PLAY"),
+      action = function()
+        self.prepareModListMenu()
+      end
     })
 
-    index = index + 1
+    table.insert(self.options, {
+      text = Text.new("MAIN_MENU_OPEN_MOD_FOLDER"),
+      action = function()
+        love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/mods")
+      end
+    })
+  else
+    table.insert(self.options, {
+      text = Text.new("MAIN_MENU_PLAY"),
+      action = function()
+        mod_list.standalone.load()
+        Scene.change("ENCOUNTER", mod_list.standalone)
+      end
+    })
+  end
+
+  table.insert(self.options, {
+    text = Text.new("MAIN_MENU_SETTINGS"),
+    menu = {
+      {
+        text = Text.new(function() return { "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() } end),
+        action = function() self.switchLanguage() end,
+      },
+      {
+        text = Text.new({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] }),
+        action = function(txt)
+          if Config["fps"] == 30 then
+            Config["fps"] = 60
+          elseif Config["fps"] == 60 then
+            Config["fps"] = 120
+          elseif Config["fps"] == 120 then
+            Config["fps"] = 144
+          elseif Config["fps"] == 144 then
+            Config["fps"] = 240
+          elseif Config["fps"] == 240 then
+            Config["fps"] = 30
+          end
+          txt:setText({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] })
+        end,
+      }
+    }
+  })
+
+  table.insert(self.options, {
+    text = Text.new("> GAME OVER SCENE"),
+    action = function()
+      Scene.change("GAME_OVER")
+    end
+  })
+
+  self.current_menu = self.options
+  self.selected_index = 1
+
+  self.prepareMenu(self.options)
+
+  Audio.playMusic("main_menu")
+end
+
+--- Prepare mod list menu options
+---@return Dummy.Menu
+function self.prepareModListMenu()
+  local play_menu_item = self.options[1]
+  play_menu_item.menu = {}
+  for i, mod in pairs(mod_list.mods) do
+    local mod_text = Text.new(mod and mod.name or mod)
+    mod_text:setPosition(320, 240 + (i * 40))
+    table.insert(play_menu_item.menu, {
+      text = mod_text,
+      action = function()
+        if not mod.name then return end
+
+        mod.load()
+        Scene.change("ENCOUNTER", mod)
+      end,
+    })
   end
 
   -- no mod
-  if index == 0 then
-    local empty_text = Text.createText("MAIN_MENU_MODLIST_EMPTY")
-    empty_text.x = 320
-    empty_text.y = 240
+  if #mod_list.mods <= 0 then
+    local empty_text = Text.new("MAIN_MENU_MODLIST_EMPTY")
+    empty_text:setPosition(320, 240)
     table.insert(play_menu_item.menu, {
       text = empty_text
     })
@@ -42,99 +135,38 @@ function self.prepareModListMenu()
   return play_menu_item.menu
 end
 
+--- Prepare menu options
+---@param menu Dummy.Menu
+---@param parent? Dummy.Menu
+---@param active? boolean
 function self.prepareMenu(menu, parent, active)
-  active = active == nil and true or active
-  menu.parent_menu = parent
+  active = Utils.getOrDefault(active, true)
 
   for i, menu_item in ipairs(menu) do
+    menu_item.parent = parent
+
     if menu_item.menu ~= nil then
       self.prepareMenu(menu_item.menu, menu, false)
     end
 
     if menu_item.text ~= nil then
       local is_selected = i == self.selected_index and (menu_item.action ~= nil or menu_item.menu ~= nil)
-      menu_item.text.color = is_selected and { 1, 1, 0 } or { 1, 1, 1 }
-      menu_item.text.x = 320
-      menu_item.text.y = 240 + (i - 1) * 40
-      menu_item.text.active = active
+      menu_item.text:setColor(1, 1, is_selected and 0 or 1)
+      menu_item.text:setPosition(320, 240 + ((i - 1) * 40))
+      menu_item.text:setActive(active)
     end
   end
 end
 
-function self.load()
-  self.logo = Sprite.createSprite("logo")
-  self.logo.x = 320
-  self.logo.y = 80
-  self.logo.scale = 6
-
-  self.credits = Text.createText(constants.credits)
-  self.credits.font = Font.fonts.small
-  self.credits.color = { 0.5, 0.5, 0.5 }
-  self.credits.x = 320
-  self.credits.y = 476
-  self.credits.origin = { 0.5, 1 }
-  self.credits.scale = 2
-
-  self.options = {
-    {
-      text = Text.createText("MAIN_MENU_PLAY"),
-      action = function(_)
-        self.prepareModListMenu()
-      end
-    },
-    {
-      text = Text.createText("MAIN_MENU_OPEN_MOD_FOLDER"),
-      action = function(_)
-        love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/mods")
-      end
-    },
-    {
-      text = Text.createText("MAIN_MENU_SETTINGS"),
-      menu = {
-        {
-          text = Text.createText(function() return { "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() } end),
-          action = function(_) self.switchLanguage() end,
-        },
-        {
-          text = Text.createText({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] }),
-          action = function(txt)
-            if Config["fps"] == 30 then
-              Config["fps"] = 60
-            elseif Config["fps"] == 60 then
-              Config["fps"] = 120
-            elseif Config["fps"] == 120 then
-              Config["fps"] = 144
-            elseif Config["fps"] == 144 then
-              Config["fps"] = 240
-            elseif Config["fps"] == 240 then
-              Config["fps"] = 30
-            end
-            txt.text = { "MAIN_MENU_SETTINGS_FPS", Config["fps"] }
-          end,
-        }
-      }
-    },
-  }
-
-  self.current_menu = self.options
-  self.selected_index = 1
-
-  self.prepareMenu(self.options)
-
-  Audio.playMusic("main_menu")
-end
-
-function self.unload()
-  Audio.stop()
-end
-
+--- Select a menu option
+---@param index number
 function self.select(index)
   if index == self.selected_index then return end
 
   -- Previously selected menu item
   local menu_item = self.current_menu[self.selected_index]
   if menu_item ~= nil then
-    menu_item.text.color = { 1, 1, 1 }
+    menu_item.text:setColor(1, 1, 1)
   end
 
   self.selected_index = index
@@ -142,17 +174,21 @@ function self.select(index)
   -- Newly selected menu item
   menu_item = self.current_menu[index]
   if menu_item ~= nil and (menu_item.action ~= nil or menu_item.menu ~= nil) then
-    menu_item.text.color = { 1, 1, 0 }
+    menu_item.text:setColor(1, 1, 0)
   end
 end
 
+--- Change menu
+---@param new_menu Dummy.Menu
 function self.changeMenu(new_menu)
   self.select(1)
-  for _, menu_item in ipairs(self.current_menu) do menu_item.text.active = false end
+  for _, menu_item in ipairs(self.current_menu) do menu_item.text:setActive(false) end
   self.current_menu = new_menu
-  for _, menu_item in ipairs(self.current_menu) do menu_item.text.active = true end
+  for _, menu_item in ipairs(self.current_menu) do menu_item.text:setActive(true) end
 end
 
+--- Update menu texts
+---@param menu Dummy.Menu
 function self.updateMenuTexts(menu)
   for _, data in pairs(menu) do
     if data.menu ~= nil then
@@ -160,16 +196,18 @@ function self.updateMenuTexts(menu)
     end
 
     if data.text ~= nil then
-      data.text.text = data.text.text
+      data.text:setText(data.text:getText())
     end
   end
 end
 
+--- Switch current language
 function self.switchLanguage()
   Lang.switchLanguage()
   self.updateMenuTexts(self.options)
 end
 
+--- Confirm menu option
 function self.confirm()
   local selected_menu = self.current_menu[self.selected_index]
   if type(selected_menu.action) == "function" then
@@ -180,23 +218,22 @@ function self.confirm()
   end
 end
 
+--- Confirm menu
 function self.cancel()
-  if self.current_menu.parent_menu ~= nil then
-    self.changeMenu(self.current_menu.parent_menu)
+  if self.current_menu[1].parent ~= nil then
+    self.changeMenu(self.current_menu[1].parent)
   end
 end
 
-function self.update()
-  if Input.Up.isPressed() then
+function self.update(dt)
+  if Input.isPressed(Input.Up) then
     self.select(math.max(1, self.selected_index - 1))
-  elseif Input.Down.isPressed() then
+  elseif Input.isPressed(Input.Down) then
     self.select(math.min(#self.current_menu, self.selected_index + 1))
-  elseif Input.Confirm.isPressed() then
+  elseif Input.isPressed(Input.Confirm) then
     self.confirm()
-  elseif Input.Cancel.isPressed() then
+  elseif Input.isPressed(Input.Cancel) then
     self.cancel()
-  elseif Input.isKeyPressed("escape") then
-    love.event.quit()
   end
 end
 

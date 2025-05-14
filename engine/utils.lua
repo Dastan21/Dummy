@@ -1,5 +1,11 @@
+-- table --
+
 -- https://gist.github.com/revolucas/dd1ecccfca32d558fddf70ddb39eb8a6
 local function table_tostring(node)
+  local s = 0
+  for _ in pairs(node) do s = s + 1 end
+  if s <= 0 then return "{}" end
+
   -- to make output beautiful
   local function tab(amt)
     local str = ""
@@ -131,11 +137,61 @@ function table.merge(t1, t2)
   return t1
 end
 
-function string.trim(s)
-  return (string.gsub(s, "^%s*(.-)%s*$", "%1"))
-end
-
 if table.unpack == nil then
   ---@diagnostic disable-next-line: deprecated
   table.unpack = unpack
 end
+
+-- string --
+
+--- @param self string
+function string:trim()
+  return (string.gsub(self, "^%s*(.-)%s*$", "%1"))
+end
+
+-- https://gist.github.com/GabrielBdeC/b055af60707115cbc954b0751d87ec23
+--- @param self string
+function string:split(delimiter)
+  local result = {}
+  local from = 1
+  local delim_from, delim_to = string.find(self, delimiter, from, true)
+  while delim_from do
+    if (delim_from ~= 1) then
+      table.insert(result, string.sub(self, from, delim_from - 1))
+    end
+    from = delim_to + 1
+    delim_from, delim_to = string.find(self, delimiter, from, true)
+  end
+  if (from <= #self) then table.insert(result, string.sub(self, from)) end
+  return result
+end
+
+-- math --
+
+function math.sign(x)
+  if x > 0 then
+    return 1
+  elseif x < 0 then
+    return -1
+  end
+  return 0
+end
+
+function math.clamp(x, min, max)
+  return math.max(math.min(x, max), min)
+end
+
+-- other --
+
+local self = {}
+
+--- Get value or default
+---@generic T
+---@param value T|nil
+---@param default_value T
+---@return T
+function self.getOrDefault(value, default_value)
+  return value == nil and default_value or value
+end
+
+return self

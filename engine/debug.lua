@@ -7,8 +7,14 @@ function self.load()
 end
 
 function self.update()
-  if Input.isKeyPressed("f9") then
+  if Input.isPressed("f9") then
     self.enabled = not self.enabled
+  elseif Input.isPressed(";") then
+    love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
+  elseif Input.isPressed("kp+") and Player ~= nil then
+    Player.setLV(Player.getLV() + 1)
+  elseif Input.isPressed("kp-") and Player ~= nil then
+    Player.setLV(Player.getLV() - 1)
   end
 end
 
@@ -27,12 +33,12 @@ end
 
 local _print = print
 function print(...)
-  local val = ""
-  for _, v in ipairs({ ... }) do
+  local t = {}
+  for _, v in pairs({ ... }) do
     table.insert(self.lines or {}, tostring(v))
-    val = val .. tostring(v) .. " "
+    table.insert(t, tostring(v))
   end
-  return _print(val)
+  return _print(table.unpack(t))
 end
 
 return self
