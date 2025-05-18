@@ -1,8 +1,9 @@
 ---@class Dummy.Scene
 ---
 ---@field private drawables table<number, Dummy.Drawable>
----@field private audios table<string, love.Source>
 local scene = {}
+
+local SCENE_QUITTING_DELAY = 0.8
 
 local self = {}
 
@@ -15,13 +16,13 @@ function self.load()
 
   self.clean()
 
-  scene.quitting_delay = 1
+  scene.quitting_delay = SCENE_QUITTING_DELAY
   scene.quitting_timer = 0
 end
 
 --- Changes scene
 ---@param scene_name string
----@param ... table data to pass to the scene
+---@param ... any data to pass to the scene
 function self.change(scene_name, ...)
   assert(self.SCENES[scene_name:upper()] ~= nil, "Cannot change scene: unkwown scene \"" .. scene_name .. "\"")
 
@@ -30,7 +31,7 @@ function self.change(scene_name, ...)
   scene.scene_name = scene_name
   scene.scene.load(...)
 
-  scene.quitting_delay = 1
+  scene.quitting_delay = SCENE_QUITTING_DELAY
   scene.quitting_timer = 0
   scene.quitting_sprite = Sprite.new("quitting1")
   scene.quitting_sprite:setPosition(1, 1)
@@ -79,22 +80,24 @@ function self.draw()
   if scene.scene == nil then return end
 
   for _, drawable in ipairs(scene.drawables) do
-    if drawable:isActive() then
+    if drawable:isVisible() then
       if type(drawable.draw) == "function" then
         drawable.draw()
       else
         love.graphics.setColor(1, 1, 1, drawable:getAlpha())
 
         local sprite = drawable:getSprite()
-        local x, y = drawable:getPosition()
-        local sx, sy = drawable:getScale()
-        local ox, oy = drawable:getOrigin()
-        love.graphics.draw(sprite,
-          x, y,
-          drawable:getRotation(),
-          sx, sy,
-          ox * sprite:getWidth(), oy * sprite:getHeight()
-        )
+        if sprite ~= nil then
+          local x, y = drawable:getPosition()
+          local sx, sy = drawable:getScale()
+          local ox, oy = drawable:getOrigin()
+          love.graphics.draw(sprite,
+            x, y,
+            drawable:getRotation(),
+            sx, sy,
+            ox * sprite:getWidth(), oy * sprite:getHeight()
+          )
+        end
       end
 
       love.graphics.setColor(1, 1, 1, 1)
@@ -122,7 +125,7 @@ end
 ---@param drawable Dummy.Drawable
 function self.removeDrawable(drawable)
   local index = 0
-  for i, d in ipairs(drawable) do
+  for i, d in ipairs(scene.drawables) do
     if d == drawable then
       index = i
       break
@@ -147,19 +150,9 @@ function self.cleanDrawables()
   scene.drawables = {}
 end
 
---- Adds an audio in the current scene
----@param source love.Source
-function self.addAudio(source)
-  scene.audios[source] = true
-end
-
-function self.cleanAudios()
-  scene.audios = {}
-end
-
 function self.clean()
   self.cleanDrawables()
-  Audio.clear()
+  love.audio.stop()
 end
 
 return self

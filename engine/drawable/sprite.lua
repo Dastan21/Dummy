@@ -1,14 +1,29 @@
+local cache = {}
 local self = {}
 
 local function getSprite(sprite_path)
-  local sprite_lang_path = "assets/sprites/" .. Lang.getLanguage() .. "/" .. sprite_path .. ".png"
-  local success, result = pcall(love.graphics.newImage, sprite_lang_path)
+  local sprite_full_path = "assets/sprites/" .. Lang.getLanguage() .. "/" .. sprite_path .. ".png"
+  -- try to get sprite data from cache
+  local image_data = cache[sprite_full_path]
+  local success = true
+  success, image_data = pcall(love.image.newImageData, sprite_full_path)
+
+  -- if sprite is not available in the current language, get it from the sprites root folder
   if not success then
-    success, result = pcall(love.graphics.newImage, "assets/sprites/" .. sprite_path .. ".png")
-    assert(success, "Sprite \"" .. sprite_path .. "\" not found: ")
+    sprite_full_path = "assets/sprites/" .. sprite_path .. ".png"
+    success, image_data = pcall(love.image.newImageData, sprite_full_path)
+    assert(success, "Sprite \"" .. sprite_path .. "\" not found")
   end
 
-  return result
+  if cache[sprite_full_path] == nil then
+    cache[sprite_full_path] = image_data
+  end
+
+  -- create an image from the sprite data
+  success, image_data = pcall(love.graphics.newImage, image_data)
+  assert(success, "Sprite \"" .. sprite_path .. "\" not found")
+
+  return image_data
 end
 
 --- Creates a sprite
@@ -16,16 +31,18 @@ end
 ---@param frames table<number, string>
 ---@param speed? number time between frames, in seconds (Defaults to 1/30)
 ---@param loop? boolean loops the animation (Defaults to `true`)
+---@param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
 ---@return Dummy.Sprite
-function self.new(frames, speed, loop)
+function self.new(frames, speed, loop, keep_last_frame)
   ---@class Dummy.Sprite : Dummy.Drawable
   ---
   ---@field private sprite love.Image
   ---@field private frames table
   ---@field private speed number
   ---@field private loop boolean
+  ---@field private keep_last_frame boolean
   ---@field private frame_index number
-  ---@field private timer table
+  ---@field private timer table|nil
   local sprite = Drawable.new()
 
   --- Gets the sprite value
@@ -51,19 +68,58 @@ function self.new(frames, speed, loop)
     Scene.addDrawable(sprite)
   end
 
+  --- Plays the sprite animation
+  function sprite:play()
+    if sprite.frames == nil then return end
+
+    sprite:stop()
+
+    sprite.timer = Timer.every(sprite.speed, function()
+      if sprite:isVisible() then
+        if not sprite.loop and sprite.frame_index >= #sprite.frames then
+          if sprite.keep_last_frame then
+            sprite:setFrame(sprite.frame_index)
+          else
+            sprite:stop()
+            sprite.frame_index = 0
+          end
+        else
+          sprite.frame_index = (sprite.frame_index % #sprite.frames) + 1
+        end
+      end
+    end)
+  end
+
+  --- Stops the sprite animation
+  function sprite:stop()
+    if sprite.frames == nil then return end
+
+    if sprite.timer ~= nil then
+      Timer.cancel(sprite.timer)
+    end
+
+    sprite.frame_index = 1
+  end
+
+  --- Sets the current sprite animation frame
+  ---@param index number
+  function sprite:setFrame(index)
+    sprite:stop()
+    sprite.frame_index = math.clamp(index, 1, #sprite.frames)
+  end
+
   if type(frames) == "table" then
     sprite.frames = {}
     sprite.frame_index = 1
-    for _, frame in ipairs(frames) do
-      table.insert(sprite.frames, getSprite(frame))
+    for i, frame in ipairs(frames) do
+      sprite.frames[i] = getSprite(frame)
     end
 
     sprite.speed = Utils.getOrDefault(speed, 1 / 30)
     sprite.loop = Utils.getOrDefault(loop, true)
+    sprite.keep_last_frame = Utils.getOrDefault(keep_last_frame, true)
 
-    Timer.every(sprite.speed, function()
-      sprite.frame_index = (sprite.frame_index % #sprite.frames) + 1
-    end)
+    sprite:play()
 
     Scene.addDrawable(sprite)
   else

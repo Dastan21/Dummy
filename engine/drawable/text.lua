@@ -1,11 +1,5 @@
 local self = {}
 
-local function updateText(txt)
-  if txt.sprite ~= nil then
-    txt.sprite:set({ { txt.color[1], txt.color[2], txt.color[3], txt.alpha }, Lang.translate(txt.text) })
-  end
-end
-
 ---@alias love.Color {[1]: number, [2]: number, [3]: number}
 
 --- Creates a text
@@ -35,7 +29,15 @@ function self.new(value)
   ---@param value string|table|fun(): string|table
   function text:setText(value)
     text.text = value
-    updateText(self)
+    text:updateText()
+  end
+
+  --- Updates the text sprite value
+  ---@protected
+  function text:updateText()
+    if text.sprite ~= nil then
+      text.sprite:set({ { text.color[1], text.color[2], text.color[3], text.alpha }, Lang.translate(text.text) })
+    end
   end
 
   --- Gets the text color
@@ -55,7 +57,7 @@ function self.new(value)
     else
       text.color = { r, g, b }
     end
-    updateText(self)
+    text:updateText()
   end
 
   --- Gets the text font
@@ -81,7 +83,7 @@ function self.new(value)
   ---@param alpha number
   function text:setAlpha(alpha)
     text.alpha = alpha
-    updateText(self)
+    text:updateText()
   end
 
   --- Gets the text sprite

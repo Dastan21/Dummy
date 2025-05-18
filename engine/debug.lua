@@ -7,7 +7,7 @@ function self.load()
 end
 
 function self.update()
-  if Input.isPressed("f9") then
+  if Input.isPressed("f8") then
     self.enabled = not self.enabled
   elseif Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)

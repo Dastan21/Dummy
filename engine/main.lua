@@ -42,9 +42,11 @@ end
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   love.audio.stop()
+  love.audio.setVolume(0)
 
   love.filesystem.createDirectory("mods")
   love.filesystem.createDirectory("saves")
+  love.filesystem.createDirectory("screenshots")
 
   love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
 
@@ -64,7 +66,7 @@ function love.load()
   dummy.next_time = love.timer.getTime()
 end
 
-local function checkFullscreen()
+local function updateFullscreen()
   if Input.isPressed("f4") or (Input.isDown("lalt") and Input.isPressed("return")) then
     local is_fullscreen = love.window.getFullscreen()
     love.window.setFullscreen(not is_fullscreen)
@@ -78,9 +80,12 @@ function love.update(dt)
   Input.update()
   Debug.update()
   Scene.update(dt)
-
-  checkFullscreen()
   Timer.update(dt)
+
+  updateFullscreen()
+  if Input.isPressed("f9") then
+    love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
+  end
 end
 
 local function limitFPS()

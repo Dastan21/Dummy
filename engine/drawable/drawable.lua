@@ -12,7 +12,7 @@ function self.new()
   ---@field private origin_y number
   ---@field private alpha number
   ---@field private layer number
-  ---@field private active boolean
+  ---@field private visible boolean
   ---@field private sprite love.Image|love.Text
   ---
   ---@field draw fun()|nil
@@ -27,7 +27,7 @@ function self.new()
   drawable.origin_y = 0.5
   drawable.alpha = 1
   drawable.layer = Constants.LAYERS.UI
-  drawable.active = true
+  drawable.visible = true
 
   --- Gets drawable position
   ---@return number, number
@@ -120,16 +120,16 @@ function self.new()
     Scene.sortDrawables()
   end
 
-  --- Wether the drawable is active
+  --- Wether the drawable is visible
   ---@return boolean
-  function drawable:isActive()
-    return self.active
+  function drawable:isVisible()
+    return self.visible
   end
 
-  --- Sets if the drawable is active
-  ---@param active boolean
-  function drawable:setActive(active)
-    self.active = active
+  --- Sets if the drawable is visible
+  ---@param visible boolean
+  function drawable:setVisible(visible)
+    self.visible = visible
     Scene.sortDrawables()
   end
 

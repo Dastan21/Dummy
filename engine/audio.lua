@@ -1,16 +1,17 @@
-local audio_exts = { "mp3", "wav", "ogg" }
+local AUDIO_EXTS = { "mp3", "wav", "ogg" }
 
+local cache = {}
 local self = {}
 
 local function getFilenameWithExt(name)
   local ext_index = 1
   local filename = ""
-  local fileinfo
+  local fileinfo = nil
   repeat
-    filename = name .. "." .. audio_exts[ext_index]
+    filename = name .. "." .. AUDIO_EXTS[ext_index]
     fileinfo = love.filesystem.getInfo(filename, "file")
     ext_index = ext_index + 1
-  until fileinfo ~= nil or ext_index > #audio_exts
+  until fileinfo ~= nil or ext_index > #AUDIO_EXTS
 
   assert(fileinfo ~= nil, "File \"" .. name .. "\" not found")
 
@@ -19,8 +20,22 @@ end
 
 local function playAudio(folder, audio_name, type, play, loop)
   local filename = getFilenameWithExt(folder .. audio_name)
-  local source = love.audio.newSource(filename, type)
-  Scene.addAudio(source)
+
+  local source = nil
+  local success = true
+  local file_data = cache[filename]
+
+  if file_data == nil then
+    success, file_data = pcall(love.filesystem.newFileData, filename)
+    assert(success, "Audio \"" .. audio_name .. "\" not found")
+  end
+
+  success, source = pcall(love.audio.newSource, file_data, type)
+  assert(success, "Audio \"" .. audio_name .. "\" not found")
+
+  if cache[filename] == nil then
+    cache[filename] = file_data
+  end
 
   if loop then source:setLooping(loop) end
   if play then source:play() end
@@ -48,12 +63,6 @@ function self.playSound(sound_name, play, loop)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, false)
   return playAudio("assets/sounds/", sound_name, "static", play, loop)
-end
-
---- Stops and clear all audios
-function self.clear()
-  love.audio.stop()
-  Scene.cleanAudios()
 end
 
 return self

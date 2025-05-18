@@ -7,7 +7,9 @@ local mod_list = require "mod.mod_list"
 ---@field text Dummy.Text text to display
 ---@field action fun(self: Dummy.Text)|nil callback when the option is confirmed
 ---@field draw fun(self: Dummy.Text)|nil draw along the option
+---@field drawable Dummy.Drawable|nil option drawable created from `option.draw`
 ---@field disabled boolean|nil wether the option is disabled
+---@field selected boolean|nil wether the option is selected
 ---@field menu Dummy.Menu|nil option children menu
 ---@field parent Dummy.Menu.Option|nil option parent menu
 
@@ -15,21 +17,21 @@ local mod_list = require "mod.mod_list"
 ---
 ---@field private options Dummy.Menu
 ---@field private current_menu Dummy.Menu
----@field private logo Dummy.Sprite
+---@field private logo_sprite Dummy.Sprite
 local self = {}
 
 function self.load()
-  self.logo = Sprite.new("logo")
-  self.logo:setPosition(320, 80)
-  self.logo:setScale(6)
+  self.logo_sprite = Sprite.new("logo")
+  self.logo_sprite:setPosition(320, 80)
+  self.logo_sprite:setScale(6)
 
-  self.credits = Text.new(Constants.CREDITS.NAME ..
+  self.credits_text = Text.new(Constants.CREDITS.NAME ..
     " v" .. Constants.CREDITS.VERSION .. " " .. Constants.CREDITS.AUTHOR .. " " .. Constants.CREDITS.YEAR)
-  self.credits:setFont(Font.FONT.SMALL)
-  self.credits:setColor(0.5, 0.5, 0.5)
-  self.credits:setPosition(320, 476)
-  self.credits:setOrigin(0.5, 1)
-  self.credits:setScale(2)
+  self.credits_text:setFont(Font.FONT.SMALL)
+  self.credits_text:setColor(0.5, 0.5, 0.5)
+  self.credits_text:setPosition(320, 476)
+  self.credits_text:setOrigin(0.5, 1)
+  self.credits_text:setScale(2)
 
   ---@type Dummy.Menu
   self.options = {}
@@ -138,9 +140,9 @@ end
 --- Prepare menu options
 ---@param menu Dummy.Menu
 ---@param parent? Dummy.Menu
----@param active? boolean
-function self.prepareMenu(menu, parent, active)
-  active = Utils.getOrDefault(active, true)
+---@param visible? boolean
+function self.prepareMenu(menu, parent, visible)
+  visible = Utils.getOrDefault(visible, true)
 
   for i, menu_item in ipairs(menu) do
     menu_item.parent = parent
@@ -153,7 +155,7 @@ function self.prepareMenu(menu, parent, active)
       local is_selected = i == self.selected_index and (menu_item.action ~= nil or menu_item.menu ~= nil)
       menu_item.text:setColor(1, 1, is_selected and 0 or 1)
       menu_item.text:setPosition(320, 240 + ((i - 1) * 40))
-      menu_item.text:setActive(active)
+      menu_item.text:setVisible(visible)
     end
   end
 end
@@ -182,9 +184,9 @@ end
 ---@param new_menu Dummy.Menu
 function self.changeMenu(new_menu)
   self.select(1)
-  for _, menu_item in ipairs(self.current_menu) do menu_item.text:setActive(false) end
+  for _, menu_item in ipairs(self.current_menu) do menu_item.text:setVisible(false) end
   self.current_menu = new_menu
-  for _, menu_item in ipairs(self.current_menu) do menu_item.text:setActive(true) end
+  for _, menu_item in ipairs(self.current_menu) do menu_item.text:setVisible(true) end
 end
 
 --- Update menu texts
