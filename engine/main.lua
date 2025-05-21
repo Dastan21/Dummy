@@ -30,7 +30,7 @@ Debug = require "engine.debug"
 Scene = require "engine.scene"
 
 local function loadConfig()
-  if love.filesystem.getInfo("settings.json") then
+  if love.filesystem.getInfo("settings.json") ~= nil then
     table.merge(Config, JSON.decode(love.filesystem.read("settings.json")))
   end
 end
@@ -74,7 +74,7 @@ local function updateFullscreen()
   end
 end
 
-function love.update(dt)
+local function update(dt)
   dummy.next_time = dummy.next_time + (1 / Config["fps"])
 
   Input.update()
@@ -97,7 +97,7 @@ local function limitFPS()
   love.timer.sleep(dummy.next_time - cur_time)
 end
 
-function love.draw()
+local function draw()
   if not love.graphics.isActive() then return end
 
   limitFPS()
@@ -109,18 +109,26 @@ function love.draw()
 
   love.graphics.setColor(0, 0, 0)
   love.graphics.rectangle("fill", -dummy.window.translate_x, 0, dummy.window.translate_x, dummy.window.height)
-  love.graphics.rectangle("fill", dummy.window.width, 0, dummy.window.translate_x,
-    dummy.window.height)
+  love.graphics.rectangle("fill", dummy.window.width, 0, dummy.window.translate_x, dummy.window.height)
   love.graphics.setColor(1, 1, 1)
 end
 
 function love.resize(width, height)
   local target_width, target_height = dummy.window.width, dummy.window.height
   local scale = math.min(width / target_width, height / target_height)
-  dummy.window.translate_x, dummy.window.translate_y, dummy.window.scale = (width - target_width * scale) / 2,
-      (height - target_height * scale) / 2, scale
+  dummy.window.translate_x = (width - target_width * scale) / 2
+  dummy.window.translate_y = (height - target_height * scale) / 2
+  dummy.window.scale = scale
 end
 
 function love.quit()
   saveConfig()
+end
+
+function love.update(dt)
+  xpcall(update, Debug.error_handler, dt)
+end
+
+function love.draw()
+  xpcall(draw, Debug.error_handler)
 end

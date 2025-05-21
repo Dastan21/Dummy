@@ -1,34 +1,37 @@
 local self = {}
 
 function self.load()
-  self.enabled = false
+  self.show_hitbox = false
+  self.show_console = false
   self.lines = {}
   self.max_lines = 5
 end
 
 function self.update()
-  if Input.isPressed("f8") then
-    self.enabled = not self.enabled
+  if Input.isPressed("f7") then
+    self.show_hitbox = not self.show_hitbox
+  elseif Input.isPressed("f8") then
+    self.show_console = not self.show_console
   elseif Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
-  elseif Input.isPressed("kp+") and Player ~= nil then
-    Player.setLV(Player.getLV() + 1)
-  elseif Input.isPressed("kp-") and Player ~= nil then
-    Player.setLV(Player.getLV() - 1)
   end
 end
 
 function self.draw()
-  if self.enabled then
+  if self.show_console then
     love.graphics.setColor(0, 0, 0, 0.5)
     love.graphics.rectangle("fill", 0, 0, 640, 480)
     love.graphics.setColor(1, 1, 1, 1)
     local i = 0
     for l = #self.lines, 1, -1 do
-      love.graphics.print(self.lines[l], 0, 20 * i, 0, 0.75, 0.75)
+      love.graphics.print(self.lines[l], 5, 20 * i, 0, 0.5, 0.5)
       i = i + 1
     end
   end
+end
+
+function self.error_handler(err)
+  Scene.change("ERROR", err)
 end
 
 local _print = print

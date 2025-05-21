@@ -3,18 +3,17 @@
 ---@field private drawables table<number, Dummy.Drawable>
 local scene = {}
 
+local scenes = {}
+
 local SCENE_QUITTING_DELAY = 0.8
 
-local self = {}
+function scene.load()
+  scene.clean()
 
-function self.load()
-  self.SCENES = {
-    MAIN_MENU = require "engine.scene.main_menu",
-    ENCOUNTER = require "engine.scene.encounter",
-    GAME_OVER = require "engine.scene.game_over",
-  }
-
-  self.clean()
+  scenes.MAIN_MENU = require "engine.scene.main_menu"
+  scenes.ENCOUNTER = require "engine.scene.encounter"
+  scenes.GAME_OVER = require "engine.scene.game_over"
+  scenes.ERROR = require "engine.scene.error"
 
   scene.quitting_delay = SCENE_QUITTING_DELAY
   scene.quitting_timer = 0
@@ -23,11 +22,14 @@ end
 --- Changes scene
 ---@param scene_name string
 ---@param ... any data to pass to the scene
-function self.change(scene_name, ...)
-  assert(self.SCENES[scene_name:upper()] ~= nil, "Cannot change scene: unkwown scene \"" .. scene_name .. "\"")
+function scene.change(scene_name, ...)
+  assert(type(scene_name) == "string", "Cannot change scene: invalid type \"" .. tostring(scene_name) .. "\"")
+  assert(scenes[scene_name:upper()] ~= nil, "Cannot change scene: unkwown scene \"" .. scene_name .. "\"")
 
-  self.clean()
-  scene.scene = self.SCENES[scene_name]
+  if scene.scene_name == scene_name then return end
+
+  scene.clean()
+  scene.scene = scenes[scene_name]
   scene.scene_name = scene_name
   scene.scene.load(...)
 
@@ -69,14 +71,14 @@ function scene.updateQuitting(dt)
   end
 end
 
-function self.update(dt)
+function scene.update(dt)
   if scene.scene == nil then return end
 
   scene.scene.update(dt)
   scene.updateQuitting(dt)
 end
 
-function self.draw()
+function scene.draw()
   if scene.scene == nil then return end
 
   for _, drawable in ipairs(scene.drawables) do
@@ -108,7 +110,7 @@ end
 --- Adds a drawable in the current scene
 ---@param drawable Dummy.Drawable|fun()
 ---@param layer? number
-function self.addDrawable(drawable, layer)
+function scene.addDrawable(drawable, layer)
   if type(drawable) == "function" then
     local d = Drawable.new()
     d.draw = drawable
@@ -118,12 +120,12 @@ function self.addDrawable(drawable, layer)
 
   table.insert(scene.drawables, drawable)
 
-  self.sortDrawables()
+  scene.sortDrawables()
 end
 
 --- Removes a drawable in the current scene
 ---@param drawable Dummy.Drawable
-function self.removeDrawable(drawable)
+function scene.removeDrawable(drawable)
   local index = 0
   for i, d in ipairs(scene.drawables) do
     if d == drawable then
@@ -136,23 +138,23 @@ function self.removeDrawable(drawable)
     table.remove(scene.drawables, index)
   end
 
-  self.sortDrawables()
+  scene.sortDrawables()
 end
 
 --- Sorts drawable list in ascending order
-function self.sortDrawables()
+function scene.sortDrawables()
   table.sort(scene.drawables, function(a, b)
     return (a:getLayer() or 0) < (b:getLayer() or 0)
   end)
 end
 
-function self.cleanDrawables()
+function scene.cleanDrawables()
   scene.drawables = {}
 end
 
-function self.clean()
-  self.cleanDrawables()
+function scene.clean()
+  scene.cleanDrawables()
   love.audio.stop()
 end
 
-return self
+return scene

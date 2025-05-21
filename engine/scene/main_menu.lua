@@ -89,13 +89,6 @@ function self.load()
     }
   })
 
-  table.insert(self.options, {
-    text = Text.new("> GAME OVER SCENE"),
-    action = function()
-      Scene.change("GAME_OVER")
-    end
-  })
-
   self.current_menu = self.options
   self.selected_index = 1
 

@@ -1,9 +1,3 @@
-Arena = require "engine.encounter.arena"
-Player = require "engine.encounter.player"
-ActionMenu = require "engine.encounter.action_menu"
-
-local Enemy = require "engine.encounter.enemy"
-
 ---@class Dummy.Encounter
 ---
 ---@field current_menu Dummy.Encounter.ActionMenu|nil
@@ -25,6 +19,11 @@ local self = {
 --- Loads the encounter scene
 ---@param mod Dummy.Mod.Data
 function self.load(mod)
+  Arena = require "engine.encounter.arena"
+  Player = require "engine.encounter.player"
+  ActionMenu = require "engine.encounter.action_menu"
+  Enemy = require "engine.encounter.enemy"
+
   self.mod = mod or {}
   self.mod.player = Utils.getOrDefault(self.mod.player, {})
   self.mod.encounter = Utils.getOrDefault(self.mod.encounter, {})

@@ -43,6 +43,16 @@ function self.load()
   self.is_fleeing = false
 
   self.setLV(1, true)
+
+  Scene.addDrawable(function()
+    --- Draws player hitbox if hitbox debugging is enabled
+    if Debug.show_hitbox and not self.isHidden() then
+      local x, y = self.getPosition()
+      love.graphics.setColor(0, 1, 0, 1)
+      love.graphics.rectangle("line", x - self.hitbox[1], y - self.hitbox[2], self.hitbox[3], self.hitbox[4])
+      love.graphics.setColor(1, 1, 1, 1)
+    end
+  end, Constants.LAYERS.ABOVE_SOUL)
 end
 
 --- Sets the player's soul position
