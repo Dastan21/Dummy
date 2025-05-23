@@ -3,19 +3,19 @@ local lang = {}
 local self = {}
 
 --- Gets the current language code
----@return string
+--- @return string
 function self.getLanguage()
   return language_code
 end
 
 --- Gets the current language name
----@return string
+--- @return string
 function self.getLanguageName()
   return language_name
 end
 
 --- Sets the current language
----@param code string language code
+--- @param code string language code
 function self.setLanguage(code)
   if type(code) ~= "string" then return end
 
@@ -38,9 +38,9 @@ function self.switchLanguage()
 end
 
 --- Translate a key in the current language
----@param key string|table|function key to translate
----@param ... table additional data passed along the key
----@return string
+--- @param key string|table|function key to translate
+--- @param ... table additional data passed along the key
+--- @return string
 function self.translate(key, ...)
   local data = { ... }
 

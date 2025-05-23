@@ -44,10 +44,10 @@ local function playAudio(folder, audio_name, type, play, loop)
 end
 
 --- Plays a music
----@param music_name string
----@param play? boolean (Defaults to `true`)
----@param loop? boolean (Defaults to `true`)
----@return love.Source
+--- @param music_name string
+--- @param play? boolean (Defaults to `true`)
+--- @param loop? boolean (Defaults to `true`)
+--- @return love.Source
 function self.playMusic(music_name, play, loop)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, true)
@@ -55,10 +55,10 @@ function self.playMusic(music_name, play, loop)
 end
 
 --- Plays a sound
----@param sound_name string
----@param play? boolean (Defaults to `true`)
----@param loop? boolean (Defaults to `false`)
----@return love.Source
+--- @param sound_name string
+--- @param play? boolean (Defaults to `true`)
+--- @param loop? boolean (Defaults to `false`)
+--- @return love.Source
 function self.playSound(sound_name, play, loop)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, false)

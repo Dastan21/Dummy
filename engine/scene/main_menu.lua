@@ -1,23 +1,23 @@
 local mod_list = require "mod.mod_list"
 
----@alias Dummy.Menu table<number, Dummy.Menu.Option>
+--- @alias Dummy.Menu table<number, Dummy.Menu.Option>
 
----@class Dummy.Menu.Option
+--- @class Dummy.Menu.Option
 ---
----@field text Dummy.Text text to display
----@field action fun(self: Dummy.Text)|nil callback when the option is confirmed
----@field draw fun(self: Dummy.Text)|nil draw along the option
----@field drawable Dummy.Drawable|nil option drawable created from `option.draw`
----@field disabled boolean|nil wether the option is disabled
----@field selected boolean|nil wether the option is selected
----@field menu Dummy.Menu|nil option children menu
----@field parent Dummy.Menu.Option|nil option parent menu
+--- @field text Dummy.Text text to display
+--- @field action fun(self: Dummy.Text)|nil callback when the option is confirmed
+--- @field draw fun(self: Dummy.Text)|nil draw along the option
+--- @field drawable Dummy.Drawable|nil option drawable created from `option.draw`
+--- @field disabled boolean|nil wether the option is disabled
+--- @field selected boolean|nil wether the option is selected
+--- @field menu Dummy.Menu|nil option children menu
+--- @field parent Dummy.Menu.Option|nil option parent menu
 
----@class Dummy.MainMenu
+--- @class Dummy.MainMenu
 ---
----@field private options Dummy.Menu
----@field private current_menu Dummy.Menu
----@field private logo_sprite Dummy.Sprite
+--- @field private options Dummy.Menu
+--- @field private current_menu Dummy.Menu
+--- @field private logo_sprite Dummy.Sprite
 local self = {}
 
 function self.load()
@@ -33,7 +33,7 @@ function self.load()
   self.credits_text:setOrigin(0.5, 1)
   self.credits_text:setScale(2)
 
-  ---@type Dummy.Menu
+  --- @type Dummy.Menu
   self.options = {}
 
   mod_list.load()
@@ -98,7 +98,7 @@ function self.load()
 end
 
 --- Prepare mod list menu options
----@return Dummy.Menu
+--- @return Dummy.Menu
 function self.prepareModListMenu()
   local play_menu_item = self.options[1]
   play_menu_item.menu = {}
@@ -131,9 +131,9 @@ function self.prepareModListMenu()
 end
 
 --- Prepare menu options
----@param menu Dummy.Menu
----@param parent? Dummy.Menu
----@param visible? boolean
+--- @param menu Dummy.Menu
+--- @param parent? Dummy.Menu
+--- @param visible? boolean
 function self.prepareMenu(menu, parent, visible)
   visible = Utils.getOrDefault(visible, true)
 
@@ -154,7 +154,7 @@ function self.prepareMenu(menu, parent, visible)
 end
 
 --- Select a menu option
----@param index number
+--- @param index number
 function self.select(index)
   if index == self.selected_index then return end
 
@@ -174,7 +174,7 @@ function self.select(index)
 end
 
 --- Change menu
----@param new_menu Dummy.Menu
+--- @param new_menu Dummy.Menu
 function self.changeMenu(new_menu)
   self.select(1)
   for _, menu_item in ipairs(self.current_menu) do menu_item.text:setVisible(false) end
@@ -183,7 +183,7 @@ function self.changeMenu(new_menu)
 end
 
 --- Update menu texts
----@param menu Dummy.Menu
+--- @param menu Dummy.Menu
 function self.updateMenuTexts(menu)
   for _, data in pairs(menu) do
     if data.menu ~= nil then

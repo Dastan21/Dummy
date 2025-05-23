@@ -1,16 +1,16 @@
----@class Dummy.GameOver
+--- @class Dummy.GameOver
 ---
----@field private player_sprite Dummy.Sprite
----@field private player_shards table<number, table>
----@field private title_game_text Dummy.Text
----@field private title_over_text Dummy.Text
----@field private title_delay number
----@field private title_timer number
+--- @field private player_sprite Dummy.Sprite
+--- @field private player_shards table<number, table>
+--- @field private title_game_text Dummy.Text
+--- @field private title_over_text Dummy.Text
+--- @field private title_delay number
+--- @field private title_timer number
 local self = {}
 
 --- Loads the game over scene
----@param x number
----@param y number
+--- @param x number
+--- @param y number
 function self.load(x, y)
   x, y = Utils.getOrDefault(x, 320), Utils.getOrDefault(y, 240)
 

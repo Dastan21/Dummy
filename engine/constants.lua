@@ -41,6 +41,8 @@ self.ENCOUNTER_STATES = {
   MERCY_MENU = "MERCY_MENU",
   --- Player attack screen
   ATTACKING = "ATTACKING",
+  --- Text dialogue before ENEMY_DIALOGUE or DEFENDING
+  TEXT_DIALOGUE = "TEXT_DIALOGUE",
   --- Enemy dialogue before DEFENDING
   ENEMY_DIALOGUE = "ENEMY_DIALOGUE",
   --- Enemy attack phase

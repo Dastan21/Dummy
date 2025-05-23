@@ -1,6 +1,6 @@
----@class Dummy.Scene
+--- @class Dummy.Scene
 ---
----@field private drawables table<number, Dummy.Drawable>
+--- @field private drawables table<number, Dummy.Drawable>
 local scene = {}
 
 local scenes = {}
@@ -20,8 +20,8 @@ function scene.load()
 end
 
 --- Changes scene
----@param scene_name string
----@param ... any data to pass to the scene
+--- @param scene_name string
+--- @param ... any data to pass to the scene
 function scene.change(scene_name, ...)
   assert(type(scene_name) == "string", "Cannot change scene: invalid type \"" .. tostring(scene_name) .. "\"")
   assert(scenes[scene_name:upper()] ~= nil, "Cannot change scene: unkwown scene \"" .. scene_name .. "\"")
@@ -74,6 +74,10 @@ end
 function scene.update(dt)
   if scene.scene == nil then return end
 
+  for _, dialogue_text in ipairs(scene.dialogues) do
+    dialogue_text:update(dt)
+  end
+
   scene.scene.update(dt)
   scene.updateQuitting(dt)
 end
@@ -81,7 +85,7 @@ end
 function scene.draw()
   if scene.scene == nil then return end
 
-  for _, drawable in ipairs(scene.drawables) do
+  for _, drawable in pairs(scene.drawables) do
     if drawable:isVisible() then
       if type(drawable.draw) == "function" then
         drawable.draw()
@@ -108,23 +112,20 @@ function scene.draw()
 end
 
 --- Adds a drawable in the current scene
----@param drawable Dummy.Drawable|fun()
----@param layer? number
+--- @param drawable Dummy.Drawable|fun()
+--- @param layer? number
 function scene.addDrawable(drawable, layer)
-  if type(drawable) == "function" then
-    local d = Drawable.new()
-    d.draw = drawable
-    d:setLayer(Utils.getOrDefault(layer, 0))
-    drawable = d
-  end
+  layer = Utils.getOrDefault(layer, 0)
 
   table.insert(scene.drawables, drawable)
 
   scene.sortDrawables()
+
+  return drawable
 end
 
 --- Removes a drawable in the current scene
----@param drawable Dummy.Drawable
+--- @param drawable Dummy.Drawable
 function scene.removeDrawable(drawable)
   local index = 0
   for i, d in ipairs(scene.drawables) do
@@ -141,19 +142,22 @@ function scene.removeDrawable(drawable)
   scene.sortDrawables()
 end
 
---- Sorts drawable list in ascending order
+--- Sorts drawables by layer in the current scene
 function scene.sortDrawables()
-  table.sort(scene.drawables, function(a, b)
+  table.stable_sort(scene.drawables, function(a, b)
     return (a:getLayer() or 0) < (b:getLayer() or 0)
   end)
 end
 
-function scene.cleanDrawables()
-  scene.drawables = {}
+--- Adds a dialogue text in the current scene
+--- @param dialogue_text Dummy.DialogueText
+function scene.addDialogue(dialogue_text)
+  table.insert(scene.dialogues, dialogue_text)
 end
 
 function scene.clean()
-  scene.cleanDrawables()
+  scene.drawables = {}
+  scene.dialogues = {}
   love.audio.stop()
 end
 

@@ -138,7 +138,7 @@ function table.merge(t1, t2)
 end
 
 if table.unpack == nil then
-  ---@diagnostic disable-next-line: deprecated
+  --- @diagnostic disable-next-line: deprecated
   table.unpack = unpack
 end
 
@@ -186,10 +186,10 @@ end
 local self = {}
 
 --- Get value or default
----@generic T
----@param value T|nil
----@param default_value T
----@return T
+--- @generic T
+--- @param value T|nil
+--- @param default_value T
+--- @return T
 function self.getOrDefault(value, default_value)
   return value == nil and default_value or value
 end

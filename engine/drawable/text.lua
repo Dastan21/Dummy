@@ -1,17 +1,17 @@
 local self = {}
 
----@alias love.Color {[1]: number, [2]: number, [3]: number}
+--- @alias love.Color {[1]: number, [2]: number, [3]: number}
 
 --- Creates a text
----@param value string|table|fun(): string|table
----@return Dummy.Text
+--- @param value string|table|fun(): string|table
+--- @return Dummy.Text
 function self.new(value)
-  ---@class Dummy.Text : Dummy.Drawable
+  --- @class Dummy.Text : Dummy.Drawable
   ---
-  ---@field private text string|table|fun(): string|table
-  ---@field private color love.Color
-  ---@field private font love.Font
-  ---@field private sprite love.Text
+  --- @field protected text string|table|fun(): string|table
+  --- @field protected color love.Color
+  --- @field protected font love.Font
+  --- @field protected sprite love.Text
   local text = Drawable.new()
 
   text.text = value
@@ -26,14 +26,14 @@ function self.new(value)
   end
 
   --- Sets the text value
-  ---@param value string|table|fun(): string|table
+  --- @param value string|table|fun(): string|table
   function text:setText(value)
     text.text = value
     text:updateText()
   end
 
   --- Updates the text sprite value
-  ---@protected
+  --- @protected
   function text:updateText()
     if text.sprite ~= nil then
       text.sprite:set({ { text.color[1], text.color[2], text.color[3], text.alpha }, Lang.translate(text.text) })
@@ -41,16 +41,16 @@ function self.new(value)
   end
 
   --- Gets the text color
-  ---@return love.Color
+  --- @return love.Color
   function text:getColor()
     return text.color
   end
 
   --- Sets the text color
-  ---@overload fun(self: Dummy.Text, color: love.Color)
-  ---@param r number
-  ---@param g number
-  ---@param b number
+  --- @overload fun(self: Dummy.Text, color: love.Color)
+  --- @param r number
+  --- @param g number
+  --- @param b number
   function text:setColor(r, g, b)
     if type(r) == "table" then
       text.color = r
@@ -61,26 +61,26 @@ function self.new(value)
   end
 
   --- Gets the text font
-  ---@return love.Font
+  --- @return love.Font
   function text:getFont()
     return text.font
   end
 
   --- Sets the text font
-  ---@param font love.Font
+  --- @param font love.Font
   function text:setFont(font)
     text.font = font
     text.sprite:setFont(font)
   end
 
   --- Gets the text alpha
-  ---@return number
+  --- @return number
   function text:getAlpha()
     return text.alpha
   end
 
   --- Sets the text alpha
-  ---@param alpha number
+  --- @param alpha number
   function text:setAlpha(alpha)
     text.alpha = alpha
     text:updateText()

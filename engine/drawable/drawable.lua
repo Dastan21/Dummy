@@ -1,21 +1,21 @@
 local self = {}
 
 function self.new()
-  ---@class Dummy.Drawable
+  --- @class Dummy.Drawable
   ---
-  ---@field private x number
-  ---@field private y number
-  ---@field private rotation number
-  ---@field private scale_x number
-  ---@field private scale_y number
-  ---@field private origin_x number
-  ---@field private origin_y number
-  ---@field private alpha number
-  ---@field private layer number
-  ---@field private visible boolean
-  ---@field private sprite love.Image|love.Text
+  --- @field protected x number
+  --- @field protected y number
+  --- @field protected rotation number
+  --- @field protected scale_x number
+  --- @field protected scale_y number
+  --- @field protected origin_x number
+  --- @field protected origin_y number
+  --- @field protected alpha number
+  --- @field protected layer number
+  --- @field protected visible boolean
+  --- @field protected sprite love.Image|love.Text
   ---
-  ---@field draw fun()|nil
+  --- @field draw fun()|nil
   local drawable = {}
 
   drawable.x = 0
@@ -30,107 +30,109 @@ function self.new()
   drawable.visible = true
 
   --- Gets drawable position
-  ---@return number, number
+  --- @return number, number
   function drawable:getPosition()
-    return self.x, self.y
+    return drawable.x, drawable.y
   end
 
   --- Sets drawable position
-  ---@param x number
-  ---@param y number
+  --- @param x number
+  --- @param y number
   function drawable:setPosition(x, y)
-    self.x = x
-    self.y = y
+    drawable.x = x
+    drawable.y = y
   end
 
   --- Gets drawable rotation
-  ---@return number
+  --- @return number
   function drawable:getRotation()
-    return self.rotation
+    return drawable.rotation
   end
 
   --- Sets drawable rotation
-  ---@param rotation number
+  --- @param rotation number
   function drawable:setRotation(rotation)
-    self.rotation = rotation
+    drawable.rotation = rotation
   end
 
   --- Gets drawable scale
-  ---@return number, number
+  --- @return number, number
   function drawable:getScale()
-    return self.scale_x, self.scale_y
+    return drawable.scale_x, drawable.scale_y
   end
 
   --- Sets drawable scale
-  ---@overload fun(self: Dummy.Drawable, scale: number)
-  ---@param scale_x number
-  ---@param scale_y number
+  --- @overload fun(self: Dummy.Drawable, scale: number)
+  --- @param scale_x number
+  --- @param scale_y number
   function drawable:setScale(scale_x, scale_y)
     if type(scale_x) == "number" and scale_y == nil then
-      self.scale_x = scale_x
-      self.scale_y = scale_x
+      drawable.scale_x = scale_x
+      drawable.scale_y = scale_x
     else
-      self.scale_x = scale_x
-      self.scale_y = scale_y
+      drawable.scale_x = scale_x
+      drawable.scale_y = scale_y
     end
   end
 
   --- Gets drawable origin
-  ---@return number, number
+  --- @return number, number
   function drawable:getOrigin()
-    return self.origin_x, self.origin_y
+    return drawable.origin_x, drawable.origin_y
   end
 
   --- Sets drawable origin
-  ---@overload fun(self: Dummy.Drawable, origin: number)
-  ---@param origin_x number
-  ---@param origin_y number
+  --- @overload fun(self: Dummy.Drawable, origin: number)
+  --- @param origin_x number
+  --- @param origin_y number
   function drawable:setOrigin(origin_x, origin_y)
     if type(origin_x) == "number" and origin_y == nil then
-      self.origin_x = origin_x
-      self.origin_y = origin_x
+      drawable.origin_x = origin_x
+      drawable.origin_y = origin_x
     else
-      self.origin_x = origin_x
-      self.origin_y = origin_y
+      drawable.origin_x = origin_x
+      drawable.origin_y = origin_y
     end
   end
 
   --- Gets drawable alpha
-  ---@return number
+  --- @return number
   function drawable:getAlpha()
-    return self.alpha
+    return drawable.alpha
   end
 
   --- Sets drawable alpha
-  ---@param alpha number
+  --- @param alpha number
   function drawable:setAlpha(alpha)
-    self.alpha = alpha
+    drawable.alpha = alpha
   end
 
   --- Gets drawable layer
-  ---@return number
+  --- @return number
   function drawable:getLayer()
-    return self.layer
+    return drawable.layer
   end
 
   --- Sets drawable layer
-  ---@param layer number
-  function drawable:setLayer(layer)
-    self.layer = layer
-    Scene.sortDrawables()
+  --- @param layer number
+  --- @param silent? boolean wether to dispatch event to the scene (Defaults to `true`)
+  function drawable:setLayer(layer, silent)
+    drawable.layer = layer
+
+    Scene.removeDrawable(drawable)
+    Scene.addDrawable(drawable)
   end
 
   --- Wether the drawable is visible
-  ---@return boolean
+  --- @return boolean
   function drawable:isVisible()
-    return self.visible
+    return drawable.visible
   end
 
   --- Sets if the drawable is visible
-  ---@param visible boolean
+  --- @param visible boolean
   function drawable:setVisible(visible)
-    self.visible = visible
-    Scene.sortDrawables()
+    drawable.visible = visible
   end
 
   --- Gets the drawable sprite

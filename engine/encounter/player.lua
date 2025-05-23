@@ -1,12 +1,14 @@
 local INTERNAL_SPEED = 110
 
----@class Dummy.Player
+--- @class Dummy.Player
 ---
----@field private lv number
----@field private hp number
----@field private max_hp number
----@field private speed number
----@field private hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
+--- @field private lv number
+--- @field private hp number
+--- @field private max_hp number
+--- @field private at number
+--- @field private df number
+--- @field private speed number
+--- @field private hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
 local self = {}
 
 --- Inits the player
@@ -14,6 +16,8 @@ function self.load()
   self.lv = 1
   self.hp = 20
   self.max_hp = 20
+  self.at = 1
+  self.df = 1
   self.speed = 1
   self.hitbox = { 4, 4, 8, 8 }
 
@@ -44,21 +48,22 @@ function self.load()
 
   self.setLV(1, true)
 
-  Scene.addDrawable(function()
-    --- Draws player hitbox if hitbox debugging is enabled
+  local hitbox_draw = Drawable.new()
+  hitbox_draw:setLayer(Constants.LAYERS.ABOVE_SOUL)
+  hitbox_draw.draw = function()
     if Debug.show_hitbox and not self.isHidden() then
       local x, y = self.getPosition()
       love.graphics.setColor(0, 1, 0, 1)
       love.graphics.rectangle("line", x - self.hitbox[1], y - self.hitbox[2], self.hitbox[3], self.hitbox[4])
       love.graphics.setColor(1, 1, 1, 1)
     end
-  end, Constants.LAYERS.ABOVE_SOUL)
+  end
 end
 
 --- Sets the player's soul position
----@param x number horizontal position
----@param y number vertical position
----@param ignore_arena_bounds? boolean ignore arena bounds collisions
+--- @param x number horizontal position
+--- @param y number vertical position
+--- @param ignore_arena_bounds? boolean ignore arena bounds collisions
 function self.setPosition(x, y, ignore_arena_bounds)
   if not ignore_arena_bounds then
     local arena_x, arena_y = Arena.getPosition()
@@ -95,7 +100,7 @@ function self.isHidden()
 end
 
 --- Sets the player's name
----@param name string name displayed
+--- @param name string name displayed
 function self.setName(name)
   if name == nil then return end
 
@@ -111,8 +116,8 @@ function self.getName()
 end
 
 --- Sets the player's LV
----@param lv number level
----@param heal? boolean set HP to max HP
+--- @param lv number level
+--- @param heal? boolean set HP to max HP
 function self.setLV(lv, heal)
   if type(lv) ~= "number" then return end
 
@@ -129,8 +134,8 @@ function self.setLV(lv, heal)
   if heal == true then
     self.setHP(self.max_hp)
   end
-  -- self.setAT(8 + 2 * player.lv)
-  -- self.setDF(9 + math.ceil(player.lv / 4))
+  self.setAT(8 + 2 * self.lv)
+  self.setDF(9 + math.ceil(self.lv / 4))
 end
 
 --- Gets the player's LV
@@ -140,7 +145,7 @@ function self.getLV()
 end
 
 --- Sets the player's HP
----@param hp number health points
+--- @param hp number health points
 function self.setHP(hp)
   if type(hp) ~= "number" then return end
 
@@ -156,8 +161,8 @@ function self.getHP()
 end
 
 --- Sets the player's max HP
----@param max_hp number maximum health points
----@param heal? boolean set HP to max HP
+--- @param max_hp number maximum health points
+--- @param heal? boolean set HP to max HP
 function self.setMaxHP(max_hp, heal)
   if type(max_hp) ~= "number" then return end
 
@@ -170,8 +175,32 @@ function self.setMaxHP(max_hp, heal)
   end
 end
 
+--- Gets the player's AT
+--- @return number
+function self.getAT()
+  return self.at
+end
+
+--- Sets the player's AT
+--- @param at number attack point
+function self.setAT(at)
+  self.at = at
+end
+
+--- Gets the player's DE
+--- @return number
+function self.getDF()
+  return self.df
+end
+
+--- Sets the player's DE
+--- @param df number defense point
+function self.setDF(df)
+  self.df = df
+end
+
 --- Wether the player's hitbox collides bullet's hitbox
----@param bullet Dummy.Bullet
+--- @param bullet Dummy.Bullet
 function self.isColliding(bullet)
   local player_x, player_y = self.soul_sprite:getPosition()
   local bullet_sprite = bullet:getSprite()
@@ -202,7 +231,7 @@ function self.flee(dt)
 end
 
 --- Updates the player
----@param dt number
+--- @param dt number
 function self.update(dt)
   local dir_x, dir_y = 0, 0
   if Input.isDown(Input.Up) then dir_y = dir_y - 1 end

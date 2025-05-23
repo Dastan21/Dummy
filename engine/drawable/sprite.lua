@@ -27,22 +27,22 @@ local function getSprite(sprite_path)
 end
 
 --- Creates a sprite
----@overload fun(sprite: string): Dummy.Sprite
----@param frames table<number, string>
----@param speed? number time between frames, in seconds (Defaults to 1/30)
----@param loop? boolean loops the animation (Defaults to `true`)
----@param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
----@return Dummy.Sprite
+--- @overload fun(sprite: string): Dummy.Sprite
+--- @param frames table<number, string>
+--- @param speed? number time between frames, in seconds (Defaults to 1/30)
+--- @param loop? boolean loops the animation (Defaults to `true`)
+--- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
+--- @return Dummy.Sprite
 function self.new(frames, speed, loop, keep_last_frame)
-  ---@class Dummy.Sprite : Dummy.Drawable
+  --- @class Dummy.Sprite : Dummy.Drawable
   ---
-  ---@field private sprite love.Image
-  ---@field private frames table
-  ---@field private speed number
-  ---@field private loop boolean
-  ---@field private keep_last_frame boolean
-  ---@field private frame_index number
-  ---@field private timer table|nil
+  --- @field protected sprite love.Image
+  --- @field protected frames table
+  --- @field protected speed number
+  --- @field protected loop boolean
+  --- @field protected keep_last_frame boolean
+  --- @field protected frame_index number
+  --- @field protected timer table|nil
   local sprite = Drawable.new()
 
   --- Gets the sprite value
@@ -56,7 +56,7 @@ function self.new(frames, speed, loop, keep_last_frame)
   end
 
   --- Sets the sprite value
-  ---@param sprite_name string|table<number, string>
+  --- @param sprite_name string|table<number, string>
   function sprite:setSprite(sprite_name)
     if sprite.sprite ~= nil then
       Scene.removeDrawable(sprite)
@@ -102,7 +102,7 @@ function self.new(frames, speed, loop, keep_last_frame)
   end
 
   --- Sets the current sprite animation frame
-  ---@param index number
+  --- @param index number
   function sprite:setFrame(index)
     sprite:stop()
     sprite.frame_index = math.clamp(index, 1, #sprite.frames)

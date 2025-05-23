@@ -1,10 +1,8 @@
----@class Dummy.Encounter
+--- @class Dummy.Encounter
 ---
----@field current_menu Dummy.Encounter.ActionMenu|nil
+--- @field current_menu Dummy.Encounter.ActionMenu|nil
 local self = {
   ACTIONS = {
-    --- No action
-    NONE = 0,
     --- FIGHT action
     FIGHT = 1,
     --- ACT action
@@ -17,7 +15,7 @@ local self = {
 }
 
 --- Loads the encounter scene
----@param mod Dummy.Mod.Data
+--- @param mod Dummy.Mod.Data
 function self.load(mod)
   Arena = require "engine.encounter.arena"
   Player = require "engine.encounter.player"
@@ -65,6 +63,14 @@ function self.load(mod)
   -- menus
   self.loadMenus()
 
+  -- textbox dialogue
+  self.dialogue_text = DialogueText.new(Utils.getOrDefault(self.mod.encounter.text, ""))
+  self.dialogue_text:setPosition(50, 271)
+  self.dialogue_text:setOrigin(0, 0)
+  self.dialogue_text:setFont(Font.FONT.MAIN_TEXT)
+  self.dialogue_text:setScale(2)
+  self.dialogue_text:setLayer(Constants.LAYERS.TOP)
+
   -- attack target
   self.target_sprite = Sprite.new("target")
   self.target_sprite:setPosition(320, 320)
@@ -97,7 +103,9 @@ function self.load(mod)
   self.strike_sprite:setScale(1.5)
   self.strike_sprite:setVisible(false)
 
-  Scene.addDrawable(function()
+  local player_hp_bar_draw = Drawable.new()
+  player_hp_bar_draw:setLayer(Constants.LAYERS.UI)
+  player_hp_bar_draw.draw = function()
     local max_hp_bar_width = math.clamp(5 * Player.getLV() + 20, 25, 120)
     local hp_bar_width = max_hp_bar_width * Player.getHP() / Player.getMaxHP()
     love.graphics.setColor(1, 0, 0, 1)
@@ -105,11 +113,11 @@ function self.load(mod)
     love.graphics.setColor(1, 1, 0, 1)
     love.graphics.rectangle("fill", 275, 400, hp_bar_width, 21)
     love.graphics.setColor(1, 1, 1, 1)
-  end, Constants.LAYERS.UI)
+  end
 end
 
 function self.loadEnemies()
-  ---@type table<number, Dummy.Enemy>
+  --- @type table<number, Dummy.Enemy>
   self.enemies = {}
   for _, enemy in ipairs(self.mod.enemies) do
     if #self.enemies >= 3 then break end
@@ -193,8 +201,6 @@ function self.loadFightEnemyMenu()
 
   self.fight_enemy_menu = ActionMenu.new(options, "vertical", false, function(i)
     self.enemy_selected_index = i
-    self.action.index = self.ACTIONS.FIGHT
-    self.updateActions()
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
 end
@@ -214,8 +220,6 @@ function self.loadActEnemyMenu()
 
   self.act_enemy_menu = ActionMenu.new(options, "vertical", false, function(i)
     self.enemy_selected_index = i
-    self.action.index = self.ACTIONS.ACT
-    self.updateActions()
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
 end
@@ -230,7 +234,8 @@ function self.loadActMenus()
         text = Text.new("ENCOUNTER_MENU_ACT_CHECK"),
         action = function()
           Audio.playSound("menu_select")
-          print("> CHECKING", enemy:getCheck())
+          self.dialogue_text:setText(enemy:getCheckText())
+          self.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
         end
       })
     end
@@ -256,8 +261,6 @@ function self.loadItemMenu()
   end
 
   self.item_menu = ActionMenu.new(options, "horizontal", true, function()
-    self.action.index = self.ACTIONS.ITEM
-    self.updateActions()
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
 end
@@ -303,14 +306,12 @@ function self.loadMercyMenu()
   end
 
   self.mercy_menu = ActionMenu.new(options, "vertical", false, function()
-    self.action.index = self.ACTIONS.MERCY
-    self.updateActions()
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
 end
 
 --- Sets current encounter state
----@param state string
+--- @param state string
 function self.setState(state)
   assert(Constants.ENCOUNTER_STATES[state:upper()] ~= nil, "Unknown encounter state \"" .. tostring(state) .. "\"")
 
@@ -318,14 +319,15 @@ function self.setState(state)
 end
 
 function self.startActionSelect()
-  if self.action.index == self.ACTIONS.NONE then
-    self.action.index = self.ACTIONS.FIGHT
-  end
+  self.action.index = math.abs(self.action.index)
   self.updateActions()
 
   self.leaveMenu()
 
-  Arena.reset()
+  Arena.reset(function()
+    self.dialogue_text:setText(self.mod.encounter.text)
+    self.dialogue_text:setVisible(true)
+  end)
 end
 
 function self.updateActionSelect()
@@ -357,11 +359,13 @@ function self.updateActionSelect()
     end
 
     Audio.playSound("menu_select")
+  elseif Input.isPressed(Input.Cancel) then
+    self.dialogue_text:skip()
   end
 end
 
 --- Opens an action's menu
----@param menu Dummy.Encounter.ActionMenu|nil
+--- @param menu Dummy.Encounter.ActionMenu|nil
 function self.enterMenu(menu)
   if menu == nil or menu:getSize() <= 0 or menu:allDisabled() then
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
@@ -371,6 +375,8 @@ function self.enterMenu(menu)
   self.leaveMenu()
   self.current_menu = menu
   self.current_menu.show()
+
+  self.dialogue_text:setVisible(false)
 end
 
 --- Leaves the current menu
@@ -416,13 +422,37 @@ function self.updateActions()
   end
 end
 
+function self.startTextDialogue()
+  self.dialogue_text:reset()
+  self.dialogue_text:setVisible(true)
+
+  self.action.index = -math.abs(self.action.index)
+  self.updateActions()
+
+  Player.hide()
+
+  self.leaveMenu()
+end
+
+function self.updateTextDialogue(dt)
+  if Input.isPressed(Input.Cancel) then
+    self.dialogue_text:skip()
+  elseif Input.isPressed(Input.Confirm) and self.dialogue_text:isDone() then
+    self.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+  end
+end
+
 function self.startEnemyDialogue()
-  self.action.index = self.ACTIONS.NONE
+  self.dialogue_text:setVisible(false)
+
+  self.action.index = -math.abs(self.action.index)
   self.updateActions()
 
   -- TODO: get arena width/height in wave
   local wave_arena_width = 175
-  Arena.resize(wave_arena_width, 130)
+  Arena.resize(wave_arena_width, 130, function()
+    self.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+  end)
 
   local x, y = Arena:getPosition()
   Player.setPosition(x, y - 65)
@@ -442,7 +472,7 @@ function self.startAttacking()
   self.leaveMenu()
   Player.hide()
 
-  local attack_window = 1.6
+  local attack_window = 1.52
   local attack_window_timer = nil
   local attack_window_miss_timer = nil
 
@@ -477,8 +507,8 @@ function self.startAttacking()
       else
         Audio.playSound("damage")
 
-        enemy.setHP(math.clamp(enemy.getHP() - 100, 0, enemy.getMaxHP())) -- DEBUG
-        if enemy.getHP() <= 0 then
+        enemy:setHP(math.clamp(enemy:getHP() - 100, 0, enemy:getMaxHP())) -- DEBUG
+        if enemy:getHP() <= 0 then
           local fight_option = self.fight_enemy_menu.getOptionByIndex(self.enemy_selected_index)
           fight_option.disabled = true
           local act_option = self.act_enemy_menu.getOptionByIndex(self.enemy_selected_index)
@@ -526,8 +556,9 @@ function self.updateAttacking(dt)
 end
 
 function self.startDefending()
-  self.action.index = self.ACTIONS.NONE
+  self.action.index = -math.abs(self.action.index)
   self.updateActions()
+
   -- TODO: get arena width/height in wave
   local wave_arena_width = 175
   local wave_arena_height = 175
@@ -562,6 +593,8 @@ function self.update(dt)
       self.item_menu.select(0, 0, true)
     elseif self.current_state == Constants.ENCOUNTER_STATES.MERCY_MENU then
       self.enterMenu(self.mercy_menu)
+    elseif self.current_state == Constants.ENCOUNTER_STATES.TEXT_DIALOGUE then
+      self.startTextDialogue()
     elseif self.current_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE then
       self.startEnemyDialogue()
     elseif self.current_state == Constants.ENCOUNTER_STATES.ATTACKING then
@@ -584,6 +617,8 @@ function self.update(dt)
     if self.current_menu ~= nil then self.current_menu.update() end
   elseif self.current_state == Constants.ENCOUNTER_STATES.MERCY_MENU then
     if self.current_menu ~= nil then self.current_menu.update() end
+  elseif self.current_state == Constants.ENCOUNTER_STATES.TEXT_DIALOGUE then
+    self.updateTextDialogue(dt)
   elseif self.current_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE then
     self.updateEnemyDialogue(dt)
   elseif self.current_state == Constants.ENCOUNTER_STATES.ATTACKING then
@@ -596,16 +631,14 @@ function self.update(dt)
   elseif self.current_state == Constants.ENCOUNTER_STATES.DONE then
     Scene.change("MAIN_MENU")
   elseif self.current_state == Constants.ENCOUNTER_STATES.NONE then
-  else
-    error("Unknown encounter state: " .. self.current_state)
   end
-
-  Arena.update(dt)
 
   if Player.getHP() <= 0 then
     local x, y = Player.getPosition()
     Scene.change("GAME_OVER", x, y)
   end
+
+  Arena.update(dt)
 end
 
 return self

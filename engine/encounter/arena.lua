@@ -1,9 +1,10 @@
----@class Dummy.Arena : Dummy.Drawable
+--- @class Dummy.Arena : Dummy.Drawable
 ---
----@field private x number
----@field private y number
----@field private width number
----@field private height number
+--- @field private x number
+--- @field private y number
+--- @field private width number
+--- @field private height number
+--- @field private done fun() | nil
 local self = Drawable.new()
 
 local RESIZE_SPEED = 400
@@ -13,7 +14,7 @@ local BORDER_WIDTH = 5
 local DEFAULT_X = 320
 local DEFAULT_Y = 385
 
----@class Dummy.Arena
+--- @class Dummy.Arena
 local current = {}
 
 function self.load()
@@ -68,6 +69,11 @@ function self.update(dt)
       end
     end
   end
+
+  if current.width == self.width and current.height == self.height and type(self.done) == "function" then
+    self.done()
+    self.done = nil
+  end
 end
 
 function self.draw()
@@ -83,32 +89,35 @@ function self.draw()
 end
 
 --- Resizes the arena
----@param width number
----@param height number
-function self.resize(width, height)
+--- @param width number
+--- @param height number
+--- @param done? fun() called after finished resizing
+function self.resize(width, height, done)
   self.width = width
   self.height = height
+  self.done = done
 end
 
 --- Resets the arena bounds
-function self.reset()
-  self.resize(DEFAULT_WIDTH, DEFAULT_HEIGHT)
+--- @param done? fun() called after finished resizing
+function self.reset(done)
+  self.resize(DEFAULT_WIDTH, DEFAULT_HEIGHT, done)
 end
 
 --- Gets the arena position
----@return number, number
+--- @return number, number
 function self.getPosition()
   return self.x, self.y
 end
 
 --- Gets the arena width
----@return number
+--- @return number
 function self.getWidth()
   return self.width
 end
 
 --- Gets the arena height
----@return number
+--- @return number
 function self.getHeight()
   return self.height
 end

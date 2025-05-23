@@ -1,23 +1,23 @@
 local self = {}
 
 --- Creates an action menu
----@param options table<number, Dummy.Menu.Option>
----@param direction? "horizontal"|"vertical"
----@param pagination? boolean
----@param onBack? fun(i: number)
----@return Dummy.Encounter.ActionMenu
+--- @param options table<number, Dummy.Menu.Option>
+--- @param direction? "horizontal"|"vertical"
+--- @param pagination? boolean
+--- @param onBack? fun(i: number)
+--- @return Dummy.Encounter.ActionMenu
 function self.new(options, direction, pagination, onBack)
-  ---@class Dummy.Encounter.ActionMenu
+  --- @class Dummy.Encounter.ActionMenu
   ---
-  ---@field private options table<number, Dummy.Menu.Option>
-  ---@field private indexes_x table<number, table<number, number>>
-  ---@field private indexes_y table<number, table<number, number>>
-  ---@field private index_x number
-  ---@field private index_y number
-  ---@field private direction "horizontal"|"vertical"
-  ---@field private pagination boolean
-  ---@field private onBack fun(i: number)|nil
-  ---@field private page_text Dummy.Text
+  --- @field private options table<number, Dummy.Menu.Option>
+  --- @field private indexes_x table<number, table<number, number>>
+  --- @field private indexes_y table<number, table<number, number>>
+  --- @field private index_x number
+  --- @field private index_y number
+  --- @field private direction "horizontal"|"vertical"
+  --- @field private pagination boolean
+  --- @field private onBack fun(i: number)|nil
+  --- @field private page_text Dummy.Text
   local menu = {}
 
   menu.options = options or {}
@@ -30,9 +30,9 @@ function self.new(options, direction, pagination, onBack)
   menu.onBack = onBack
 
   --- Selects an option
-  ---@param index_x number horizontal index
-  ---@param index_y number vertical index
-  ---@param silent? boolean wether to play a sound (Defaults to `false`)
+  --- @param index_x number horizontal index
+  --- @param index_y number vertical index
+  --- @param silent? boolean wether to play a sound (Defaults to `false`)
   function menu.select(index_x, index_y, silent)
     if not silent and (menu.pagination or index_x ~= menu.index_x or index_y ~= menu.index_y) then
       Audio.playSound("menu_move")
@@ -63,8 +63,8 @@ function self.new(options, direction, pagination, onBack)
   end
 
   --- Moves cursor option
-  ---@param delta_x number
-  ---@param delta_y number
+  --- @param delta_x number
+  --- @param delta_y number
   function menu.move(delta_x, delta_y)
     local index_x = (menu.index_x + delta_x + #menu.indexes_x[menu.index_y + 1]) % #menu.indexes_x[menu.index_y + 1]
     local index_y = (menu.index_y + delta_y + #menu.indexes_y[menu.index_x + 1]) % #menu.indexes_y[menu.index_x + 1]
@@ -73,8 +73,8 @@ function self.new(options, direction, pagination, onBack)
   end
 
   --- Selects an option by index
-  ---@param index number options index
-  ---@param silent? boolean wether to play a sound (Defaults to `false`)
+  --- @param index number options index
+  --- @param silent? boolean wether to play a sound (Defaults to `false`)
   function menu.selectByIndex(index, silent)
     local index_x, index_y = menu.getIndexesByOptionIndex(index)
     menu.select(index_x, index_y, silent)
@@ -127,7 +127,9 @@ function self.new(options, direction, pagination, onBack)
         option.drawable = Drawable.new()
         option.drawable:setLayer(Constants.LAYERS.UI)
         option.drawable.draw = function()
-          option.draw(option.text)
+          if option.text:isVisible() then
+            option.draw(option.text)
+          end
         end
         Scene.addDrawable(option.drawable)
       end
@@ -153,13 +155,13 @@ function self.new(options, direction, pagination, onBack)
   end
 
   --- Gets the number of options
-  ---@return number
+  --- @return number
   function menu.getSize()
     return #menu.options
   end
 
   --- Wether all the options are disabled
-  ---@return boolean
+  --- @return boolean
   function menu.allDisabled()
     for _, option in ipairs(menu.options) do
       if not option.disabled then
@@ -170,35 +172,35 @@ function self.new(options, direction, pagination, onBack)
   end
 
   --- Gets an option
-  ---@param index_x number
-  ---@param index_y number
-  ---@return Dummy.Menu.Option
+  --- @param index_x number
+  --- @param index_y number
+  --- @return Dummy.Menu.Option
   function menu.getOption(index_x, index_y)
     return menu.options[menu.getOptionIndex(index_x, index_y)]
   end
 
   --- Gets the selected option
-  ---@return Dummy.Menu.Option
+  --- @return Dummy.Menu.Option
   function menu.getSelectedOption()
     return menu.getOption(menu.index_x, menu.index_y)
   end
 
   --- Gets the option index
-  ---@param index_x number
-  ---@param index_y number
-  ---@return number
+  --- @param index_x number
+  --- @param index_y number
+  --- @return number
   function menu.getOptionIndex(index_x, index_y)
     return (menu.indexes_x[index_y + 1] or {})[index_x + 1]
   end
 
   --- Gets the selected option index
-  ---@return number
+  --- @return number
   function menu.getSelectedOptionIndex()
     return menu.getOptionIndex(menu.index_x, menu.index_y)
   end
 
   --- Gets the grid indexes by option index
-  ---@param index number
+  --- @param index number
   function menu.getIndexesByOptionIndex(index)
     local index_x = 0
     for _, indexes in ipairs(menu.indexes_x) do
@@ -224,16 +226,16 @@ function self.new(options, direction, pagination, onBack)
   end
 
   --- Gets an option by its index
-  ---@param index number
-  ---@return Dummy.Menu.Option
+  --- @param index number
+  --- @return Dummy.Menu.Option
   function menu.getOptionByIndex(index)
     local index_x, index_y = menu.getIndexesByOptionIndex(index)
     return menu.getOption(index_x, index_y)
   end
 
   --- Gets the max x option index
-  ---@return number
-  ---@private
+  --- @return number
+  --- @private
   function menu.getMaxX()
     if menu.direction == "vertical" then
       return math.min(math.ceil(#menu.options / (menu.pagination and 2 or 3)), 2)
@@ -243,8 +245,8 @@ function self.new(options, direction, pagination, onBack)
   end
 
   --- Gets the max y option index
-  ---@return number
-  ---@private
+  --- @return number
+  --- @private
   function menu.getMaxY()
     if menu.direction == "vertical" then
       return math.min(#menu.options, menu.pagination and 2 or 3)

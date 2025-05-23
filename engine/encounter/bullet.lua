@@ -1,14 +1,14 @@
 local self = {}
 
----@alias Dummy.Bullet.Hitbox {[1]:number, [2]:number, [3]:number, [4]:number}
+--- @alias Dummy.Bullet.Hitbox {[1]:number, [2]:number, [3]:number, [4]:number}
 
 --- Creates a bullet
----@return Dummy.Bullet
+--- @return Dummy.Bullet
 function self.new()
-  ---@class Dummy.Bullet
+  --- @class Dummy.Bullet
   ---
-  ---@field private sprite Dummy.Sprite
-  ---@field private hitbox Dummy.Bullet.Hitbox
+  --- @field private sprite Dummy.Sprite
+  --- @field private hitbox Dummy.Bullet.Hitbox
   local bullet = {}
   --- Gets bullet sprite
   --- @return Dummy.Sprite

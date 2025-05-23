@@ -17,6 +17,7 @@ Config = {
 
 JSON = require "engine.lib.json"
 Timer = require "engine.lib.timer"
+require "engine.lib.stable_sort"
 
 Utils = require "engine.utils"
 Audio = require "engine.audio"
@@ -26,6 +27,7 @@ Font = require "engine.font"
 Drawable = require "engine.drawable.drawable"
 Sprite = require "engine.drawable.sprite"
 Text = require "engine.drawable.text"
+DialogueText = require "engine.drawable.dialogue_text"
 Debug = require "engine.debug"
 Scene = require "engine.scene"
 
@@ -42,7 +44,7 @@ end
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   love.audio.stop()
-  love.audio.setVolume(0)
+  love.audio.setVolume(0) -- DEBUG
 
   love.filesystem.createDirectory("mods")
   love.filesystem.createDirectory("saves")
@@ -59,8 +61,8 @@ function love.load()
   Input.load()
   Lang.load()
   Font.load()
-  Debug.load()
   Scene.load()
+  Debug.load()
   Scene.change("MAIN_MENU")
 
   dummy.next_time = love.timer.getTime()
@@ -78,8 +80,8 @@ local function update(dt)
   dummy.next_time = dummy.next_time + (1 / Config["fps"])
 
   Input.update()
-  Debug.update()
   Scene.update(dt)
+  Debug.update()
   Timer.update(dt)
 
   updateFullscreen()
@@ -105,7 +107,6 @@ local function draw()
   love.graphics.scale(dummy.window.scale)
 
   Scene.draw()
-  Debug.draw()
 
   love.graphics.setColor(0, 0, 0)
   love.graphics.rectangle("fill", -dummy.window.translate_x, 0, dummy.window.translate_x, dummy.window.height)
@@ -125,10 +126,18 @@ function love.quit()
   saveConfig()
 end
 
+local function error_handler(err)
+  if Scene.scene_name == "ERROR" then
+    print(err)
+  else
+    Scene.change("ERROR", err)
+  end
+end
+
 function love.update(dt)
-  xpcall(update, Debug.error_handler, dt)
+  xpcall(update, error_handler, dt)
 end
 
 function love.draw()
-  xpcall(draw, Debug.error_handler)
+  xpcall(draw, error_handler)
 end

@@ -5,6 +5,21 @@ function self.load()
   self.show_console = false
   self.lines = {}
   self.max_lines = 5
+
+  local console_draw = Drawable.new()
+  console_draw:setLayer(Constants.LAYERS.TOP)
+  console_draw.draw = function()
+    if self.show_console then
+      love.graphics.setColor(0, 0, 0, 0.5)
+      love.graphics.rectangle("fill", 0, 0, 640, 480)
+      love.graphics.setColor(1, 1, 1, 1)
+      local i = 0
+      for l = #self.lines, 1, -1 do
+        love.graphics.print(self.lines[l], 5, 20 * i, 0, 0.5, 0.5)
+        i = i + 1
+      end
+    end
+  end
 end
 
 function self.update()
@@ -15,23 +30,6 @@ function self.update()
   elseif Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
   end
-end
-
-function self.draw()
-  if self.show_console then
-    love.graphics.setColor(0, 0, 0, 0.5)
-    love.graphics.rectangle("fill", 0, 0, 640, 480)
-    love.graphics.setColor(1, 1, 1, 1)
-    local i = 0
-    for l = #self.lines, 1, -1 do
-      love.graphics.print(self.lines[l], 5, 20 * i, 0, 0.5, 0.5)
-      i = i + 1
-    end
-  end
-end
-
-function self.error_handler(err)
-  Scene.change("ERROR", err)
 end
 
 local _print = print
