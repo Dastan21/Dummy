@@ -1,9 +1,18 @@
 local AUDIO_EXTS = { "mp3", "wav", "ogg" }
 
-local cache = {}
+--- @class Dummy.Audio
+---
+--- @field private current_music love.Source
 local self = {}
 
-local function getFilenameWithExt(name)
+---@type table<string, love.FileData>
+local cache = {}
+
+--- Gets the filename without extension
+---@param name string
+---@return string
+---@private
+function self.getFilenameWithExt(name)
   local ext_index = 1
   local filename = ""
   local fileinfo = nil
@@ -18,8 +27,15 @@ local function getFilenameWithExt(name)
   return filename
 end
 
-local function playAudio(folder, audio_name, type, play, loop)
-  local filename = getFilenameWithExt(folder .. audio_name)
+--- Plays an audio
+--- @param folder string
+--- @param audio_name string
+--- @param type "queue"|"static"|"stream"
+--- @param play boolean
+--- @param loop boolean
+--- @return love.Source
+function self.playAudio(folder, audio_name, type, play, loop)
+  local filename = self.getFilenameWithExt(folder .. audio_name)
 
   local source = nil
   local success = true
@@ -44,25 +60,33 @@ local function playAudio(folder, audio_name, type, play, loop)
 end
 
 --- Plays a music
---- @param music_name string
---- @param play? boolean (Defaults to `true`)
---- @param loop? boolean (Defaults to `true`)
+--- @param music_name string the music name to play
+--- @param play? boolean wether the music should play instantly (Defaults to `true`)
+--- @param loop? boolean wether the music should loop (Defaults to `true`)
+--- @param replace? boolean wether to replace the current playing music (Defaults to `true`)
 --- @return love.Source
-function self.playMusic(music_name, play, loop)
+function self.playMusic(music_name, play, loop, replace)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, true)
-  return playAudio("assets/music/", music_name, "stream", play, loop)
+  replace = Utils.getOrDefault(replace, true)
+
+  if replace and self.current_music ~= nil then
+    self.current_music:stop()
+  end
+
+  self.current_music = self.playAudio("assets/music/", music_name, "stream", play, loop)
+  return self.current_music
 end
 
 --- Plays a sound
---- @param sound_name string
---- @param play? boolean (Defaults to `true`)
---- @param loop? boolean (Defaults to `false`)
+--- @param sound_name string the sound name to play
+--- @param play? boolean wether the sound should play instantly (Defaults to `true`)
+--- @param loop? boolean wether the sound should loop (Defaults to `false`)
 --- @return love.Source
 function self.playSound(sound_name, play, loop)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, false)
-  return playAudio("assets/sounds/", sound_name, "static", play, loop)
+  return self.playAudio("assets/sounds/", sound_name, "static", play, loop)
 end
 
 return self

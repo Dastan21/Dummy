@@ -114,6 +114,9 @@ function self.load(mod)
     love.graphics.rectangle("fill", 275, 400, hp_bar_width, 21)
     love.graphics.setColor(1, 1, 1, 1)
   end
+
+  -- music
+  Audio.playMusic(Utils.getOrDefault(self.mod.encounter.music, "battle"))
 end
 
 function self.loadEnemies()

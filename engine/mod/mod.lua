@@ -21,6 +21,7 @@
 ---
 --- @field text string|nil
 --- @field flee boolean|nil
+--- @field music string|nil
 
 
 --- @class Dummy.Mod.Data.Enemy
