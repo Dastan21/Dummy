@@ -9,6 +9,7 @@ local INTERNAL_SPEED = 110
 --- @field private df number
 --- @field private speed number
 --- @field private hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
+--- @field private is_fleeing boolean
 local self = {}
 
 --- Inits the player
@@ -29,12 +30,12 @@ function self.load()
   self.name_text = Text.new(self.name)
   self.name_text:setPosition(30, 400)
   self.name_text:setOrigin(0)
-  self.name_text:setFont(Font.FONT.CURS)
+  self.name_text:setFont(Font.FONTS.CURS)
 
   self.lv_text = Text.new("")
   self.lv_text:setPosition(174, 400)
   self.lv_text:setOrigin(0)
-  self.lv_text:setFont(Font.FONT.CURS)
+  self.lv_text:setFont(Font.FONTS.CURS)
 
   self.hp_sprite = Sprite.new("hp")
   self.hp_sprite:setPosition(244, 405)
@@ -42,7 +43,7 @@ function self.load()
   self.hp_value_text = Text.new("")
   self.hp_value_text:setPosition(400, 409)
   self.hp_value_text:setOrigin(0, 0.5)
-  self.hp_value_text:setFont(Font.FONT.CURS)
+  self.hp_value_text:setFont(Font.FONTS.CURS)
 
   self.is_fleeing = false
 
@@ -55,7 +56,6 @@ function self.load()
       local x, y = self.getPosition()
       love.graphics.setColor(0, 1, 0, 1)
       love.graphics.rectangle("line", x - self.hitbox[1], y - self.hitbox[2], self.hitbox[3], self.hitbox[4])
-      love.graphics.setColor(1, 1, 1, 1)
     end
   end
 end
@@ -213,6 +213,12 @@ end
 --- @return number
 function self.getMaxHP()
   return self.max_hp
+end
+
+--- Wether the playing is playing the escape animation
+---@return boolean
+function self.isFleeing()
+  return self.is_fleeing
 end
 
 --- Animates the soul escaping

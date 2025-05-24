@@ -4,29 +4,22 @@
 --- @field private y number
 --- @field private width number
 --- @field private height number
---- @field private done fun() | nil
+--- @field private resize_callback fun()|nil
 local self = Drawable.new()
-
-local RESIZE_SPEED = 400
-local DEFAULT_WIDTH = 565
-local DEFAULT_HEIGHT = 130
-local BORDER_WIDTH = 5
-local DEFAULT_X = 320
-local DEFAULT_Y = 385
 
 --- @class Dummy.Arena
 local current = {}
 
 function self.load()
-  current.width = DEFAULT_WIDTH
-  current.height = DEFAULT_HEIGHT
-  current.x = DEFAULT_X
-  current.y = DEFAULT_Y
+  current.width = Constants.ARENA.DEFAULT_WIDTH
+  current.height = Constants.ARENA.DEFAULT_HEIGHT
+  current.x = Constants.ARENA.DEFAULT_X
+  current.y = Constants.ARENA.DEFAULT_Y
 
-  self.width = DEFAULT_WIDTH
-  self.height = DEFAULT_HEIGHT
-  self.x = DEFAULT_X
-  self.y = DEFAULT_Y
+  self.width = Constants.ARENA.DEFAULT_WIDTH
+  self.height = Constants.ARENA.DEFAULT_HEIGHT
+  self.x = Constants.ARENA.DEFAULT_X
+  self.y = Constants.ARENA.DEFAULT_Y
 
   self.layer = Constants.LAYERS.ARENA
 
@@ -50,29 +43,29 @@ function self.update(dt)
   -- end
 
   if current.height > self.height then
-    current.height = current.height - RESIZE_SPEED * dt * 3
+    current.height = current.height - Constants.ARENA.RESIZE_SPEED * dt * 3
     if current.height < self.height then
       current.height = self.height
     end
   end
   if current.width ~= self.width then
     local sign = math.sign(self.width - current.width)
-    current.width = current.width + sign * RESIZE_SPEED * dt * 4
+    current.width = current.width + sign * Constants.ARENA.RESIZE_SPEED * dt * 4
     if (math.sign(self.width - current.width) ~= sign) then
       current.width = self.width
     end
   else
     if current.height < self.height then
-      current.height = current.height + RESIZE_SPEED * dt * 3
+      current.height = current.height + Constants.ARENA.RESIZE_SPEED * dt * 3
       if current.height > self.height then
         current.height = self.height
       end
     end
   end
 
-  if current.width == self.width and current.height == self.height and type(self.done) == "function" then
-    self.done()
-    self.done = nil
+  if current.width == self.width and current.height == self.height and type(self.resize_callback) == "function" then
+    self.resize_callback()
+    self.resize_callback = nil
   end
 end
 
@@ -81,27 +74,27 @@ function self.draw()
   local arena_y = self.y - current.height
 
   love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.rectangle("fill", arena_x - BORDER_WIDTH, arena_y - BORDER_WIDTH, current.width + 2 * BORDER_WIDTH,
-    current.height + 2 * BORDER_WIDTH)
+  love.graphics.rectangle("fill", arena_x - Constants.ARENA.BORDER_WIDTH, arena_y - Constants.ARENA.BORDER_WIDTH,
+    current.width + 2 * Constants.ARENA.BORDER_WIDTH,
+    current.height + 2 * Constants.ARENA.BORDER_WIDTH)
   love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("fill", arena_x, arena_y, current.width, current.height)
-  love.graphics.setColor(1, 1, 1, 1)
 end
 
 --- Resizes the arena
---- @param width number
---- @param height number
---- @param done? fun() called after finished resizing
-function self.resize(width, height, done)
+--- @param width number target width of the arena
+--- @param height number target height of the arena
+--- @param resize_callback? fun() called after finished resizing
+function self.resize(width, height, resize_callback)
   self.width = width
   self.height = height
-  self.done = done
+  self.resize_callback = resize_callback
 end
 
 --- Resets the arena bounds
---- @param done? fun() called after finished resizing
-function self.reset(done)
-  self.resize(DEFAULT_WIDTH, DEFAULT_HEIGHT, done)
+--- @param resize_callback? fun() called after finished resizing
+function self.reset(resize_callback)
+  self.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, resize_callback)
 end
 
 --- Gets the arena position

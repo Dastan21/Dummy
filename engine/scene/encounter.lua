@@ -15,7 +15,7 @@ local self = {
 }
 
 --- Loads the encounter scene
---- @param mod Dummy.Mod.Data
+--- @param mod Dummy.Mod
 function self.load(mod)
   Arena = require "engine.encounter.arena"
   Player = require "engine.encounter.player"
@@ -25,16 +25,17 @@ function self.load(mod)
   self.mod = mod or {}
   self.mod.player = Utils.getOrDefault(self.mod.player, {})
   self.mod.encounter = Utils.getOrDefault(self.mod.encounter, {})
+  self.mod.enemies = Utils.getOrDefault(self.mod.enemies, {})
 
   -- background
   self.bg_sprite = Sprite.new("battle_bg")
   self.bg_sprite:setPosition(319.5, 127)
   self.bg_sprite:setLayer(Constants.LAYERS.BOTTOM)
-  self.black_bg_sprite = Sprite.new("black_bg")
-  self.black_bg_sprite:setOrigin(0, 0)
-  self.black_bg_sprite:setVisible(false)
-  self.black_bg_sprite:setAlpha(0)
-  self.black_bg_sprite:setLayer(Constants.LAYERS.TOP)
+  self.black_sprite = Sprite.new("black")
+  self.black_sprite:setOrigin(0, 0)
+  self.black_sprite:setVisible(false)
+  self.black_sprite:setAlpha(0)
+  self.black_sprite:setLayer(Constants.LAYERS.TOP)
 
   -- arena
   Arena.load()
@@ -64,12 +65,13 @@ function self.load(mod)
   self.loadMenus()
 
   -- textbox dialogue
-  self.dialogue_text = DialogueText.new(Utils.getOrDefault(self.mod.encounter.text, ""))
-  self.dialogue_text:setPosition(50, 271)
+  self.dialogue_text = DialogueText.new("")
+  self.dialogue_text:setPosition(52, 270)
   self.dialogue_text:setOrigin(0, 0)
-  self.dialogue_text:setFont(Font.FONT.MAIN_TEXT)
+  self.dialogue_text:setFont(Font.FONTS.MAIN_TEXT)
   self.dialogue_text:setScale(2)
-  self.dialogue_text:setLayer(Constants.LAYERS.TOP)
+  self.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
+  self.dialogue_text:setText(Utils.getOrDefault(self.mod.encounter.text, ""))
 
   -- attack target
   self.target_sprite = Sprite.new("target")
@@ -112,11 +114,14 @@ function self.load(mod)
     love.graphics.rectangle("fill", 275, 400, max_hp_bar_width, 21)
     love.graphics.setColor(1, 1, 0, 1)
     love.graphics.rectangle("fill", 275, 400, hp_bar_width, 21)
-    love.graphics.setColor(1, 1, 1, 1)
   end
 
   -- music
-  Audio.playMusic(Utils.getOrDefault(self.mod.encounter.music, "battle"))
+  if self.mod.encounter.music ~= nil then
+    Audio.playMusic(self.mod.encounter.music, nil, nil, nil)
+  else
+    Audio.playMusic("battle")
+  end
 end
 
 function self.loadEnemies()
@@ -284,6 +289,8 @@ function self.loadMercyMenu()
     table.insert(options, {
       text = Text.new("ENCOUNTER_MENU_MERCY_FLEE"),
       action = function()
+        if Player.isFleeing() then return end
+
         Timer.after(1.5, function()
           self.setState(Constants.ENCOUNTER_STATES.DONE)
         end)
@@ -294,11 +301,11 @@ function self.loadMercyMenu()
 
         Timer.after(1, function()
           local time = 0
-          self.black_bg_sprite:setVisible(true)
+          self.black_sprite:setVisible(true)
 
           Timer.during(0.4, function(dt)
             time = time + dt
-            self.black_bg_sprite:setAlpha(time / 0.4)
+            self.black_sprite:setAlpha(time / 0.4)
           end)
         end)
 
@@ -475,7 +482,7 @@ function self.startAttacking()
   self.leaveMenu()
   Player.hide()
 
-  local attack_window = 1.52
+  local attack_window = 1.55
   local attack_window_timer = nil
   local attack_window_miss_timer = nil
 

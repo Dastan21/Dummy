@@ -194,4 +194,12 @@ function self.getOrDefault(value, default_value)
   return value == nil and default_value or value
 end
 
+function self.checkExtension(path, ...)
+  for _, v in ipairs({ ... }) do
+    if path:sub(- #v - 1):lower() == "." .. v then
+      return path:sub(1, - #v - 2), v
+    end
+  end
+end
+
 return self

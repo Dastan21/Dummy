@@ -159,6 +159,7 @@ function scene.clean()
   scene.drawables = {}
   scene.dialogues = {}
   love.audio.stop()
+  Timer.clear()
 end
 
 return scene

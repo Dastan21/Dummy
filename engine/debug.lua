@@ -12,7 +12,6 @@ function self.load()
     if self.show_console then
       love.graphics.setColor(0, 0, 0, 0.5)
       love.graphics.rectangle("fill", 0, 0, 640, 480)
-      love.graphics.setColor(1, 1, 1, 1)
       local i = 0
       for l = #self.lines, 1, -1 do
         love.graphics.print(self.lines[l], 5, 20 * i, 0, 0.5, 0.5)

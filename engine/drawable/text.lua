@@ -48,15 +48,21 @@ function self.new(value)
 
   --- Sets the text color
   --- @overload fun(self: Dummy.Text, color: love.Color)
-  --- @param r number
-  --- @param g number
-  --- @param b number
-  function text:setColor(r, g, b)
+  --- @param r number red
+  --- @param g number green
+  --- @param b number blue
+  --- @param a number alpha
+  function text:setColor(r, g, b, a)
     if type(r) == "table" then
       text.color = r
     else
       text.color = { r, g, b }
     end
+
+    if a ~= nil then
+      text.alpha = a
+    end
+
     text:updateText()
   end
 

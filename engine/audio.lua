@@ -86,6 +86,7 @@ end
 function self.playSound(sound_name, play, loop)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, false)
+
   return self.playAudio("assets/sounds/", sound_name, "static", play, loop)
 end
 

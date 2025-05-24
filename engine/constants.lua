@@ -51,4 +51,13 @@ self.ENCOUNTER_STATES = {
   DONE = "DONE",
 }
 
+self.ARENA = {
+  RESIZE_SPEED = 400,
+  DEFAULT_WIDTH = 565,
+  DEFAULT_HEIGHT = 130,
+  BORDER_WIDTH = 5,
+  DEFAULT_X = 320,
+  DEFAULT_Y = 385
+}
+
 return self

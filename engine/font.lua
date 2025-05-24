@@ -1,5 +1,5 @@
 local self = {
-  FONT = {
+  FONTS = {
     MAIN = love.graphics.newImageFont("assets/fonts/main.png",
       " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäçèéêëìíîïôùúûü"),
     MAIN_TEXT = love.graphics.newImageFont("assets/fonts/main_text.png",
@@ -13,10 +13,10 @@ local self = {
 }
 
 function self.load()
-  love.graphics.setFont(self.FONT.MAIN)
+  love.graphics.setFont(self.FONTS.MAIN)
 
   -- Antialiazing
-  for _, font in pairs(self.FONT) do
+  for _, font in pairs(self.FONTS) do
     font:setFilter("nearest", "nearest")
   end
 end

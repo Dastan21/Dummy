@@ -1,4 +1,4 @@
-local mod_list = require "mod.mod_list"
+local mod_list = require "engine.mod.mod_list"
 
 --- @alias Dummy.Menu table<number, Dummy.Menu.Option>
 
@@ -21,22 +21,25 @@ local mod_list = require "mod.mod_list"
 local self = {}
 
 function self.load()
+  mod_list.load()
+
   self.logo_sprite = Sprite.new("logo")
-  self.logo_sprite:setPosition(320, 80)
+  self.logo_sprite:setPosition(320, 120)
   self.logo_sprite:setScale(6)
 
   self.credits_text = Text.new(Constants.CREDITS.NAME ..
     " v" .. Constants.CREDITS.VERSION .. " " .. Constants.CREDITS.AUTHOR .. " " .. Constants.CREDITS.YEAR)
-  self.credits_text:setFont(Font.FONT.SMALL)
-  self.credits_text:setColor(0.5, 0.5, 0.5)
+  self.credits_text:setFont(Font.FONTS.SMALL)
+  self.credits_text:setAlpha(0.707)
   self.credits_text:setPosition(320, 476)
   self.credits_text:setOrigin(0.5, 1)
   self.credits_text:setScale(2)
+  self.background_sprite = Sprite.new("background")
+  self.background_sprite:setOrigin(0, 0)
+  self.background_sprite:setLayer(Constants.LAYERS.BOTTOM)
 
   --- @type Dummy.Menu
   self.options = {}
-
-  mod_list.load()
 
   if not mod_list.standalone then
     table.insert(self.options, {
@@ -95,6 +98,10 @@ function self.load()
   self.prepareMenu(self.options)
 
   Audio.playMusic("main_menu")
+
+  if mod_list.standalone and type(mod_list.standalone.preview) == "function" then
+    mod_list.standalone.preview()
+  end
 end
 
 --- Prepare mod list menu options
@@ -102,15 +109,16 @@ end
 function self.prepareModListMenu()
   local play_menu_item = self.options[1]
   play_menu_item.menu = {}
-  for i, mod in pairs(mod_list.mods) do
-    local mod_text = Text.new(mod and mod.name or mod)
-    mod_text:setPosition(320, 240 + (i * 40))
+
+  for i, mod in ipairs(mod_list.mods) do
+    local mod_text = Text.new(mod.name)
+    mod_text:setPosition(320, 260 + ((i - 1) * 40))
     table.insert(play_menu_item.menu, {
       text = mod_text,
       action = function()
-        if not mod.name then return end
+        if mod.error then return end
 
-        mod.load()
+        mod_list.loadMod(mod)
         Scene.change("ENCOUNTER", mod)
       end,
     })
@@ -119,7 +127,7 @@ function self.prepareModListMenu()
   -- no mod
   if #mod_list.mods <= 0 then
     local empty_text = Text.new("MAIN_MENU_MODLIST_EMPTY")
-    empty_text:setPosition(320, 240)
+    empty_text:setPosition(320, 260)
     table.insert(play_menu_item.menu, {
       text = empty_text
     })
@@ -147,7 +155,7 @@ function self.prepareMenu(menu, parent, visible)
     if menu_item.text ~= nil then
       local is_selected = i == self.selected_index and (menu_item.action ~= nil or menu_item.menu ~= nil)
       menu_item.text:setColor(1, 1, is_selected and 0 or 1)
-      menu_item.text:setPosition(320, 240 + ((i - 1) * 40))
+      menu_item.text:setPosition(320, 260 + ((i - 1) * 40))
       menu_item.text:setVisible(visible)
     end
   end

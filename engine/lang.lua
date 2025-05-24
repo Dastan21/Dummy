@@ -75,7 +75,7 @@ function self.load()
 
   local files = love.filesystem.getDirectoryItems("assets/lang")
   for _, filename in pairs(files) do
-    if filename:sub(-4) == ".txt" then
+    if Utils.checkExtension(filename, "txt") then
       local code = filename:sub(1, #filename - 4)
       table.insert(lang.languages, code)
       lang.translations[code] = {}

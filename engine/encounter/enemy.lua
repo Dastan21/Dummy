@@ -1,7 +1,7 @@
 local self = {}
 
 --- Creates an enemy
---- @param data Dummy.Mod.Data.Enemy
+--- @param data Dummy.Mod.Enemy
 --- @return Dummy.Enemy
 function self.new(data)
   --- @class Dummy.Enemy

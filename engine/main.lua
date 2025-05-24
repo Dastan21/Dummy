@@ -63,6 +63,7 @@ function love.load()
   Font.load()
   Scene.load()
   Debug.load()
+
   Scene.change("MAIN_MENU")
 
   dummy.next_time = love.timer.getTime()
@@ -109,10 +110,9 @@ local function draw()
 
   Scene.draw()
 
-  love.graphics.setColor(0, 0, 0)
+  love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("fill", -dummy.window.translate_x, 0, dummy.window.translate_x, dummy.window.height)
   love.graphics.rectangle("fill", dummy.window.width, 0, dummy.window.translate_x, dummy.window.height)
-  love.graphics.setColor(1, 1, 1)
 end
 
 function love.resize(width, height)

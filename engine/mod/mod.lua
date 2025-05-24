@@ -1,13 +1,16 @@
---- @class Dummy.Mod.Data
+--- @class Dummy.Mod
 ---
+--- @field id string
 --- @field name string
 --- @field title string|nil
---- @field player Dummy.Mod.Data.Player|nil
---- @field encounter Dummy.Mod.Data.Encounter|nil
---- @field enemies table<number, Dummy.Mod.Data.Enemy>|nil
+--- @field player Dummy.Mod.Player|nil
+--- @field encounter Dummy.Mod.Encounter|nil
+--- @field enemies table<number, Dummy.Mod.Enemy>|nil
+--- @field load fun()|nil
+--- @field preview fun()|nil
 
 
---- @class Dummy.Mod.Data.Player
+--- @class Dummy.Mod.Player
 ---
 --- @field name string|nil
 --- @field level number|nil
@@ -17,14 +20,14 @@
 --- @field df number|nil
 
 
---- @class Dummy.Mod.Data.Encounter
+--- @class Dummy.Mod.Encounter
 ---
 --- @field text string|nil
 --- @field flee boolean|nil
 --- @field music string|nil
 
 
---- @class Dummy.Mod.Data.Enemy
+--- @class Dummy.Mod.Enemy
 ---
 --- @field name string
 --- @field hp number|nil

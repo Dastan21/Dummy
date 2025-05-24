@@ -15,11 +15,14 @@ function self.new(value)
   dialogue_text.speed = 1
   dialogue_text.time = 0
   dialogue_text.text_index = 0
+  dialogue_text.max_width = Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2
 
   --- Sets the dialogue text value
   --- @param value string|table|fun(): string|table
   function dialogue_text:setText(value)
-    dialogue_text.full_text = Lang.translate(value)
+    local scale_x = dialogue_text:getScale()
+    local _, wrapped_value = Font.FONTS.MAIN_TEXT:getWrap(Lang.translate(value), dialogue_text:getMaxWidth() / scale_x)
+    dialogue_text.full_text = Lang.translate(table.concat(wrapped_value, "\n  "))
     dialogue_text:reset()
   end
 
@@ -45,8 +48,18 @@ function self.new(value)
     dialogue_text:updateDialogue()
   end
 
+  --- Wether the dialogue is done
+  ---@return boolean
   function dialogue_text:isDone()
     return not dialogue_text:isVisible() or dialogue_text.text_index >= #dialogue_text.full_text
+  end
+
+  function dialogue_text:getMaxWidth()
+    return dialogue_text.max_width
+  end
+
+  function dialogue_text:setMaxWidth(max_width)
+    dialogue_text.max_width = max_width
   end
 
   --- Gets the dialogue speed
