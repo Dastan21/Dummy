@@ -10,11 +10,13 @@ function self.new(value)
   --- @field protected speed number
   --- @field protected time number
   --- @field protected text_index number
+  --- @field protected voice string
   local dialogue_text = Text.new("")
 
   dialogue_text.speed = 1
   dialogue_text.time = 0
   dialogue_text.text_index = 0
+  dialogue_text.voice = "text_voice"
   dialogue_text.max_width = Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2
 
   --- Sets the dialogue text value
@@ -74,6 +76,18 @@ function self.new(value)
     dialogue_text.speed = speed
   end
 
+  --- Gets the dialogue voice
+  --- @return string
+  function dialogue_text:getVoice()
+    return dialogue_text.voice
+  end
+
+  --- Sets the dialogue voice
+  --- @param voice string
+  function dialogue_text:setVoice(voice)
+    dialogue_text.voice = voice
+  end
+
   --- Updates the dialogue
   --- @param dt number
   function dialogue_text:update(dt)
@@ -83,7 +97,7 @@ function self.new(value)
 
     if dialogue_text.text_index < math.floor(dialogue_text.time) then
       dialogue_text.text_index = math.floor(dialogue_text.time)
-      Audio.playSound("text_voice")
+      Audio.playSound(dialogue_text.voice)
     end
 
     dialogue_text:updateDialogue()
