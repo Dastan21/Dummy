@@ -363,11 +363,11 @@ function self.updateActionSelect()
     self.updateActions()
     Audio.playSound("menu_move")
   elseif Input.isPressed(Input.Confirm) then
-    if self.action.index == self.ACTIONS.FIGHT then
+    if self.action.index == self.ACTIONS.FIGHT and self.fight_enemy_menu:getSize() > 0 and not self.fight_enemy_menu:allDisabled() then
       self.setState(Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU)
-    elseif self.action.index == self.ACTIONS.ACT then
+    elseif self.action.index == self.ACTIONS.ACT and self.fight_enemy_menu:getSize() > 0 and not self.item_menu:allDisabled() then
       self.setState(Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU)
-    elseif self.action.index == self.ACTIONS.ITEM then
+    elseif self.action.index == self.ACTIONS.ITEM and self.item_menu:getSize() > 0 then
       self.setState(Constants.ENCOUNTER_STATES.ITEM_MENU)
     elseif self.action.index == self.ACTIONS.MERCY then
       self.setState(Constants.ENCOUNTER_STATES.MERCY_MENU)
