@@ -334,12 +334,16 @@ function self.setState(state)
 end
 
 function self.startActionSelect()
-  self.action.index = math.abs(self.action.index)
-  self.updateActions()
-
-  self.leaveMenu()
+  Player.hide()
 
   Arena.reset(function()
+    self.action.index = math.abs(self.action.index)
+    self.updateActions()
+
+    Player.show()
+
+    self.leaveMenu()
+
     self.dialogue_text:setText(self.mod.encounter.text)
     self.dialogue_text:setVisible(true)
   end)
@@ -373,7 +377,9 @@ function self.updateActionSelect()
       self.setState(Constants.ENCOUNTER_STATES.MERCY_MENU)
     end
 
-    Audio.playSound("menu_select")
+    if self.action.index > 0 then
+      Audio.playSound("menu_select")
+    end
   elseif Input.isPressed(Input.Cancel) then
     self.dialogue_text:skip()
   end
@@ -484,8 +490,10 @@ function self.startAttacking()
   self.target_sprite:setVisible(true)
   self.target_sprite:setAlpha(1)
   self.target_sprite:setScale(1)
-  self.leaveMenu()
+
   Player.hide()
+
+  self.leaveMenu()
 
   local attack_window = 1.55
   local attack_window_timer = nil
@@ -500,15 +508,12 @@ function self.startAttacking()
     Timer.cancel(attack_window_miss_timer)
 
     local proceed_attack = function()
-      Timer.during(2, function(dt)
+      Timer.during(1, function(dt)
         alpha = math.clamp(alpha - dt * 2.5, 0, 1)
         self.target_sprite:setAlpha(alpha)
 
         scale_x = math.max(0.25, scale_x - dt * 2.5)
         self.target_sprite:setScale(scale_x, 1)
-
-        self.target_sprite:setVisible(false)
-        self.target_bar_sprite:setVisible(false)
       end)
 
       local enemy = self.enemies[self.enemy_selected_index]
