@@ -18,7 +18,9 @@ function self.load()
         mod_dir = mod_name
       end
 
-      self.preloadMod(mod_dir)
+      if love.filesystem.getInfo("mods/" .. mod_dir .. "/mod.lua") ~= nil then
+        self.preloadMod(mod_dir)
+      end
       if self.standalone ~= nil then return end
     end
   end
@@ -38,8 +40,10 @@ function self.preloadMod(mod_id)
       return
     end
   else
-    mod.name = { "MAIN_MENU_MODLIST_MOD_ERROR", mod_id }
-    mod.error = mod
+    mod = {
+      name = { "MAIN_MENU_MODLIST_MOD_ERROR", mod_id },
+      error = mod
+    }
   end
 
   mod.id = mod_id
