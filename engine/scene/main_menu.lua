@@ -55,6 +55,9 @@ function self.load()
         love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/mods")
       end
     })
+
+    love.window.setTitle(Constants.CREDITS.NAME)
+    love.window.setIcon(love.image.newImageData("assets/icon.png"))
   else
     table.insert(self.options, {
       text = Text.new("MAIN_MENU_PLAY"),
@@ -63,6 +66,11 @@ function self.load()
         Scene.change("ENCOUNTER", mod_list.standalone)
       end
     })
+
+    if mod_list.standalone.title ~= nil then
+      love.window.setTitle(mod_list.standalone.title)
+    end
+    love.window.setIcon(love.image.newImageData("assets/icon.png"))
   end
 
   table.insert(self.options, {

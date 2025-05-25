@@ -27,6 +27,11 @@ function self.load(mod)
   self.mod.encounter = Utils.getOrDefault(self.mod.encounter, {})
   self.mod.enemies = Utils.getOrDefault(self.mod.enemies, {})
 
+  if self.mod.title ~= nil then
+    love.window.setTitle(self.mod.title)
+  end
+  love.window.setIcon(love.image.newImageData("assets/icon.png"))
+
   -- background
   self.bg_sprite = Sprite.new("battle_bg")
   self.bg_sprite:setPosition(319.5, 127)
