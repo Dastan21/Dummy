@@ -123,10 +123,12 @@ function self.load(mod)
 
   -- music
   if self.mod.encounter.music ~= nil then
-    Audio.playMusic(self.mod.encounter.music, nil, nil, nil)
+    self.battle_music = Audio.playMusic(self.mod.encounter.music, nil, nil, nil)
   else
-    Audio.playMusic("battle")
+    self.battle_music = Audio.playMusic("battle")
   end
+
+  self.battle_music:setVolume(0.5)
 end
 
 function self.loadEnemies()
