@@ -1,9 +1,11 @@
 local self = {
   FONTS = {
     MAIN = love.graphics.newImageFont("assets/fonts/main.png",
-      " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäçèéêëìíîïôùúûü"),
+      " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäæçèéêëìíîïôùúûü"),
     MAIN_TEXT = love.graphics.newImageFont("assets/fonts/main_text.png",
-      " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäçèéêëìíîïôùúûü"),
+      " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäæçèéêëìíîïôùúûü"),
+    MAIN_TEXT_ESPACED = love.graphics.newImageFont("assets/fonts/main_text_espaced.png",
+      " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäæçèéêëìíîïôùúûü"),
     SMALL = love.graphics.newImageFont("assets/fonts/small.png",
       " !\"$'()+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]_`abcdefghijklmnopqrstuvwxyz"),
     CURS = love.graphics.newImageFont("assets/fonts/curs.png",

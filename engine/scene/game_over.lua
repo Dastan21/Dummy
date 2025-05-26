@@ -6,6 +6,7 @@
 --- @field private title_over_text Dummy.Text
 --- @field private title_delay number
 --- @field private title_timer number
+--- @field private game_over_music love.Source
 local self = {}
 
 --- Loads the game over scene
@@ -48,10 +49,33 @@ function self.load(x, y)
     shard_sprite:setVisible(false)
     self.player_shards[i] = {
       sprite = shard_sprite,
-      vel_x = (math.random() - 0.5) * 4,
-      vel_y = (math.random() - 0.5) * 4
+      vel_x = math.random(4) - math.random(4),
+      vel_y = math.random(4) - math.random(4)
     }
   end
+
+  -- black fade
+  self.black_sprite = Sprite.new("black")
+  self.black_sprite:setOrigin(0, 0)
+  self.black_sprite:setVisible(false)
+  self.black_sprite:setAlpha(0)
+  self.black_sprite:setLayer(Constants.LAYERS.TOP)
+  self.transition_time = 0
+
+  -- dialogue
+  self.dialogue_text = DialogueText.new("")
+  self.dialogue_text:setPosition(120, 320)
+  self.dialogue_text:setOrigin(0, 0)
+  self.dialogue_text:setFont(Font.FONTS.MAIN_TEXT_ESPACED)
+  self.dialogue_text:setScale(2)
+  self.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
+  self.dialogue_text:setVoice("asgore_voice")
+  self.dialogue_text:setMaxWidth(400)
+  self.dialogue_text:setText(Lang.translate("GAME_OVER_TEXT_1"))
+  self.dialogue_text:setVisible(false)
+  self.dialogue_index = 1
+
+  self.game_over_music = Audio.playMusic("game_over", false)
 
   Timer.after(0.6, function()
     self.player_sprite:setSprite("heart_break")
@@ -68,13 +92,34 @@ function self.load(x, y)
       Timer.after(1.5, function()
         self.title_game_text:setVisible(true)
         self.title_over_text:setVisible(true)
-        Audio.playMusic("game_over")
+        self.game_over_music:play()
+
+        Timer.after(2.7, function()
+          self.dialogue_text:setVisible(true)
+          self.dialogue_text:reset()
+        end)
       end)
     end)
   end)
 end
 
 function self.update(dt)
+  if self.dialogue_text:isVisible() then
+    if Input.isPressed(Input.Cancel) then
+      self.dialogue_text:skip()
+    elseif Input.isPressed(Input.Confirm) and self.dialogue_text:isDone() then
+      self.dialogue_index = self.dialogue_index + 1
+
+      if self.dialogue_index == 2 then
+        self.dialogue_text:setText(Lang.translate({ "GAME_OVER_TEXT_2", Player.getName() }))
+      elseif self.dialogue_index == 3 then
+        self.dialogue_text:setText("")
+      elseif self.dialogue_index == 4 then
+        self.black_sprite:setVisible(true)
+      end
+    end
+  end
+
   if self.title_game_text:isVisible() and self.title_over_text:isVisible() and self.title_timer < self.title_delay then
     self.title_timer = self.title_timer + dt
     self.title_game_text:setAlpha(self.title_timer / self.title_delay)
@@ -94,6 +139,16 @@ function self.update(dt)
           shard.sprite:setVisible(false)
         end
       end
+    end
+  end
+
+  if self.black_sprite:isVisible() then
+    self.transition_time = self.transition_time + dt
+    self.black_sprite:setAlpha(self.transition_time)
+    self.game_over_music:setVolume((1 - self.transition_time) / 2)
+
+    if self.transition_time >= 1.2 then
+      Scene.change("MAIN_MENU")
     end
   end
 end

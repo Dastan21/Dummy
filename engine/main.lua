@@ -17,6 +17,7 @@ Config = {
 
 JSON = require "engine.lib.json"
 Timer = require "engine.lib.timer"
+UTF8 = require "engine.lib.utf8"
 require "engine.lib.stable_sort"
 
 Utils = require "engine.utils"

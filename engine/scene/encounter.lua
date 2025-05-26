@@ -76,6 +76,7 @@ function self.load(mod)
   self.dialogue_text:setFont(Font.FONTS.MAIN_TEXT)
   self.dialogue_text:setScale(2)
   self.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
+  self.dialogue_text:setMaxWidth(Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
   self.dialogue_text:setText(Utils.getOrDefault(self.mod.encounter.text, ""))
 
   -- attack target
@@ -246,7 +247,7 @@ function self.loadActMenus()
 
     if enemy:hasCheck() then
       table.insert(options, {
-        text = Text.new("ENCOUNTER_MENU_ACT_CHECK"),
+        text = Text.new("* " .. Lang.translate("ENCOUNTER_MENU_ACT_CHECK")),
         action = function()
           Audio.playSound("menu_select")
           self.dialogue_text:setText(enemy:getCheckText())
@@ -283,7 +284,7 @@ end
 function self.loadMercyMenu()
   local options = {
     {
-      text = Text.new("ENCOUNTER_MENU_MERCY_SPARE"),
+      text = Text.new("* " .. Lang.translate("ENCOUNTER_MENU_MERCY_SPARE")),
       action = function()
         Audio.playSound("menu_select")
         -- self.setState(Constants.ENCOUNTER_STATES.NONE)
@@ -294,7 +295,7 @@ function self.loadMercyMenu()
 
   if self.mod.encounter.flee ~= false then
     table.insert(options, {
-      text = Text.new("ENCOUNTER_MENU_MERCY_FLEE"),
+      text = Text.new("* " .. Lang.translate("ENCOUNTER_MENU_MERCY_FLEE")),
       action = function()
         if Player.isFleeing() then return end
 
@@ -457,7 +458,7 @@ function self.startTextDialogue()
   self.leaveMenu()
 end
 
-function self.updateTextDialogue(dt)
+function self.updateTextDialogue()
   if Input.isPressed(Input.Cancel) then
     self.dialogue_text:skip()
   elseif Input.isPressed(Input.Confirm) and self.dialogue_text:isDone() then
@@ -640,7 +641,7 @@ function self.update(dt)
   elseif self.current_state == Constants.ENCOUNTER_STATES.MERCY_MENU then
     if self.current_menu ~= nil then self.current_menu.update() end
   elseif self.current_state == Constants.ENCOUNTER_STATES.TEXT_DIALOGUE then
-    self.updateTextDialogue(dt)
+    self.updateTextDialogue()
   elseif self.current_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE then
     self.updateEnemyDialogue(dt)
   elseif self.current_state == Constants.ENCOUNTER_STATES.ATTACKING then

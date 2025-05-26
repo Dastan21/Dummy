@@ -13,25 +13,35 @@ function self.new(value)
   --- @field protected voice string
   local dialogue_text = Text.new("")
 
+  dialogue_text.full_text = ""
   dialogue_text.speed = 1
   dialogue_text.time = 0
   dialogue_text.text_index = 0
   dialogue_text.voice = "text_voice"
-  dialogue_text.max_width = Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2
+  dialogue_text.max_width = 0
 
   --- Sets the dialogue text value
   --- @param value string|table|fun(): string|table
   function dialogue_text:setText(value)
-    local scale_x = dialogue_text:getScale()
-    local _, wrapped_value = Font.FONTS.MAIN_TEXT:getWrap(Lang.translate(value), dialogue_text:getMaxWidth() / scale_x)
-    dialogue_text.full_text = Lang.translate(table.concat(wrapped_value, "\n  "))
+    if dialogue_text.max_width > 0 then
+      local scale_x = dialogue_text:getScale()
+      local texts = Lang.translate(value):split("\n")
+      local wrapped_value
+      for i, txt in ipairs(texts) do
+        wrapped_value = select(2, dialogue_text.font:getWrap(txt, dialogue_text.max_width / scale_x))
+        texts[i] = table.concat(wrapped_value, "\n  ")
+      end
+      value = table.concat(texts, "\n")
+    end
+
+    dialogue_text.full_text = Lang.translate(value)
     dialogue_text:reset()
   end
 
   --- Updates the dialogue text sprite value
   --- @protected
   function dialogue_text:updateDialogue()
-    dialogue_text.text = dialogue_text.full_text:sub(1, dialogue_text.text_index)
+    dialogue_text.text = UTF8.sub(dialogue_text.full_text, 1, dialogue_text.text_index)
     dialogue_text:updateText()
   end
 
@@ -61,7 +71,7 @@ function self.new(value)
   end
 
   function dialogue_text:setMaxWidth(max_width)
-    dialogue_text.max_width = max_width
+    dialogue_text.max_width = math.max(0, max_width)
   end
 
   --- Gets the dialogue speed
@@ -105,7 +115,6 @@ function self.new(value)
 
   dialogue_text:setText(value)
 
-  Scene.addDrawable(dialogue_text)
   Scene.addDialogue(dialogue_text)
 
   return dialogue_text

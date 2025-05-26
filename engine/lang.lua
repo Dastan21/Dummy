@@ -57,6 +57,8 @@ function self.translate(key, ...)
     key = key[1]
   end
 
+  key = key:gsub("\\n", "\n")
+
   local txt = (lang.translations[language_code] and lang.translations[language_code][key]) or key or ""
   local i = 1
 
@@ -80,10 +82,10 @@ function self.load()
       table.insert(lang.languages, code)
       lang.translations[code] = {}
       for txt in love.filesystem.lines("assets/lang/" .. filename) do
-        if txt:sub(1, 1) ~= "#" and txt ~= "" then -- comment
+        if txt ~= "" and txt:sub(1, 1) ~= "#" then -- for comments
           local t = {}
           for str in string.gmatch(txt, "([^=]+)") do table.insert(t, str) end
-          lang.translations[code][t[1]:trim()] = t[2]:trim()
+          lang.translations[code][t[1]] = t[2]
         end
       end
     end
