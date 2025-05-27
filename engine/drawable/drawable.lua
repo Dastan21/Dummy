@@ -1,6 +1,9 @@
 local self = {}
 
-function self.new()
+--- Creates a drawable
+--- @param draw fun()|nil
+--- @return Dummy.Drawable
+function self.new(draw)
   --- @class Dummy.Drawable
   ---
   --- @field protected x number
@@ -14,8 +17,7 @@ function self.new()
   --- @field protected layer number
   --- @field protected visible boolean
   --- @field protected sprite love.Image|love.Text
-  ---
-  --- @field draw fun()|nil
+  --- @field protected draw fun()|nil
   local drawable = {}
 
   drawable.x = 0
@@ -28,6 +30,7 @@ function self.new()
   drawable.alpha = 1
   drawable.layer = Constants.LAYERS.UI
   drawable.visible = true
+  drawable.draw = draw
 
   --- Gets drawable position
   --- @return number, number

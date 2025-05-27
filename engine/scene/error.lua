@@ -14,12 +14,11 @@ function self.load(err)
   self.error_text:setOrigin(0, 0)
   self.error_text:setFont(Font.FONTS.MAIN_TEXT)
 
-  local black_rectangle_draw = Drawable.new()
-  black_rectangle_draw:setLayer(Constants.LAYERS.ABOVE_UI)
-  black_rectangle_draw.draw = function()
+  local black_rectangle_draw = Drawable.new(function()
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", 0, 435, 640, 45)
-  end
+  end)
+  black_rectangle_draw:setLayer(Constants.LAYERS.ABOVE_UI)
 
   self.back_main_menu_text = Text.new("ERROR_SCENE_BACK_MAIN_MENU")
   self.back_main_menu_text:setPosition(5, 455)

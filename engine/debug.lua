@@ -6,9 +6,7 @@ function self.load()
   self.lines = {}
   self.max_lines = 5
 
-  local console_draw = Drawable.new()
-  console_draw:setLayer(Constants.LAYERS.TOP)
-  console_draw.draw = function()
+  local console_draw = Drawable.new(function()
     if self.show_console then
       love.graphics.setColor(0, 0, 0, 0.5)
       love.graphics.rectangle("fill", 0, 0, 640, 480)
@@ -18,7 +16,8 @@ function self.load()
         i = i + 1
       end
     end
-  end
+  end)
+  console_draw:setLayer(Constants.LAYERS.TOP)
 end
 
 function self.update()
@@ -36,7 +35,7 @@ function print(...)
   local t = {}
   for _, v in pairs({ ... }) do
     table.insert(self.lines or {}, tostring(v))
-    table.insert(t, tostring(v))
+    table.insert(t, v)
   end
   return _print(table.unpack(t))
 end
