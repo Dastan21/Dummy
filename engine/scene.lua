@@ -87,8 +87,8 @@ function scene.draw()
 
   for _, drawable in pairs(scene.drawables) do
     if drawable:isVisible() then
-      if type(drawable.draw) == "function" then
-        drawable.draw()
+      if type(drawable:getDraw()) == "function" then
+        drawable:getDraw()
       else
         love.graphics.setColor(1, 1, 1, drawable:getAlpha())
 

@@ -144,6 +144,12 @@ function self.new(draw)
     return drawable.sprite
   end
 
+  --- Gets the drawable draw function
+  --- @return fun()|nil
+  function drawable:getDraw()
+    return drawable.draw
+  end
+
   return drawable
 end
 
