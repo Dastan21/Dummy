@@ -4,13 +4,15 @@ local self = {
       " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäæçèéêëìíîïôùúûü"),
     MAIN_TEXT = love.graphics.newImageFont("assets/fonts/main_text.png",
       " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäæçèéêëìíîïôùúûü"),
-    MAIN_TEXT_ESPACED = love.graphics.newImageFont("assets/fonts/main_text_espaced.png",
+    MAIN_TEXT_MONO = love.graphics.newImageFont("assets/fonts/main_text_mono.png",
       " !\"$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÇÈÉÊËÌÍÎÏÔÙÚÛÜàáâäæçèéêëìíîïôùúûü"),
     SMALL = love.graphics.newImageFont("assets/fonts/small.png",
       " !\"$'()+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]_`abcdefghijklmnopqrstuvwxyz"),
     CURS = love.graphics.newImageFont("assets/fonts/curs.png",
       " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"),
-    WONDER = love.graphics.newImageFont("assets/fonts/wonder.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+    WONDER = love.graphics.newImageFont("assets/fonts/wonder.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
+    DAMAGE = love.graphics.newImageFont("assets/fonts/damage.png",
+      " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
   }
 }
 
