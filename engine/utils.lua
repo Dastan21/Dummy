@@ -142,6 +142,8 @@ if table.unpack == nil then
   table.unpack = unpack
 end
 
+table.stable_sort = table.stable_sort or function(array, less) return array end
+
 -- string --
 
 --- @param self string
