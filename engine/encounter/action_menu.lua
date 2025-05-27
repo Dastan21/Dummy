@@ -124,13 +124,12 @@ function self.new(options, direction, pagination, onBack)
       option.text:setVisible(visible)
 
       if visible and type(option.draw) == "function" then
-        option.drawable = Drawable.new()
-        option.drawable:setLayer(Constants.LAYERS.UI)
-        option.drawable.draw = function()
+        option.drawable = Drawable.new(function()
           if option.text:isVisible() then
             option.draw(option.text)
           end
-        end
+        end)
+        option.drawable:setLayer(Constants.LAYERS.UI)
         Scene.addDrawable(option.drawable)
       end
     end
