@@ -17,8 +17,8 @@ function self.load()
   self.lv = 1
   self.hp = 20
   self.max_hp = 20
-  self.at = 1
-  self.df = 1
+  self.at = 10
+  self.df = 10
   self.speed = 1
   self.hitbox = { 4, 4, 8, 8 }
 
