@@ -39,9 +39,21 @@ function DialogueText:reset()
   self:updateDialogue()
 end
 
+--- Wether the dialogue can be skipped
+---@return boolean
+function DialogueText:canSkip()
+  return self.can_skip
+end
+
+--- Sets if the dialogue can be skipped
+--- @param can_skip boolean
+function DialogueText:setCanSkip(can_skip)
+  self.can_skip = can_skip
+end
+
 --- Skips the dialogue
 function DialogueText:skip()
-  if self:isDone() then return end
+  if self:isDone() or not self.can_skip then return end
 
   self.text_index = #self.full_text
   self:updateDialogue()
