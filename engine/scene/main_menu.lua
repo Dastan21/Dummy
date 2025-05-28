@@ -105,7 +105,7 @@ function self.load()
 
   self.prepareMenu(self.options)
 
-  self.menu_music = Audio.playMusic("battle")
+  self.menu_music = Audio.playMusic("main_menu")
   self.menu_music:setVolume(0.5)
 
   if mod_list.standalone and type(mod_list.standalone.preview) == "function" then

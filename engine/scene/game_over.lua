@@ -145,7 +145,7 @@ function self.update(dt)
   if self.black_sprite:isVisible() then
     self.transition_time = self.transition_time + dt
     self.black_sprite:setAlpha(self.transition_time)
-    self.game_over_music:setVolume((1 - self.transition_time) / 2)
+    self.game_over_music:setVolume(math.max(0, (1 - self.transition_time) / 2))
 
     if self.transition_time >= 1.2 then
       Scene.change("MAIN_MENU")
