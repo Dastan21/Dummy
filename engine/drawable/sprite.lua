@@ -63,6 +63,22 @@ function Sprite:setSprite(sprite_name)
   Scene.addDrawable(self)
 end
 
+--- Gets the sprite width
+---@return number
+function Sprite:getWidth()
+  local sprite = self:getSprite()
+  if sprite == nil then return 0 end
+  return sprite:getWidth()
+end
+
+--- Gets the sprite height
+---@return number
+function Sprite:getHeight()
+  local sprite = self:getSprite()
+  if sprite == nil then return 0 end
+  return sprite:getHeight()
+end
+
 --- Plays the sprite animation
 function Sprite:play()
   if self.frames == nil then return end

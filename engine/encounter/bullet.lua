@@ -5,13 +5,13 @@ local Bullet = Class:extend(Sprite)
 
 --- @alias Dummy.Bullet.Hitbox {[1]:number, [2]:number, [3]:number, [4]:number}
 
---- Gets bullet hitbox
+--- Gets the bullet hitbox
 --- @return Dummy.Bullet.Hitbox
 function Bullet:getHitbox()
   return self.hitbox
 end
 
---- Sets bullet hitbox
+--- Sets the bullet hitbox
 --- @param hitbox Dummy.Bullet.Hitbox
 function Bullet:setHitbox(hitbox)
   self.hitbox = hitbox

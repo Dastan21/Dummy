@@ -96,13 +96,14 @@ function scene.draw()
         local sprite = drawable:getSprite()
         if sprite ~= nil then
           local x, y = drawable:getPosition()
+          local w, h = drawable:getWidth(), drawable:getHeight()
           local sx, sy = drawable:getScale()
           local ox, oy = drawable:getOrigin()
           love.graphics.draw(sprite,
             x, y,
             drawable:getRotation(),
             sx, sy,
-            ox * sprite:getWidth(), oy * sprite:getHeight()
+            ox * w, oy * h
           )
         end
       end

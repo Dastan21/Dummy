@@ -14,7 +14,7 @@
 --- @field protected draw fun()|nil
 local Drawable = Class:extend()
 
---- Gets drawable position
+--- Gets the drawable position
 --- @return number, number
 function Drawable:getPosition()
   return self.x, self.y
@@ -28,7 +28,21 @@ function Drawable:setPosition(x, y)
   self.y = y
 end
 
---- Gets drawable rotation
+--- Gets the drawable width
+---@return number
+function Drawable:getWidth()
+  if self.sprite == nil then return 0 end
+  return self.sprite:getWidth()
+end
+
+--- Gets the drawable height
+---@return number
+function Drawable:getHeight()
+  if self.sprite == nil then return 0 end
+  return self.sprite:getHeight()
+end
+
+--- Gets the drawable rotation
 --- @return number
 function Drawable:getRotation()
   return self.rotation
@@ -40,7 +54,7 @@ function Drawable:setRotation(rotation)
   self.rotation = rotation
 end
 
---- Gets drawable scale
+--- Gets the drawable scale
 --- @return number, number
 function Drawable:getScale()
   return self.scale_x, self.scale_y
@@ -60,7 +74,7 @@ function Drawable:setScale(scale_x, scale_y)
   end
 end
 
---- Gets drawable origin
+--- Gets the drawable origin
 --- @return number, number
 function Drawable:getOrigin()
   return self.origin_x, self.origin_y
@@ -80,7 +94,7 @@ function Drawable:setOrigin(origin_x, origin_y)
   end
 end
 
---- Gets drawable alpha
+--- Gets the drawable alpha
 --- @return number
 function Drawable:getAlpha()
   return self.alpha
@@ -92,7 +106,7 @@ function Drawable:setAlpha(alpha)
   self.alpha = alpha
 end
 
---- Gets drawable layer
+--- Gets the drawable layer
 --- @return number
 function Drawable:getLayer()
   return self.layer
@@ -148,6 +162,7 @@ function Drawable:new(draw)
     layer = Constants.LAYERS.UI,
     visible = true,
     draw = draw,
+    sprite = nil
   })
 
   Scene.addDrawable(drawable)
