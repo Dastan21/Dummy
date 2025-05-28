@@ -1,7 +1,7 @@
 -- table --
 
 -- https://gist.github.com/revolucas/dd1ecccfca32d558fddf70ddb39eb8a6
-local function table_tostring(node)
+function table.tostring(node)
   local s = 0
   for _ in pairs(node) do s = s + 1 end
   if s <= 0 then return "{}" end
@@ -86,15 +86,6 @@ local function table_tostring(node)
   output_str = table.concat(output)
 
   return output_str
-end
-
-local _tostring = tostring
-function tostring(v)
-  if type(v) == "table" then
-    s, r = pcall(function() return table_tostring(v) end)
-    if s then return r end
-  end
-  return _tostring(v)
 end
 
 -- https://gist.github.com/tylerneylon/81333721109155b2d244

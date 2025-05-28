@@ -35,7 +35,7 @@ function scene.change(scene_name, ...)
 
   scene.quitting_delay = SCENE_QUITTING_DELAY
   scene.quitting_timer = 0
-  scene.quitting_sprite = Sprite.new("quitting1")
+  scene.quitting_sprite = Sprite:new("quitting1")
   scene.quitting_sprite:setPosition(1, 1)
   scene.quitting_sprite:setOrigin(0)
   scene.quitting_sprite:setAlpha(0)

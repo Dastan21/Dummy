@@ -1,156 +1,158 @@
-local self = {}
+--- @class Dummy.Drawable : Dummy.Class
+---
+--- @field protected x number
+--- @field protected y number
+--- @field protected rotation number
+--- @field protected scale_x number
+--- @field protected scale_y number
+--- @field protected origin_x number
+--- @field protected origin_y number
+--- @field protected alpha number
+--- @field protected layer number
+--- @field protected visible boolean
+--- @field protected sprite love.Image|love.Text
+--- @field protected draw fun()|nil
+local Drawable = Class:extend()
+
+--- Gets drawable position
+--- @return number, number
+function Drawable:getPosition()
+  return self.x, self.y
+end
+
+--- Sets drawable position
+--- @param x number
+--- @param y number
+function Drawable:setPosition(x, y)
+  self.x = x
+  self.y = y
+end
+
+--- Gets drawable rotation
+--- @return number
+function Drawable:getRotation()
+  return self.rotation
+end
+
+--- Sets drawable rotation
+--- @param rotation number
+function Drawable:setRotation(rotation)
+  self.rotation = rotation
+end
+
+--- Gets drawable scale
+--- @return number, number
+function Drawable:getScale()
+  return self.scale_x, self.scale_y
+end
+
+--- Sets drawable scale
+--- @overload fun(self: Dummy.Drawable, scale: number)
+--- @param scale_x number
+--- @param scale_y number
+function Drawable:setScale(scale_x, scale_y)
+  if type(scale_x) == "number" and scale_y == nil then
+    self.scale_x = scale_x
+    self.scale_y = scale_x
+  else
+    self.scale_x = scale_x
+    self.scale_y = scale_y
+  end
+end
+
+--- Gets drawable origin
+--- @return number, number
+function Drawable:getOrigin()
+  return self.origin_x, self.origin_y
+end
+
+--- Sets drawable origin
+--- @overload fun(self: Dummy.Drawable, origin: number)
+--- @param origin_x number
+--- @param origin_y number
+function Drawable:setOrigin(origin_x, origin_y)
+  if type(origin_x) == "number" and origin_y == nil then
+    self.origin_x = origin_x
+    self.origin_y = origin_x
+  else
+    self.origin_x = origin_x
+    self.origin_y = origin_y
+  end
+end
+
+--- Gets drawable alpha
+--- @return number
+function Drawable:getAlpha()
+  return self.alpha
+end
+
+--- Sets drawable alpha
+--- @param alpha number
+function Drawable:setAlpha(alpha)
+  self.alpha = alpha
+end
+
+--- Gets drawable layer
+--- @return number
+function Drawable:getLayer()
+  return self.layer
+end
+
+--- Sets drawable layer
+--- @param layer number
+--- @param silent? boolean wether to dispatch event to the scene (Defaults to `true`)
+function Drawable:setLayer(layer, silent)
+  self.layer = layer
+
+  Scene.removeDrawable(self)
+  Scene.addDrawable(self)
+end
+
+--- Wether the drawable is visible
+--- @return boolean
+function Drawable:isVisible()
+  return self.visible
+end
+
+--- Sets if the drawable is visible
+--- @param visible boolean
+function Drawable:setVisible(visible)
+  self.visible = visible
+end
+
+--- Gets the drawable sprite
+--- @return love.Image|love.Text
+function Drawable:getSprite()
+  return self.sprite
+end
+
+--- Gets the drawable draw function
+--- @return fun()|nil
+function Drawable:getDraw()
+  return self.draw
+end
 
 --- Creates a drawable
 --- @param draw fun()|nil
 --- @return Dummy.Drawable
-function self.new(draw)
-  --- @class Dummy.Drawable
-  ---
-  --- @field protected x number
-  --- @field protected y number
-  --- @field protected rotation number
-  --- @field protected scale_x number
-  --- @field protected scale_y number
-  --- @field protected origin_x number
-  --- @field protected origin_y number
-  --- @field protected alpha number
-  --- @field protected layer number
-  --- @field protected visible boolean
-  --- @field protected sprite love.Image|love.Text
-  --- @field protected draw fun()|nil
-  local drawable = {}
+function Drawable:new(draw)
+  local drawable = Class:new(Drawable, {
+    x = 0,
+    y = 0,
+    rotation = 0,
+    scale_x = 1,
+    scale_y = 1,
+    origin_x = 0.5,
+    origin_y = 0.5,
+    alpha = 1,
+    layer = Constants.LAYERS.UI,
+    visible = true,
+    draw = draw,
+  })
 
-  drawable.x = 0
-  drawable.y = 0
-  drawable.rotation = 0
-  drawable.scale_x = 1
-  drawable.scale_y = 1
-  drawable.origin_x = 0.5
-  drawable.origin_y = 0.5
-  drawable.alpha = 1
-  drawable.layer = Constants.LAYERS.UI
-  drawable.visible = true
-  drawable.draw = draw
-
-  --- Gets drawable position
-  --- @return number, number
-  function drawable:getPosition()
-    return drawable.x, drawable.y
-  end
-
-  --- Sets drawable position
-  --- @param x number
-  --- @param y number
-  function drawable:setPosition(x, y)
-    drawable.x = x
-    drawable.y = y
-  end
-
-  --- Gets drawable rotation
-  --- @return number
-  function drawable:getRotation()
-    return drawable.rotation
-  end
-
-  --- Sets drawable rotation
-  --- @param rotation number
-  function drawable:setRotation(rotation)
-    drawable.rotation = rotation
-  end
-
-  --- Gets drawable scale
-  --- @return number, number
-  function drawable:getScale()
-    return drawable.scale_x, drawable.scale_y
-  end
-
-  --- Sets drawable scale
-  --- @overload fun(self: Dummy.Drawable, scale: number)
-  --- @param scale_x number
-  --- @param scale_y number
-  function drawable:setScale(scale_x, scale_y)
-    if type(scale_x) == "number" and scale_y == nil then
-      drawable.scale_x = scale_x
-      drawable.scale_y = scale_x
-    else
-      drawable.scale_x = scale_x
-      drawable.scale_y = scale_y
-    end
-  end
-
-  --- Gets drawable origin
-  --- @return number, number
-  function drawable:getOrigin()
-    return drawable.origin_x, drawable.origin_y
-  end
-
-  --- Sets drawable origin
-  --- @overload fun(self: Dummy.Drawable, origin: number)
-  --- @param origin_x number
-  --- @param origin_y number
-  function drawable:setOrigin(origin_x, origin_y)
-    if type(origin_x) == "number" and origin_y == nil then
-      drawable.origin_x = origin_x
-      drawable.origin_y = origin_x
-    else
-      drawable.origin_x = origin_x
-      drawable.origin_y = origin_y
-    end
-  end
-
-  --- Gets drawable alpha
-  --- @return number
-  function drawable:getAlpha()
-    return drawable.alpha
-  end
-
-  --- Sets drawable alpha
-  --- @param alpha number
-  function drawable:setAlpha(alpha)
-    drawable.alpha = alpha
-  end
-
-  --- Gets drawable layer
-  --- @return number
-  function drawable:getLayer()
-    return drawable.layer
-  end
-
-  --- Sets drawable layer
-  --- @param layer number
-  --- @param silent? boolean wether to dispatch event to the scene (Defaults to `true`)
-  function drawable:setLayer(layer, silent)
-    drawable.layer = layer
-
-    Scene.removeDrawable(drawable)
-    Scene.addDrawable(drawable)
-  end
-
-  --- Wether the drawable is visible
-  --- @return boolean
-  function drawable:isVisible()
-    return drawable.visible
-  end
-
-  --- Sets if the drawable is visible
-  --- @param visible boolean
-  function drawable:setVisible(visible)
-    drawable.visible = visible
-  end
-
-  --- Gets the drawable sprite
-  --- @return love.Image|love.Text
-  function drawable:getSprite()
-    return drawable.sprite
-  end
-
-  --- Gets the drawable draw function
-  --- @return fun()|nil
-  function drawable:getDraw()
-    return drawable.draw
-  end
+  Scene.addDrawable(drawable)
 
   return drawable
 end
 
-return self
+return Drawable

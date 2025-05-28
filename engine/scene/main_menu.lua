@@ -23,18 +23,18 @@ local self = {}
 function self.load()
   mod_list.load()
 
-  self.logo_sprite = Sprite.new("logo")
+  self.logo_sprite = Sprite:new("logo")
   self.logo_sprite:setPosition(320, 120)
   self.logo_sprite:setScale(6)
 
-  self.credits_text = Text.new(Constants.CREDITS.NAME ..
+  self.credits_text = Text:new(Constants.CREDITS.NAME ..
     " v" .. Constants.CREDITS.VERSION .. " " .. Constants.CREDITS.AUTHOR .. " " .. Constants.CREDITS.YEAR)
   self.credits_text:setFont(Font.FONTS.SMALL)
   self.credits_text:setAlpha(0.707)
   self.credits_text:setPosition(320, 476)
   self.credits_text:setOrigin(0.5, 1)
   self.credits_text:setScale(2)
-  self.background_sprite = Sprite.new("background")
+  self.background_sprite = Sprite:new("background")
   self.background_sprite:setOrigin(0, 0)
   self.background_sprite:setLayer(Constants.LAYERS.BOTTOM)
 
@@ -43,14 +43,14 @@ function self.load()
 
   if not mod_list.standalone then
     table.insert(self.options, {
-      text = Text.new("MAIN_MENU_PLAY"),
+      text = Text:new("MAIN_MENU_PLAY"),
       action = function()
         self.prepareModListMenu()
       end
     })
 
     table.insert(self.options, {
-      text = Text.new("MAIN_MENU_OPEN_MOD_FOLDER"),
+      text = Text:new("MAIN_MENU_OPEN_MOD_FOLDER"),
       action = function()
         love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/mods")
       end
@@ -60,7 +60,7 @@ function self.load()
     love.window.setIcon(love.image.newImageData("assets/icon.png"))
   else
     table.insert(self.options, {
-      text = Text.new("MAIN_MENU_PLAY"),
+      text = Text:new("MAIN_MENU_PLAY"),
       action = function()
         mod_list.standalone.load()
         Scene.change("ENCOUNTER", mod_list.standalone)
@@ -74,14 +74,14 @@ function self.load()
   end
 
   table.insert(self.options, {
-    text = Text.new("MAIN_MENU_SETTINGS"),
+    text = Text:new("MAIN_MENU_SETTINGS"),
     menu = {
       {
-        text = Text.new(function() return { "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() } end),
+        text = Text:new(function() return { "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() } end),
         action = function() self.switchLanguage() end,
       },
       {
-        text = Text.new({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] }),
+        text = Text:new({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] }),
         action = function(txt)
           if Config["fps"] == 30 then
             Config["fps"] = 60
@@ -105,7 +105,7 @@ function self.load()
 
   self.prepareMenu(self.options)
 
-  self.menu_music = Audio.playMusic("main_menu")
+  self.menu_music = Audio.playMusic("battle")
   self.menu_music:setVolume(0.5)
 
   if mod_list.standalone and type(mod_list.standalone.preview) == "function" then
@@ -120,7 +120,7 @@ function self.prepareModListMenu()
   play_menu_item.menu = {}
 
   for i, mod in ipairs(mod_list.mods) do
-    local mod_text = Text.new(mod.name)
+    local mod_text = Text:new(mod.name)
     mod_text:setPosition(320, 260 + ((i - 1) * 40))
     table.insert(play_menu_item.menu, {
       text = mod_text,
@@ -135,7 +135,7 @@ function self.prepareModListMenu()
 
   -- no mod
   if #mod_list.mods <= 0 then
-    local empty_text = Text.new("MAIN_MENU_MODLIST_EMPTY")
+    local empty_text = Text:new("MAIN_MENU_MODLIST_EMPTY")
     empty_text:setPosition(320, 260)
     table.insert(play_menu_item.menu, {
       text = empty_text

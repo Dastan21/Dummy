@@ -33,10 +33,10 @@ function self.load(mod)
   love.window.setIcon(love.image.newImageData("assets/icon.png"))
 
   -- background
-  self.bg_sprite = Sprite.new("battle_bg")
+  self.bg_sprite = Sprite:new("battle_bg")
   self.bg_sprite:setPosition(319.5, 127)
   self.bg_sprite:setLayer(Constants.LAYERS.BOTTOM)
-  self.black_sprite = Sprite.new("black")
+  self.black_sprite = Sprite:new("black")
   self.black_sprite:setOrigin(0, 0)
   self.black_sprite:setVisible(false)
   self.black_sprite:setAlpha(0)
@@ -70,7 +70,7 @@ function self.load(mod)
   self.loadMenus()
 
   -- textbox dialogue
-  self.dialogue_text = DialogueText.new("")
+  self.dialogue_text = DialogueText:new("")
   self.dialogue_text:setPosition(52, 270)
   self.dialogue_text:setOrigin(0, 0)
   self.dialogue_text:setFont(Font.FONTS.MAIN_TEXT)
@@ -80,24 +80,24 @@ function self.load(mod)
   self.dialogue_text:setText(Utils.getOrDefault(self.mod.encounter.text, ""))
 
   -- attack target
-  self.target_sprite = Sprite.new("target")
+  self.target_sprite = Sprite:new("target")
   self.target_sprite:setPosition(320, 320)
   self.target_sprite:setVisible(false)
   self.target_sprite:setLayer(Constants.LAYERS.UI)
-  self.target_bar_sprite = Sprite.new({ "target_bar1", "target_bar2" }, 0.1)
+  self.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1)
   self.target_bar_sprite:stop()
   self.target_bar_sprite:setPosition(38, 320)
   self.target_bar_sprite:setVisible(false)
   self.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
 
   -- miss
-  self.miss_sprite = Sprite.new("miss")
+  self.miss_sprite = Sprite:new("miss")
   self.miss_sprite:setVisible(false)
   self.miss_sprite:setPosition(320, 140) -- TODO: use enemy sprite position
   self.miss_sprite:setLayer(Constants.LAYERS.UI)
 
   -- strike
-  self.strike_sprite = Sprite.new({
+  self.strike_sprite = Sprite:new({
     "strike1",
     "strike2",
     "strike3",
@@ -111,7 +111,7 @@ function self.load(mod)
   self.strike_sprite:setScale(1.5)
   self.strike_sprite:setVisible(false)
 
-  local player_hp_bar_draw = Drawable.new(function()
+  local player_hp_bar_draw = Drawable:new(function()
     local max_hp_bar_width = math.clamp(5 * Player.getLV() + 20, 25, 120)
     local hp_bar_width = max_hp_bar_width * Player.getHP() / Player.getMaxHP()
     love.graphics.setColor(1, 0, 0, 1)
@@ -137,7 +137,7 @@ function self.loadEnemies()
   for _, enemy in ipairs(self.mod.enemies) do
     if #self.enemies >= 3 then break end
 
-    table.insert(self.enemies, Enemy.new(enemy))
+    table.insert(self.enemies, Enemy:new(enemy))
   end
 end
 
@@ -146,37 +146,37 @@ function self.loadActions()
   self.action.index = self.ACTIONS.FIGHT
 
   -- FIGHT
-  self.action.fight_sprite = Sprite.new("fight")
+  self.action.fight_sprite = Sprite:new("fight")
   self.action.fight_sprite:setPosition(32, 432)
   self.action.fight_sprite:setOrigin(0)
-  self.action.fight_hover_sprite = Sprite.new("fight_hover")
+  self.action.fight_hover_sprite = Sprite:new("fight_hover")
   self.action.fight_hover_sprite:setPosition(32, 432)
   self.action.fight_hover_sprite:setOrigin(0)
   self.action.fight_hover_sprite:setVisible(false)
 
   -- ACT
-  self.action.act_sprite = Sprite.new("act")
+  self.action.act_sprite = Sprite:new("act")
   self.action.act_sprite:setPosition(185, 432)
   self.action.act_sprite:setOrigin(0)
-  self.action.act_hover_sprite = Sprite.new("act_hover")
+  self.action.act_hover_sprite = Sprite:new("act_hover")
   self.action.act_hover_sprite:setPosition(185, 432)
   self.action.act_hover_sprite:setOrigin(0)
   self.action.act_hover_sprite:setVisible(false)
 
   -- ITEM
-  self.action.item_sprite = Sprite.new("item")
+  self.action.item_sprite = Sprite:new("item")
   self.action.item_sprite:setPosition(345, 432)
   self.action.item_sprite:setOrigin(0)
-  self.action.item_hover_sprite = Sprite.new("item_hover")
+  self.action.item_hover_sprite = Sprite:new("item_hover")
   self.action.item_hover_sprite:setPosition(345, 432)
   self.action.item_hover_sprite:setOrigin(0)
   self.action.item_hover_sprite:setVisible(false)
 
   -- MERCY
-  self.action.mercy_sprite = Sprite.new("mercy")
+  self.action.mercy_sprite = Sprite:new("mercy")
   self.action.mercy_sprite:setPosition(500, 432)
   self.action.mercy_sprite:setOrigin(0)
-  self.action.mercy_hover_sprite = Sprite.new("mercy_hover")
+  self.action.mercy_hover_sprite = Sprite:new("mercy_hover")
   self.action.mercy_hover_sprite:setPosition(500, 432)
   self.action.mercy_hover_sprite:setOrigin(0)
   self.action.mercy_hover_sprite:setVisible(false)
@@ -196,7 +196,7 @@ function self.loadFightEnemyMenu()
   local options = {}
   for i, enemy in ipairs(self.enemies) do
     options[i] = {
-      text = Text.new("* " .. enemy:getName()),
+      text = Text:new("* " .. enemy:getName()),
       action = function()
         self.enemy_selected_index = i
         Audio.playSound("menu_select")
@@ -214,7 +214,7 @@ function self.loadFightEnemyMenu()
     }
   end
 
-  self.fight_enemy_menu = ActionMenu.new(options, "vertical", false, function(i)
+  self.fight_enemy_menu = ActionMenu:new(options, "vertical", false, function(i)
     self.enemy_selected_index = i
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
@@ -224,7 +224,7 @@ function self.loadActEnemyMenu()
   local options = {}
   for i, enemy in ipairs(self.enemies) do
     options[i] = {
-      text = Text.new("* " .. enemy:getName()),
+      text = Text:new("* " .. enemy:getName()),
       action = function()
         self.enemy_selected_index = i
         Audio.playSound("menu_select")
@@ -233,7 +233,7 @@ function self.loadActEnemyMenu()
     }
   end
 
-  self.act_enemy_menu = ActionMenu.new(options, "vertical", false, function(i)
+  self.act_enemy_menu = ActionMenu:new(options, "vertical", false, function(i)
     self.enemy_selected_index = i
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
@@ -246,7 +246,7 @@ function self.loadActMenus()
 
     if enemy:hasCheck() then
       table.insert(options, {
-        text = Text.new("* " .. Lang.translate("ENCOUNTER_MENU_ACT_CHECK")),
+        text = Text:new("* " .. Lang.translate("ENCOUNTER_MENU_ACT_CHECK")),
         action = function()
           Audio.playSound("menu_select")
           self.dialogue_text:setText(enemy:getCheckText())
@@ -255,7 +255,7 @@ function self.loadActMenus()
       })
     end
 
-    self.act_menus[i] = ActionMenu.new(options, "horizontal", false, function()
+    self.act_menus[i] = ActionMenu:new(options, "horizontal", false, function()
       self.setState(Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU)
     end)
   end
@@ -267,7 +267,7 @@ function self.loadItemMenu()
   -- DEBUG
   for i = 1, 7 do
     table.insert(options, {
-      text = Text.new("* ITEM_" .. i),
+      text = Text:new("* ITEM_" .. i),
       action = function()
         Audio.playSound("menu_select")
         print("> USE ITEM_" .. i)
@@ -275,7 +275,7 @@ function self.loadItemMenu()
     })
   end
 
-  self.item_menu = ActionMenu.new(options, "horizontal", true, function()
+  self.item_menu = ActionMenu:new(options, "horizontal", true, function()
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
 end
@@ -283,7 +283,7 @@ end
 function self.loadMercyMenu()
   local options = {
     {
-      text = Text.new("* " .. Lang.translate("ENCOUNTER_MENU_MERCY_SPARE")),
+      text = Text:new("* " .. Lang.translate("ENCOUNTER_MENU_MERCY_SPARE")),
       action = function()
         Audio.playSound("menu_select")
         -- self.setState(Constants.ENCOUNTER_STATES.NONE)
@@ -294,7 +294,7 @@ function self.loadMercyMenu()
 
   if self.mod.encounter.flee ~= false then
     table.insert(options, {
-      text = Text.new("* " .. Lang.translate("ENCOUNTER_MENU_MERCY_FLEE")),
+      text = Text:new("* " .. Lang.translate("ENCOUNTER_MENU_MERCY_FLEE")),
       action = function()
         if Player.isFleeing() then return end
 
@@ -322,7 +322,7 @@ function self.loadMercyMenu()
     })
   end
 
-  self.mercy_menu = ActionMenu.new(options, "vertical", false, function()
+  self.mercy_menu = ActionMenu:new(options, "vertical", false, function()
     self.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
 end
@@ -397,7 +397,7 @@ function self.enterMenu(menu)
 
   self.leaveMenu()
   self.current_menu = menu
-  self.current_menu.show()
+  self.current_menu:show()
 
   self.dialogue_text:setVisible(false)
 end
@@ -405,7 +405,7 @@ end
 --- Leaves the current menu
 function self.leaveMenu()
   if self.current_menu ~= nil then
-    self.current_menu.hide()
+    self.current_menu:hide()
     self.current_menu = nil
   end
 end
@@ -529,11 +529,11 @@ function self.startAttacking()
       else
         Audio.playSound("damage")
 
-        enemy:setHP(math.clamp(enemy:getHP() - 100, 0, enemy:getMaxHP())) -- DEBUG
+        enemy:setHP(math.clamp(enemy:getHP() - 12, 0, enemy:getMaxHP())) -- DEBUG
         if enemy:getHP() <= 0 then
-          local fight_option = self.fight_enemy_menu.getOptionByIndex(self.enemy_selected_index)
+          local fight_option = self.fight_enemy_menu:getOptionByIndex(self.enemy_selected_index)
           fight_option.disabled = true
-          local act_option = self.act_enemy_menu.getOptionByIndex(self.enemy_selected_index)
+          local act_option = self.act_enemy_menu:getOptionByIndex(self.enemy_selected_index)
           act_option.disabled = true
         end
       end
@@ -601,18 +601,18 @@ function self.update(dt)
     elseif self.current_state == Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU then
       self.enterMenu(self.fight_enemy_menu)
       if self.current_menu == self.fight_enemy_menu then
-        self.fight_enemy_menu.selectByIndex(self.enemy_selected_index, true)
+        self.fight_enemy_menu:selectByIndex(self.enemy_selected_index, true)
       end
     elseif self.current_state == Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU then
       self.enterMenu(self.act_enemy_menu)
       if self.current_menu == self.act_enemy_menu then
-        self.act_enemy_menu.selectByIndex(self.enemy_selected_index, true)
+        self.act_enemy_menu:selectByIndex(self.enemy_selected_index, true)
       end
     elseif self.current_state == Constants.ENCOUNTER_STATES.ACT_MENU then
       self.enterMenu(self.act_menus[self.enemy_selected_index])
     elseif self.current_state == Constants.ENCOUNTER_STATES.ITEM_MENU then
       self.enterMenu(self.item_menu)
-      self.item_menu.select(0, 0, true)
+      self.item_menu:select(0, 0, true)
     elseif self.current_state == Constants.ENCOUNTER_STATES.MERCY_MENU then
       self.enterMenu(self.mercy_menu)
     elseif self.current_state == Constants.ENCOUNTER_STATES.TEXT_DIALOGUE then
@@ -630,15 +630,15 @@ function self.update(dt)
   if self.current_state == Constants.ENCOUNTER_STATES.ACTION_SELECT then
     self.updateActionSelect()
   elseif self.current_state == Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU then
-    if self.current_menu ~= nil then self.current_menu.update() end
+    if self.current_menu ~= nil then self.current_menu:update() end
   elseif self.current_state == Constants.ENCOUNTER_STATES.ACT_MENU then
-    if self.current_menu ~= nil then self.current_menu.update() end
+    if self.current_menu ~= nil then self.current_menu:update() end
   elseif self.current_state == Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU then
-    if self.current_menu ~= nil then self.current_menu.update() end
+    if self.current_menu ~= nil then self.current_menu:update() end
   elseif self.current_state == Constants.ENCOUNTER_STATES.ITEM_MENU then
-    if self.current_menu ~= nil then self.current_menu.update() end
+    if self.current_menu ~= nil then self.current_menu:update() end
   elseif self.current_state == Constants.ENCOUNTER_STATES.MERCY_MENU then
-    if self.current_menu ~= nil then self.current_menu.update() end
+    if self.current_menu ~= nil then self.current_menu:update() end
   elseif self.current_state == Constants.ENCOUNTER_STATES.TEXT_DIALOGUE then
     self.updateTextDialogue()
   elseif self.current_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE then

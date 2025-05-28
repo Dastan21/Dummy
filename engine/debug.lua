@@ -6,7 +6,7 @@ function self.load()
   self.lines = {}
   self.max_lines = 5
 
-  local console_draw = Drawable.new(function()
+  local console_draw = Drawable:new(function()
     if self.show_console then
       love.graphics.setColor(0, 0, 0, 0.5)
       love.graphics.rectangle("fill", 0, 0, 640, 480)

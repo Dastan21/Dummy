@@ -22,25 +22,25 @@ function self.load()
   self.speed = 1
   self.hitbox = { 4, 4, 8, 8 }
 
-  self.soul_sprite = Sprite.new("heart")
+  self.soul_sprite = Sprite:new("heart")
   self.soul_sprite:setPosition(320, 240)
   self.soul_sprite:setLayer(Constants.LAYERS.SOUL)
 
   self.name = "Frisk"
-  self.name_text = Text.new(self.name)
+  self.name_text = Text:new(self.name)
   self.name_text:setPosition(30, 400)
   self.name_text:setOrigin(0)
   self.name_text:setFont(Font.FONTS.CURS)
 
-  self.lv_text = Text.new("")
+  self.lv_text = Text:new("")
   self.lv_text:setPosition(174, 400)
   self.lv_text:setOrigin(0)
   self.lv_text:setFont(Font.FONTS.CURS)
 
-  self.hp_sprite = Sprite.new("hp")
+  self.hp_sprite = Sprite:new("hp")
   self.hp_sprite:setPosition(244, 405)
   self.hp_sprite:setOrigin(0)
-  self.hp_value_text = Text.new("")
+  self.hp_value_text = Text:new("")
   self.hp_value_text:setPosition(400, 409)
   self.hp_value_text:setOrigin(0, 0.5)
   self.hp_value_text:setFont(Font.FONTS.CURS)
@@ -49,7 +49,7 @@ function self.load()
 
   self.setLV(1, true)
 
-  local hitbox_draw = Drawable.new(function()
+  local hitbox_draw = Drawable:new(function()
     if Debug.show_hitbox and not self.isHidden() then
       local x, y = self.getPosition()
       love.graphics.setColor(0, 1, 0, 1)
@@ -202,9 +202,8 @@ end
 --- @param bullet Dummy.Bullet
 function self.isColliding(bullet)
   local player_x, player_y = self.soul_sprite:getPosition()
-  local bullet_sprite = bullet:getSprite()
-  local bullet_scale = bullet_sprite:getScale()
-  local bullet_origin = bullet_sprite:getOrigin()
+  local bullet_scale = bullet:getScale()
+  local bullet_origin = bullet:getOrigin()
   local bullet_hitbox = bullet:getHitbox()
 end
 
@@ -223,7 +222,7 @@ end
 --- Animates the soul escaping
 function self.flee(dt)
   if not self.is_fleeing then
-    self.soul_escape_sprite = Sprite.new({ "heart_escape1", "heart_escape2" }, 0.08, true)
+    self.soul_escape_sprite = Sprite:new({ "heart_escape1", "heart_escape2" }, 0.08, true)
     self.soul_escape_sprite:setPosition(self.getPosition())
     self.soul_escape_sprite:setLayer(Constants.LAYERS.SOUL)
     self.soul_sprite:setVisible(false)

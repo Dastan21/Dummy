@@ -21,6 +21,7 @@ UTF8 = require "engine.lib.utf8"
 require "engine.lib.stable_sort"
 
 Utils = require "engine.utils"
+Class = require "engine.class"
 Audio = require "engine.audio"
 Input = require "engine.input"
 Lang = require "engine.lang"
@@ -129,9 +130,13 @@ function love.quit()
 end
 
 local function error_handler(err)
-  if Scene.scene_name == "ERROR" then
-    print(err)
+  if err == "stack overflow" then
+    err = "Stack overflow!"
   else
+    err = debug.traceback(err)
+  end
+  print(err)
+  if Scene.scene_name ~= "ERROR" then
     Scene.change("ERROR", err)
   end
 end

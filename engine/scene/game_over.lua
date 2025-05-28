@@ -16,13 +16,13 @@ function self.load(x, y)
   x, y = Utils.getOrDefault(x, 320), Utils.getOrDefault(y, 240)
 
   -- GAME OVER title
-  self.title_game_text = Text.new("GAME_OVER_TITLE_GAME")
+  self.title_game_text = Text:new("GAME_OVER_TITLE_GAME")
   self.title_game_text:setPosition(330, 76)
   self.title_game_text:setFont(Font.FONTS.WONDER)
   self.title_game_text:setScale(8)
   self.title_game_text:setAlpha(0)
   self.title_game_text:setVisible(false)
-  self.title_over_text = Text.new("GAME_OVER_TITLE_OVER")
+  self.title_over_text = Text:new("GAME_OVER_TITLE_OVER")
   self.title_over_text:setPosition(324, 172)
   self.title_over_text:setFont(Font.FONTS.WONDER)
   self.title_over_text:setScale(8)
@@ -32,13 +32,13 @@ function self.load(x, y)
   self.title_timer = 0
 
   -- heart
-  self.player_sprite = Sprite.new("heart")
+  self.player_sprite = Sprite:new("heart")
   self.player_sprite:setPosition(x, y)
   -- heart shards
   self.player_shards = {}
   self.player_shards_speed = 100
   for i = 1, 6 do
-    local shard_sprite = Sprite.new({
+    local shard_sprite = Sprite:new({
       "heart_shard1",
       "heart_shard2",
       "heart_shard3",
@@ -55,7 +55,7 @@ function self.load(x, y)
   end
 
   -- black fade
-  self.black_sprite = Sprite.new("black")
+  self.black_sprite = Sprite:new("black")
   self.black_sprite:setOrigin(0, 0)
   self.black_sprite:setVisible(false)
   self.black_sprite:setAlpha(0)
@@ -63,7 +63,7 @@ function self.load(x, y)
   self.transition_time = 0
 
   -- dialogue
-  self.dialogue_text = DialogueText.new("")
+  self.dialogue_text = DialogueText:new("")
   self.dialogue_text:setPosition(120, 320)
   self.dialogue_text:setOrigin(0, 0)
   self.dialogue_text:setFont(Font.FONTS.MAIN_TEXT_MONO)

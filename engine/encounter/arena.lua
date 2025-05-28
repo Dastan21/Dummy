@@ -5,7 +5,7 @@
 --- @field private width number
 --- @field private height number
 --- @field private resize_callback fun()|nil
-local self = Drawable.new()
+local self = Drawable:new()
 
 --- @class Dummy.Arena
 local current = {}
