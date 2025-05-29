@@ -12,6 +12,7 @@
 --- @field protected visible boolean
 --- @field protected sprite love.Image|love.Text
 --- @field protected draw fun()|nil
+--- @field protected persistent boolean
 local Drawable = Class:extend()
 
 --- Gets the drawable position
@@ -146,10 +147,23 @@ function Drawable:getDraw()
   return self.draw
 end
 
+--- Wether the drawable is persistent between scenes
+--- @return boolean
+function Drawable:isPersistent()
+  return self.persistent
+end
+
+--- Sets if the drawable is persistent between scenes
+--- @param persistent boolean
+function Drawable:setPersistent(persistent)
+  self.persistent = persistent
+end
+
 --- Creates a drawable
---- @param draw fun()|nil
+--- @param draw? fun() custom draw function
+--- @param persistent? boolean wether the drawable is persistent between scenes (Defaults to `false`)
 --- @return Dummy.Drawable
-function Drawable:new(draw)
+function Drawable:new(draw, persistent)
   local drawable = Class:new(Drawable, {
     x = 0,
     y = 0,
@@ -162,7 +176,8 @@ function Drawable:new(draw)
     layer = Constants.LAYERS.UI,
     visible = true,
     draw = draw,
-    sprite = nil
+    persistent = Utils.getOrDefault(persistent, false),
+    sprite = nil,
   })
 
   Scene.addDrawable(drawable)

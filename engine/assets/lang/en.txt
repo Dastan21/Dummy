@@ -19,9 +19,9 @@ ENCOUNTER_MENU_MERCY_FLEE=Flee
 GAME_OVER_TITLE_GAME=GAME
 GAME_OVER_TITLE_OVER=OVER
 
-ERROR_SCENE_ERROR=ERROR:
-ERROR_SCENE_BACK_MAIN_MENU=Press ESC to return to main menu
-ERROR_SCENE_COPY_TRACEBACK=Press CTRL+C to copy traceback to clipboard
+ERROR_LABEL=ERROR:
+ERROR_BACK_MAIN_MENU=Press ESC to return to main menu
+ERROR_COPY_TRACEBACK=Press CTRL+C to copy traceback to clipboard
 
 GAME_OVER_TEXT_1=  You cannot give\n  up just yet...
 GAME_OVER_TEXT_2=  {}!\n  Stay determined...

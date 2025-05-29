@@ -19,9 +19,9 @@ ENCOUNTER_MENU_MERCY_FLEE=Fuir
 GAME_OVER_TITLE_GAME=FIN DE
 GAME_OVER_TITLE_OVER=PARTIE
 
-ERROR_SCENE_ERROR=ERREUR :
-ERROR_SCENE_BACK_MAIN_MENU=Appuyez sur ÉCHAP pour retourner au menu principal
-ERROR_SCENE_COPY_TRACEBACK=Appuyez sur CTRL+C pour copier la trace d'appels dans le presse-papier
+ERROR_LABEL=ERREUR :
+ERROR_BACK_MAIN_MENU=Appuyez sur ÉCHAP pour retourner au menu principal
+ERROR_COPY_TRACEBACK=Appuyez sur CTRL+C pour copier la trace d'appels dans le presse-papier
 
 GAME_OVER_TEXT_1=  Tu ne peux pas\n  abandonner\n  maintenant...
 GAME_OVER_TEXT_2=  {}!\n  Garde ta détermination...

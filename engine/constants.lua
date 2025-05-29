@@ -21,7 +21,8 @@ self.LAYERS = {
   BELOW_BULLETS = 9,
   BULLETS       = 10,
   ABOVE_BULLETS = 11,
-  TOP           = 1000
+  TOP           = 1000,
+  DEBUG         = 1001
 }
 
 self.ENCOUNTER_STATES = {

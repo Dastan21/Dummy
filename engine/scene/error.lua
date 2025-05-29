@@ -1,7 +1,7 @@
 local self = {}
 
 function self.load(err)
-  self.traceback = Lang.translate("ERROR_SCENE_ERROR") .. " " .. err
+  self.traceback = Lang.translate("ERROR_LABEL") .. " " .. err
 
   local _, wrapped_error = Font.FONTS.MAIN_TEXT:getWrap(self.traceback, 630)
   self.error_text = Text:new(table.concat(wrapped_error, "\n"))
@@ -15,13 +15,13 @@ function self.load(err)
   end)
   black_rectangle_draw:setLayer(Constants.LAYERS.ABOVE_UI)
 
-  self.back_main_menu_text = Text:new("ERROR_SCENE_BACK_MAIN_MENU")
+  self.back_main_menu_text = Text:new("ERROR_BACK_MAIN_MENU")
   self.back_main_menu_text:setPosition(5, 455)
   self.back_main_menu_text:setOrigin(0, 1)
   self.back_main_menu_text:setFont(Font.FONTS.MAIN_TEXT)
   self.back_main_menu_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
-  self.copy_traceback_text = Text:new("ERROR_SCENE_COPY_TRACEBACK")
+  self.copy_traceback_text = Text:new("ERROR_COPY_TRACEBACK")
   self.copy_traceback_text:setPosition(5, 475)
   self.copy_traceback_text:setOrigin(0, 1)
   self.copy_traceback_text:setFont(Font.FONTS.MAIN_TEXT)

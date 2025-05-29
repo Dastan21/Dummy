@@ -115,10 +115,7 @@ end
 
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
---- @param layer? number
-function scene.addDrawable(drawable, layer)
-  layer = Utils.getOrDefault(layer, 0)
-
+function scene.addDrawable(drawable)
   table.insert(scene.drawables, drawable)
 
   scene.sortDrawables()
@@ -158,7 +155,14 @@ function scene.addDialogue(dialogue_text)
 end
 
 function scene.clean()
-  scene.drawables = {}
+  local tmp_drawables = {}
+  for _, d in ipairs(scene.drawables or {}) do
+    if d:isPersistent() then
+      table.insert(tmp_drawables, d)
+    end
+  end
+  scene.drawables = tmp_drawables
+
   scene.dialogues = {}
   love.audio.stop()
   Timer.clear()
