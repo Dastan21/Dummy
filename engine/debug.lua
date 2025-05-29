@@ -1,11 +1,11 @@
 local self = {}
 
 function self.load()
-  self.show_hitbox = false
-  self.lines = {}
-  self.max_lines = 5
+  self.logs = {}
   self.margin = 5
   self.scale = 1
+
+  self.show_hitbox = false
 
   self.log_bg_sprite = Sprite:new("black")
   self.log_bg_sprite:setPosition(0, 0)
@@ -34,9 +34,15 @@ function self.load()
   self.fps_text:setPersistent(true)
 end
 
+function self.saveLogs()
+  if #self.logs <= 0 then return end
+
+  love.filesystem.write("logs.txt", table.concat(self.logs, "\n"))
+end
+
 function self.update()
   self.fps_text:setText(tostring(love.timer.getFPS()))
-  self.log_text:setText(table.concat(self.lines or {}, "\n"))
+  self.log_text:setText(table.concat(self.logs or {}, "\n"))
 
   if Input.isPressed("f6") then
     self.fps_text:setVisible(not self.fps_text:isVisible())
@@ -58,12 +64,12 @@ function print(...)
     table.insert(t, tostring(v))
   end
 
-  if self.lines ~= nil then
+  if self.logs ~= nil then
     local w = select(2,
       love.graphics.getFont():getWrap(table.concat(t, "	"), (600 / self.scale) - (self.margin * 2)))
-    local len = #self.lines
+    local len = #self.logs
     for i, s in ipairs(w) do
-      self.lines[len + i] = "> " .. s
+      self.logs[len + i] = "> " .. s
     end
   end
 

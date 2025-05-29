@@ -127,6 +127,7 @@ end
 
 function love.quit()
   saveConfig()
+  Debug.saveLogs()
 end
 
 local function error_handler(err)
