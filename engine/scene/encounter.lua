@@ -298,6 +298,8 @@ function self.loadMercyMenu()
       action = function()
         if Player.isFleeing() then return end
 
+        self.mercy_menu:setActive(false)
+
         Timer.after(1.5, function()
           self.setState(Constants.ENCOUNTER_STATES.DONE)
         end)

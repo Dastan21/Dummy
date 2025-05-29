@@ -9,6 +9,7 @@
 --- @field protected pagination boolean
 --- @field protected onBack fun(i: number)|nil
 --- @field protected page_text Dummy.Text
+--- @field protected active boolean
 local ActionMenu = Class()
 
 --- Selects an option
@@ -236,6 +237,18 @@ function ActionMenu:getMaxY()
   return math.min(math.ceil(#self.options / 2), self.pagination and 2 or 3)
 end
 
+--- Wether the menu is active
+--- @return any
+function ActionMenu:getActive()
+  return self.active
+end
+
+--- Sets wether the menu is active
+--- @param active boolean
+function ActionMenu:setActive(active)
+  self.active = active
+end
+
 --- Initializes the menu options
 function ActionMenu:initOptions()
   for i, option in ipairs(self.options) do
@@ -272,6 +285,8 @@ end
 
 --- Updates the menu
 function ActionMenu:update()
+  if not self.active then return end
+
   if Input.isPressed(Input.Up) then
     self:move(0, -1)
   elseif Input.isPressed(Input.Down) then
@@ -308,6 +323,7 @@ function ActionMenu:new(options, direction, pagination, onBack)
     direction = Utils.getOrDefault(direction, "horizontal"),
     pagination = Utils.getOrDefault(pagination, false),
     onBack = onBack,
+    active = true,
   })
 
   action_menu:initOptions()

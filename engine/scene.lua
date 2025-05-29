@@ -39,12 +39,14 @@ function scene.change(scene_name, ...)
   scene.quitting_sprite:setPosition(1, 1)
   scene.quitting_sprite:setOrigin(0)
   scene.quitting_sprite:setAlpha(0)
+  scene.quitting_sprite:setVisible(false)
 end
 
 function scene.resetQuitting()
   scene.quitting_timer = 0
-  scene.quitting_sprite:setAlpha(0)
   scene.quitting_sprite:setSprite("quitting1")
+  scene.quitting_sprite:setAlpha(0)
+  scene.quitting_sprite:setVisible(false)
 end
 
 function scene.updateQuitting(dt)
@@ -54,6 +56,7 @@ function scene.updateQuitting(dt)
     end
   else
     if Input.isDown("escape") and scene.quitting_timer < scene.quitting_delay then
+      scene.quitting_sprite:setVisible(true)
       scene.quitting_timer = scene.quitting_timer + dt
       scene.quitting_sprite:setAlpha(scene.quitting_timer / scene.quitting_delay)
     elseif Input.isReleased("escape") then
@@ -105,6 +108,12 @@ function scene.draw()
             sx, sy,
             ox * w, oy * h
           )
+
+
+          if Debug.show_hitbox then
+            love.graphics.setColor(0, 0, 1, 1)
+            love.graphics.rectangle("line", x - w * ox * sx, y - h * oy * sy, w * sx, h * sy)
+          end
         end
       end
 

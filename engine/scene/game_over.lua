@@ -49,8 +49,8 @@ function self.load(x, y)
     shard_sprite:setVisible(false)
     self.player_shards[i] = {
       sprite = shard_sprite,
-      vel_x = math.random(4) - math.random(4),
-      vel_y = math.random(4) - math.random(4)
+      vel_x = (math.random() - math.random()) * 4,
+      vel_y = (math.random() - math.random()) * 4
     }
   end
 

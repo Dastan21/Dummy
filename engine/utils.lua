@@ -174,6 +174,10 @@ function math.clamp(x, min, max)
   return math.max(math.min(x, max), min)
 end
 
+function math.round(x)
+  return math.floor(x + 0.5)
+end
+
 -- other --
 
 local self = {}

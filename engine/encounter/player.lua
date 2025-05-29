@@ -49,14 +49,13 @@ function self.load()
 
   self.setLV(1, true)
 
-  local hitbox_draw = Drawable:new(function()
+  Drawable:new(function()
     if Debug.show_hitbox and not self.isHidden() then
       local x, y = self.getPosition()
       love.graphics.setColor(0, 1, 0, 1)
       love.graphics.rectangle("line", x - self.hitbox[1], y - self.hitbox[2], self.hitbox[3], self.hitbox[4])
     end
-  end)
-  hitbox_draw:setLayer(Constants.LAYERS.ABOVE_SOUL)
+  end):setLayer(Constants.LAYERS.ABOVE_SOUL)
 end
 
 --- Sets the player's soul position
