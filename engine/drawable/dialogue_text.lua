@@ -13,9 +13,9 @@ function DialogueText:setText(value)
   if self.max_width > 0 then
     local scale_x = self:getScale()
     local texts = Lang.translate(value):split("\n")
-    local wrapped_value
+    local _, wrapped_value
     for i, txt in ipairs(texts) do
-      wrapped_value = select(2, self.font:getWrap(txt, self.max_width / scale_x))
+      _, wrapped_value = self.font:getWrap(txt, self.max_width / scale_x)
       texts[i] = table.concat(wrapped_value, "\n  ")
     end
     value = table.concat(texts, "\n")

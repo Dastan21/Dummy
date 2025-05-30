@@ -36,3 +36,9 @@
 --- @field xp number|nil
 --- @field gold number|nil
 --- @field check string|nil
+--- @field position Dummy.Mod.Enemy.Position|nil
+
+--- @class Dummy.Mod.Enemy.Position
+---
+--- @field center { [1]: number, [2]: number }|nil
+--- @field size { [1]: number, [2]: number }|nil

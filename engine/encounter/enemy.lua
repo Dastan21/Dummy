@@ -1,6 +1,5 @@
 --- @class Dummy.Enemy : Dummy.Class
 ---
----
 --- @field protected name string
 --- @field protected hp number
 --- @field protected max_hp number
@@ -9,6 +8,10 @@
 --- @field protected xp number
 --- @field protected gold number
 --- @field protected check string|nil
+--- @field protected x number
+--- @field protected y number
+--- @field protected width number
+--- @field protected height number
 local Enemy = Class()
 
 --- Gets the enemy's name
@@ -91,10 +94,42 @@ function Enemy:getCheckText()
   return check
 end
 
+--- Gets the enemy's center position
+---@return number, number
+function Enemy:getPosition()
+  return self.x, self.y
+end
+
+--- Sets the enemy's center position
+---@param x number
+---@param y number
+function Enemy:setPosition(x, y)
+  self.x = x
+  self.y = y
+end
+
+--- Gets the enemy's size
+---@return number, number
+function Enemy:getSize()
+  return self.width, self.height
+end
+
+--- Sets the enemy's size
+---@param width number
+---@param height number
+function Enemy:setSize(width, height)
+  self.width = width
+  self.height = height
+end
+
 --- Creates an enemy
 --- @param data Dummy.Mod.Enemy
 --- @return Dummy.Enemy
 function Enemy:new(data)
+  local position = Utils.getOrDefault(data.position, {})
+  local center = Utils.getOrDefault(position.center, {})
+  local size = Utils.getOrDefault(position.size, {})
+
   return Class:new(Enemy, {
     name = data.name,
     hp = Utils.getOrDefault(data.hp, 20),
@@ -104,6 +139,10 @@ function Enemy:new(data)
     exp = Utils.getOrDefault(data.xp, 0),
     gold = Utils.getOrDefault(data.gold, 0),
     check = Utils.getOrDefault(data.check, ""),
+    x = Utils.getOrDefault(center[1], 320),
+    y = Utils.getOrDefault(center[2], 200),
+    width = Utils.getOrDefault(size[1], 80),
+    height = Utils.getOrDefault(size[2], 110),
   })
 end
 

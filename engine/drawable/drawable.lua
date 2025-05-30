@@ -147,6 +147,12 @@ function Drawable:getDraw()
   return self.draw
 end
 
+--- Sets the drawable draw function
+--- @param draw fun()
+function Drawable:setDraw(draw)
+  self.draw = draw
+end
+
 --- Wether the drawable is persistent between scenes
 --- @return boolean
 function Drawable:isPersistent()

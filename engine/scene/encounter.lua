@@ -82,8 +82,8 @@ function self.load(mod)
   -- attack target
   self.target_sprite = Sprite:new("target")
   self.target_sprite:setPosition(320, 320)
-  self.target_sprite:setVisible(false)
   self.target_sprite:setLayer(Constants.LAYERS.UI)
+  self.target_sprite:setVisible(false)
   self.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1)
   self.target_bar_sprite:stop()
   self.target_bar_sprite:setPosition(38, 320)
@@ -93,7 +93,6 @@ function self.load(mod)
   -- miss
   self.miss_sprite = Sprite:new("miss")
   self.miss_sprite:setVisible(false)
-  self.miss_sprite:setPosition(320, 140) -- TODO: use enemy sprite position
   self.miss_sprite:setLayer(Constants.LAYERS.UI)
 
   -- strike
@@ -106,20 +105,31 @@ function self.load(mod)
     "strike6"
   }, 1 / 8, false, false)
   self.strike_sprite:stop()
-  self.strike_sprite:setPosition(320, 240) -- TODO: use enemy sprite position
-  self.strike_sprite:setOrigin(0.5, 1)
+  self.strike_sprite:setOrigin(0.5, 0.5)
   self.strike_sprite:setScale(1.5)
   self.strike_sprite:setVisible(false)
 
-  local player_hp_bar_draw = Drawable:new(function()
+  -- player hp bar
+  Drawable:new(function()
     local max_hp_bar_width = math.clamp(5 * Player.getLV() + 20, 25, 120)
     local hp_bar_width = max_hp_bar_width * Player.getHP() / Player.getMaxHP()
     love.graphics.setColor(1, 0, 0, 1)
     love.graphics.rectangle("fill", 275, 400, max_hp_bar_width, 21)
     love.graphics.setColor(1, 1, 0, 1)
     love.graphics.rectangle("fill", 275, 400, hp_bar_width, 21)
-  end)
-  player_hp_bar_draw:setLayer(Constants.LAYERS.UI)
+  end):setLayer(Constants.LAYERS.UI)
+
+  -- enemy hp bar & damage text
+  self.enemy_hp_draw = Drawable:new()
+  self.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_BULLETS)
+  self.enemy_hp_draw:setVisible(false)
+
+  self.enemy_hp_text = Text:new("")
+  self.enemy_hp_text:setColor(1, 0, 0)
+  self.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_BULLETS)
+  self.enemy_hp_text:setFont(Font.FONTS.DAMAGE)
+  self.enemy_hp_text:setScale(1)
+  self.enemy_hp_text:setVisible(false)
 
   -- music
   if self.mod.encounter.music ~= nil then
@@ -134,10 +144,21 @@ end
 function self.loadEnemies()
   --- @type table<number, Dummy.Enemy>
   self.enemies = {}
-  for _, enemy in ipairs(self.mod.enemies) do
+  for _, data in ipairs(self.mod.enemies) do
     if #self.enemies >= 3 then break end
 
-    table.insert(self.enemies, Enemy:new(enemy))
+    local enemy = Enemy:new(data)
+
+    table.insert(self.enemies, enemy)
+
+    Drawable:new(function()
+      local x, y = enemy:getPosition()
+      local w, h = enemy:getSize()
+      love.graphics.setColor(0, 0, 1, 0.2)
+      love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
+      love.graphics.setColor(1, 0, 0, 1)
+      love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
+    end):setLayer(Constants.LAYERS.ARENA)
   end
 end
 
@@ -477,6 +498,8 @@ function self.startEnemyDialogue()
   local wave_arena_width = 175
   Arena.resize(wave_arena_width, 130, function()
     self.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+    self.enemy_hp_draw:setVisible(false)
+    self.enemy_hp_text:setVisible(false)
   end)
 
   local x, y = Arena:getPosition()
@@ -485,9 +508,9 @@ function self.startEnemyDialogue()
 end
 
 function self.updateEnemyDialogue(dt)
-  if Input.isPressed(Input.Confirm) then
-    self.setState(Constants.ENCOUNTER_STATES.DEFENDING)
-  end
+  -- if Input.isPressed(Input.Confirm) then
+  --   self.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+  -- end
 end
 
 function self.startAttacking()
@@ -511,17 +534,15 @@ function self.startAttacking()
     Timer.cancel(attack_window_timer)
     Timer.cancel(attack_window_miss_timer)
 
+    local enemy = self.enemies[self.enemy_selected_index]
+    local enemy_x, enemy_y = enemy:getPosition()
+    self.strike_sprite:setPosition(enemy_x, enemy_y)
+    self.miss_sprite:setPosition(enemy_x, enemy_y)
+
+    local damage = 0
+    local enemy_hp_text_vel_y = -4
+
     local proceed_attack = function()
-      Timer.during(1, function(dt)
-        alpha = math.clamp(alpha - dt * 2.5, 0, 1)
-        self.target_sprite:setAlpha(alpha)
-
-        scale_x = math.max(0.25, scale_x - dt * 2.5)
-        self.target_sprite:setScale(scale_x, 1)
-      end)
-
-      local enemy = self.enemies[self.enemy_selected_index]
-
       if miss == true then
         self.miss_sprite:setVisible(true)
 
@@ -531,7 +552,47 @@ function self.startAttacking()
       else
         Audio.playSound("damage")
 
-        enemy:setHP(math.clamp(enemy:getHP() - 12, 0, enemy:getMaxHP())) -- DEBUG
+        local enemy_width, enemy_height = enemy:getSize()
+        enemy_width = math.max(100, enemy_width)
+        local stretchfactor = enemy_width / enemy:getMaxHP()
+        local enemy_hp_draw_x = enemy_x - enemy_width / 2
+        local enemy_hp_draw_y = enemy_y - enemy_height / 2 - 16
+        local width = math.round(enemy:getMaxHP() * stretchfactor)
+        local enemy_current_hp = enemy:getHP()
+        local enemy_hp_draw_width = math.round(enemy_current_hp * stretchfactor)
+        Timer.during(1, function(dt)
+          enemy_current_hp = math.max(enemy:getHP(), enemy_current_hp - damage * dt)
+          enemy_hp_draw_width = math.round(enemy_current_hp * stretchfactor)
+        end)
+
+        self.enemy_hp_draw:setVisible(true)
+        self.enemy_hp_draw:setDraw(function()
+          love.graphics.setColor(0, 0, 0, 1)
+          love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_hp_draw_y - 1, width + 2, 15)
+          love.graphics.setColor(0.25, 0.25, 0.25, 1)
+          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_hp_draw_y, width, 13)
+          love.graphics.setColor(0, 1, 0, 1)
+          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_hp_draw_y, enemy_hp_draw_width, 13)
+        end)
+
+        local enemy_hp_text_x = enemy_x
+        local enemy_hp_text_y_start = enemy_y - enemy_height / 2 - 31
+        local enemy_hp_text_y = enemy_hp_text_y_start
+        self.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
+        self.enemy_hp_text:setVisible(true)
+        self.enemy_hp_text:setText(tostring(damage))
+        self.enemy_hp_text_timer = Timer.during(1, function(dt)
+          enemy_hp_text_vel_y = enemy_hp_text_vel_y + 0.5 * dt * 30
+          enemy_hp_text_y = enemy_hp_text_y + enemy_hp_text_vel_y * dt * 30
+          self.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y)
+
+          if enemy_hp_text_y >= enemy_hp_text_y_start + 8 then
+            Timer.cancel(self.enemy_hp_text_timer)
+            self.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
+          end
+        end)
+
+        enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
         if enemy:getHP() <= 0 then
           local fight_option = self.fight_enemy_menu:getOptionByIndex(self.enemy_selected_index)
           fight_option.disabled = true
@@ -540,21 +601,49 @@ function self.startAttacking()
         end
       end
 
+      Timer.after(1, function()
+        Timer.during(0.5, function(dt)
+          alpha = math.clamp(alpha - dt * 3.5, 0, 1)
+          self.target_sprite:setAlpha(alpha)
 
-      self.target_bar_sprite:setVisible(false)
-      self.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+          scale_x = math.max(0.25, scale_x - dt * 2.5)
+          self.target_sprite:setScale(scale_x, 1)
+
+          if alpha <= 0 then
+            self.target_sprite:setVisible(false)
+          end
+        end)
+
+        self.target_bar_sprite:setVisible(false)
+        self.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+      end)
     end
 
     if miss == true then
       proceed_attack()
     else
+      local target_x = self.target_sprite:getPosition()
+      local target_width = self.target_sprite:getWidth()
+      local target_bar_x = self.target_bar_sprite:getPosition()
+      local bonus_factor = math.abs(target_x - target_bar_x)
+      local stretch = (target_width - bonus_factor) / target_width
+      damage = Player:getAT() - enemy:getDF() + (math.random() * 2)
+      if bonus_factor <= 12 then
+        damage = math.round(damage * 2.2)
+      else
+        damage = math.round(damage * 2 * stretch)
+      end
+
       self.strike_sprite:setVisible(true)
+      self.strike_sprite:setScale(stretch * 2 - 0.5)
       self.strike_sprite:play()
       self.target_bar_sprite:play()
       Audio.playSound("strike")
       Timer.after(1, proceed_attack)
     end
   end
+
+  self.target_bar_sprite:setPosition(38, 320)
 
   attack_window_timer = Timer.during(attack_window, function(dt)
     local x, y = self.target_bar_sprite:getPosition()

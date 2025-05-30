@@ -65,8 +65,7 @@ function print(...)
   end
 
   if self.logs ~= nil then
-    local w = select(2,
-      love.graphics.getFont():getWrap(table.concat(t, "	"), (600 / self.scale) - (self.margin * 2)))
+    local _, w = love.graphics.getFont():getWrap(table.concat(t, "	"), (600 / self.scale) - (self.margin * 2))
     local len = #self.logs
     for i, s in ipairs(w) do
       self.logs[len + i] = "> " .. s
