@@ -59,6 +59,7 @@ function love.load()
   if Config["fullscreen"] == true then
     love.window.setFullscreen(true)
   end
+  love.resize(love.window.getMode())
 
   Input.load()
   Lang.load()
