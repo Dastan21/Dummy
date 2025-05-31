@@ -1,5 +1,3 @@
-local INTERNAL_SPEED = 110
-
 --- @class Dummy.Player
 ---
 --- @field private lv number
@@ -8,6 +6,7 @@ local INTERNAL_SPEED = 110
 --- @field private at number
 --- @field private df number
 --- @field private speed number
+--- @field private speed_factor number
 --- @field private hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
 --- @field private is_fleeing boolean
 local self = {}
@@ -19,14 +18,15 @@ function self.load()
   self.max_hp = 20
   self.at = 10
   self.df = 10
-  self.speed = 1
+  self.speed = 4
+  self.speed_factor = 1
   self.hitbox = { 4, 4, 8, 8 }
 
   self.soul_sprite = Sprite:new("heart")
   self.soul_sprite:setPosition(320, 240)
   self.soul_sprite:setLayer(Constants.LAYERS.SOUL)
 
-  self.name = "Frisk"
+  self.name = "FRISK"
   self.name_text = Text:new(self.name)
   self.name_text:setPosition(30, 400)
   self.name_text:setOrigin(0)
@@ -102,7 +102,7 @@ end
 function self.setName(name)
   if name == nil then return end
 
-  self.name = name
+  self.name = Utils.getOrDefault(name, "FRISK"):upper()
   self.name_text:setText(self.name)
   self.lv_text:setPosition(self.name_text:getSprite():getWidth() + 57, 400)
 end
@@ -197,6 +197,18 @@ function self.setDF(df)
   self.df = df
 end
 
+--- Gets the player's speed
+--- @return number
+function self.getSpeed()
+  return self.speed_factor
+end
+
+--- Sets the player's speeds
+--- @param speed number
+function self.setSpeed(speed)
+  self.speed_factor = speed
+end
+
 --- Wether the player's hitbox collides bullet's hitbox
 --- @param bullet Dummy.Bullet
 function self.isColliding(bullet)
@@ -242,7 +254,7 @@ function self.update(dt)
   if Input.isDown(Input.Left) then dir_x = dir_x - 1 end
   if Input.isDown(Input.Right) then dir_x = dir_x + 1 end
 
-  local s = INTERNAL_SPEED * self.speed * dt
+  local s = self.speed * dt * 30
   local x, y = self.soul_sprite:getPosition()
   self.setPosition(x + dir_x * s, y + dir_y * s)
 end

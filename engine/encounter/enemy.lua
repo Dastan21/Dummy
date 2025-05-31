@@ -131,7 +131,7 @@ function Enemy:new(data)
   local size = Utils.getOrDefault(position.size, {})
 
   return Class:new(Enemy, {
-    name = data.name,
+    name = Utils.getOrDefault(data.name, "MONSTER"):upper(),
     hp = Utils.getOrDefault(data.hp, 20),
     max_hp = Utils.getOrDefault(data.hp, 20),
     at = Utils.getOrDefault(data.at, 0),

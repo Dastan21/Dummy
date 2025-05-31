@@ -91,9 +91,11 @@ function self.load(mod)
   self.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
 
   -- miss
-  self.miss_sprite = Sprite:new("miss")
-  self.miss_sprite:setVisible(false)
-  self.miss_sprite:setLayer(Constants.LAYERS.UI)
+  self.miss_text = Text:new("ENCOUNTER_ATTACK_MISS")
+  self.miss_text:setVisible(false)
+  self.miss_text:setFont(Font.FONTS.DAMAGE)
+  self.miss_text:setColor(0.75, 0.75, 0.75)
+  self.miss_text:setLayer(Constants.LAYERS.UI)
 
   -- strike
   self.strike_sprite = Sprite:new({
@@ -522,44 +524,46 @@ function self.startAttacking()
 
   self.leaveMenu()
 
-  local attack_window = 1.55
+  local attacking = false
   local attack_window_timer = nil
-  local attack_window_miss_timer = nil
-
   local alpha = 1
   local scale_x = 1
-  local bar_speed = 400
+  local attack_speed = 11
 
   local function attack(miss)
+    if attacking then return end
+
+    attacking = true
     Timer.cancel(attack_window_timer)
-    Timer.cancel(attack_window_miss_timer)
 
     local enemy = self.enemies[self.enemy_selected_index]
     local enemy_x, enemy_y = enemy:getPosition()
     self.strike_sprite:setPosition(enemy_x, enemy_y)
-    self.miss_sprite:setPosition(enemy_x, enemy_y)
 
     local damage = 0
     local enemy_hp_text_vel_y = -4
 
     local proceed_attack = function()
+      local enemy_width, enemy_height = enemy:getSize()
+      local enemy_top_y = enemy_y - enemy_height / 2 - 16
+
       if miss == true then
-        self.miss_sprite:setVisible(true)
+        self.miss_text:setPosition(enemy_x, enemy_top_y)
+        self.miss_text:setVisible(true)
 
         Timer.after(1, function()
-          self.miss_sprite:setVisible(false)
+          self.miss_text:setVisible(false)
         end)
       else
         Audio.playSound("damage")
 
-        local enemy_width, enemy_height = enemy:getSize()
         enemy_width = math.max(100, enemy_width)
         local stretchfactor = enemy_width / enemy:getMaxHP()
-        local enemy_hp_draw_x = enemy_x - enemy_width / 2
-        local enemy_hp_draw_y = enemy_y - enemy_height / 2 - 16
         local width = math.round(enemy:getMaxHP() * stretchfactor)
         local enemy_current_hp = enemy:getHP()
         local enemy_hp_draw_width = math.round(enemy_current_hp * stretchfactor)
+        local enemy_hp_draw_x = enemy_x - enemy_width / 2
+
         Timer.during(1, function(dt)
           enemy_current_hp = math.max(enemy:getHP(), enemy_current_hp - damage * dt)
           enemy_hp_draw_width = math.round(enemy_current_hp * stretchfactor)
@@ -568,11 +572,11 @@ function self.startAttacking()
         self.enemy_hp_draw:setVisible(true)
         self.enemy_hp_draw:setDraw(function()
           love.graphics.setColor(0, 0, 0, 1)
-          love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_hp_draw_y - 1, width + 2, 15)
+          love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, width + 2, 15)
           love.graphics.setColor(0.25, 0.25, 0.25, 1)
-          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_hp_draw_y, width, 13)
+          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, width, 13)
           love.graphics.setColor(0, 1, 0, 1)
-          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_hp_draw_y, enemy_hp_draw_width, 13)
+          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, enemy_hp_draw_width, 13)
         end)
 
         local enemy_hp_text_x = enemy_x
@@ -644,24 +648,24 @@ function self.startAttacking()
   end
 
   self.target_bar_sprite:setPosition(38, 320)
+  self.target_bar_sprite:setVisible(true)
+  self.target_bar_sprite:setFrame(1)
 
-  attack_window_timer = Timer.during(attack_window, function(dt)
+  local bar_speed = attack_speed + (math.random() * 2)
+  attack_window_timer = Timer.during(2, function(dt)
     local x, y = self.target_bar_sprite:getPosition()
-    self.target_bar_sprite:setPosition(x + bar_speed * dt, y)
+    local target_bar_x = x + bar_speed * dt * 30
+    self.target_bar_sprite:setPosition(target_bar_x, y)
+
+    local target_x = self.target_sprite:getPosition()
+    local width = self.target_sprite:getWidth()
+    if target_bar_x > target_x + width / 2 then
+      attack(true)
+    end
 
     if Input.isPressed(Input.Confirm) then
       attack()
     end
-  end)
-
-  attack_window_miss_timer = Timer.after(attack_window, function()
-    attack(true)
-  end)
-
-  Timer.after(0.1, function()
-    self.target_bar_sprite:setPosition(38, 320)
-    self.target_bar_sprite:setVisible(true)
-    self.target_bar_sprite:setFrame(1)
   end)
 end
 
