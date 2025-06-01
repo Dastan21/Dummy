@@ -46,6 +46,7 @@ function self.load()
   self.hp_value_text:setFont(Font.FONTS.CURS)
 
   self.is_fleeing = false
+  self.flee_speed = 3
 
   self.setLV(1, true)
 
@@ -102,7 +103,7 @@ end
 function self.setName(name)
   if name == nil then return end
 
-  self.name = Utils.getOrDefault(name, "FRISK"):upper()
+  self.name = Utils.getOrDefault(name, "Frisk")
   self.name_text:setText(self.name)
   self.lv_text:setPosition(self.name_text:getSprite():getWidth() + 57, 400)
 end
@@ -233,7 +234,7 @@ end
 --- Animates the soul escaping
 function self.flee(dt)
   if not self.is_fleeing then
-    self.soul_escape_sprite = Sprite:new({ "heart_escape1", "heart_escape2" }, 0.08, true)
+    self.soul_escape_sprite = Sprite:new({ "heart_escape1", "heart_escape2" }, 2 / 30, true)
     self.soul_escape_sprite:setPosition(self.getPosition())
     self.soul_escape_sprite:setLayer(Constants.LAYERS.SOUL)
     self.soul_sprite:setVisible(false)
@@ -241,8 +242,7 @@ function self.flee(dt)
   end
 
   local x, y = self.soul_escape_sprite:getPosition()
-  local s = 90 * dt
-  self.soul_escape_sprite:setPosition(x - 1 * s, y)
+  self.soul_escape_sprite:setPosition(x - self.flee_speed * dt * 30, y)
 end
 
 --- Updates the player

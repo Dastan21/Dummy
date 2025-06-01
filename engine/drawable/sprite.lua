@@ -40,7 +40,7 @@ function Sprite:loadSprite(sprite_path)
   return image_data
 end
 
---- Gets the sprite value
+--- Gets the sprite's value
 --- @return love.Image
 function Sprite:getSprite()
   if self.frames ~= nil then
@@ -50,7 +50,7 @@ function Sprite:getSprite()
   return self.sprite
 end
 
---- Sets the sprite value
+--- Sets the sprite's value
 --- @param sprite_name string
 function Sprite:setSprite(sprite_name)
   if self.sprite ~= nil then
@@ -63,7 +63,7 @@ function Sprite:setSprite(sprite_name)
   Scene.addDrawable(self)
 end
 
---- Gets the sprite width
+--- Gets the sprite's width
 ---@return number
 function Sprite:getWidth()
   local sprite = self:getSprite()
@@ -71,7 +71,7 @@ function Sprite:getWidth()
   return sprite:getWidth()
 end
 
---- Gets the sprite height
+--- Gets the sprite's height
 ---@return number
 function Sprite:getHeight()
   local sprite = self:getSprite()
@@ -79,7 +79,7 @@ function Sprite:getHeight()
   return sprite:getHeight()
 end
 
---- Plays the sprite animation
+--- Plays the sprite's animation
 function Sprite:play()
   if self.frames == nil then return end
 
@@ -101,7 +101,7 @@ function Sprite:play()
   end)
 end
 
---- Stops the sprite animation
+--- Stops the sprite's animation
 function Sprite:stop()
   if self.frames == nil then return end
 
@@ -112,11 +112,23 @@ function Sprite:stop()
   self.frame_index = 1
 end
 
---- Sets the current sprite animation frame
+--- Sets the current sprite's animation frame
 --- @param index number
 function Sprite:setFrame(index)
   self:stop()
   self.frame_index = math.clamp(index, 1, #self.frames)
+end
+
+--- Gets the sprite's animation speed
+--- @return number
+function Sprite:getSpeed()
+  return self.speed
+end
+
+--- Sets the sprite's animation speed
+--- @param speed number
+function Sprite:setSpeed(speed)
+  self.speed = speed
 end
 
 --- Creates a sprite

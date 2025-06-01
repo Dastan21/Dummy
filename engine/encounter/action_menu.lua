@@ -254,12 +254,12 @@ function ActionMenu:initOptions()
   for i, option in ipairs(self.options) do
     local max_x = self:getMaxX()
     local max_y = self:getMaxY()
-    local x = 98 + 256 * ((i - 1) % max_x)
-    local y = 287 + 32 * ((math.ceil(i / max_x) - 1) % max_y)
+    local x = 100 + 256 * ((i - 1) % max_x)
+    local y = 286 + 32 * ((math.ceil(i / max_x) - 1) % max_y)
 
     if self.direction == "vertical" then
-      x = 98 + 256 * ((math.ceil(i / max_y) - 1) % max_x)
-      y = 287 + 32 * ((i - 1) % max_y)
+      x = 100 + 256 * ((math.ceil(i / max_y) - 1) % max_x)
+      y = 286 + 32 * ((i - 1) % max_y)
     end
 
     option.text:setPosition(x, y)

@@ -109,6 +109,10 @@ function DialogueText:update(dt)
     Audio.playSound(self.voice)
   end
 
+  if Input.isPressed(Input.Cancel) then
+    self:skip()
+  end
+
   self:updateDialogue()
 end
 
@@ -123,6 +127,7 @@ function DialogueText:new(value)
     text_index = 0,
     voice = "text_voice",
     max_width = 0,
+    can_skip = true
   }, { value })
 
   Scene.addDialogue(dialogue_text)

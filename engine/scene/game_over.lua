@@ -36,21 +36,20 @@ function self.load(x, y)
   self.player_sprite:setPosition(x, y)
   -- heart shards
   self.player_shards = {}
-  self.player_shards_speed = 100
   for i = 1, 6 do
     local shard_sprite = Sprite:new({
       "heart_shard1",
       "heart_shard2",
       "heart_shard3",
       "heart_shard4"
-    }, 1 / 7)
+    }, 4 / 30)
     shard_sprite:stop()
     shard_sprite:setPosition(x, y)
     shard_sprite:setVisible(false)
     self.player_shards[i] = {
       sprite = shard_sprite,
-      vel_x = (math.random() - math.random()) * 4,
-      vel_y = (math.random() - math.random()) * 4
+      vel_x = (math.random() - 0.5) * 7,
+      vel_y = (math.random() - 0.5) * 7
     }
   end
 
@@ -60,7 +59,7 @@ function self.load(x, y)
   self.black_sprite:setVisible(false)
   self.black_sprite:setAlpha(0)
   self.black_sprite:setLayer(Constants.LAYERS.TOP)
-  self.transition_time = 0
+  self.fade_time = 1
 
   -- dialogue
   self.dialogue_text = DialogueText:new("")
@@ -70,6 +69,7 @@ function self.load(x, y)
   self.dialogue_text:setScale(2)
   self.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
   self.dialogue_text:setVoice("asgore_voice")
+  self.dialogue_text:setCanSkip(false)
   self.dialogue_text:setMaxWidth(400)
   self.dialogue_text:setText(Lang.translate("GAME_OVER_TEXT_1"))
   self.dialogue_text:setVisible(false)
@@ -105,13 +105,12 @@ end
 
 function self.update(dt)
   if self.dialogue_text:isVisible() then
-    if Input.isPressed(Input.Cancel) then
-      self.dialogue_text:skip()
-    elseif Input.isPressed(Input.Confirm) and self.dialogue_text:isDone() then
+    if Input.isPressed(Input.Confirm) and self.dialogue_text:isDone() then
       self.dialogue_index = self.dialogue_index + 1
 
       if self.dialogue_index == 2 then
-        self.dialogue_text:setText(Lang.translate({ "GAME_OVER_TEXT_2", Player.getName() }))
+        local name = Player and Player.getName() or "Frisk"
+        self.dialogue_text:setText(Lang.translate({ "GAME_OVER_TEXT_2", name }))
       elseif self.dialogue_index == 3 then
         self.dialogue_text:setText("")
       elseif self.dialogue_index == 4 then
@@ -130,10 +129,10 @@ function self.update(dt)
     for i, shard in ipairs(self.player_shards) do
       if shard.sprite:isVisible() then
         local x, y = shard.sprite:getPosition()
-        x = x + shard.vel_x * self.player_shards_speed * dt
-        y = y + shard.vel_y * self.player_shards_speed * dt
+        x = x + shard.vel_x * dt * 30
+        y = y + shard.vel_y * dt * 30
         shard.sprite:setPosition(x, y)
-        shard.vel_y = shard.vel_y + dt * 2
+        shard.vel_y = shard.vel_y + 0.2 * dt * 30
 
         if y > 500 then
           shard.sprite:setVisible(false)
@@ -143,11 +142,11 @@ function self.update(dt)
   end
 
   if self.black_sprite:isVisible() then
-    self.transition_time = self.transition_time + dt
-    self.black_sprite:setAlpha(self.transition_time)
-    self.game_over_music:setVolume(math.max(0, (1 - self.transition_time) / 2))
+    self.fade_time = math.max(0, self.fade_time - 0.02 * dt * 30)
+    self.black_sprite:setAlpha(1 - self.fade_time)
+    self.game_over_music:setVolume(self.fade_time)
 
-    if self.transition_time >= 1.2 then
+    if self.fade_time <= 0 then
       Scene.change("MAIN_MENU")
     end
   end

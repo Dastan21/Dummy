@@ -96,8 +96,21 @@ function self.load()
           end
           txt:setText({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] })
         end,
+      },
+      {
+        text = Text:new("MAIN_MENU_BACK"),
+        action = function()
+          self.changeMenu(self.options)
+        end,
       }
     }
+  })
+
+  table.insert(self.options, {
+    text = Text:new("MAIN_MENU_QUIT"),
+    action = function()
+      love.event.quit()
+    end
   })
 
   self.current_menu = self.options

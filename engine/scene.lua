@@ -31,6 +31,7 @@ function scene.change(scene_name, ...)
   scene.clean()
   scene.scene = scenes[scene_name]
   scene.scene_name = scene_name
+  scene.scene_data = { ... }
   scene.scene.load(...)
 
   scene.quitting_delay = SCENE_QUITTING_DELAY
@@ -72,6 +73,12 @@ function scene.updateQuitting(dt)
       scene.quitting_sprite:setSprite("quitting2")
     end
   end
+end
+
+function scene.reload()
+  local scene_name = scene.scene_name
+  scene.scene_name = nil
+  scene.change(scene_name, table.unpack(scene.scene_data))
 end
 
 function scene.update(dt)

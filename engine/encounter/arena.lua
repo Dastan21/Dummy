@@ -1,11 +1,11 @@
---- @class Dummy.Arena : Dummy.Drawable
+--- @class Dummy.Arena
 ---
 --- @field private x number
 --- @field private y number
 --- @field private width number
 --- @field private height number
 --- @field private resize_callback fun()|nil
-local self = Drawable:new()
+local self = {}
 
 --- @class Dummy.Arena
 local current = {}
@@ -23,40 +23,58 @@ function self.load()
 
   self.layer = Constants.LAYERS.ARENA
 
-  Scene.addDrawable(self)
+  Drawable:new(function()
+    local arena_x = self.x - (current.width / 2)
+    local arena_y = self.y - current.height
+
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.rectangle("fill", arena_x, arena_y, current.width, current.height)
+  end):setLayer(Constants.LAYERS.ARENA)
+
+  Drawable:new(function()
+    local b = Constants.ARENA.BORDER_WIDTH
+    local x = self.x - (current.width / 2)
+    local y = self.y - current.height
+
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.rectangle("fill", x - b, y - b, current.width + b * 2, b)
+    love.graphics.rectangle("fill", x - b, y + current.height, current.width + b * 2, b)
+    love.graphics.rectangle("fill", x - b, y - b, b, current.height + b * 2)
+    love.graphics.rectangle("fill", x + current.width, y - b, b, current.height + b * 2)
+  end):setLayer(Constants.LAYERS.ABOVE_BULLETS)
 end
 
 function self.update(dt)
   -- if current.x ~= self.x then
   --   local sign = math.sign(self.x - current.x)
-  --   current.x = current.x + sign * SPEED * dt
+  --   current.x = current.x + sign * Constants.ARENA.RESIZE_SPEED * dt
   --   if (math.sign(self.x - current.x) ~= sign) then
   --     current.x = self.x
   --   end
   -- end
   -- if current.y ~= self.y then
   --   local sign = math.sign(self.y - current.y)
-  --   current.y = current.y + sign * SPEED * dt
+  --   current.y = current.y + sign * Constants.ARENA.RESIZE_SPEED * dt
   --   if (math.sign(self.y - current.y) ~= sign) then
   --     current.y = self.y
   --   end
   -- end
 
   if current.height > self.height then
-    current.height = current.height - Constants.ARENA.RESIZE_SPEED * dt * 3
+    current.height = current.height - Constants.ARENA.RESIZE_SPEED * dt * 30
     if current.height < self.height then
       current.height = self.height
     end
   end
   if current.width ~= self.width then
     local sign = math.sign(self.width - current.width)
-    current.width = current.width + sign * Constants.ARENA.RESIZE_SPEED * dt * 4
+    current.width = current.width + sign * Constants.ARENA.RESIZE_SPEED * dt * 30
     if (math.sign(self.width - current.width) ~= sign) then
       current.width = self.width
     end
   else
     if current.height < self.height then
-      current.height = current.height + Constants.ARENA.RESIZE_SPEED * dt * 3
+      current.height = current.height + Constants.ARENA.RESIZE_SPEED * dt * 30
       if current.height > self.height then
         current.height = self.height
       end
@@ -67,18 +85,6 @@ function self.update(dt)
     self.resize_callback()
     self.resize_callback = nil
   end
-end
-
-function self.draw()
-  local arena_x = self.x - (current.width / 2)
-  local arena_y = self.y - current.height
-
-  love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.rectangle("fill", arena_x - Constants.ARENA.BORDER_WIDTH, arena_y - Constants.ARENA.BORDER_WIDTH,
-    current.width + 2 * Constants.ARENA.BORDER_WIDTH,
-    current.height + 2 * Constants.ARENA.BORDER_WIDTH)
-  love.graphics.setColor(0, 0, 0, 1)
-  love.graphics.rectangle("fill", arena_x, arena_y, current.width, current.height)
 end
 
 --- Resizes the arena

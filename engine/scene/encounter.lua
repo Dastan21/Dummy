@@ -86,7 +86,6 @@ function self.load(mod)
   self.target_sprite:setVisible(false)
   self.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1)
   self.target_bar_sprite:stop()
-  self.target_bar_sprite:setPosition(38, 320)
   self.target_bar_sprite:setVisible(false)
   self.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
 
@@ -105,7 +104,7 @@ function self.load(mod)
     "strike4",
     "strike5",
     "strike6"
-  }, 1 / 8, false, false)
+  }, 4 / 30, false, false)
   self.strike_sprite:stop()
   self.strike_sprite:setOrigin(0.5, 0.5)
   self.strike_sprite:setScale(1.5)
@@ -153,12 +152,13 @@ function self.loadEnemies()
 
     table.insert(self.enemies, enemy)
 
+    -- DEBUG
     Drawable:new(function()
       local x, y = enemy:getPosition()
       local w, h = enemy:getSize()
-      love.graphics.setColor(0, 0, 1, 0.2)
+      love.graphics.setColor(1, 1, 1, 0.2)
       love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
-      love.graphics.setColor(1, 0, 0, 1)
+      love.graphics.setColor(1, 1, 1, 1)
       love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
     end):setLayer(Constants.LAYERS.ARENA)
   end
@@ -273,6 +273,7 @@ function self.loadActMenus()
         action = function()
           Audio.playSound("menu_select")
           self.dialogue_text:setText(enemy:getCheckText())
+          self.dialogue_text:setCanSkip(false)
           self.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
         end
       })
@@ -342,6 +343,23 @@ function self.loadMercyMenu()
         end)
 
         Audio.playSound("escaped")
+
+        local flee_value = math.random(20)
+        local flee_text_key
+        if flee_value <= 1 then
+          flee_text_key = "ENCOUNTER_FLEE_TEXT_1"
+        elseif flee_value == 2 then
+          flee_text_key = "ENCOUNTER_FLEE_TEXT_2"
+        elseif flee_value == 3 then
+          flee_text_key = "ENCOUNTER_FLEE_TEXT_3"
+        else
+          flee_text_key = "ENCOUNTER_FLEE_TEXT_4"
+        end
+        self.dialogue_text:setText("   * " .. Lang.translate(flee_text_key))
+        self.dialogue_text:setVisible(true)
+        self.dialogue_text:skip()
+        self.leaveMenu()
+        self.unselectAction()
       end,
       silent = true
     })
@@ -372,6 +390,7 @@ function self.startActionSelect()
     self.leaveMenu()
 
     self.dialogue_text:setText(self.mod.encounter.text)
+    self.dialogue_text:setCanSkip(true)
     self.dialogue_text:setVisible(true)
   end)
 end
@@ -407,8 +426,6 @@ function self.updateActionSelect()
     if self.action.index > 0 then
       Audio.playSound("menu_select")
     end
-  elseif Input.isPressed(Input.Cancel) then
-    self.dialogue_text:skip()
   end
 end
 
@@ -470,12 +487,16 @@ function self.updateActions()
   end
 end
 
+function self.unselectAction()
+  self.action.index = -math.abs(self.action.index)
+  self.updateActions()
+end
+
 function self.startTextDialogue()
   self.dialogue_text:reset()
   self.dialogue_text:setVisible(true)
 
-  self.action.index = -math.abs(self.action.index)
-  self.updateActions()
+  self.unselectAction()
 
   Player.hide()
 
@@ -483,9 +504,7 @@ function self.startTextDialogue()
 end
 
 function self.updateTextDialogue()
-  if Input.isPressed(Input.Cancel) then
-    self.dialogue_text:skip()
-  elseif Input.isPressed(Input.Confirm) and self.dialogue_text:isDone() then
+  if Input.isPressed(Input.Confirm) and self.dialogue_text:isDone() then
     self.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
   end
 end
@@ -493,8 +512,7 @@ end
 function self.startEnemyDialogue()
   self.dialogue_text:setVisible(false)
 
-  self.action.index = -math.abs(self.action.index)
-  self.updateActions()
+  self.unselectAction()
 
   -- TODO: get arena width/height in wave
   local wave_arena_width = 175
@@ -607,10 +625,10 @@ function self.startAttacking()
 
       Timer.after(1, function()
         Timer.during(0.5, function(dt)
-          alpha = math.clamp(alpha - dt * 3.5, 0, 1)
+          alpha = math.clamp(alpha - 2.4 * dt, 0, 1)
           self.target_sprite:setAlpha(alpha)
 
-          scale_x = math.max(0.25, scale_x - dt * 2.5)
+          scale_x = math.max(0.25, scale_x - 1.8 * dt)
           self.target_sprite:setScale(scale_x, 1)
 
           if alpha <= 0 then
@@ -619,7 +637,10 @@ function self.startAttacking()
         end)
 
         self.target_bar_sprite:setVisible(false)
-        self.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+
+        Timer.after(0.05, function()
+          self.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+        end)
       end)
     end
 
@@ -640,14 +661,18 @@ function self.startAttacking()
 
       self.strike_sprite:setVisible(true)
       self.strike_sprite:setScale(stretch * 2 - 0.5)
+      local strike_speed_base = 0.5 - stretch / 4
+      local strike_speed = 1 / (strike_speed_base * 30)
+      self.strike_sprite:setSpeed(strike_speed)
       self.strike_sprite:play()
       self.target_bar_sprite:play()
       Audio.playSound("strike")
-      Timer.after(1, proceed_attack)
+      local damage_delay = (1 / strike_speed_base * 6 + 3) / 30
+      Timer.after(damage_delay, proceed_attack)
     end
   end
 
-  self.target_bar_sprite:setPosition(38, 320)
+  self.target_bar_sprite:setPosition(22, 320)
   self.target_bar_sprite:setVisible(true)
   self.target_bar_sprite:setFrame(1)
 
@@ -673,8 +698,7 @@ function self.updateAttacking(dt)
 end
 
 function self.startDefending()
-  self.action.index = -math.abs(self.action.index)
-  self.updateActions()
+  self.unselectAction()
 
   -- TODO: get arena width/height in wave
   local wave_arena_width = 175
