@@ -185,7 +185,8 @@ end
 
 --- Select a menu option
 --- @param index number
-function self.select(index)
+--- @param silent? boolean wether to play a sound (Defaults to `false`)
+function self.select(index, silent)
   if index == self.selected_index then return end
 
   -- Previously selected menu item
@@ -201,12 +202,16 @@ function self.select(index)
   if menu_item ~= nil and (menu_item.action ~= nil or menu_item.menu ~= nil) then
     menu_item.text:setColor(1, 1, 0)
   end
+
+  if not silent then
+    Audio.playSound("menu_move")
+  end
 end
 
 --- Change menu
 --- @param new_menu Dummy.Menu
 function self.changeMenu(new_menu)
-  self.select(1)
+  self.select(1, true)
   for _, menu_item in ipairs(self.current_menu) do menu_item.text:setVisible(false) end
   self.current_menu = new_menu
   for _, menu_item in ipairs(self.current_menu) do menu_item.text:setVisible(true) end
@@ -241,6 +246,8 @@ function self.confirm()
   if type(selected_menu.menu) == "table" then
     self.changeMenu(selected_menu.menu)
   end
+
+  Audio.playSound("menu_select")
 end
 
 --- Confirm menu
@@ -250,11 +257,19 @@ function self.cancel()
   end
 end
 
-function self.update(dt)
+function self.update()
   if Input.isPressed(Input.Up) then
-    self.select(math.max(1, self.selected_index - 1))
+    if self.selected_index <= 1 then
+      self.select(#self.current_menu)
+    else
+      self.select(self.selected_index - 1)
+    end
   elseif Input.isPressed(Input.Down) then
-    self.select(math.min(#self.current_menu, self.selected_index + 1))
+    if self.selected_index >= #self.current_menu then
+      self.select(1)
+    else
+      self.select(self.selected_index + 1)
+    end
   elseif Input.isPressed(Input.Confirm) then
     self.confirm()
   elseif Input.isPressed(Input.Cancel) then
