@@ -9,6 +9,7 @@
 --- @field protected timer table|nil
 local Sprite = Class:extend(Drawable)
 
+---@type table<string, love.ImageData>
 local cache = {}
 
 --- Loads a sprite
@@ -19,25 +20,28 @@ function Sprite:loadSprite(sprite_path)
   local sprite_full_path = "assets/sprites/" .. Lang.getLanguage() .. "/" .. sprite_path .. ".png"
   -- try to get sprite data from cache
   local image_data = cache[sprite_full_path]
-  local success = true
-  success, image_data = pcall(love.image.newImageData, sprite_full_path)
+  if image_data == nil then
+    local success_image_data, new_image_data = pcall(love.image.newImageData, sprite_full_path)
 
-  -- if sprite is not available in the current language, get it from the sprites root folder
-  if not success then
-    sprite_full_path = "assets/sprites/" .. sprite_path .. ".png"
-    success, image_data = pcall(love.image.newImageData, sprite_full_path)
-    assert(success, "Sprite \"" .. sprite_path .. "\" not found")
-  end
+    -- if sprite is not available in the current language, get it from the sprites root folder
+    if not success_image_data then
+      sprite_full_path = "assets/sprites/" .. sprite_path .. ".png"
+      success_image_data, new_image_data = pcall(love.image.newImageData, sprite_full_path)
+      assert(success_image_data, "Sprite \"" .. sprite_path .. "\" not found")
+    end
 
-  if cache[sprite_full_path] == nil then
-    cache[sprite_full_path] = image_data
+    if cache[sprite_full_path] == nil then
+      cache[sprite_full_path] = new_image_data
+    end
+
+    image_data = new_image_data
   end
 
   -- create an image from the sprite data
-  success, image_data = pcall(love.graphics.newImage, image_data)
-  assert(success, "Sprite \"" .. sprite_path .. "\" not found")
+  local successImage, image = pcall(love.graphics.newImage, image_data)
+  assert(successImage, "Sprite \"" .. sprite_path .. "\" not found")
 
-  return image_data
+  return image
 end
 
 --- Gets the sprite's value
@@ -158,6 +162,11 @@ function Sprite:new(frames, speed, loop, keep_last_frame)
   end
 
   return sprite
+end
+
+--- Clears the cache
+function Sprite.clear()
+  cache = {}
 end
 
 return Sprite

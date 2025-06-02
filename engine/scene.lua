@@ -140,7 +140,7 @@ function scene.addDrawable(drawable)
 end
 
 --- Removes a drawable in the current scene
---- @param drawable Dummy.Drawable
+--- @param drawable Dummy.Drawable|fun()
 function scene.removeDrawable(drawable)
   local index = 0
   for i, d in ipairs(scene.drawables) do
@@ -180,6 +180,8 @@ function scene.clean()
   scene.drawables = tmp_drawables
 
   scene.dialogues = {}
+  Sprite.clear()
+  Audio.clear()
   love.audio.stop()
   Timer.clear()
 end

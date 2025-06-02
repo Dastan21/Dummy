@@ -3,7 +3,7 @@ local AUDIO_EXTS = { "mp3", "wav", "ogg" }
 --- @class Dummy.Audio
 ---
 --- @field private current_music love.Source
-local self = {}
+local Audio = {}
 
 ---@type table<string, love.FileData>
 local cache = {}
@@ -12,7 +12,7 @@ local cache = {}
 ---@param name string
 ---@return string
 ---@private
-function self.getFilenameWithExt(name)
+function Audio.getFilenameWithExt(name)
   local ext_index = 1
   local filename = ""
   local fileinfo = nil
@@ -34,8 +34,8 @@ end
 --- @param play boolean
 --- @param loop boolean
 --- @return love.Source
-function self.playAudio(folder, audio_name, type, play, loop)
-  local filename = self.getFilenameWithExt(folder .. audio_name)
+function Audio.playAudio(folder, audio_name, type, play, loop)
+  local filename = Audio.getFilenameWithExt(folder .. audio_name)
 
   local source = nil
   local success = true
@@ -65,17 +65,17 @@ end
 --- @param loop? boolean wether the music should loop (Defaults to `true`)
 --- @param replace? boolean wether to replace the current playing music (Defaults to `true`)
 --- @return love.Source
-function self.playMusic(music_name, play, loop, replace)
+function Audio.playMusic(music_name, play, loop, replace)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, true)
   replace = Utils.getOrDefault(replace, true)
 
-  if replace and self.current_music ~= nil then
-    self.current_music:stop()
+  if replace and Audio.current_music ~= nil then
+    Audio.current_music:stop()
   end
 
-  self.current_music = self.playAudio("assets/music/", music_name, "stream", play, loop)
-  return self.current_music
+  Audio.current_music = Audio.playAudio("assets/music/", music_name, "stream", play, loop)
+  return Audio.current_music
 end
 
 --- Plays a sound
@@ -83,11 +83,16 @@ end
 --- @param play? boolean wether the sound should play instantly (Defaults to `true`)
 --- @param loop? boolean wether the sound should loop (Defaults to `false`)
 --- @return love.Source
-function self.playSound(sound_name, play, loop)
+function Audio.playSound(sound_name, play, loop)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, false)
 
-  return self.playAudio("assets/sounds/", sound_name, "static", play, loop)
+  return Audio.playAudio("assets/sounds/", sound_name, "static", play, loop)
 end
 
-return self
+--- Clears the cache
+function Audio.clear()
+  cache = {}
+end
+
+return Audio
