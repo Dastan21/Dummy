@@ -1,5 +1,3 @@
-local mod_list = require "engine.mod.mod_list"
-
 --- @class Dummy.Scene.MainMenu
 ---
 --- @field private menu Dummy.MainMenu
@@ -10,6 +8,8 @@ local mod_list = require "engine.mod.mod_list"
 --- @field private background_sprite Dummy.Sprite
 --- @field private menu_music love.Source
 local main_menu = Class(MainMenu)
+
+local mod_list = require "engine.mod.mod_list"
 
 function main_menu.load()
   mod_list.load()
