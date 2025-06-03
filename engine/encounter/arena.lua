@@ -4,121 +4,183 @@
 --- @field private y number
 --- @field private width number
 --- @field private height number
+--- @field private target_x number
+--- @field private target_y number
+--- @field private target_width number
+--- @field private target_height number
 --- @field private resize_callback fun()|nil
-local self = {}
+--- @field private move_callback fun()|nil
+local Arena = {}
 
---- @class Dummy.Arena
-local current = {}
+--- Loads the arena
+function Arena.load()
+  Arena.x = Constants.ARENA.DEFAULT_X
+  Arena.y = Constants.ARENA.DEFAULT_Y
+  Arena.width = Constants.ARENA.DEFAULT_WIDTH
+  Arena.height = Constants.ARENA.DEFAULT_HEIGHT
 
-function self.load()
-  current.width = Constants.ARENA.DEFAULT_WIDTH
-  current.height = Constants.ARENA.DEFAULT_HEIGHT
-  current.x = Constants.ARENA.DEFAULT_X
-  current.y = Constants.ARENA.DEFAULT_Y
+  Arena.target_x = Constants.ARENA.DEFAULT_X
+  Arena.target_y = Constants.ARENA.DEFAULT_Y
+  Arena.target_width = Constants.ARENA.DEFAULT_WIDTH
+  Arena.target_height = Constants.ARENA.DEFAULT_HEIGHT
 
-  self.width = Constants.ARENA.DEFAULT_WIDTH
-  self.height = Constants.ARENA.DEFAULT_HEIGHT
-  self.x = Constants.ARENA.DEFAULT_X
-  self.y = Constants.ARENA.DEFAULT_Y
+  Arena.layer = Constants.LAYERS.ARENA
 
-  self.layer = Constants.LAYERS.ARENA
-
+  --- arena background
   Drawable:new(function()
-    local arena_x = self.x - (current.width / 2)
-    local arena_y = self.y - current.height
+    local arena_x = Arena.x - (Arena.width / 2)
+    local arena_y = Arena.y - Arena.height
 
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.rectangle("fill", arena_x, arena_y, current.width, current.height)
+    love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
   end):setLayer(Constants.LAYERS.ARENA)
 
+  --- arena border
   Drawable:new(function()
     local b = Constants.ARENA.BORDER_WIDTH
-    local x = self.x - (current.width / 2)
-    local y = self.y - current.height
+    local x = Arena.x - (Arena.width / 2)
+    local y = Arena.y - Arena.height
 
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.rectangle("fill", x - b, y - b, current.width + b * 2, b)
-    love.graphics.rectangle("fill", x - b, y + current.height, current.width + b * 2, b)
-    love.graphics.rectangle("fill", x - b, y - b, b, current.height + b * 2)
-    love.graphics.rectangle("fill", x + current.width, y - b, b, current.height + b * 2)
+    love.graphics.rectangle("fill", x - b, y - b, Arena.width + b * 2, b)
+    love.graphics.rectangle("fill", x - b, y + Arena.height, Arena.width + b * 2, b)
+    love.graphics.rectangle("fill", x - b, y - b, b, Arena.height + b * 2)
+    love.graphics.rectangle("fill", x + Arena.width, y - b, b, Arena.height + b * 2)
   end):setLayer(Constants.LAYERS.ABOVE_BULLETS)
 end
 
-function self.update(dt)
-  -- if current.x ~= self.x then
-  --   local sign = math.sign(self.x - current.x)
-  --   current.x = current.x + sign * Constants.ARENA.RESIZE_SPEED * dt
-  --   if (math.sign(self.x - current.x) ~= sign) then
-  --     current.x = self.x
-  --   end
-  -- end
-  -- if current.y ~= self.y then
-  --   local sign = math.sign(self.y - current.y)
-  --   current.y = current.y + sign * Constants.ARENA.RESIZE_SPEED * dt
-  --   if (math.sign(self.y - current.y) ~= sign) then
-  --     current.y = self.y
-  --   end
-  -- end
-
-  if current.height > self.height then
-    current.height = current.height - Constants.ARENA.RESIZE_SPEED * dt * 30
-    if current.height < self.height then
-      current.height = self.height
+--- Updates the arena
+function Arena.update(dt)
+  -- resize
+  if Arena.height > Arena.target_height then
+    Arena.height = Arena.height - Constants.ARENA.RESIZE_SPEED * dt * 30
+    if Arena.height < Arena.target_height then
+      Arena.height = Arena.target_height
     end
   end
-  if current.width ~= self.width then
-    local sign = math.sign(self.width - current.width)
-    current.width = current.width + sign * Constants.ARENA.RESIZE_SPEED * dt * 30
-    if (math.sign(self.width - current.width) ~= sign) then
-      current.width = self.width
+  if Arena.width ~= Arena.target_width then
+    local sign = math.sign(Arena.target_width - Arena.width)
+    Arena.width = Arena.width + sign * Constants.ARENA.RESIZE_SPEED * dt * 30
+    if (math.sign(Arena.target_width - Arena.width) ~= sign) then
+      Arena.width = Arena.target_width
     end
   else
-    if current.height < self.height then
-      current.height = current.height + Constants.ARENA.RESIZE_SPEED * dt * 30
-      if current.height > self.height then
-        current.height = self.height
+    if Arena.height < Arena.target_height then
+      Arena.height = Arena.height + Constants.ARENA.RESIZE_SPEED * dt * 30
+      if Arena.height > Arena.target_height then
+        Arena.height = Arena.target_height
       end
     end
   end
 
-  if current.width == self.width and current.height == self.height and type(self.resize_callback) == "function" then
-    self.resize_callback()
-    self.resize_callback = nil
+  if Arena.width == Arena.target_width and Arena.height == Arena.target_height and type(Arena.resize_callback) == "function" then
+    Arena.resize_callback()
+    Arena.resize_callback = nil
+  end
+
+  -- move
+  if Arena.x ~= Arena.target_x then
+    local sign = math.sign(Arena.target_x - Arena.x)
+    Arena.x = Arena.x + sign * Constants.ARENA.RESIZE_SPEED * dt * 30
+    if (math.sign(Arena.target_x - Arena.x) ~= sign) then
+      Arena.x = Arena.target_x
+    end
+  end
+  if Arena.y ~= Arena.target_y then
+    local sign = math.sign(Arena.target_y - Arena.y)
+    Arena.y = Arena.y + sign * Constants.ARENA.RESIZE_SPEED * dt * 30
+    if (math.sign(Arena.target_y - Arena.y) ~= sign) then
+      Arena.y = Arena.target_y
+    end
+  end
+
+  if Arena.x == Arena.target_x and Arena.y == Arena.target_y and type(Arena.move_callback) == "function" then
+    Arena.move_callback()
+    Arena.move_callback = nil
   end
 end
 
 --- Resizes the arena
 --- @param width number target width of the arena
 --- @param height number target height of the arena
+--- @param instant? boolean resizes the arena instantly (Defaults to `false`)
 --- @param resize_callback? fun() called after finished resizing
-function self.resize(width, height, resize_callback)
-  self.width = width
-  self.height = height
-  self.resize_callback = resize_callback
+function Arena.resize(width, height, instant, resize_callback)
+  if Utils.getOrDefault(instant, false) then
+    Arena.width = width
+    Arena.height = height
+    Arena.target_width = width
+    Arena.target_height = height
+
+    if type(resize_callback) == "function" then
+      resize_callback()
+    end
+  else
+    Arena.target_width = width
+    Arena.target_height = height
+    Arena.resize_callback = resize_callback
+  end
+end
+
+--- Moves the arena relative from the center-bottom
+---@param x number target x position of the arena
+---@param y number target y position of the arena
+--- @param instant? boolean moves the arena instantly (Defaults to `false`)
+--- @param move_callback? fun() called after finished moving
+function Arena.move(x, y, instant, move_callback)
+  local abs_x = Arena.x + x
+  local abs_y = Arena.y + y
+  if Utils.getOrDefault(instant, false) then
+    Arena.x = abs_x
+    Arena.y = abs_y
+    Arena.target_x = abs_x
+    Arena.target_y = abs_y
+
+    if type(move_callback) == "function" then
+      move_callback()
+    end
+  else
+    Arena.target_x = abs_x
+    Arena.target_y = abs_y
+    Arena.move_callback = move_callback
+  end
 end
 
 --- Resets the arena bounds
---- @param resize_callback? fun() called after finished resizing
-function self.reset(resize_callback)
-  self.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, resize_callback)
+--- @param reset_callback? fun() called after finished resetting
+function Arena.reset(reset_callback)
+  local finished_resizing = false
+  local finished_moving = false
+  local callback = function(resize, move)
+    if type(reset_callback) ~= "function" then return end
+
+    finished_resizing = finished_resizing or resize
+    finished_moving = finished_moving or move
+    if finished_resizing and finished_moving then
+      reset_callback()
+    end
+  end
+
+  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, false, function() callback(true) end)
+  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, false, function() callback(nil, true) end)
 end
 
 --- Gets the arena position
 --- @return number, number
-function self.getPosition()
-  return self.x, self.y
+function Arena.getPosition()
+  return Arena.x, Arena.y
 end
 
 --- Gets the arena width
 --- @return number
-function self.getWidth()
-  return self.width
+function Arena.getWidth()
+  return Arena.width
 end
 
 --- Gets the arena height
 --- @return number
-function self.getHeight()
-  return self.height
+function Arena.getHeight()
+  return Arena.height
 end
 
-return self
+return Arena

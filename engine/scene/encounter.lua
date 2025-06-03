@@ -521,10 +521,10 @@ function self.startEnemyDialogue()
 
   -- TODO: get arena width/height in wave
   local wave_arena_width = 175
-  Arena.resize(wave_arena_width, 130, function()
-    self.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+  Arena.resize(wave_arena_width, 130, false, function()
     self.enemy_hp_draw:setVisible(false)
     self.enemy_hp_text:setVisible(false)
+    self.setState(Constants.ENCOUNTER_STATES.DEFENDING)
   end)
 
   local x, y = Arena:getPosition()
@@ -699,16 +699,16 @@ function self.startAttacking()
   end)
 end
 
-function self.updateAttacking(dt)
-end
-
 function self.startDefending()
   self.unselectAction()
 
   -- TODO: get arena width/height in wave
   local wave_arena_width = 175
   local wave_arena_height = 175
+  local wave_arena_x = 0
+  local wave_arena_y = -45
   Arena.resize(wave_arena_width, wave_arena_height)
+  Arena.move(wave_arena_x, wave_arena_y)
 end
 
 function self.updateDefending(dt)
@@ -767,8 +767,6 @@ function self.update(dt)
     self.updateTextDialogue()
   elseif self.current_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE then
     self.updateEnemyDialogue(dt)
-  elseif self.current_state == Constants.ENCOUNTER_STATES.ATTACKING then
-    self.updateAttacking(dt)
   elseif self.current_state == Constants.ENCOUNTER_STATES.DEFENDING then
     self.updateDefending(dt)
     if Input.isPressed(Input.Cancel) then

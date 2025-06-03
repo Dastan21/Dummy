@@ -129,7 +129,7 @@ function Drawable:isVisible()
   return self.visible
 end
 
---- Sets if the drawable is visible
+--- Sets wether the drawable is visible
 --- @param visible boolean
 function Drawable:setVisible(visible)
   self.visible = visible
@@ -159,7 +159,7 @@ function Drawable:isPersistent()
   return self.persistent
 end
 
---- Sets if the drawable is persistent between scenes
+--- Sets wether the drawable is persistent between scenes
 --- @param persistent boolean
 function Drawable:setPersistent(persistent)
   self.persistent = persistent

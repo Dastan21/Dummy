@@ -45,7 +45,7 @@ function DialogueText:canSkip()
   return self.can_skip
 end
 
---- Sets if the dialogue can be skipped
+--- Sets wether the dialogue can be skipped
 --- @param can_skip boolean
 function DialogueText:setCanSkip(can_skip)
   self.can_skip = can_skip
