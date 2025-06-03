@@ -180,18 +180,18 @@ end
 
 -- other --
 
-local self = {}
+local Utils = {}
 
 --- Get value or default
 --- @generic T
 --- @param value T|nil
 --- @param default_value T
 --- @return T
-function self.getOrDefault(value, default_value)
+function Utils.getOrDefault(value, default_value)
   return value == nil and default_value or value
 end
 
-function self.checkExtension(path, ...)
+function Utils.checkExtension(path, ...)
   for _, v in ipairs({ ... }) do
     if path:sub(- #v - 1):lower() == "." .. v then
       return path:sub(1, - #v - 2), v
@@ -199,4 +199,8 @@ function self.checkExtension(path, ...)
   end
 end
 
-return self
+function Utils.getFilenameWithoutExt(filename)
+  return filename:gsub("%.[^.]*$", "")
+end
+
+return Utils

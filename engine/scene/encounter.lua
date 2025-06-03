@@ -49,7 +49,6 @@ function Encounter.load(mod)
   Encounter.mod = Utils.getOrDefault(mod, {})
   Encounter.mod.player = Utils.getOrDefault(Encounter.mod.player, {})
   Encounter.mod.encounter = Utils.getOrDefault(Encounter.mod.encounter, {})
-  Encounter.mod.enemies = Utils.getOrDefault(Encounter.mod.enemies, {})
 
   if Encounter.mod.title ~= nil then
     love.window.setTitle(Encounter.mod.title)
@@ -169,22 +168,25 @@ end
 function Encounter.loadEnemies()
   --- @type table<number, Dummy.Enemy>
   Encounter.enemies = {}
-  for _, data in ipairs(Encounter.mod.enemies) do
-    if #Encounter.enemies >= 3 then break end
 
-    local enemy = Enemy:new(data)
+  local enemies_files = love.filesystem.getDirectoryItems("mods/" .. Encounter.mod.id .. "/scripts/enemies")
+  for _, filename in ipairs(enemies_files) do
+    local enemy_path = "mods." .. Encounter.mod.id .. ".scripts.enemies." .. Utils.getFilenameWithoutExt(filename)
+    --- @type boolean, Dummy.Enemy
+    local success, enemy = pcall(require, enemy_path)
+    if success and type(enemy) == "table" then
+      table.insert(Encounter.enemies, enemy)
 
-    table.insert(Encounter.enemies, enemy)
-
-    -- DEBUG
-    Drawable:new(function()
-      local x, y = enemy:getPosition()
-      local w, h = enemy:getSize()
-      love.graphics.setColor(1, 1, 1, 0.2)
-      love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
-      love.graphics.setColor(1, 1, 1, 1)
-      love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
-    end):setLayer(Constants.LAYERS.ARENA)
+      -- DEBUG
+      Drawable:new(function()
+        local x, y = enemy:getPosition()
+        local w, h = enemy:getSize()
+        love.graphics.setColor(1, 1, 1, 0.2)
+        love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
+      end):setLayer(Constants.LAYERS.BELOW_ARENA)
+    end
   end
 end
 

@@ -1,18 +1,18 @@
-local AUDIO_EXTS = { "mp3", "wav", "ogg" }
-
 --- @class Dummy.Audio
 ---
 --- @field private current_music love.Source
 local Audio = {}
 
+local AUDIO_EXTS = { "mp3", "wav", "ogg" }
+
 ---@type table<string, love.FileData>
 local cache = {}
 
---- Gets the filename without extension
+--- Checks which extension to use
 ---@param name string
 ---@return string
 ---@private
-function Audio.getFilenameWithExt(name)
+function Audio.checkFilenameExt(name)
   local ext_index = 1
   local filename = ""
   local fileinfo = nil
@@ -35,7 +35,7 @@ end
 --- @param loop boolean
 --- @return love.Source
 function Audio.playAudio(folder, audio_name, type, play, loop)
-  local filename = Audio.getFilenameWithExt(folder .. audio_name)
+  local filename = Audio.checkFilenameExt(folder .. audio_name)
 
   local source = nil
   local success = true

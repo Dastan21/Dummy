@@ -7,7 +7,7 @@
 --- @field protected df number
 --- @field protected xp number
 --- @field protected gold number
---- @field protected check string|nil
+--- @field protected check string|table<number, string>|nil
 --- @field protected x number
 --- @field protected y number
 --- @field protected width number
@@ -18,6 +18,12 @@ local Enemy = Class()
 --- @return string
 function Enemy:getName()
   return self.name
+end
+
+--- Sets the enemy's name
+--- @param name string
+function Enemy:setName(name)
+  self.name = name
 end
 
 --- Gets the enemy's HP
@@ -81,7 +87,18 @@ end
 --- Gets the enemy's check
 --- @return string
 function Enemy:getCheck()
-  return self.check
+  local check = self.check
+  if type(check) == "table" then
+    return "* " .. table.concat(check, "\n* ")
+  end
+
+  return "* " .. check
+end
+
+--- Sets the enemy's check
+--- @param check string|table<number, string>
+function Enemy:setCheck(check)
+  self.check = check
 end
 
 --- Gets the computed enemy's check text
@@ -127,8 +144,7 @@ end
 --- @return Dummy.Enemy
 function Enemy:new(data)
   local position = Utils.getOrDefault(data.position, {})
-  local center = Utils.getOrDefault(position.center, {})
-  local size = Utils.getOrDefault(position.size, {})
+  local size = Utils.getOrDefault(data.size, {})
 
   return Class:new(Enemy, {
     name = Utils.getOrDefault(data.name, "Monster"),
@@ -139,11 +155,13 @@ function Enemy:new(data)
     exp = Utils.getOrDefault(data.xp, 0),
     gold = Utils.getOrDefault(data.gold, 0),
     check = Utils.getOrDefault(data.check, ""),
-    x = Utils.getOrDefault(center[1], 320),
-    y = Utils.getOrDefault(center[2], 200),
+    x = Utils.getOrDefault(position[1], 320),
+    y = Utils.getOrDefault(position[2], 200),
     width = Utils.getOrDefault(size[1], 80),
     height = Utils.getOrDefault(size[2], 110),
   })
 end
+
+function Enemy:init() end
 
 return Enemy
