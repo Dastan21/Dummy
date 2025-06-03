@@ -110,11 +110,10 @@ function ActionMenu:show()
     if visible and type(option.draw) == "function" then
       option.drawable = Drawable:new(function()
         if option.text:isVisible() then
-          option.draw(option.text)
+          option.draw(option)
         end
       end)
       option.drawable:setLayer(Constants.LAYERS.UI)
-      Scene.addDrawable(option.drawable)
     end
   end
 
@@ -250,7 +249,7 @@ function ActionMenu:setActive(active)
 end
 
 --- Initializes the menu options
-function ActionMenu:initOptions()
+function ActionMenu:init()
   for i, option in ipairs(self.options) do
     local max_x = self:getMaxX()
     local max_y = self:getMaxY()
@@ -298,7 +297,7 @@ function ActionMenu:update()
   elseif Input.isPressed(Input.Confirm) then
     local option = self:getSelectedOption()
     if type(option.action) == "function" then
-      option.action(option.text)
+      option.action(option)
     end
   elseif Input.isPressed(Input.Cancel) then
     if type(self.onBack) == "function" then
@@ -315,7 +314,7 @@ end
 --- @return Dummy.Encounter.ActionMenu
 function ActionMenu:new(options, direction, pagination, onBack)
   local action_menu = Class:new(ActionMenu, {
-    options = options or {},
+    options = Utils.getOrDefault(options, {}),
     indexes_x = {},
     indexes_y = {},
     index_x = 0,
@@ -326,7 +325,7 @@ function ActionMenu:new(options, direction, pagination, onBack)
     active = true,
   })
 
-  action_menu:initOptions()
+  action_menu:init()
 
   return action_menu
 end
