@@ -15,11 +15,13 @@ Config = {
   fullscreen = false
 }
 
+-- libraries
 JSON = require "engine.lib.json"
 Timer = require "engine.lib.timer"
 UTF8 = require "engine.lib.utf8"
 require "engine.lib.stable_sort"
 
+-- engine
 Utils = require "engine.utils"
 Class = require "engine.class"
 Audio = require "engine.audio"
@@ -32,6 +34,13 @@ Text = require "engine.drawable.text"
 DialogueText = require "engine.drawable.dialogue_text"
 Debug = require "engine.debug"
 Scene = require "engine.scene"
+MainMenu = require "engine.main_menu"
+
+-- encounter
+Arena = require "engine.encounter.arena"
+Player = require "engine.encounter.player"
+ActionMenu = require "engine.encounter.action_menu"
+Enemy = require "engine.encounter.enemy"
 
 local function loadConfig()
   if love.filesystem.getInfo("settings.json") ~= nil then

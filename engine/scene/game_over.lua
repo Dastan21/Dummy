@@ -1,11 +1,15 @@
---- @class Dummy.GameOver
+--- @class Dummy.Scene.GameOver
 ---
---- @field private player_sprite Dummy.Sprite
---- @field private player_shards table<number, table>
 --- @field private title_game_text Dummy.Text
 --- @field private title_over_text Dummy.Text
 --- @field private title_delay number
 --- @field private title_timer number
+--- @field private player_sprite Dummy.Sprite
+--- @field private player_shards table<number, table>
+--- @field private black_sprite Dummy.Sprite
+--- @field private fade_time number
+--- @field private dialogue_text Dummy.DialogueText
+--- @field private dialogue_index number
 --- @field private game_over_music love.Source
 local self = {}
 
@@ -109,7 +113,7 @@ function self.update(dt)
       self.dialogue_index = self.dialogue_index + 1
 
       if self.dialogue_index == 2 then
-        local name = Player and Player.getName() or "Frisk"
+        local name = Utils.getOrDefault(Player.getName(), "Frisk")
         self.dialogue_text:setText(Lang.translate({ "GAME_OVER_TEXT_2", name }))
       elseif self.dialogue_index == 3 then
         self.dialogue_text:setText("")
@@ -121,8 +125,9 @@ function self.update(dt)
 
   if self.title_game_text:isVisible() and self.title_over_text:isVisible() and self.title_timer < self.title_delay then
     self.title_timer = self.title_timer + dt
-    self.title_game_text:setAlpha(self.title_timer / self.title_delay)
-    self.title_over_text:setAlpha(self.title_timer / self.title_delay)
+    local alpha = math.min(1, self.title_timer / self.title_delay)
+    self.title_game_text:setAlpha(alpha)
+    self.title_over_text:setAlpha(alpha)
   end
 
   if not self.player_sprite:isVisible() then

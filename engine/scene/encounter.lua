@@ -1,4 +1,4 @@
---- @class Dummy.Encounter
+--- @class Dummy.Scene.Encounter
 ---
 --- @field current_menu Dummy.Encounter.ActionMenu|nil
 local self = {
@@ -17,12 +17,7 @@ local self = {
 --- Loads the encounter scene
 --- @param mod Dummy.Mod
 function self.load(mod)
-  Arena = require "engine.encounter.arena"
-  Player = require "engine.encounter.player"
-  ActionMenu = require "engine.encounter.action_menu"
-  Enemy = require "engine.encounter.enemy"
-
-  self.mod = mod or {}
+  self.mod = Utils.getOrDefault(mod, {})
   self.mod.player = Utils.getOrDefault(self.mod.player, {})
   self.mod.encounter = Utils.getOrDefault(self.mod.encounter, {})
   self.mod.enemies = Utils.getOrDefault(self.mod.enemies, {})
@@ -207,6 +202,7 @@ function self.loadActions()
   self.updateActions()
 end
 
+--- Loads actions menus
 function self.loadMenus()
   self.loadFightEnemyMenu()
   self.loadActEnemyMenu()
@@ -215,7 +211,9 @@ function self.loadMenus()
   self.loadMercyMenu()
 end
 
+--- Loads fight enemy menu
 function self.loadFightEnemyMenu()
+  --- @type Dummy.Menu.Options
   local options = {}
   for i, enemy in ipairs(self.enemies) do
     options[i] = {
@@ -225,8 +223,8 @@ function self.loadFightEnemyMenu()
         Audio.playSound("menu_select")
         self.setState(Constants.ENCOUNTER_STATES.ATTACKING)
       end,
-      draw = function(txt)
-        local x, y = txt:getPosition()
+      draw = function(option)
+        local x, y = option.text:getPosition()
         local hp_x, hp_y = x + 220, y - 7
         local hp_width, hp_height = 101, 17
         love.graphics.setColor(1, 0, 0, 1)
@@ -243,7 +241,9 @@ function self.loadFightEnemyMenu()
   end)
 end
 
+--- Loads act enemy menu
 function self.loadActEnemyMenu()
+  --- @type Dummy.Menu.Options
   local options = {}
   for i, enemy in ipairs(self.enemies) do
     options[i] = {
@@ -262,9 +262,11 @@ function self.loadActEnemyMenu()
   end)
 end
 
+--- Loads act menus
 function self.loadActMenus()
   self.act_menus = {}
   for i, enemy in ipairs(self.enemies) do
+    --- @type Dummy.Menu.Options
     local options = {}
 
     if enemy:hasCheck() then
@@ -285,7 +287,9 @@ function self.loadActMenus()
   end
 end
 
+--- Loads item menu
 function self.loadItemMenu()
+  --- @type Dummy.Menu.Options
   local options = {}
 
   -- DEBUG
@@ -305,6 +309,7 @@ function self.loadItemMenu()
 end
 
 function self.loadMercyMenu()
+  --- @type Dummy.Menu.Options
   local options = {
     {
       text = Text:new("* " .. Lang.translate("ENCOUNTER_MENU_MERCY_SPARE")),

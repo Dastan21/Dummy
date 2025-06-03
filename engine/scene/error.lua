@@ -1,3 +1,12 @@
+--- @class Dummy.Scene.Error
+---
+--- @field private traceback string
+--- @field private error_text Dummy.Text
+--- @field private back_main_menu_text Dummy.Text
+--- @field private copy_traceback_text Dummy.Text
+--- @field private copied_delay number
+--- @field private copied_timer number
+--- @field private escape boolean
 local self = {}
 
 function self.load(err)
