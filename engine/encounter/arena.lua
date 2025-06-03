@@ -162,7 +162,9 @@ function Arena.reset(reset_callback)
   end
 
   Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, false, function() callback(true) end)
-  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, false, function() callback(nil, true) end)
+
+  local move_x, move_y = Constants.ARENA.DEFAULT_X - Arena.x, Constants.ARENA.DEFAULT_Y - Arena.y
+  Arena.move(move_x, move_y, false, function() callback(nil, true) end)
 end
 
 --- Gets the arena position
