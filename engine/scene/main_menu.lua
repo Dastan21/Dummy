@@ -7,7 +7,7 @@
 --- @field private credits_text Dummy.Text
 --- @field private background_sprite Dummy.Sprite
 --- @field private menu_music love.Source
-local main_menu = Class(MainMenu)
+local main_menu = {}
 
 local mod_list = require "engine.mod.mod_list"
 
