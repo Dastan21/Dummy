@@ -1,101 +1,106 @@
 --- @class Dummy.Scene
 ---
 --- @field private drawables table<number, Dummy.Drawable>
-local scene = {}
+local Scene = {}
 
 local scenes = {}
 
 local SCENE_QUITTING_DELAY = 0.8
 
-function scene.load()
-  scene.clean()
+--- Loads the scene manager
+function Scene.load()
+  Scene.clean()
 
   scenes.MAIN_MENU = require "engine.scene.main_menu"
   scenes.ENCOUNTER = require "engine.scene.encounter"
   scenes.GAME_OVER = require "engine.scene.game_over"
   scenes.ERROR = require "engine.scene.error"
 
-  scene.quitting_delay = SCENE_QUITTING_DELAY
-  scene.quitting_timer = 0
+  Scene.quitting_delay = SCENE_QUITTING_DELAY
+  Scene.quitting_timer = 0
 end
 
 --- Changes scene
 --- @param scene_name string
 --- @param ... any data to pass to the scene
-function scene.change(scene_name, ...)
+function Scene.change(scene_name, ...)
   assert(type(scene_name) == "string", "Cannot change scene: invalid type \"" .. tostring(scene_name) .. "\"")
   assert(scenes[scene_name:upper()] ~= nil, "Cannot change scene: unkwown scene \"" .. scene_name .. "\"")
 
-  if scene.scene_name == scene_name then return end
+  if Scene.scene_name == scene_name then return end
 
-  scene.clean()
-  scene.scene = scenes[scene_name]
-  scene.scene_name = scene_name
-  scene.scene_data = { ... }
-  scene.scene.load(...)
+  Scene.clean()
+  Scene.scene = scenes[scene_name]
+  Scene.scene_name = scene_name
+  Scene.scene_data = { ... }
+  Scene.scene.load(...)
 
-  scene.quitting_delay = SCENE_QUITTING_DELAY
-  scene.quitting_timer = 0
-  scene.quitting_sprite = Sprite:new("quitting1")
-  scene.quitting_sprite:setPosition(1, 1)
-  scene.quitting_sprite:setOrigin(0)
-  scene.quitting_sprite:setAlpha(0)
-  scene.quitting_sprite:setVisible(false)
+  Scene.quitting_delay = SCENE_QUITTING_DELAY
+  Scene.quitting_timer = 0
+  Scene.quitting_sprite = Sprite:new("quitting1")
+  Scene.quitting_sprite:setPosition(1, 1)
+  Scene.quitting_sprite:setOrigin(0)
+  Scene.quitting_sprite:setAlpha(0)
+  Scene.quitting_sprite:setVisible(false)
 end
 
-function scene.resetQuitting()
-  scene.quitting_timer = 0
-  scene.quitting_sprite:setSprite("quitting1")
-  scene.quitting_sprite:setAlpha(0)
-  scene.quitting_sprite:setVisible(false)
+--- Resets the quitting timer
+function Scene.resetQuitting()
+  Scene.quitting_timer = 0
+  Scene.quitting_sprite:setSprite("quitting1")
+  Scene.quitting_sprite:setAlpha(0)
+  Scene.quitting_sprite:setVisible(false)
 end
 
-function scene.updateQuitting(dt)
-  if scene.scene_name == "MAIN_MENU" then
+--- Updates the quitting timer
+function Scene.updateQuitting(dt)
+  if Scene.scene_name == "MAIN_MENU" then
     if Input.isPressed("escape") then
       love.event.quit()
     end
   else
-    if Input.isDown("escape") and scene.quitting_timer < scene.quitting_delay then
-      scene.quitting_sprite:setVisible(true)
-      scene.quitting_timer = scene.quitting_timer + dt
-      scene.quitting_sprite:setAlpha(scene.quitting_timer / scene.quitting_delay)
+    if Input.isDown("escape") and Scene.quitting_timer < Scene.quitting_delay then
+      Scene.quitting_sprite:setVisible(true)
+      Scene.quitting_timer = Scene.quitting_timer + dt
+      Scene.quitting_sprite:setAlpha(Scene.quitting_timer / Scene.quitting_delay)
     elseif Input.isReleased("escape") then
-      scene.resetQuitting()
+      Scene.resetQuitting()
     end
 
-    if scene.quitting_timer >= scene.quitting_delay then
-      scene.resetQuitting()
+    if Scene.quitting_timer >= Scene.quitting_delay then
+      Scene.resetQuitting()
       Scene.change("MAIN_MENU")
-    elseif scene.quitting_timer > scene.quitting_delay * 2 / 3 then
-      scene.quitting_sprite:setSprite("quitting3")
-    elseif scene.quitting_timer > scene.quitting_delay * 1 / 3 then
-      scene.quitting_sprite:setSprite("quitting2")
+    elseif Scene.quitting_timer > Scene.quitting_delay * 2 / 3 then
+      Scene.quitting_sprite:setSprite("quitting3")
+    elseif Scene.quitting_timer > Scene.quitting_delay * 1 / 3 then
+      Scene.quitting_sprite:setSprite("quitting2")
     end
   end
 end
 
-function scene.reload()
-  local scene_name = scene.scene_name
-  scene.scene_name = nil
-  scene.change(scene_name, table.unpack(scene.scene_data))
+--- Reloads the current scene
+function Scene.reload()
+  local scene_name = Scene.scene_name
+  Scene.scene_name = nil
+  Scene.change(scene_name, table.unpack(Scene.scene_data))
 end
 
-function scene.update(dt)
-  if scene.scene == nil then return end
+function Scene.update(dt)
+  if Scene.scene == nil then return end
 
-  for _, dialogue_text in ipairs(scene.dialogues) do
+  for _, dialogue_text in ipairs(Scene.dialogues) do
     dialogue_text:update(dt)
   end
 
-  scene.scene.update(dt)
-  scene.updateQuitting(dt)
+  Scene.scene.update(dt)
+  Scene.updateQuitting(dt)
 end
 
-function scene.draw()
-  if scene.scene == nil then return end
+--- Draws the current scene
+function Scene.draw()
+  if Scene.scene == nil then return end
 
-  for _, drawable in pairs(scene.drawables) do
+  for _, drawable in pairs(Scene.drawables) do
     if drawable:isVisible() then
       local draw = drawable:getDraw()
       if type(draw) == "function" then
@@ -150,20 +155,20 @@ end
 
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
-function scene.addDrawable(drawable)
-  scene.removeDrawable(drawable)
-  table.insert(scene.drawables, drawable)
+function Scene.addDrawable(drawable)
+  Scene.removeDrawable(drawable)
+  table.insert(Scene.drawables, drawable)
 
-  scene.sortDrawables()
+  Scene.sortDrawables()
 
   return drawable
 end
 
 --- Removes a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
-function scene.removeDrawable(drawable)
+function Scene.removeDrawable(drawable)
   local index = 0
-  for i, d in ipairs(scene.drawables) do
+  for i, d in ipairs(Scene.drawables) do
     if d == drawable then
       index = i
       break
@@ -171,39 +176,40 @@ function scene.removeDrawable(drawable)
   end
 
   if index > 0 then
-    table.remove(scene.drawables, index)
+    table.remove(Scene.drawables, index)
   end
 
-  scene.sortDrawables()
+  Scene.sortDrawables()
 end
 
 --- Sorts drawables by layer in the current scene
-function scene.sortDrawables()
-  table.stable_sort(scene.drawables, function(a, b)
+function Scene.sortDrawables()
+  table.stable_sort(Scene.drawables, function(a, b)
     return (a:getLayer() or 0) < (b:getLayer() or 0)
   end)
 end
 
 --- Adds a dialogue text in the current scene
 --- @param dialogue_text Dummy.DialogueText
-function scene.addDialogue(dialogue_text)
-  table.insert(scene.dialogues, dialogue_text)
+function Scene.addDialogue(dialogue_text)
+  table.insert(Scene.dialogues, dialogue_text)
 end
 
-function scene.clean()
+--- Cleans the current scene
+function Scene.clean()
   local tmp_drawables = {}
-  for _, d in ipairs(scene.drawables or {}) do
+  for _, d in ipairs(Scene.drawables or {}) do
     if d:isPersistent() then
       table.insert(tmp_drawables, d)
     end
   end
-  scene.drawables = tmp_drawables
+  Scene.drawables = tmp_drawables
 
-  scene.dialogues = {}
+  Scene.dialogues = {}
   Sprite.clear()
   Audio.clear()
   love.audio.stop()
   Timer.clear()
 end
 
-return scene
+return Scene
