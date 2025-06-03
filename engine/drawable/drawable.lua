@@ -2,7 +2,7 @@
 ---
 --- @field protected x number
 --- @field protected y number
---- @field protected rotation number
+--- @field protected angle number
 --- @field protected scale_x number
 --- @field protected scale_y number
 --- @field protected origin_x number
@@ -43,16 +43,16 @@ function Drawable:getHeight()
   return self.sprite:getHeight()
 end
 
---- Gets the drawable rotation
+--- Gets the drawable angle, in degree
 --- @return number
-function Drawable:getRotation()
-  return self.rotation
+function Drawable:getAngle()
+  return math.deg(self.angle)
 end
 
---- Sets drawable rotation
---- @param rotation number
-function Drawable:setRotation(rotation)
-  self.rotation = rotation
+--- Sets drawable angle, in degree
+--- @param angle number
+function Drawable:setAngle(angle)
+  self.angle = math.rad(angle)
 end
 
 --- Gets the drawable scale
@@ -173,7 +173,7 @@ function Drawable:new(draw, persistent)
   local drawable = Class:new(Drawable, {
     x = 0,
     y = 0,
-    rotation = 0,
+    angle = 0,
     scale_x = 1,
     scale_y = 1,
     origin_x = 0.5,

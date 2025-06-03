@@ -106,20 +106,39 @@ function scene.draw()
         local sprite = drawable:getSprite()
         if sprite ~= nil then
           local x, y = drawable:getPosition()
-          local w, h = drawable:getWidth(), drawable:getHeight()
-          local sx, sy = drawable:getScale()
-          local ox, oy = drawable:getOrigin()
+          local width, height = drawable:getWidth(), drawable:getHeight()
+          local angle = math.rad(drawable:getAngle())
+          local scale_x, scale_y = drawable:getScale()
+          local origin_x, origin_y = drawable:getOrigin()
           love.graphics.draw(sprite,
             x, y,
-            drawable:getRotation(),
-            sx, sy,
-            ox * w, oy * h
+            angle,
+            scale_x, scale_y,
+            origin_x * width, origin_y * height
           )
-
 
           if Debug.show_hitbox then
             love.graphics.setColor(0, 0, 1, 1)
-            love.graphics.rectangle("line", x - w * ox * sx, y - h * oy * sy, w * sx, h * sy)
+
+            if angle % 2 * math.pi == 0 then
+              local hitbox_x = x - width * origin_x * scale_x
+              local hitbox_y = y - height * origin_y * scale_y
+              love.graphics.rectangle("line", hitbox_x, hitbox_y, width * scale_x, height * scale_y)
+            else
+              local points = {}
+
+              local function addPoint(point_x, point_y)
+                table.insert(points, math.cos(angle) * (point_x - x) - math.sin(angle) * (point_y - y) + x)
+                table.insert(points, math.sin(angle) * (point_x - x) + math.cos(angle) * (point_y - y) + y)
+              end
+
+              addPoint(x - origin_x * width * scale_x, y - origin_y * height * scale_y)
+              addPoint(x - origin_x * width * scale_x, y + origin_y * height * scale_y)
+              addPoint(x + origin_x * width * scale_x, y + origin_y * height * scale_y)
+              addPoint(x + origin_x * width * scale_x, y - origin_y * height * scale_y)
+
+              love.graphics.polygon("line", table.unpack(points))
+            end
           end
         end
       end
@@ -132,6 +151,7 @@ end
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
 function scene.addDrawable(drawable)
+  scene.removeDrawable(drawable)
   table.insert(scene.drawables, drawable)
 
   scene.sortDrawables()
