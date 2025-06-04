@@ -31,7 +31,7 @@ end
 --- @private
 function self.preloadMod(mod_id)
   local success, mod = pcall(require, "mods." .. mod_id .. ".mod")
-  if success and type(mod) == "table" and mod.name ~= nil then
+  if self.isModValid(success, mod) then
     if mod.standalone == true then
       self.mods = {}
       mod.id = mod_id
@@ -44,6 +44,7 @@ function self.preloadMod(mod_id)
       name = { "MAIN_MENU_MODLIST_MOD_ERROR", mod_id },
       error = mod
     }
+    print(table.tostring(mod.error))
   end
 
   mod.id = mod_id
@@ -56,7 +57,7 @@ function self.loadMod(mod)
   love.filesystem.mount("mods/" .. mod.id .. "/assets", "assets")
 
   if type(mod.load) == "function" then
-    mod.load()
+    mod:load()
   end
 end
 
@@ -68,6 +69,19 @@ function self.unloadMods()
     love.filesystem.unmount("mods/" .. mod.id .. "/assets")
     love.filesystem.unmount("mods/" .. mod.id .. ".zip")
   end
+end
+
+--- Wether a mod is valid
+--- @param success boolean
+--- @param mod Dummy.Mod
+--- @return boolean
+function self.isModValid(success, mod)
+  if not success then return false end
+  if type(mod) ~= "table" then return false end
+  if type(mod.getClass) ~= "function" then return false end
+  if mod:getClass() ~= "Dummy.Mod" then return false end
+
+  return true
 end
 
 return self

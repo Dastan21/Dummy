@@ -1,15 +1,3 @@
---- @class Dummy.Mod
----
---- @field id string
---- @field name string
---- @field title string|nil
---- @field player Dummy.Mod.Player|nil
---- @field encounter Dummy.Mod.Encounter|nil
---- @field enemies table<number, Dummy.Mod.Enemy>|nil
---- @field load fun()|nil
---- @field preview fun()|nil
-
-
 --- @class Dummy.Mod.Player
 ---
 --- @field name string|nil
@@ -38,3 +26,37 @@
 --- @field check string|table<number, string>|nil
 --- @field position { [1]: number, [2]: number }|nil
 --- @field size { [1]: number, [2]: number }|nil
+
+--- @class Dummy.Mod.Data
+---
+--- @field name string
+--- @field title string|nil
+--- @field standalone boolean|nil
+
+--- @class Dummy.Mod : Dummy.Class
+---
+--- @field id string
+--- @field name string
+--- @field title string|nil
+--- @field player Dummy.Mod.Player|nil
+--- @field encounter Dummy.Mod.Encounter|nil
+--- @field enemies table<number, Dummy.Mod.Enemy>|nil
+local Mod = Class()
+
+--- Gets the class name
+--- @return string
+function Mod:getClass()
+  return "Dummy.Mod"
+end
+
+--- Called when the mod is loaded
+function Mod:load() end
+
+--- Creates a mod
+--- @param data Dummy.Mod.Data
+--- @return Dummy.Mod
+function Mod:new(data)
+  return Class:new(Mod, data)
+end
+
+return Mod

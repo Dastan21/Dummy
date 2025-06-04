@@ -35,6 +35,7 @@ DialogueText = require "engine.drawable.dialogue_text"
 Debug = require "engine.debug"
 Scene = require "engine.scene"
 MainMenu = require "engine.main_menu"
+Mod = require "engine.mod.mod"
 
 -- encounter
 Arena = require "engine.encounter.arena"
