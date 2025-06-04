@@ -394,8 +394,8 @@ function Encounter.loadMercyMenu()
         Encounter.dialogue_text:setText("   * " .. Lang.translate(flee_text_key))
         Encounter.dialogue_text:setVisible(true)
         Encounter.dialogue_text:skip()
-        Encounter.leaveMenu()
         Encounter.unselectAction()
+        Encounter.leaveMenu()
       end,
       silent = true
     })
@@ -533,9 +533,7 @@ function Encounter.startTextDialogue()
   Encounter.dialogue_text:setVisible(true)
 
   Encounter.unselectAction()
-
   Player.hide()
-
   Encounter.leaveMenu()
 end
 
@@ -570,13 +568,14 @@ function Encounter.updateEnemyDialogue(dt)
 end
 
 function Encounter.startAttacking()
+  Encounter.leaveMenu()
+  Encounter.unselectAction()
+  Player.hide()
+
   Encounter.target_sprite:setVisible(true)
   Encounter.target_sprite:setAlpha(1)
   Encounter.target_sprite:setScale(1)
 
-  Player.hide()
-
-  Encounter.leaveMenu()
 
   local attacking = false
   local attack_window_timer = nil
