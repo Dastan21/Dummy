@@ -12,6 +12,12 @@
 --- @field protected active boolean
 local ActionMenu = Class()
 
+--- Gets the class name
+--- @return string
+function ActionMenu:getClass()
+  return "Dummy.ActionMenu"
+end
+
 --- Selects an option
 --- @param index_x number horizontal index
 --- @param index_y number vertical index

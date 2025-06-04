@@ -9,6 +9,12 @@
 --- @field protected timer table|nil
 local Sprite = Class:extend(Drawable)
 
+--- Gets the class name
+--- @return string
+function Sprite:getClass()
+  return "Dummy.Sprite"
+end
+
 ---@type table<string, love.ImageData>
 local cache = {}
 

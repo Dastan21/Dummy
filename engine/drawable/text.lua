@@ -6,6 +6,12 @@
 --- @field protected sprite love.Text
 local Text = Class:extend(Drawable)
 
+--- Gets the class name
+--- @return string
+function Text:getClass()
+  return "Dummy.Text"
+end
+
 --- @alias love.Color {[1]: number, [2]: number, [3]: number}
 
 --- Gets the text value

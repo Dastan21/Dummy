@@ -13,7 +13,13 @@
 --- @field protected sprite love.Image|love.Text
 --- @field protected draw fun()|nil
 --- @field protected persistent boolean
-local Drawable = Class:extend()
+local Drawable = Class("Dummy.Drawable")
+
+--- Gets the class name
+--- @return string
+function Drawable:getClass()
+  return "Dummy.Drawable"
+end
 
 --- Gets the drawable position
 --- @return number, number

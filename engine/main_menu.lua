@@ -16,6 +16,12 @@
 --- @field protected onBack fun()|nil
 local MainMenu = Class()
 
+--- Gets the class name
+--- @return string
+function MainMenu:getClass()
+  return "Dummy.MainMenu"
+end
+
 local MAX_DISPLAYED_OPTIONS = 4
 
 --- Select a menu option

@@ -14,6 +14,12 @@
 --- @field protected height number
 local Enemy = Class()
 
+--- Gets the class name
+--- @return string
+function Enemy:getClass()
+  return "Dummy.Enemy"
+end
+
 --- Gets the enemy's name
 --- @return string
 function Enemy:getName()

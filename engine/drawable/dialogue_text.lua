@@ -7,6 +7,12 @@
 --- @field protected voice string
 local DialogueText = Class:extend(Text)
 
+--- Gets the class name
+--- @return string
+function DialogueText:getClass()
+  return "Dummy.DialogueText"
+end
+
 --- Sets the dialogue text value
 --- @param value string|table|fun(): string|table
 function DialogueText:setText(value)
