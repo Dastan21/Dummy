@@ -1,47 +1,51 @@
-local lang = {}
-
-local self = {}
+--- @class Dummy.Lang
+---
+--- @field private translations table<string, table<string, string>>
+--- @field private languages table<number, string>
+--- @field private language_code string
+--- @field private language_name string
+local Lang = {}
 
 --- Gets the current language code
 --- @return string
-function self.getLanguage()
-  return language_code
+function Lang.getLanguage()
+  return Lang.language_code
 end
 
 --- Gets the current language name
 --- @return string
-function self.getLanguageName()
-  return language_name
+function Lang.getLanguageName()
+  return Lang.language_name
 end
 
 --- Sets the current language
 --- @param code string language code
-function self.setLanguage(code)
+function Lang.setLanguage(code)
   if type(code) ~= "string" then return end
 
-  language_code = code
-  language_name = self.translate("LANGUAGE_" .. language_code:upper())
+  Lang.language_code = code
+  Lang.language_name = Lang.translate("LANGUAGE_" .. Lang.language_code:upper())
 
-  Config.language = language_code
+  Config["language"] = Lang.language_code
 end
 
 --- Switches current language
-function self.switchLanguage()
+function Lang.switchLanguage()
   local lang_index = 1
-  for i, l in ipairs(lang.languages) do
-    if l == language_code then
+  for i, l in ipairs(Lang.languages) do
+    if l == Lang.language_code then
       lang_index = i
       break
     end
   end
-  self.setLanguage(lang.languages[lang_index + 1] or lang.languages[1])
+  Lang.setLanguage(Lang.languages[lang_index + 1] or Lang.languages[1])
 end
 
 --- Translate a key in the current language
 --- @param key string|table|function key to translate
 --- @param ... table additional data passed along the key
 --- @return string
-function self.translate(key, ...)
+function Lang.translate(key, ...)
   local data = { ... }
 
   if type(key) == "function" then
@@ -59,7 +63,7 @@ function self.translate(key, ...)
 
   key = key:gsub("\\n", "\n")
 
-  local txt = (lang.translations[language_code] and lang.translations[language_code][key]) or key or ""
+  local txt = (Lang.translations[Lang.language_code] and Lang.translations[Lang.language_code][key]) or key or ""
   local i = 1
 
   return (txt:gsub("{}", function()
@@ -69,29 +73,30 @@ function self.translate(key, ...)
   end))
 end
 
-function self.load()
-  lang.translations = {}
-  lang.languages = {}
-  lang.language_code = ""
-  lang.language_name = ""
+--- Loads languages
+function Lang.load()
+  Lang.translations = {}
+  Lang.languages = {}
+  Lang.language_code = ""
+  Lang.language_name = ""
 
   local files = love.filesystem.getDirectoryItems("assets/lang")
   for _, filename in pairs(files) do
     if Utils.checkExtension(filename, "txt") then
       local code = filename:sub(1, #filename - 4)
-      table.insert(lang.languages, code)
-      lang.translations[code] = {}
+      table.insert(Lang.languages, code)
+      Lang.translations[code] = {}
       for txt in love.filesystem.lines("assets/lang/" .. filename) do
         if txt ~= "" and txt:sub(1, 1) ~= "#" then -- for comments
           local t = {}
           for str in string.gmatch(txt, "([^=]+)") do table.insert(t, str) end
-          lang.translations[code][t[1]] = t[2]
+          Lang.translations[code][t[1]] = t[2]
         end
       end
     end
   end
 
-  self.setLanguage(Config.language)
+  Lang.setLanguage(Config["language"])
 end
 
-return self
+return Lang
