@@ -1,8 +1,8 @@
 return {
   CREDITS = {
-    NAME = "DUMMY",
-    AUTHOR = "Dastan",
-    YEAR = "2025",
+    NAME    = "DUMMY",
+    AUTHOR  = "Dastan",
+    YEAR    = "2025",
     VERSION = "0.01"
   },
 
@@ -26,37 +26,37 @@ return {
 
   ENCOUNTER_STATES = {
     --- Used for example for custom introductions
-    NONE = "NONE",
+    NONE             = "NONE",
     --- Action selection menu
-    ACTION_SELECT = "ACTION_SELECT",
+    ACTION_SELECT    = "ACTION_SELECT",
     --- Enemy selection menu for FIGHT
     FIGHT_ENEMY_MENU = "FIGHT_ENEMY_MENU",
     --- Enemy selection menu for ACT
-    ACT_ENEMY_MENU = "ACT_ENEMY_MENU",
+    ACT_ENEMY_MENU   = "ACT_ENEMY_MENU",
     --- ACT selection menu
-    ACT_MENU = "ACT_MENU",
+    ACT_MENU         = "ACT_MENU",
     --- ITEM selection menu
-    ITEM_MENU = "ITEM_MENU",
+    ITEM_MENU        = "ITEM_MENU",
     --- MERCY selection menu
-    MERCY_MENU = "MERCY_MENU",
+    MERCY_MENU       = "MERCY_MENU",
     --- Player attack screen
-    ATTACKING = "ATTACKING",
+    ATTACKING        = "ATTACKING",
     --- Text dialogue before ENEMY_DIALOGUE or DEFENDING
-    TEXT_DIALOGUE = "TEXT_DIALOGUE",
+    TEXT_DIALOGUE    = "TEXT_DIALOGUE",
     --- Enemy dialogue before DEFENDING
-    ENEMY_DIALOGUE = "ENEMY_DIALOGUE",
+    ENEMY_DIALOGUE   = "ENEMY_DIALOGUE",
     --- Enemy attack phase
-    DEFENDING = "DEFENDING",
+    DEFENDING        = "DEFENDING",
     --- Returns to the main menu
-    DONE = "DONE",
+    DONE             = "DONE",
   },
 
   ARENA = {
-    RESIZE_SPEED = 30,
-    DEFAULT_WIDTH = 565,
+    RESIZE_SPEED   = 30,
+    DEFAULT_WIDTH  = 565,
     DEFAULT_HEIGHT = 130,
-    BORDER_WIDTH = 5,
-    DEFAULT_X = 320,
-    DEFAULT_Y = 385
+    BORDER_WIDTH   = 5,
+    DEFAULT_X      = 320,
+    DEFAULT_Y      = 385,
   }
 }

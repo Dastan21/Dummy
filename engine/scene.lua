@@ -11,10 +11,10 @@ local SCENE_QUITTING_DELAY = 0.8
 function Scene.load()
   Scene.clean()
 
-  scenes.MAIN_MENU = require "engine.scene.main_menu"
-  scenes.ENCOUNTER = require "engine.scene.encounter"
-  scenes.GAME_OVER = require "engine.scene.game_over"
-  scenes.ERROR = require "engine.scene.error"
+  scenes.MAIN_MENU = require "scene.main_menu"
+  scenes.ENCOUNTER = require "scene.encounter"
+  scenes.GAME_OVER = require "scene.game_over"
+  scenes.ERROR = require "scene.error"
 
   Scene.quitting_delay = SCENE_QUITTING_DELAY
   Scene.quitting_timer = 0
@@ -122,7 +122,7 @@ function Scene.draw()
             origin_x * width, origin_y * height
           )
 
-          if Debug.show_hitbox then
+          if Debugger.show_hitbox then
             love.graphics.setColor(0, 0, 1, 1)
 
             if angle % 2 * math.pi == 0 then

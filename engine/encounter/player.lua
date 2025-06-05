@@ -51,7 +51,7 @@ function Player.load()
   Player.setLV(1, true)
 
   Drawable:new(function()
-    if Debug.show_hitbox and not Player.isHidden() then
+    if Debugger.show_hitbox and not Player.isHidden() then
       local x, y = Player.getPosition()
       love.graphics.setColor(0, 1, 0, 1)
       love.graphics.rectangle("line", x - Player.hitbox[1], y - Player.hitbox[2], Player.hitbox[3], Player.hitbox[4])

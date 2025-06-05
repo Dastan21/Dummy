@@ -1,0 +1,13 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build engine",
+      "type": "shell",
+      "command": "makelove --config ../makelove.toml",
+      "options": {
+        "cwd": "${workspaceFolder}/engine"
+      }
+    }
+  ]
+}

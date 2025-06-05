@@ -9,7 +9,7 @@
 --- @field private menu_music love.Source
 local main_menu = {}
 
-local mod_list = require "engine.mod.mod_list"
+local mod_list = require "mod.mod_list"
 
 function main_menu.load()
   mod_list.load()

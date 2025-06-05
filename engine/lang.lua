@@ -75,13 +75,12 @@ end
 
 --- Loads languages
 function Lang.load()
-  Lang.translations = {}
-  Lang.languages = {}
+  Lang.translations  = {}
+  Lang.languages     = {}
   Lang.language_code = ""
   Lang.language_name = ""
 
-  local files = love.filesystem.getDirectoryItems("assets/lang")
-  for _, filename in pairs(files) do
+  for _, filename in pairs(love.filesystem.getDirectoryItems("assets/lang")) do
     if Utils.checkExtension(filename, "txt") then
       local code = filename:sub(1, #filename - 4)
       table.insert(Lang.languages, code)

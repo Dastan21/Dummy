@@ -16,32 +16,32 @@ Config = {
 }
 
 -- libraries
-JSON = require "engine.lib.json"
-Timer = require "engine.lib.timer"
-UTF8 = require "engine.lib.utf8"
-require "engine.lib.stable_sort"
+JSON = require "lib.json"
+Timer = require "lib.timer"
+UTF8 = require "lib.utf8"
+require "lib.stable_sort"
 
 -- engine
-Utils = require "engine.utils"
-Class = require "engine.class"
-Audio = require "engine.audio"
-Input = require "engine.input"
-Lang = require "engine.lang"
-Font = require "engine.font"
-Drawable = require "engine.drawable.drawable"
-Sprite = require "engine.drawable.sprite"
-Text = require "engine.drawable.text"
-DialogueText = require "engine.drawable.dialogue_text"
-Debug = require "engine.debug"
-Scene = require "engine.scene"
-MainMenu = require "engine.main_menu"
-Mod = require "engine.mod.mod"
+Utils = require "utils"
+Class = require "class"
+Audio = require "audio"
+Input = require "input"
+Lang = require "lang"
+Font = require "font"
+Drawable = require "drawable.drawable"
+Sprite = require "drawable.sprite"
+Text = require "drawable.text"
+DialogueText = require "drawable.dialogue_text"
+Debugger = require "debugger"
+Scene = require "scene"
+MainMenu = require "main_menu"
+Mod = require "mod.mod"
 
 -- encounter
-Arena = require "engine.encounter.arena"
-Player = require "engine.encounter.player"
-ActionMenu = require "engine.encounter.action_menu"
-Enemy = require "engine.encounter.enemy"
+Arena = require "encounter.arena"
+Player = require "encounter.player"
+ActionMenu = require "encounter.action_menu"
+Enemy = require "encounter.enemy"
 
 local function loadConfig()
   if love.filesystem.getInfo("settings.json") ~= nil then
@@ -75,7 +75,7 @@ function love.load()
   Lang.load()
   Font.load()
   Scene.load()
-  Debug.load()
+  Debugger.load()
 
   Scene.change("MAIN_MENU")
 
@@ -95,7 +95,7 @@ local function update(dt)
 
   Input.update()
   Scene.update(dt)
-  Debug.update()
+  Debugger.update()
   Timer.update(dt)
 
   updateFullscreen()
@@ -138,7 +138,7 @@ end
 
 function love.quit()
   saveConfig()
-  Debug.saveLogs()
+  Debugger.saveLogs()
 end
 
 local function error_handler(err)
