@@ -132,7 +132,7 @@ end
 
 --- Loads mod list menu
 function main_menu.loadModListMenu()
-  -- clean previous menu
+  mod_list.load()
 
   --- @type Dummy.Menu.Options
   local options = {}
