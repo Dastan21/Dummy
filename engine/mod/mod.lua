@@ -7,7 +7,6 @@
 --- @field at number|nil
 --- @field df number|nil
 
-
 --- @class Dummy.Mod.Encounter
 ---
 --- @field text string|nil
@@ -51,6 +50,9 @@ end
 
 --- Called when the mod is loaded
 function Mod:load() end
+
+--- Called when the main menu is loaded, for standalone mods only
+function Mod:preview() end
 
 --- Creates a mod
 --- @param data Dummy.Mod.Data
