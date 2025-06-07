@@ -38,11 +38,11 @@ function Player.load()
   Player.lv_text:setFont(Font.FONTS.CURS)
 
   Player.hp_sprite = Sprite:new("hp")
-  Player.hp_sprite:setPosition(244, 405)
+  Player.hp_sprite:setPosition(240, 400)
   Player.hp_sprite:setOrigin(0)
   Player.hp_value_text = Text:new("")
-  Player.hp_value_text:setPosition(400, 409)
-  Player.hp_value_text:setOrigin(0, 0.5)
+  Player.hp_value_text:setPosition(400, 400)
+  Player.hp_value_text:setOrigin(0)
   Player.hp_value_text:setFont(Font.FONTS.CURS)
 
   Player.is_fleeing = false
@@ -150,7 +150,7 @@ function Player.setHP(hp)
 
   Player.hp = math.clamp(hp, 0, math.min(Player.max_hp, 99))
   Player.hp_value_text:setText(string.format("%02d", Player.hp) .. " / " .. tostring(Player.max_hp))
-  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 409)
+  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 400)
 end
 
 --- Gets the player's HP
@@ -167,7 +167,7 @@ function Player.setMaxHP(max_hp, heal)
 
   Player.max_hp = math.clamp(max_hp, 20, 99)
   Player.hp_value_text:setText(tostring(Player.hp) .. " / " .. tostring(Player.max_hp))
-  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 409)
+  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 400)
 
   if heal == true then
     Player.setHP(Player.max_hp)
