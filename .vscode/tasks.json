@@ -8,6 +8,14 @@
       "options": {
         "cwd": "${workspaceFolder}/engine"
       }
+    },
+    {
+      "label": "Build documentation",
+      "type": "shell",
+      "command": "py build.py",
+      "options": {
+        "cwd": "${workspaceFolder}/docs"
+      }
     }
   ]
 }

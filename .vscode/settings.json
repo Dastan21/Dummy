@@ -6,7 +6,8 @@
   "Lua.workspace.checkThirdParty": false,
   "Lua.workspace.ignoreDir": [
     ".vscode",
-    "lib"
+    "lib",
+    "docs/library"
   ],
   "Lua.diagnostics.disable": [
     "lowercase-global"
