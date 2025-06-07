@@ -155,13 +155,6 @@ function main_menu.loadModListMenu()
     })
   end
 
-  for i = 1, 5 do
-    table.insert(options, {
-      text = Text:new("MOD_" .. i),
-      action = function() end
-    })
-  end
-
   if main_menu.mod_list_menu ~= nil then
     main_menu.mod_list_menu:setOptions(options)
   else
