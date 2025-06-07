@@ -57,6 +57,7 @@ function self.loadMod(mod)
   love.filesystem.mount("mods/" .. mod.id .. "/assets", "assets")
 
   if type(mod.load) == "function" then
+    Lang.loadLanguages()
     mod:load()
   end
 end

@@ -73,18 +73,15 @@ function Lang.translate(key, ...)
   end))
 end
 
---- Loads languages
-function Lang.load()
-  Lang.translations  = {}
-  Lang.languages     = {}
-  Lang.language_code = ""
-  Lang.language_name = ""
-
+--- Loads languages from the lang folder
+function Lang.loadLanguages()
   for _, filename in pairs(love.filesystem.getDirectoryItems("assets/lang")) do
     if Utils.checkExtension(filename, "txt") then
       local code = filename:sub(1, #filename - 4)
-      table.insert(Lang.languages, code)
-      Lang.translations[code] = {}
+      if Lang.translations[code] == nil then
+        Lang.translations[code] = {}
+        table.insert(Lang.languages, code)
+      end
       for txt in love.filesystem.lines("assets/lang/" .. filename) do
         if txt ~= "" and txt:sub(1, 1) ~= "#" then -- for comments
           local t = {}
@@ -96,6 +93,16 @@ function Lang.load()
   end
 
   Lang.setLanguage(Config["language"])
+end
+
+--- Loads languages
+function Lang.load()
+  Lang.translations  = {}
+  Lang.languages     = {}
+  Lang.language_code = ""
+  Lang.language_name = ""
+
+  Lang.loadLanguages()
 end
 
 return Lang
