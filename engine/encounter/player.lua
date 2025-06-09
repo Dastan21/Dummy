@@ -26,7 +26,7 @@ function Player.load()
   Player.soul_sprite:setPosition(320, 240)
   Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
 
-  Player.name = "FRISK"
+  Player.name = "Frisk"
   Player.name_text = Text:new(Player.name)
   Player.name_text:setPosition(30, 400)
   Player.name_text:setOrigin(0)

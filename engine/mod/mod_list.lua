@@ -55,6 +55,7 @@ end
 ---@param mod Dummy.Mod
 function self.loadMod(mod)
   love.filesystem.mount("mods/" .. mod.id .. "/assets", "assets")
+  love.filesystem.mount("mods/" .. mod.id .. "/scripts", "scripts")
 
   if type(mod.load) == "function" then
     Lang.loadLanguages()
@@ -67,6 +68,7 @@ function self.unloadMods()
   if self.mods == nil then return end
 
   for _, mod in ipairs(self.mods) do
+    love.filesystem.unmount("mods/" .. mod.id .. "/scripts")
     love.filesystem.unmount("mods/" .. mod.id .. "/assets")
     love.filesystem.unmount("mods/" .. mod.id .. ".zip")
   end

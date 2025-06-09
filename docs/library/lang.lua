@@ -35,6 +35,9 @@ function Lang.switchLanguage() end
 --- @return string
 function Lang.translate(key, ...) end
 
+--- Loads languages from the lang folder
+function Lang.loadLanguages() end
+
 --- Loads languages
 function Lang.load() end
 

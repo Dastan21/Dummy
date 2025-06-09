@@ -11,9 +11,7 @@
 --- @field id string
 --- @field name string
 --- @field title string|nil
---- @field player Dummy.Mod.Player|nil
---- @field encounter Dummy.Mod.Encounter|nil
---- @field enemies table<number, Dummy.Mod.Enemy>|nil
+--- @field encounter Dummy.Scene.Encounter
 Mod = {}
 
 --- @class Dummy.Mod.Player
@@ -24,7 +22,6 @@ Mod = {}
 --- @field max_hp number|nil
 --- @field at number|nil
 --- @field df number|nil
-
 
 --- @class Dummy.Mod.Encounter
 ---
@@ -57,6 +54,14 @@ function Mod:getClass() end
 
 --- Called when the mod is loaded
 function Mod:load() end
+
+--- Called right before the encounter starts
+function Mod:start() end
+
+--- Called when the main menu is loaded, for standalone mods only
+function Mod:preview() end
+
+function Mod:addEnemy(enemy) end
 
 --- Creates a mod
 --- @param data Dummy.Mod.Data
