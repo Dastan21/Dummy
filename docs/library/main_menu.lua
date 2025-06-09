@@ -6,7 +6,7 @@
 
 ---@meta
 
---- @class Dummy.Menu : Dummy.Class
+--- @class Dummy.MainMenu : Dummy.Class
 ---
 --- @field protected options Dummy.Menu.Options
 --- @field protected onBack fun()|nil
@@ -22,7 +22,7 @@ MainMenu = {}
 --- @field drawable Dummy.Drawable|nil option drawable created from `option.draw`
 --- @field disabled boolean|nil wether the option is disabled
 --- @field selected boolean|nil wether the option is selected
---- @field menu Dummy.Menu|nil sub menu
+--- @field menu Dummy.MainMenu|nil sub menu
 
 --- Gets the class name
 --- @return string
@@ -51,3 +51,4 @@ function MainMenu:update() end
 ---@param options Dummy.Menu.Options
 ---@param onBack? fun()
 function MainMenu:new(options, onBack) end
+

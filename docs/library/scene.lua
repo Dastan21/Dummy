@@ -8,8 +8,20 @@
 
 --- @class Dummy.Scene
 ---
+--- @field private scene Dummy.Scene.Scene|nil
+--- @field private scene_name string
+--- @field private scene_data table
+--- @field private quitting_delay number
+--- @field private quitting_timer number
+--- @field private quitting_sprite Dummy.Sprite
 --- @field private drawables table<number, Dummy.Drawable>
+--- @field private dialogues table<number, Dummy.DialogueText>
 Scene = {}
+
+--- @class Dummy.Scene.Scene
+---
+--- @field load fun(...)
+--- @field update fun(dt: number)
 
 --- Loads the scene manager
 function Scene.load() end
@@ -28,10 +40,16 @@ function Scene.updateQuitting(dt) end
 --- Reloads the current scene
 function Scene.reload() end
 
+--- Updates the current scene
+---@param dt number
 function Scene.update(dt) end
 
 --- Draws the current scene
 function Scene.draw() end
+
+--- Gets the current scene name
+--- @return string
+function Scene.getSceneName() end
 
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()

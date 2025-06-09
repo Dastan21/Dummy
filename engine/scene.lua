@@ -1,7 +1,19 @@
 --- @class Dummy.Scene
 ---
+--- @field private scene Dummy.Scene.Scene|nil
+--- @field private scene_name string
+--- @field private scene_data table
+--- @field private quitting_delay number
+--- @field private quitting_timer number
+--- @field private quitting_sprite Dummy.Sprite
 --- @field private drawables table<number, Dummy.Drawable>
+--- @field private dialogues table<number, Dummy.DialogueText>
 local Scene = {}
+
+--- @class Dummy.Scene.Scene
+---
+--- @field load fun(...)
+--- @field update fun(dt: number)
 
 local scenes = {}
 
@@ -11,10 +23,10 @@ local SCENE_QUITTING_DELAY = 0.8
 function Scene.load()
   Scene.clean()
 
-  scenes.MAIN_MENU = require "scene.main_menu"
-  scenes.ENCOUNTER = require "scene.encounter"
-  scenes.GAME_OVER = require "scene.game_over"
-  scenes.ERROR = require "scene.error"
+  scenes.MAIN_MENU = require "scene.main_menu_scene"
+  scenes.ENCOUNTER = require "scene.encounter_scene"
+  scenes.GAME_OVER = require "scene.game_over_scene"
+  scenes.ERROR = require "scene.error_scene"
 
   Scene.quitting_delay = SCENE_QUITTING_DELAY
   Scene.quitting_timer = 0
@@ -85,6 +97,8 @@ function Scene.reload()
   Scene.change(scene_name, table.unpack(Scene.scene_data))
 end
 
+--- Updates the current scene
+---@param dt number
 function Scene.update(dt)
   if Scene.scene == nil then return end
 
@@ -151,6 +165,12 @@ function Scene.draw()
       love.graphics.setColor(1, 1, 1, 1)
     end
   end
+end
+
+--- Gets the current scene name
+--- @return string
+function Scene.getSceneName()
+  return Scene.scene_name
 end
 
 --- Adds a drawable in the current scene

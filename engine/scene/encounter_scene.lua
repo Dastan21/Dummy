@@ -1,4 +1,4 @@
---- @class Dummy.Scene.Encounter
+--- @class Dummy.Scene.Encounter : Dummy.Scene.Scene
 ---
 --- @field private mod Dummy.Mod
 --- @field private current_state string
@@ -47,8 +47,11 @@ local Encounter = {
 --- @param mod Dummy.Mod
 function Encounter.load(mod)
   Encounter.mod = Utils.getOrDefault(mod, {})
-  Encounter.mod.player = Utils.getOrDefault(Encounter.mod.player, {})
-  Encounter.mod.encounter = Utils.getOrDefault(Encounter.mod.encounter, {})
+  Encounter.mod.encounter = Encounter
+  Encounter.enemies = {}
+  Encounter.mod:start()
+  -- Encounter.mod.player = Utils.getOrDefault(Encounter.mod.player, {})
+  -- Encounter.mod.encounter = Utils.getOrDefault(Encounter.mod.encounter, {})
 
   if Encounter.mod.title ~= nil then
     love.window.setTitle(Encounter.mod.title)
@@ -70,17 +73,14 @@ function Encounter.load(mod)
 
   -- player
   Player.load()
-  Player.setName(Utils.getOrDefault(Encounter.mod.player.name, "Frisk"))
-  Player.setLV(Utils.getOrDefault(Encounter.mod.player.level, 1), true)
-  if Encounter.mod.player.max_hp ~= nil then
-    Player.setMaxHP(Encounter.mod.player.max_hp)
-  end
-  if Encounter.mod.player.hp ~= nil then
-    Player.setHP(Encounter.mod.player.hp)
-  end
-
-  -- enemies
-  Encounter.loadEnemies()
+  -- Player.setName(Utils.getOrDefault(Encounter.mod.player.name, "Frisk"))
+  -- Player.setLV(Utils.getOrDefault(Encounter.mod.player.level, 1), true)
+  -- if Encounter.mod.player.max_hp ~= nil then
+  --   Player.setMaxHP(Encounter.mod.player.max_hp)
+  -- end
+  -- if Encounter.mod.player.hp ~= nil then
+  --   Player.setHP(Encounter.mod.player.hp)
+  -- end
 
   -- state
   Encounter.previous_state = Constants.ENCOUNTER_STATES.ACTION_SELECT
@@ -100,7 +100,6 @@ function Encounter.load(mod)
   Encounter.dialogue_text:setScale(2)
   Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
   Encounter.dialogue_text:setMaxWidth(Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
-  Encounter.dialogue_text:setText(Utils.getOrDefault(Encounter.mod.encounter.text, ""))
 
   -- attack target
   Encounter.target_sprite = Sprite:new("target")
@@ -156,39 +155,54 @@ function Encounter.load(mod)
   Encounter.enemy_hp_text:setVisible(false)
 
   -- music
-  if Encounter.mod.encounter.music ~= nil then
-    Encounter.battle_music = Audio.playMusic(Encounter.mod.encounter.music, nil, nil, nil)
-  else
-    Encounter.battle_music = Audio.playMusic("battle")
-  end
+  -- if Encounter.mod.encounter.music ~= nil then
+  --   Encounter.battle_music = Audio.playMusic(Encounter.mod.encounter.music, nil, nil, nil)
+  -- else
+  --   Encounter.battle_music = Audio.playMusic("battle")
+  -- end
 
+  Encounter.battle_music = Audio.playMusic("battle")
   Encounter.battle_music:setVolume(0.5)
 end
 
-function Encounter.loadEnemies()
-  --- @type table<number, Dummy.Enemy>
-  Encounter.enemies = {}
+function Encounter.addEnemy(enemy)
+  table.insert(Encounter.enemies, enemy)
 
-  local enemies_files = love.filesystem.getDirectoryItems("mods/" .. Encounter.mod.id .. "/scripts/enemies")
-  for _, filename in ipairs(enemies_files) do
-    local enemy_path = "mods." .. Encounter.mod.id .. ".scripts.enemies." .. Utils.getFilenameWithoutExt(filename)
-    --- @type boolean, Dummy.Enemy
-    local success, enemy = pcall(require, enemy_path)
-    if success and type(enemy) == "table" then
-      table.insert(Encounter.enemies, enemy)
-
-      -- DEBUG
-      Drawable:new(function()
-        local x, y = enemy:getPosition()
-        local w, h = enemy:getSize()
-        love.graphics.setColor(1, 1, 1, 0.2)
-        love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
-      end):setLayer(Constants.LAYERS.BELOW_ARENA)
-    end
-  end
+  -- DEBUG
+  Drawable:new(function()
+    local x, y = enemy:getPosition()
+    local w, h = enemy:getSize()
+    love.graphics.setColor(1, 1, 1, 0.2)
+    love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
+  end):setLayer(Constants.LAYERS.BELOW_ARENA)
 end
+
+-- function Encounter.loadEnemies()
+--   --- @type table<number, Dummy.Enemy>
+--   Encounter.enemies = {}
+
+--   local enemies_files = love.filesystem.getDirectoryItems("mods/" .. Encounter.mod.id .. "/scripts/enemies")
+--   for _, filename in ipairs(enemies_files) do
+--     local enemy_path = "mods." .. Encounter.mod.id .. ".scripts.enemies." .. Utils.getFilenameWithoutExt(filename)
+--     --- @type boolean, Dummy.Enemy
+--     local success, enemy = pcall(require, enemy_path)
+--     if success and type(enemy) == "table" then
+--       table.insert(Encounter.enemies, enemy)
+
+--       -- DEBUG
+--       Drawable:new(function()
+--         local x, y = enemy:getPosition()
+--         local w, h = enemy:getSize()
+--         love.graphics.setColor(1, 1, 1, 0.2)
+--         love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
+--         love.graphics.setColor(1, 1, 1, 1)
+--         love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
+--       end):setLayer(Constants.LAYERS.BELOW_ARENA)
+--     end
+--   end
+-- end
 
 function Encounter.loadActions()
   Encounter.action = {}
@@ -352,7 +366,8 @@ function Encounter.loadMercyMenu()
     }
   }
 
-  if Encounter.mod.encounter.flee ~= false then
+  -- if Encounter.mod.encounter.flee ~= false then
+  if true ~= false then
     table.insert(options, {
       text = Text:new("* " .. Lang.translate("ENCOUNTER_MENU_MERCY_FLEE")),
       action = function()
@@ -425,7 +440,8 @@ function Encounter.startActionSelect()
 
     Encounter.leaveMenu()
 
-    Encounter.dialogue_text:setText(Encounter.mod.encounter.text)
+    -- Encounter.dialogue_text:setText(Encounter.mod.encounter.text)
+    Encounter.dialogue_text:setText("encounter text")
     Encounter.dialogue_text:setCanSkip(true)
     Encounter.dialogue_text:setVisible(true)
   end)

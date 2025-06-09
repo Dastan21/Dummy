@@ -1,7 +1,7 @@
 --[[
-  Generated from ..\engine\debug.lua
+  Generated from ..\engine\debugger.lua
 
-  Source: https://github.com/Dastan21/Dummy/blob/main/engine/debug.lua
+  Source: https://github.com/Dastan21/Dummy/blob/main/engine/debugger.lua
 ]]
 
 ---@meta

@@ -148,7 +148,7 @@ local function error_handler(err)
     err = debug.traceback(err)
   end
   print(err)
-  if Scene.scene_name ~= "ERROR" then
+  if Scene.getSceneName() ~= "ERROR" then
     Scene.change("ERROR", err)
   end
 end

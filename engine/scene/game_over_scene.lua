@@ -1,4 +1,4 @@
---- @class Dummy.Scene.GameOver
+--- @class Dummy.Scene.GameOver : Dummy.Scene.Scene
 ---
 --- @field private title_game_text Dummy.Text
 --- @field private title_over_text Dummy.Text

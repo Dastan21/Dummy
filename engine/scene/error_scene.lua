@@ -1,4 +1,4 @@
---- @class Dummy.Scene.Error
+--- @class Dummy.Scene.Error : Dummy.Scene.Scene
 ---
 --- @field private traceback string
 --- @field private error_text Dummy.Text

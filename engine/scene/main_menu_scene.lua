@@ -1,4 +1,4 @@
---- @class Dummy.Scene.MainMenu
+--- @class Dummy.Scene.MainMenu : Dummy.Scene.Scene
 ---
 --- @field private menu Dummy.MainMenu
 --- @field private options Dummy.Menu.Options
