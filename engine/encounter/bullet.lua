@@ -1,6 +1,7 @@
 --- @class Dummy.Bullet : Dummy.Sprite
 ---
 --- @field protected hitbox Dummy.Bullet.Hitbox
+--- @field protected persistent boolean
 local Bullet = Class:extend(Sprite)
 
 --- Gets the class name
@@ -21,6 +22,18 @@ end
 --- @param hitbox Dummy.Bullet.Hitbox
 function Bullet:setHitbox(hitbox)
   self.hitbox = hitbox
+end
+
+--- Wether the bullet is persistent after wave ends
+--- @return boolean
+function Bullet:getPersistent()
+  return self.persistent
+end
+
+--- Sets wether the bullet is persistent after wave ends
+--- @param persistent boolean
+function Bullet:setPersistent(persistent)
+  self.persistent = persistent
 end
 
 --- Creates a bullet
