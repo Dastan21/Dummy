@@ -44,7 +44,11 @@ function self.preloadMod(mod_id)
       name = { "MAIN_MENU_MODLIST_MOD_ERROR", mod_id },
       error = mod
     }
-    print(table.tostring(mod.error))
+    if type(mod.error) == "table" then
+      print(table.tostring(mod.error))
+    else
+      print(mod.error)
+    end
   end
 
   mod.id = mod_id
@@ -54,8 +58,8 @@ end
 --- Loads a mod
 ---@param mod Dummy.Mod
 function self.loadMod(mod)
-  love.filesystem.mount("mods/" .. mod.id .. "/assets", "assets")
-  love.filesystem.mount("mods/" .. mod.id .. "/scripts", "scripts")
+  love.filesystem.mount("mods/" .. mod:getId() .. "/assets", "assets")
+  love.filesystem.mount("mods/" .. mod:getId() .. "/scripts", "scripts")
 
   if type(mod.load) == "function" then
     Lang.loadLanguages()

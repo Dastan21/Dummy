@@ -41,6 +41,7 @@ Mod = require "mod.mod"
 Arena = require "encounter.arena"
 Player = require "encounter.player"
 ActionMenu = require "encounter.action_menu"
+Encounter = require "encounter.encounter"
 Enemy = require "encounter.enemy"
 
 local function loadConfig()

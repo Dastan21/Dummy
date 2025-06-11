@@ -9,9 +9,9 @@
 
 --- @class Dummy.Mod.Encounter
 ---
---- @field text string|nil
---- @field flee boolean|nil
---- @field music string|nil
+--- @field text Dummy.Text.Text|nil the encounter text
+--- @field can_flee boolean|nil wether the action is displayed (Defaults to `true`)
+--- @field music string|nil the encounter music (Defaults to `"battle"`)
 
 
 --- @class Dummy.Mod.Enemy
@@ -22,7 +22,7 @@
 --- @field df number|nil
 --- @field xp number|nil
 --- @field gold number|nil
---- @field check string|table<number, string>|nil
+--- @field check Dummy.Text.Text|table<number, Dummy.Text.Text>|nil
 --- @field position { [1]: number, [2]: number }|nil
 --- @field size { [1]: number, [2]: number }|nil
 
@@ -34,10 +34,11 @@
 
 --- @class Dummy.Mod : Dummy.Class
 ---
---- @field id string
---- @field name string
---- @field title string|nil
---- @field encounter Dummy.Scene.Encounter
+--- @field protected id string
+--- @field protected name string
+--- @field protected title string|nil
+--- @field protected standalone boolean
+--- @field protected encounter Dummy.Encounter
 local Mod = Class()
 
 --- Gets the class name
@@ -46,24 +47,57 @@ function Mod:getClass()
   return "Dummy.Mod"
 end
 
+--- Gets the mod's id
+--- @return string
+function Mod:getId()
+  return self.id
+end
+
+--- Gets the mod's name
+--- @return string
+function Mod:getName()
+  return self.name
+end
+
+--- Gets the mod's title
+--- @return string|nil
+function Mod:getTitle()
+  return self.title
+end
+
+--- Gets the mod's title
+--- @param title string
+function Mod:setTitle(title)
+  self.title = title
+end
+
+--- Gets the mod's encounter
+--- @return Dummy.Encounter
+function Mod:getEncounter()
+  return self.encounter
+end
+
+--- Sets the mod's encounter
+--- @param encounter Dummy.Encounter
+function Mod:setEncounter(encounter)
+  self.encounter = encounter
+end
+
 --- Called when the mod is loaded
 function Mod:load() end
 
---- Called right before the encounter starts
-function Mod:start() end
-
 --- Called when the main menu is loaded, for standalone mods only
 function Mod:preview() end
-
-function Mod:addEnemy(enemy)
-  self.encounter.addEnemy(enemy)
-end
 
 --- Creates a mod
 --- @param data Dummy.Mod.Data
 --- @return Dummy.Mod
 function Mod:new(data)
-  return Class:new(Mod, data)
+  return Class:new(Mod, {
+    name = data.name,
+    title = data.title,
+    standalone = Utils.getOrDefault(data.standalone, false),
+  })
 end
 
 return Mod

@@ -8,10 +8,11 @@
 
 --- @class Dummy.Mod : Dummy.Class
 ---
---- @field id string
---- @field name string
---- @field title string|nil
---- @field encounter Dummy.Scene.Encounter
+--- @field protected id string
+--- @field protected name string
+--- @field protected title string|nil
+--- @field protected standalone boolean
+--- @field protected encounter Dummy.Encounter
 Mod = {}
 
 --- @class Dummy.Mod.Player
@@ -25,9 +26,9 @@ Mod = {}
 
 --- @class Dummy.Mod.Encounter
 ---
---- @field text string|nil
---- @field flee boolean|nil
---- @field music string|nil
+--- @field text Dummy.Text.Text|nil the encounter text
+--- @field can_flee boolean|nil wether the action is displayed (Defaults to `true`)
+--- @field music string|nil the encounter music (Defaults to `"battle"`)
 
 
 --- @class Dummy.Mod.Enemy
@@ -38,7 +39,7 @@ Mod = {}
 --- @field df number|nil
 --- @field xp number|nil
 --- @field gold number|nil
---- @field check string|table<number, string>|nil
+--- @field check Dummy.Text.Text|table<number, Dummy.Text.Text>|nil
 --- @field position { [1]: number, [2]: number }|nil
 --- @field size { [1]: number, [2]: number }|nil
 
@@ -52,16 +53,35 @@ Mod = {}
 --- @return string
 function Mod:getClass() end
 
+--- Gets the mod's id
+--- @return string
+function Mod:getId() end
+
+--- Gets the mod's name
+--- @return string
+function Mod:getName() end
+
+--- Gets the mod's title
+--- @return string|nil
+function Mod:getTitle() end
+
+--- Gets the mod's title
+--- @param title string
+function Mod:setTitle(title) end
+
+--- Gets the mod's encounter
+--- @return Dummy.Encounter
+function Mod:getEncounter() end
+
+--- Sets the mod's encounter
+--- @param encounter Dummy.Encounter
+function Mod:setEncounter(encounter) end
+
 --- Called when the mod is loaded
 function Mod:load() end
 
---- Called right before the encounter starts
-function Mod:start() end
-
 --- Called when the main menu is loaded, for standalone mods only
 function Mod:preview() end
-
-function Mod:addEnemy(enemy) end
 
 --- Creates a mod
 --- @param data Dummy.Mod.Data

@@ -16,7 +16,14 @@
 --- @field private speed number
 --- @field private speed_factor number
 --- @field private hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
+--- @field private soul_sprite Dummy.Sprite
+--- @field private name string
+--- @field private name_text Dummy.Text
+--- @field private lv_text Dummy.Text
+--- @field private hp_sprite Dummy.Sprite
+--- @field private hp_value_text Dummy.Text
 --- @field private is_fleeing boolean
+--- @field private flee_speed number
 Player = {}
 
 --- Inits the player
@@ -110,7 +117,7 @@ function Player.getMaxHP() end
 function Player.isFleeing() end
 
 --- Animates the soul escaping
-function Player.flee(dt) end
+function Player.escape(dt) end
 
 --- Updates the player
 --- @param dt number
