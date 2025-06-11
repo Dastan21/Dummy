@@ -1,4 +1,4 @@
-return {
+Constants = {
   CREDITS = {
     NAME    = "DUMMY",
     AUTHOR  = "Dastan",

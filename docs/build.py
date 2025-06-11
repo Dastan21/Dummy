@@ -15,7 +15,9 @@ ignore = [
   os.path.join("mod", "mod_list.lua"),
 ]
 
-copy = []
+copy = [
+  os.path.join("constants.lua")
+]
 
 scripts = []
 copy_scripts = []
