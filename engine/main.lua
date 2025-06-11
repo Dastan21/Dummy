@@ -22,6 +22,7 @@ UTF8 = require "lib.utf8"
 require "lib.stable_sort"
 
 -- engine
+require "constants"
 Utils = require "utils"
 Class = require "class"
 Audio = require "audio"
@@ -43,6 +44,7 @@ Player = require "encounter.player"
 ActionMenu = require "encounter.action_menu"
 Encounter = require "encounter.encounter"
 Enemy = require "encounter.enemy"
+Item = require "encounter.item"
 
 local function loadConfig()
   if love.filesystem.getInfo("settings.json") ~= nil then

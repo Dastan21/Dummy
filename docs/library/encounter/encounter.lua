@@ -8,10 +8,12 @@
 
 --- @class Dummy.Encounter : Dummy.Class
 ---
+--- @field protected encounter Dummy.Encounter
 --- @field protected text Dummy.Text.Text
 --- @field protected can_flee boolean
 --- @field protected music love.Source
 --- @field protected enemies table<number, Dummy.Enemy>
+--- @field protected items table<number, Dummy.Item>
 --- @field protected current_state string
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
@@ -46,6 +48,10 @@ Encounter = {}
 --- @return string
 function Encounter:getClass() end
 
+--- Gets the current encounter
+--- @return Dummy.Encounter
+function Encounter.getEncounter() end
+
 --- Gets the encounter's text
 --- @return Dummy.Text.Text
 function Encounter:getText() end
@@ -55,9 +61,14 @@ function Encounter:getText() end
 function Encounter:setText(text) end
 
 --- Adds one or more enemies to the encounter
----@param enemy Dummy.Enemy
+---@param enemy Dummy.Enemy|table<number, Dummy.Enemy>
 ---@param ... Dummy.Enemy
 function Encounter:addEnemy(enemy, ...) end
+
+--- Adds one or more items to the encounter
+---@param item Dummy.Item|table<number, Dummy.Item>
+---@param ... Dummy.Item
+function Encounter:addItem(item, ...) end
 
 --- Wether the player can flee the encounter
 --- @return boolean
@@ -74,6 +85,11 @@ function Encounter:getMusic() end
 --- Sets the encounter music
 ---@param music string
 function Encounter:setMusic(music) end
+
+--- Plays a text dialogue
+---@param text string
+---@param can_skip? boolean
+function Encounter:playDialogue(text, can_skip) end
 
 function Encounter:load() end
 

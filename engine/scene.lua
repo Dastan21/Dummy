@@ -187,16 +187,11 @@ end
 --- Removes a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
 function Scene.removeDrawable(drawable)
-  local index = 0
   for i, d in ipairs(Scene.drawables) do
     if d == drawable then
-      index = i
+      table.remove(Scene.drawables, i)
       break
     end
-  end
-
-  if index > 0 then
-    table.remove(Scene.drawables, index)
   end
 
   Scene.sortDrawables()

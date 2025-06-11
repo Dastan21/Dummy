@@ -1,9 +1,11 @@
 --- @class Dummy.Encounter : Dummy.Class
 ---
+--- @field protected encounter Dummy.Encounter
 --- @field protected text Dummy.Text.Text
 --- @field protected can_flee boolean
 --- @field protected music love.Source
 --- @field protected enemies table<number, Dummy.Enemy>
+--- @field protected items table<number, Dummy.Item>
 --- @field protected current_state string
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
@@ -51,6 +53,12 @@ function Encounter:getClass()
   return "Dummy.Encounter"
 end
 
+--- Gets the current encounter
+--- @return Dummy.Encounter
+function Encounter.getEncounter()
+  return Encounter.encounter
+end
+
 --- Gets the encounter's text
 --- @return Dummy.Text.Text
 function Encounter:getText()
@@ -64,10 +72,12 @@ function Encounter:setText(text)
 end
 
 --- Adds one or more enemies to the encounter
----@param enemy Dummy.Enemy
+---@param enemy Dummy.Enemy|table<number, Dummy.Enemy>
 ---@param ... Dummy.Enemy
 function Encounter:addEnemy(enemy, ...)
-  for _, enemy in ipairs({ enemy, ... }) do
+  local enemies = { enemy, ... }
+  if #enemy >= 1 then enemies = enemy end
+  for _, enemy in ipairs(enemies) do
     table.insert(self.enemies, enemy)
 
     -- DEBUG
@@ -79,6 +89,30 @@ function Encounter:addEnemy(enemy, ...)
       love.graphics.setColor(1, 1, 1, 1)
       love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
     end):setLayer(Constants.LAYERS.BELOW_ARENA)
+  end
+
+  self:loadMenus()
+end
+
+--- Adds one or more items to the encounter
+---@param item Dummy.Item|table<number, Dummy.Item>
+---@param ... Dummy.Item
+function Encounter:addItem(item, ...)
+  local items = { item, ... }
+  if #item >= 1 then items = item end
+  for _, item in ipairs(items) do
+    table.insert(self.items, item)
+  end
+
+  self:loadMenus()
+end
+
+function Encounter:removeItem(item)
+  for i, it in ipairs(self.items) do
+    if it == item then
+      table.remove(self.items, i)
+      break
+    end
   end
 
   self:loadMenus()
@@ -107,6 +141,15 @@ end
 function Encounter:setMusic(music)
   self.music = Audio.playMusic(music)
   self.music:setVolume(0.5)
+end
+
+--- Plays a text dialogue
+---@param text string
+---@param can_skip? boolean
+function Encounter:playDialogue(text, can_skip)
+  self.dialogue_text:setText(text)
+  self.dialogue_text:setCanSkip(Utils.getOrDefault(can_skip, true))
+  self:setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
 end
 
 function Encounter:load()
@@ -191,10 +234,12 @@ function Encounter:load()
 
   self:setMusic("battle")
 
+  self.enemies = {}
+  self.items = {}
+
   -- menus
   self:loadMenus()
 
-  self.enemies = {}
   self:start()
 end
 
@@ -211,6 +256,7 @@ end
 function Encounter:loadFightEnemyMenu()
   --- @type Dummy.Menu.Options
   local options = {}
+
   for i, enemy in ipairs(self.enemies) do
     options[i] = {
       text = Text:new("* " .. enemy:getName()),
@@ -241,6 +287,7 @@ end
 function Encounter:loadActEnemyMenu()
   --- @type Dummy.Menu.Options
   local options = {}
+
   for i, enemy in ipairs(self.enemies) do
     options[i] = {
       text = Text:new("* " .. enemy:getName()),
@@ -288,13 +335,12 @@ function Encounter:loadItemMenu()
   --- @type Dummy.Menu.Options
   local options = {}
 
-  -- DEBUG
-  for i = 1, 7 do
+  for _, item in ipairs(self.items) do
     table.insert(options, {
-      text = Text:new("* ITEM_" .. i),
+      text = Text:new(item:getName()),
       action = function()
         Audio.playSound("menu_select")
-        print("> USE ITEM_" .. i)
+        item:use()
       end
     })
   end
@@ -844,12 +890,16 @@ function Encounter:onStateChange(current_state, previous_state) end
 --- @param data Dummy.Mod.Encounter
 --- @return Dummy.Encounter
 function Encounter:new(data)
-  return Class:new(Encounter, {
+  local encounter = Class:new(Encounter, {
     text = Utils.getOrDefault(data.text, ""),
     can_flee = Utils.getOrDefault(data.can_flee, true),
     music = Utils.getOrDefault(data.music, "battle"),
     enemies = {}
   })
+
+  Encounter.encounter = encounter
+
+  return encounter
 end
 
 --- Called when the encounter starts
