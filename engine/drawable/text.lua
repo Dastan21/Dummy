@@ -1,10 +1,12 @@
 --- @class Dummy.Text : Dummy.Drawable
 ---
---- @field protected text string|table|fun(): string|table
+--- @field protected text Dummy.Text.Text
 --- @field protected color love.Color
 --- @field protected font love.Font
 --- @field protected sprite love.Text
 local Text = Class:extend(Drawable)
+
+--- @alias Dummy.Text.Text string|table|fun(): string|table
 
 --- Gets the class name
 --- @return string
@@ -15,13 +17,13 @@ end
 --- @alias love.Color {[1]: number, [2]: number, [3]: number}
 
 --- Gets the text value
---- @return string|table|fun(): string|table
+--- @return Dummy.Text.Text
 function Text:getText()
   return self.text
 end
 
 --- Sets the text value
---- @param value string|table|fun(): string|table
+--- @param value Dummy.Text.Text
 function Text:setText(value)
   self.text = value
   self:updateText()
@@ -94,7 +96,7 @@ function Text:getSprite()
 end
 
 --- Creates a text
---- @param value string|table|fun(): string|table
+--- @param value Dummy.Text.Text
 --- @return Dummy.Text
 function Text:new(value)
   local text = Class:new(Text, {

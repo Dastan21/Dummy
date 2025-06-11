@@ -8,11 +8,13 @@
 
 --- @class Dummy.Text : Dummy.Drawable
 ---
---- @field protected text string|table|fun(): string|table
+--- @field protected text Dummy.Text.Text
 --- @field protected color love.Color
 --- @field protected font love.Font
 --- @field protected sprite love.Text
 Text = {}
+
+--- @alias Dummy.Text.Text string|table|fun(): string|table
 
 --- @alias love.Color {[1]: number, [2]: number, [3]: number}
 
@@ -21,11 +23,11 @@ Text = {}
 function Text:getClass() end
 
 --- Gets the text value
---- @return string|table|fun(): string|table
+--- @return Dummy.Text.Text
 function Text:getText() end
 
 --- Sets the text value
---- @param value string|table|fun(): string|table
+--- @param value Dummy.Text.Text
 function Text:setText(value) end
 
 --- Updates the text sprite value
@@ -65,7 +67,7 @@ function Text:setAlpha(alpha) end
 function Text:getSprite() end
 
 --- Creates a text
---- @param value string|table|fun(): string|table
+--- @param value Dummy.Text.Text
 --- @return Dummy.Text
 function Text:new(value) end
 

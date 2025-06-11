@@ -20,7 +20,7 @@ DialogueText = {}
 function DialogueText:getClass() end
 
 --- Sets the dialogue text value
---- @param value string|table|fun(): string|table
+--- @param value Dummy.Text.Text
 function DialogueText:setText(value) end
 
 --- Updates the dialogue text sprite value
@@ -70,7 +70,7 @@ function DialogueText:setVoice(voice) end
 function DialogueText:update(dt) end
 
 --- Creates a dialogue text
---- @param value string|table|fun(): string|table
+--- @param value Dummy.Text.Text
 --- @return Dummy.DialogueText
 function DialogueText:new(value) end
 

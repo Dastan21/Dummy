@@ -14,7 +14,7 @@ function DialogueText:getClass()
 end
 
 --- Sets the dialogue text value
---- @param value string|table|fun(): string|table
+--- @param value Dummy.Text.Text
 function DialogueText:setText(value)
   if self.max_width > 0 then
     local scale_x = self:getScale()
@@ -123,7 +123,7 @@ function DialogueText:update(dt)
 end
 
 --- Creates a dialogue text
---- @param value string|table|fun(): string|table
+--- @param value Dummy.Text.Text
 --- @return Dummy.DialogueText
 function DialogueText:new(value)
   local dialogue_text = Class:new(DialogueText, {

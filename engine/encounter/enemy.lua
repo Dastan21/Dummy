@@ -7,7 +7,7 @@
 --- @field protected df number
 --- @field protected xp number
 --- @field protected gold number
---- @field protected check string|table<number, string>|nil
+--- @field protected check Dummy.Text.Text|table<number, string>|nil
 --- @field protected x number
 --- @field protected y number
 --- @field protected width number
@@ -95,14 +95,18 @@ end
 function Enemy:getCheck()
   local check = self.check
   if type(check) == "table" then
-    return "* " .. table.concat(check, "\n* ")
+    local t = {}
+    for _, txt in ipairs(check) do
+      table.insert(t, Lang.translate(txt))
+    end
+    return "* " .. table.concat(t, "\n* ")
   end
 
   return "* " .. check
 end
 
 --- Sets the enemy's check
---- @param check string|table<number, string>
+--- @param check Dummy.Text.Text|table<number, Dummy.Text.Text>
 function Enemy:setCheck(check)
   self.check = check
 end
