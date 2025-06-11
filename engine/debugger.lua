@@ -67,10 +67,10 @@ function print(...)
   end
 
   if self.logs ~= nil then
-    local _, w = love.graphics.getFont():getWrap(table.concat(t, "	"), (600 / self.scale) - (self.margin * 2))
+    local _, w = self.log_text:getFont():getWrap(table.concat(t, "	"), (600 / self.scale) - (self.margin * 2))
     local len = #self.logs
     for i, s in ipairs(w) do
-      self.logs[len + i] = "> " .. s
+      self.logs[len + i] = (i == 1 and "> " or "  ") .. s
     end
   end
 
