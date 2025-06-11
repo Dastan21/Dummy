@@ -142,11 +142,10 @@ function main_menu.loadModListMenu()
       table.insert(options, {
         text = Text:new(mod.name),
         action = function()
-          if mod.error then return end
-
           mod_list.loadMod(mod)
           Scene.change("ENCOUNTER", mod)
         end,
+        disabled = mod.error ~= nil
       })
     end
   else

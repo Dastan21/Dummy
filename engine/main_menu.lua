@@ -137,10 +137,14 @@ function MainMenu:update()
       self:select(self.selected_index + 1)
     end
   elseif Input.isPressed(Input.Confirm) then
-    local selected_menu = self.options[self.selected_index]
-    if type(selected_menu.action) == "function" then
-      Audio.playSound("menu_select")
-      selected_menu.action(selected_menu)
+    local selected_menu_item = self.options[self.selected_index]
+    if type(selected_menu_item.action) == "function" then
+      if selected_menu_item.disabled == true then
+        Audio.playSound("hurt")
+      else
+        Audio.playSound("menu_select")
+        selected_menu_item.action(selected_menu_item)
+      end
     end
   elseif Input.isPressed(Input.Cancel) then
     if type(self.onBack) == "function" then
