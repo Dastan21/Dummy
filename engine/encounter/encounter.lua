@@ -69,24 +69,20 @@ end
 ---@param enemy Dummy.Enemy|Dummy.Enemy[]
 ---@param ... Dummy.Enemy
 function Encounter.addEnemy(enemy, ...)
-  if #Encounter.enemies >= 3 then return end
-
   local enemies = { enemy, ... }
   if #enemy >= 1 then enemies = enemy end
   for _, enemy in ipairs(enemies) do
-    if #Encounter.enemies < 3 then
-      table.insert(Encounter.enemies, enemy)
+    table.insert(Encounter.enemies, enemy)
 
-      -- DEBUG
-      Drawable:new(function()
-        local x, y = enemy:getPosition()
-        local w, h = enemy:getSize()
-        love.graphics.setColor(1, 1, 1, 0.2)
-        love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
-      end):setLayer(Constants.LAYERS.BELOW_ARENA)
-    end
+    -- DEBUG
+    Drawable:new(function()
+      local x, y = enemy:getPosition()
+      local w, h = enemy:getSize()
+      love.graphics.setColor(1, 1, 1, 0.2)
+      love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
+      love.graphics.setColor(1, 1, 1, 1)
+      love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
+    end):setLayer(Constants.LAYERS.BELOW_ARENA)
   end
 
   Encounter.loadFightEnemyMenu()
@@ -287,6 +283,18 @@ function Encounter.loadActMenus()
       })
     end
 
+    for _, item in ipairs(enemy:getACTs()) do
+      table.insert(options, {
+        text = Text:new(item:getName()),
+        action = function()
+          Assets.playSound("menu_select")
+          if type(item.use) == "function" then
+            item:use()
+          end
+        end
+      })
+    end
+
     Encounter.act_menus[i] = ActionMenu:new(options, "horizontal", false, function()
       Encounter.setState(Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU)
     end)
@@ -303,7 +311,9 @@ function Encounter.loadItemMenu()
       text = Text:new(item:getShortName()),
       action = function()
         Assets.playSound("menu_select")
-        item:use()
+        if type(item.use) == "function" then
+          item:use()
+        end
       end
     })
   end

@@ -12,6 +12,7 @@
 --- @field protected y number
 --- @field protected width number
 --- @field protected height number
+--- @field protected acts Dummy.ACT[]
 local Enemy = Class()
 
 --- Gets the class name
@@ -149,6 +150,23 @@ function Enemy:setSize(width, height)
   self.height = height
 end
 
+--- Gets the enemy's ACTs
+--- @return Dummy.ACT[]
+function Enemy:getACTs()
+  return self.acts
+end
+
+--- Adds one or more ACTs to the enemy
+---@param act Dummy.ACT|Dummy.ACT[]
+---@param ... Dummy.ACT
+function Enemy:addACT(act, ...)
+  local acts = { act, ... }
+  if #act >= 1 then acts = act end
+  for _, act in ipairs(acts) do
+    table.insert(self.acts, act)
+  end
+end
+
 --- Creates an enemy
 --- @param data Dummy.Mod.Enemy
 --- @return Dummy.Enemy
@@ -169,9 +187,8 @@ function Enemy:new(data)
     y = Utils.getOrDefault(position[2], 200),
     width = Utils.getOrDefault(size[1], 80),
     height = Utils.getOrDefault(size[2], 110),
+    acts = {}
   })
 end
-
-function Enemy:init() end
 
 return Enemy

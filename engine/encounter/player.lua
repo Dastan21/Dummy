@@ -276,14 +276,10 @@ end
 ---@param item Dummy.Item|Dummy.Item[]
 ---@param ... Dummy.Item
 function Player.addItem(item, ...)
-  if #Player.items >= 8 then return end
-
   local items = { item, ... }
   if #item >= 1 then items = item end
   for _, item in ipairs(items) do
-    if #Player.items < 8 then
-      table.insert(Player.items, item)
-    end
+    table.insert(Player.items, item)
   end
 
   Encounter.loadItemMenu()

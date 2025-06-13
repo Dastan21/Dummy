@@ -20,6 +20,7 @@
 --- @field protected y number
 --- @field protected width number
 --- @field protected height number
+--- @field protected acts Dummy.ACT[]
 Enemy = {}
 
 --- Gets the class name
@@ -100,10 +101,17 @@ function Enemy:getSize() end
 ---@param height number
 function Enemy:setSize(width, height) end
 
+--- Gets the enemy's ACTs
+--- @return Dummy.ACT[]
+function Enemy:getACTs() end
+
+--- Adds one or more ACTs to the enemy
+---@param act Dummy.ACT|Dummy.ACT[]
+---@param ... Dummy.ACT
+function Enemy:addACT(act, ...) end
+
 --- Creates an enemy
 --- @param data Dummy.Mod.Enemy
 --- @return Dummy.Enemy
 function Enemy:new(data) end
-
-function Enemy:init() end
 

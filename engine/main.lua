@@ -43,11 +43,12 @@ Player = require "encounter.player"
 ActionMenu = require "encounter.action_menu"
 Encounter = require "encounter.encounter"
 Enemy = require "encounter.enemy"
-
+ACT = require "encounter.act"
 -- encounter item
 Item = require "encounter.item"
 ItemConsumable = require "encounter.item.consumable"
 ItemEquipment = require "encounter.item.equipment"
+
 
 local function loadConfig()
   if love.filesystem.getInfo("settings.json") ~= nil then

@@ -38,9 +38,6 @@ end
 --- Called when the item is used
 function Item:use() end
 
---- Called when the item's effect is applied
-function Item:effect() end
-
 --- Creates an item
 --- @param name Dummy.Text.Text
 --- @param short_name Dummy.Text.Text
