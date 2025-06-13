@@ -153,6 +153,7 @@ function Encounter.load()
   Encounter.dialogue_text:setScale(2)
   Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
   Encounter.dialogue_text:setMaxWidth(Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
+  Encounter.dialogue_text:setCanSkip(true)
   Encounter.dialogue_text:setText(Encounter.getText())
 
   -- attack target
@@ -279,7 +280,7 @@ function Encounter.loadActMenus()
         action = function()
           Assets.playSound("menu_select")
           Encounter.dialogue_text:setText(enemy:getCheckText())
-          Encounter.dialogue_text:setCanSkip(false)
+          Encounter.dialogue_text:setCanSkip(true)
           Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
         end
       })
@@ -365,6 +366,7 @@ function Encounter.loadMercyMenu()
           flee_text_key = "ENCOUNTER_FLEE_TEXT_4"
         end
         Encounter.dialogue_text:setText("   * " .. Lang.translate(flee_text_key))
+        Encounter.dialogue_text:setCanSkip(true)
         Encounter.dialogue_text:setVisible(true)
         Encounter.dialogue_text:skip()
         Encounter.unselectAction()
@@ -407,6 +409,8 @@ end
 
 --- Updates action select
 function Encounter.updateActionSelect()
+  if Player.isHidden() then return end
+
   if Input.isPressed(Input.Left) then
     if Encounter.action.index <= Encounter.ACTIONS.FIGHT then
       Encounter.action.index = Encounter.ACTIONS.MERCY
@@ -574,7 +578,7 @@ function Encounter.startEnemyDialogue()
 
   Encounter.unselectAction()
 
-  -- TODO: get arena width/height in wave
+  -- FIXME: get arena width/height in wave
   local wave_arena_width = 175
   Arena.resize(wave_arena_width, 130, false, function()
     Encounter.enemy_hp_draw:setVisible(false)
@@ -761,7 +765,7 @@ end
 function Encounter.startDefending()
   Encounter.unselectAction()
 
-  -- TODO: get arena width/height in wave
+  -- FIXME: get arena width/height in wave
   local wave_arena_width = 175
   local wave_arena_height = 175
   local wave_arena_x = 0
@@ -773,6 +777,11 @@ end
 --- Updates defending
 function Encounter.updateDefending(dt)
   Player.update(dt)
+
+  -- FIXME: remove when waves are implemented
+  if Input.isPressed(Input.Cancel) then
+    Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
+  end
 end
 
 function Encounter.update(dt)
@@ -835,9 +844,6 @@ function Encounter.update(dt)
     Encounter.updateEnemyDialogue(dt)
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.DEFENDING then
     Encounter.updateDefending(dt)
-    if Input.isPressed(Input.Cancel) then
-      Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
-    end
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.DONE then
     Scene.change("MAIN_MENU")
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.NONE then
