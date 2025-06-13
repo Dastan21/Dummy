@@ -9,7 +9,6 @@
 --- @class Dummy.ACT : Dummy.Class
 ---
 --- @field protected name Dummy.Text.Text
---- @field protected text Dummy.Text.Text|nil
 ACT = {}
 
 --- Gets the class name
@@ -19,14 +18,6 @@ function ACT:getClass() end
 --- Gets the ACT's name
 --- @return Dummy.Text.Text
 function ACT:getName() end
-
---- Gets the ACT's dialogue text
---- @return Dummy.Text.Text
-function ACT:getText() end
-
---- Sets the ACT's dialogue text
---- @param text Dummy.Text.Text
-function ACT:setText(text) end
 
 --- Called when the ACT is used
 function ACT:use() end
