@@ -209,6 +209,7 @@ function Encounter.load()
   Encounter.enemy_hp_text:setScale(1)
   Encounter.enemy_hp_text:setVisible(false)
 
+  Encounter.can_flee = true
   Encounter.setMusic("battle")
 
   Encounter.enemies = {}
