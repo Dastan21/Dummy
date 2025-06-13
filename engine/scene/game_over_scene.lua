@@ -5,7 +5,7 @@
 --- @field private title_delay number
 --- @field private title_timer number
 --- @field private player_sprite Dummy.Sprite
---- @field private player_shards table<number, table>
+--- @field private player_shards table[]
 --- @field private black_sprite Dummy.Sprite
 --- @field private fade_time number
 --- @field private dialogue_text Dummy.DialogueText
@@ -22,13 +22,13 @@ function game_over.load(x, y)
   -- GAME OVER title
   game_over.title_game_text = Text:new("GAME_OVER_TITLE_GAME")
   game_over.title_game_text:setPosition(330, 76)
-  game_over.title_game_text:setFont(Font.FONTS.WONDER)
+  game_over.title_game_text:setFont(Assets.getFont("wonder"))
   game_over.title_game_text:setScale(8)
   game_over.title_game_text:setAlpha(0)
   game_over.title_game_text:setVisible(false)
   game_over.title_over_text = Text:new("GAME_OVER_TITLE_OVER")
   game_over.title_over_text:setPosition(324, 172)
-  game_over.title_over_text:setFont(Font.FONTS.WONDER)
+  game_over.title_over_text:setFont(Assets.getFont("wonder"))
   game_over.title_over_text:setScale(8)
   game_over.title_over_text:setAlpha(0)
   game_over.title_over_text:setVisible(false)
@@ -69,7 +69,7 @@ function game_over.load(x, y)
   game_over.dialogue_text = DialogueText:new("")
   game_over.dialogue_text:setPosition(120, 320)
   game_over.dialogue_text:setOrigin(0, 0)
-  game_over.dialogue_text:setFont(Font.FONTS.MAIN_TEXT_MONO)
+  game_over.dialogue_text:setFont(Assets.getFont("main_text_mono"))
   game_over.dialogue_text:setScale(2)
   game_over.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
   game_over.dialogue_text:setVoice("asgore_voice")
@@ -79,11 +79,11 @@ function game_over.load(x, y)
   game_over.dialogue_text:setVisible(false)
   game_over.dialogue_index = 1
 
-  game_over.game_over_music = Audio.playMusic("game_over", false)
+  game_over.game_over_music = Assets.playMusic("game_over", false)
 
   Timer.after(0.6, function()
     game_over.player_sprite:setSprite("heart_break")
-    Audio.playSound("heart_break")
+    Assets.playSound("heart_break")
 
     Timer.after(1.3, function()
       game_over.player_sprite:setVisible(false)
@@ -91,7 +91,7 @@ function game_over.load(x, y)
         shard.sprite:setVisible(true)
         shard.sprite:play()
       end
-      Audio.playSound("heart_explode")
+      Assets.playSound("heart_explode")
 
       Timer.after(1.5, function()
         game_over.title_game_text:setVisible(true)
@@ -114,7 +114,7 @@ function game_over.update(dt)
 
       if game_over.dialogue_index == 2 then
         local name = Utils.getOrDefault(Player.getName(), "Frisk")
-        game_over.dialogue_text:setText(Lang.translate({ "GAME_OVER_TEXT_2", name }))
+        game_over.dialogue_text:setText(Lang.translate("GAME_OVER_TEXT_2", name))
       elseif game_over.dialogue_index == 3 then
         game_over.dialogue_text:setText("")
       elseif game_over.dialogue_index == 4 then

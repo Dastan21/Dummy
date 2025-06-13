@@ -1,12 +1,3 @@
---- @class Dummy.Mod.Player
----
---- @field name string|nil
---- @field level number|nil
---- @field hp number|nil
---- @field max_hp number|nil
---- @field at number|nil
---- @field df number|nil
-
 --- @class Dummy.Mod.Encounter
 ---
 --- @field text Dummy.Text.Text|nil the encounter text
@@ -22,9 +13,10 @@
 --- @field df number|nil
 --- @field xp number|nil
 --- @field gold number|nil
---- @field check Dummy.Text.Text|table<number, Dummy.Text.Text>|nil
+--- @field check Dummy.Text.Text|Dummy.Text.Text[]|nil
 --- @field position { [1]: number, [2]: number }|nil
 --- @field size { [1]: number, [2]: number }|nil
+
 
 --- @class Dummy.Mod.Data
 ---
@@ -32,13 +24,13 @@
 --- @field title string|nil
 --- @field standalone boolean|nil
 
+
 --- @class Dummy.Mod : Dummy.Class
 ---
 --- @field protected id string
 --- @field protected name string
 --- @field protected title string|nil
 --- @field protected standalone boolean
---- @field protected encounter Dummy.Encounter
 local Mod = Class()
 
 --- Gets the class name
@@ -69,18 +61,6 @@ end
 --- @param title string
 function Mod:setTitle(title)
   self.title = title
-end
-
---- Gets the mod's encounter
---- @return Dummy.Encounter
-function Mod:getEncounter()
-  return self.encounter
-end
-
---- Sets the mod's encounter
---- @param encounter Dummy.Encounter
-function Mod:setEncounter(encounter)
-  self.encounter = encounter
 end
 
 --- Called when the mod is loaded

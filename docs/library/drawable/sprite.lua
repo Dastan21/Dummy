@@ -21,6 +21,9 @@ Sprite = {}
 --- @return string
 function Sprite:getClass() end
 
+--- Clears the cache
+function Sprite.clear() end
+
 --- Gets the sprite's value
 --- @return love.Image
 function Sprite:getSprite() end
@@ -57,13 +60,10 @@ function Sprite:setSpeed(speed) end
 
 --- Creates a sprite
 --- @overload fun(self: Dummy.Sprite, sprite: string): Dummy.Sprite
---- @param frames table<number, string>
+--- @param frames string[]
 --- @param speed? number time between frames, in seconds (Defaults to 1/30)
 --- @param loop? boolean loops the animation (Defaults to `true`)
 --- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
 --- @return Dummy.Sprite
 function Sprite:new(frames, speed, loop, keep_last_frame) end
-
---- Clears the cache
-function Sprite.clear() end
 

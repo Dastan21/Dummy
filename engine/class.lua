@@ -19,8 +19,8 @@ end
 --- Creates a new instance of a class
 --- @generic T : Dummy.Class
 --- @param c T
---- @param d? table<number, any>
---- @param p? table<number, any>
+--- @param d? any[]
+--- @param p? any[]
 --- @return T
 function Class:new(c, d, p)
   local o = {}

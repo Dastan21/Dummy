@@ -13,7 +13,7 @@
 --- @field protected sprite love.Image|love.Text
 --- @field protected draw fun()|nil
 --- @field protected persistent boolean
-local Drawable = Class("Dummy.Drawable")
+local Drawable = Class()
 
 --- Gets the class name
 --- @return string

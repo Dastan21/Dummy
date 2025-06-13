@@ -8,9 +8,9 @@
 
 --- @class Dummy.Encounter.ActionMenu : Dummy.Class
 ---
---- @field protected options table<number, Dummy.Menu.Option>
---- @field protected indexes_x table<number, table<number, number>>
---- @field protected indexes_y table<number, table<number, number>>
+--- @field protected options Dummy.Menu.Option[]
+--- @field protected indexes_x number[][]
+--- @field protected indexes_y number[][]
 --- @field protected index_x number
 --- @field protected index_y number
 --- @field protected direction "horizontal"|"vertical"
@@ -96,8 +96,8 @@ function ActionMenu:getMaxX() end
 function ActionMenu:getMaxY() end
 
 --- Wether the menu is active
---- @return any
-function ActionMenu:getActive() end
+--- @return boolean
+function ActionMenu:isActive() end
 
 --- Sets wether the menu is active
 --- @param active boolean
@@ -110,7 +110,7 @@ function ActionMenu:init() end
 function ActionMenu:update() end
 
 --- Creates an action menu
---- @param options table<number, Dummy.Menu.Option>
+--- @param options Dummy.Menu.Option[]
 --- @param direction? "horizontal"|"vertical"
 --- @param pagination? boolean
 --- @param onBack? fun(i: number)

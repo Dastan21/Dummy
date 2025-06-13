@@ -16,6 +16,7 @@ lick.clearPackages = false             -- clear all packages in package.loaded o
 lick.defaultFile = "main.lua"          -- default file to load
 lick.fileExtensions = { ".lua" }       -- file extensions to watch
 lick.entryPoint = "main.lua"           -- entry point for the game, if empty, all files are reloaded
+lick.beforeReload = nil                -- function called before reloading
 
 -- local variables
 local drawok_old, updateok_old, loadok_old
@@ -111,6 +112,11 @@ local function checkFileUpdate()
         end
     end
     if not modified then return end
+
+    if type(lick.beforeReload) == "function" then
+        lick.beforeReload()
+    end
+
     -- remove all files from the require cache
     if lick.clearPackages then
         for k, _ in pairs(package.loaded) do

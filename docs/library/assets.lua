@@ -1,15 +1,31 @@
 --[[
-  Generated from ..\engine\audio.lua
+  Generated from ..\engine\assets.lua
 
-  Source: https://github.com/Dastan21/Dummy/blob/main/engine/audio.lua
+  Source: https://github.com/Dastan21/Dummy/blob/main/engine/assets.lua
 ]]
 
 ---@meta
 
---- @class Dummy.Audio
+--- @class Dummy.Assets
 ---
+--- @field private fonts table<Dummy.Assets.Font, love.Font>
 --- @field private current_music love.Source
-Audio = {}
+Assets = {}
+
+--- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage"
+
+function Assets.load() end
+
+--- Gets a font
+--- @param name Dummy.Assets.Font
+--- @return love.Font
+function Assets.getFont(name) end
+
+--- Checks which extension to use
+---@param name string
+---@param exts table<string, string>
+---@return string
+function Assets.checkFilenameExt(name, exts) end
 
 --- Plays an audio
 --- @param folder string
@@ -18,7 +34,7 @@ Audio = {}
 --- @param play boolean
 --- @param loop boolean
 --- @return love.Source
-function Audio.playAudio(folder, audio_name, type, play, loop) end
+function Assets.playAudio(folder, audio_name, type, play, loop) end
 
 --- Plays a music
 --- @param music_name string the music name to play
@@ -26,15 +42,15 @@ function Audio.playAudio(folder, audio_name, type, play, loop) end
 --- @param loop? boolean wether the music should loop (Defaults to `true`)
 --- @param replace? boolean wether to replace the current playing music (Defaults to `true`)
 --- @return love.Source
-function Audio.playMusic(music_name, play, loop, replace) end
+function Assets.playMusic(music_name, play, loop, replace) end
 
 --- Plays a sound
 --- @param sound_name string the sound name to play
 --- @param play? boolean wether the sound should play instantly (Defaults to `true`)
 --- @param loop? boolean wether the sound should loop (Defaults to `false`)
 --- @return love.Source
-function Audio.playSound(sound_name, play, loop) end
+function Assets.playSound(sound_name, play, loop) end
 
 --- Clears the cache
-function Audio.clear() end
+function Assets.clear() end
 

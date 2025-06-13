@@ -14,8 +14,8 @@
 --- @field private quitting_delay number
 --- @field private quitting_timer number
 --- @field private quitting_sprite Dummy.Sprite
---- @field private drawables table<number, Dummy.Drawable>
---- @field private dialogues table<number, Dummy.DialogueText>
+--- @field private drawables Dummy.Drawable[]
+--- @field private dialogues Dummy.DialogueText[]
 Scene = {}
 
 --- @class Dummy.Scene.Scene

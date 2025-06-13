@@ -7,7 +7,7 @@
 --- @field protected df number
 --- @field protected xp number
 --- @field protected gold number
---- @field protected check Dummy.Text.Text|table<number, string>|nil
+--- @field protected check Dummy.Text.Text|string[]|nil
 --- @field protected x number
 --- @field protected y number
 --- @field protected width number
@@ -106,7 +106,7 @@ function Enemy:getCheck()
 end
 
 --- Sets the enemy's check
---- @param check Dummy.Text.Text|table<number, Dummy.Text.Text>
+--- @param check Dummy.Text.Text|Dummy.Text.Text[]
 function Enemy:setCheck(check)
   self.check = check
 end

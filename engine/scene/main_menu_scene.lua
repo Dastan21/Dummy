@@ -1,6 +1,6 @@
 --- @class Dummy.Scene.MainMenu : Dummy.Scene.Scene
 ---
---- @field private menu Dummy.MainMenu
+--- @field private mod_list Dummy.ModList
 --- @field private options Dummy.Menu.Options
 --- @field private current_menu Dummy.MainMenu
 --- @field private logo_sprite Dummy.Sprite
@@ -9,10 +9,9 @@
 --- @field private menu_music love.Source
 local main_menu = {}
 
-local mod_list = require "mod.mod_list"
-
 function main_menu.load()
-  mod_list.load()
+  main_menu.mod_list = require "mod.mod_list"
+  main_menu.mod_list.load()
 
   main_menu.logo_sprite = Sprite:new("logo")
   main_menu.logo_sprite:setPosition(320, 120)
@@ -20,7 +19,7 @@ function main_menu.load()
 
   main_menu.credits_text = Text:new(Constants.CREDITS.NAME ..
     " v" .. Constants.CREDITS.VERSION .. " " .. Constants.CREDITS.AUTHOR .. " " .. Constants.CREDITS.YEAR)
-  main_menu.credits_text:setFont(Font.FONTS.SMALL)
+  main_menu.credits_text:setFont(Assets.getFont("small"))
   main_menu.credits_text:setAlpha(0.707)
   main_menu.credits_text:setPosition(320, 476)
   main_menu.credits_text:setOrigin(0.5, 1)
@@ -32,11 +31,12 @@ function main_menu.load()
   main_menu.loadMenus()
   main_menu.changeMenu(main_menu.main_menu)
 
-  main_menu.menu_music = Audio.playMusic("main_menu")
+  main_menu.menu_music = Assets.playMusic("main_menu")
   main_menu.menu_music:setVolume(0.5)
 
-  if mod_list.standalone and type(mod_list.standalone.preview) == "function" then
-    mod_list.standalone.preview()
+  local standalone = main_menu.mod_list.getStandalone()
+  if standalone ~= nil and type(standalone.preview) == "function" then
+    standalone:preview()
   end
 end
 
@@ -51,7 +51,8 @@ function main_menu.loadMainMenu()
   --- @type Dummy.Menu.Options
   local options = {}
 
-  if not mod_list.standalone then
+  local standalone = main_menu.mod_list.getStandalone()
+  if not standalone then
     table.insert(options, {
       text = Text:new("MAIN_MENU_PLAY"),
       action = function()
@@ -67,21 +68,17 @@ function main_menu.loadMainMenu()
       end
     })
 
-    love.window.setTitle(Constants.CREDITS.NAME)
-    love.window.setIcon(love.image.newImageData("assets/icon.png"))
+    main_menu.mod_list.setWindowTitleAndIcon(Constants.CREDITS.NAME)
   else
     table.insert(options, {
       text = Text:new("MAIN_MENU_PLAY"),
       action = function()
-        mod_list.standalone.load()
-        Scene.change("ENCOUNTER", mod_list.standalone)
+        standalone:load()
+        Scene.change("ENCOUNTER", standalone)
       end
     })
 
-    if mod_list.standalone.title ~= nil then
-      love.window.setTitle(mod_list.standalone.title)
-    end
-    love.window.setIcon(love.image.newImageData("assets/icon.png"))
+    main_menu.mod_list.setWindowTitleAndIcon(standalone:getTitle())
   end
 
   table.insert(options, {
@@ -132,20 +129,19 @@ end
 
 --- Loads mod list menu
 function main_menu.loadModListMenu()
-  mod_list.load()
+  main_menu.mod_list.load()
 
   --- @type Dummy.Menu.Options
   local options = {}
 
-  if #mod_list.mods > 0 then
-    for _, mod in ipairs(mod_list.mods) do
+  if #main_menu.mod_list.getMods() > 0 then
+    for _, mod in ipairs(main_menu.mod_list.getMods()) do
       table.insert(options, {
-        text = Text:new(mod.name),
+        text = Text:new(mod:getName()),
         action = function()
-          mod_list.loadMod(mod)
           Scene.change("ENCOUNTER", mod)
         end,
-        disabled = mod.error ~= nil
+        disabled = mod["error"] ~= nil
       })
     end
   else

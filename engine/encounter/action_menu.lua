@@ -1,8 +1,8 @@
 --- @class Dummy.Encounter.ActionMenu : Dummy.Class
 ---
---- @field protected options table<number, Dummy.Menu.Option>
---- @field protected indexes_x table<number, table<number, number>>
---- @field protected indexes_y table<number, table<number, number>>
+--- @field protected options Dummy.Menu.Option[]
+--- @field protected indexes_x number[][]
+--- @field protected indexes_y number[][]
 --- @field protected index_x number
 --- @field protected index_y number
 --- @field protected direction "horizontal"|"vertical"
@@ -24,7 +24,7 @@ end
 --- @param silent? boolean wether to play a sound (Defaults to `false`)
 function ActionMenu:select(index_x, index_y, silent)
   if not silent and (self.pagination or index_x ~= self.index_x or index_y ~= self.index_y) then
-    Audio.playSound("menu_move")
+    Assets.playSound("menu_move")
   end
 
   local option = self:getOption(index_x, index_y)
@@ -243,8 +243,8 @@ function ActionMenu:getMaxY()
 end
 
 --- Wether the menu is active
---- @return any
-function ActionMenu:getActive()
+--- @return boolean
+function ActionMenu:isActive()
   return self.active
 end
 
@@ -269,7 +269,7 @@ function ActionMenu:init()
 
     option.text:setPosition(x, y)
     option.text:setOrigin(0, 0.5)
-    option.text:setFont(Font.FONTS.MAIN_TEXT)
+    option.text:setFont(Assets.getFont("main_text"))
     option.text:setScale(2)
     option.text:setVisible(false)
     option.text:setLayer(Constants.LAYERS.UI)
@@ -279,7 +279,7 @@ function ActionMenu:init()
     self.page_text = Text:new({ "ENCOUNTER_MENU_ITEM_PAGE", 1 })
     self.page_text:setPosition(388, 351)
     self.page_text:setOrigin(0, 0.5)
-    self.page_text:setFont(Font.FONTS.MAIN_TEXT)
+    self.page_text:setFont(Assets.getFont("main_text"))
     self.page_text:setScale(2)
     self.page_text:setVisible(false)
     self.page_text:setLayer(Constants.LAYERS.UI)
@@ -313,7 +313,7 @@ function ActionMenu:update()
 end
 
 --- Creates an action menu
---- @param options table<number, Dummy.Menu.Option>
+--- @param options Dummy.Menu.Option[]
 --- @param direction? "horizontal"|"vertical"
 --- @param pagination? boolean
 --- @param onBack? fun(i: number)

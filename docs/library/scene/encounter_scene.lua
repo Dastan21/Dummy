@@ -7,8 +7,6 @@
 ---@meta
 
 --- @class Dummy.Scene.Encounter : Dummy.Scene.Scene
----
---- @field private encounter Dummy.Encounter
 encounter = {}
 
 --- Loads the encounter scene

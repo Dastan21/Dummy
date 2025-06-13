@@ -1,4 +1,4 @@
---- @alias Dummy.Menu.Options table<number, Dummy.Menu.Option>
+--- @alias Dummy.Menu.Options Dummy.Menu.Option[]
 
 --- @class Dummy.Menu.Option
 ---
@@ -56,7 +56,7 @@ function MainMenu:select(index, silent)
   self.page_text:setText({ "MAIN_MENU_PAGE", page })
 
   if not silent then
-    Audio.playSound("menu_move")
+    Assets.playSound("menu_move")
   end
 end
 
@@ -140,9 +140,9 @@ function MainMenu:update()
     local selected_menu_item = self.options[self.selected_index]
     if type(selected_menu_item.action) == "function" then
       if selected_menu_item.disabled == true then
-        Audio.playSound("hurt")
+        Assets.playSound("hurt")
       else
-        Audio.playSound("menu_select")
+        Assets.playSound("menu_select")
         selected_menu_item.action(selected_menu_item)
       end
     end

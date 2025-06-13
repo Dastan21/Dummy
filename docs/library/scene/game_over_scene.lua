@@ -13,7 +13,7 @@
 --- @field private title_delay number
 --- @field private title_timer number
 --- @field private player_sprite Dummy.Sprite
---- @field private player_shards table<number, table>
+--- @field private player_shards table[]
 --- @field private black_sprite Dummy.Sprite
 --- @field private fade_time number
 --- @field private dialogue_text Dummy.DialogueText

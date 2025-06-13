@@ -12,7 +12,7 @@
 --- @field protected onBack fun()|nil
 MainMenu = {}
 
---- @alias Dummy.Menu.Options table<number, Dummy.Menu.Option>
+--- @alias Dummy.Menu.Options Dummy.Menu.Option[]
 
 --- @class Dummy.Menu.Option
 ---

@@ -8,6 +8,10 @@ if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   lick.updateAllFiles = true
   lick.clearPackages = true
   lick.chunkLoadMessage = "[RELOADED]"
+  lick.beforeReload = function()
+    local mod_list = require "mod.mod_list"
+    mod_list.unloadMods()
+  end
 
   function love.errorhandler(msg)
     error(msg, 2)

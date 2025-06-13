@@ -25,10 +25,9 @@ require "lib.stable_sort"
 require "constants"
 Utils = require "utils"
 Class = require "class"
-Audio = require "audio"
+Assets = require "assets"
 Input = require "input"
 Lang = require "lang"
-Font = require "font"
 Drawable = require "drawable.drawable"
 Sprite = require "drawable.sprite"
 Text = require "drawable.text"
@@ -44,7 +43,11 @@ Player = require "encounter.player"
 ActionMenu = require "encounter.action_menu"
 Encounter = require "encounter.encounter"
 Enemy = require "encounter.enemy"
+
+-- encounter item
 Item = require "encounter.item"
+ItemConsumable = require "encounter.item.consumable"
+ItemEquipment = require "encounter.item.equipment"
 
 local function loadConfig()
   if love.filesystem.getInfo("settings.json") ~= nil then
@@ -76,7 +79,7 @@ function love.load()
 
   Input.load()
   Lang.load()
-  Font.load()
+  Assets.load()
   Scene.load()
   Debugger.load()
 
@@ -103,7 +106,7 @@ local function update(dt)
 
   updateFullscreen()
   if Input.isPressed("f9") then
-    Audio.playSound("screenshot")
+    Assets.playSound("screenshot")
     love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
   end
 end

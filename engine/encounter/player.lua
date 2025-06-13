@@ -1,21 +1,22 @@
 --- @class Dummy.Player
 ---
---- @field private lv number
---- @field private hp number
---- @field private max_hp number
---- @field private at number
---- @field private df number
---- @field private speed number
---- @field private speed_factor number
---- @field private hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
---- @field private soul_sprite Dummy.Sprite
---- @field private name string
---- @field private name_text Dummy.Text
---- @field private lv_text Dummy.Text
---- @field private hp_sprite Dummy.Sprite
---- @field private hp_value_text Dummy.Text
---- @field private is_fleeing boolean
---- @field private flee_speed number
+--- @field protected lv number
+--- @field protected hp number
+--- @field protected max_hp number
+--- @field protected at number
+--- @field protected df number
+--- @field protected speed number
+--- @field protected speed_factor number
+--- @field protected hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
+--- @field protected soul_sprite Dummy.Sprite
+--- @field protected name string
+--- @field protected name_text Dummy.Text
+--- @field protected lv_text Dummy.Text
+--- @field protected hp_sprite Dummy.Sprite
+--- @field protected hp_value_text Dummy.Text
+--- @field protected is_fleeing boolean
+--- @field protected flee_speed number
+--- @field protected items Dummy.Item[]
 local Player = {}
 
 --- Inits the player
@@ -37,12 +38,12 @@ function Player.load()
   Player.name_text = Text:new(Player.name)
   Player.name_text:setPosition(30, 400)
   Player.name_text:setOrigin(0)
-  Player.name_text:setFont(Font.FONTS.CURS)
+  Player.name_text:setFont(Assets.getFont("curs"))
 
   Player.lv_text = Text:new("")
   Player.lv_text:setPosition(174, 400)
   Player.lv_text:setOrigin(0)
-  Player.lv_text:setFont(Font.FONTS.CURS)
+  Player.lv_text:setFont(Assets.getFont("curs"))
 
   Player.hp_sprite = Sprite:new("hp")
   Player.hp_sprite:setPosition(240, 400)
@@ -50,10 +51,12 @@ function Player.load()
   Player.hp_value_text = Text:new("")
   Player.hp_value_text:setPosition(400, 400)
   Player.hp_value_text:setOrigin(0)
-  Player.hp_value_text:setFont(Font.FONTS.CURS)
+  Player.hp_value_text:setFont(Assets.getFont("curs"))
 
   Player.is_fleeing = false
   Player.flee_speed = 3
+
+  Player.items = {}
 
   Player.setLV(1, true)
 
@@ -64,6 +67,13 @@ function Player.load()
       love.graphics.rectangle("line", x - Player.hitbox[1], y - Player.hitbox[2], Player.hitbox[3], Player.hitbox[4])
     end
   end):setLayer(Constants.LAYERS.ABOVE_SOUL)
+end
+
+--- Gets the player's soul position
+--- @return number x horizontal position
+--- @return number y vertical position
+function Player.getPosition()
+  return Player.soul_sprite:getPosition()
 end
 
 --- Sets the player's soul position
@@ -82,13 +92,6 @@ function Player.setPosition(x, y, ignore_arena_bounds)
   Player.soul_sprite:setPosition(x, y)
 end
 
---- Gets the player's soul position
---- @return number x horizontal position
---- @return number y vertical position
-function Player.getPosition()
-  return Player.soul_sprite:getPosition()
-end
-
 --- Shows the player's soul
 function Player.show()
   Player.soul_sprite:setVisible(true)
@@ -105,6 +108,12 @@ function Player.isHidden()
   return not Player.soul_sprite:isVisible()
 end
 
+--- Gets the player's name
+--- @return string
+function Player.getName()
+  return Player.name
+end
+
 --- Sets the player's name
 --- @param name string name displayed
 function Player.setName(name)
@@ -115,10 +124,10 @@ function Player.setName(name)
   Player.lv_text:setPosition(Player.name_text:getSprite():getWidth() + 57, 400)
 end
 
---- Gets the player's name
---- @return string
-function Player.getName()
-  return Player.name
+--- Gets the player's LV
+--- @return number
+function Player.getLV()
+  return Player.lv
 end
 
 --- Sets the player's LV
@@ -144,10 +153,10 @@ function Player.setLV(lv, heal)
   Player.setDF(9 + math.ceil(Player.lv / 4))
 end
 
---- Gets the player's LV
+--- Gets the player's HP
 --- @return number
-function Player.getLV()
-  return Player.lv
+function Player.getHP()
+  return Player.hp
 end
 
 --- Sets the player's HP
@@ -160,10 +169,21 @@ function Player.setHP(hp)
   Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 400)
 end
 
---- Gets the player's HP
+--- Heals the player
+--- @param amount number
+--- @param silent? boolean wether to play a sound (Defaults to `false`)
+function Player.heal(amount, silent)
+  Player.setHP(Player.hp + amount)
+
+  if not silent then
+    Assets.playSound("heal")
+  end
+end
+
+--- Gets the player's max HP
 --- @return number
-function Player.getHP()
-  return Player.hp
+function Player.getMaxHP()
+  return Player.max_hp
 end
 
 --- Sets the player's max HP
@@ -226,18 +246,6 @@ function Player.isColliding(bullet)
   local bullet_hitbox = bullet:getHitbox()
 end
 
---- Gets the player's max HP
---- @return number
-function Player.getMaxHP()
-  return Player.max_hp
-end
-
---- Wether the playing is playing the escape animation
----@return boolean
-function Player.isFleeing()
-  return Player.is_fleeing
-end
-
 --- Animates the soul escaping
 function Player.escape(dt)
   if not Player.is_fleeing then
@@ -250,6 +258,48 @@ function Player.escape(dt)
 
   local x, y = Player.soul_escape_sprite:getPosition()
   Player.soul_escape_sprite:setPosition(x - Player.flee_speed * dt * 30, y)
+end
+
+--- Wether the playing is playing the escape animation
+---@return boolean
+function Player.isFleeing()
+  return Player.is_fleeing
+end
+
+--- Gets the player's items
+--- @return Dummy.Item[]
+function Player.getItems()
+  return Player.items
+end
+
+--- Adds one or more items to the player
+---@param item Dummy.Item|Dummy.Item[]
+---@param ... Dummy.Item
+function Player.addItem(item, ...)
+  if #Player.items >= 8 then return end
+
+  local items = { item, ... }
+  if #item >= 1 then items = item end
+  for _, item in ipairs(items) do
+    if #Player.items < 8 then
+      table.insert(Player.items, item)
+    end
+  end
+
+  Encounter.loadItemMenu()
+end
+
+--- Removes an item from the player
+--- @param item Dummy.Item
+function Player.removeItem(item)
+  for i, it in ipairs(Player.items) do
+    if it == item then
+      table.remove(Player.items, i)
+      break
+    end
+  end
+
+  Encounter.loadItemMenu()
 end
 
 --- Updates the player

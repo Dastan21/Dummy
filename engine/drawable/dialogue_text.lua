@@ -112,7 +112,7 @@ function DialogueText:update(dt)
 
   if self.text_index < math.floor(self.time) then
     self.text_index = math.floor(self.time)
-    Audio.playSound(self.voice)
+    Assets.playSound(self.voice)
   end
 
   if Input.isPressed(Input.Cancel) then

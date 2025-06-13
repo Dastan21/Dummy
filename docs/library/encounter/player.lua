@@ -8,37 +8,38 @@
 
 --- @class Dummy.Player
 ---
---- @field private lv number
---- @field private hp number
---- @field private max_hp number
---- @field private at number
---- @field private df number
---- @field private speed number
---- @field private speed_factor number
---- @field private hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
---- @field private soul_sprite Dummy.Sprite
---- @field private name string
---- @field private name_text Dummy.Text
---- @field private lv_text Dummy.Text
---- @field private hp_sprite Dummy.Sprite
---- @field private hp_value_text Dummy.Text
---- @field private is_fleeing boolean
---- @field private flee_speed number
+--- @field protected lv number
+--- @field protected hp number
+--- @field protected max_hp number
+--- @field protected at number
+--- @field protected df number
+--- @field protected speed number
+--- @field protected speed_factor number
+--- @field protected hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
+--- @field protected soul_sprite Dummy.Sprite
+--- @field protected name string
+--- @field protected name_text Dummy.Text
+--- @field protected lv_text Dummy.Text
+--- @field protected hp_sprite Dummy.Sprite
+--- @field protected hp_value_text Dummy.Text
+--- @field protected is_fleeing boolean
+--- @field protected flee_speed number
+--- @field protected items Dummy.Item[]
 Player = {}
 
 --- Inits the player
 function Player.load() end
+
+--- Gets the player's soul position
+--- @return number x horizontal position
+--- @return number y vertical position
+function Player.getPosition() end
 
 --- Sets the player's soul position
 --- @param x number horizontal position
 --- @param y number vertical position
 --- @param ignore_arena_bounds? boolean ignore arena bounds collisions
 function Player.setPosition(x, y, ignore_arena_bounds) end
-
---- Gets the player's soul position
---- @return number x horizontal position
---- @return number y vertical position
-function Player.getPosition() end
 
 --- Shows the player's soul
 function Player.show() end
@@ -50,30 +51,39 @@ function Player.hide() end
 --- @return boolean
 function Player.isHidden() end
 
+--- Gets the player's name
+--- @return string
+function Player.getName() end
+
 --- Sets the player's name
 --- @param name string name displayed
 function Player.setName(name) end
 
---- Gets the player's name
---- @return string
-function Player.getName() end
+--- Gets the player's LV
+--- @return number
+function Player.getLV() end
 
 --- Sets the player's LV
 --- @param lv number level
 --- @param heal? boolean set HP to max HP
 function Player.setLV(lv, heal) end
 
---- Gets the player's LV
+--- Gets the player's HP
 --- @return number
-function Player.getLV() end
+function Player.getHP() end
 
 --- Sets the player's HP
 --- @param hp number health points
 function Player.setHP(hp) end
 
---- Gets the player's HP
+--- Heals the player
+--- @param amount number
+--- @param silent? boolean wether to play a sound (Defaults to `false`)
+function Player.heal(amount, silent) end
+
+--- Gets the player's max HP
 --- @return number
-function Player.getHP() end
+function Player.getMaxHP() end
 
 --- Sets the player's max HP
 --- @param max_hp number maximum health points
@@ -108,16 +118,25 @@ function Player.setSpeed(speed) end
 --- @param bullet Dummy.Bullet
 function Player.isColliding(bullet) end
 
---- Gets the player's max HP
---- @return number
-function Player.getMaxHP() end
+--- Animates the soul escaping
+function Player.escape(dt) end
 
 --- Wether the playing is playing the escape animation
 ---@return boolean
 function Player.isFleeing() end
 
---- Animates the soul escaping
-function Player.escape(dt) end
+--- Gets the player's items
+--- @return Dummy.Item[]
+function Player.getItems() end
+
+--- Adds one or more items to the player
+---@param item Dummy.Item|Dummy.Item[]
+---@param ... Dummy.Item
+function Player.addItem(item, ...) end
+
+--- Removes an item from the player
+--- @param item Dummy.Item
+function Player.removeItem(item) end
 
 --- Updates the player
 --- @param dt number

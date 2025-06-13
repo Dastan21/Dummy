@@ -1,10 +1,26 @@
-local self = {}
+--- @class Dummy.ModList
+---
+--- @field private mods Dummy.Mod[]
+--- @field private standalone Dummy.Mod|nil
+local ModList = {}
+
+--- Gets the mods
+--- @return Dummy.Mod[]
+function ModList.getMods()
+  return ModList.mods
+end
+
+--- Gets the standalone mod
+--- @return Dummy.Mod|nil
+function ModList.getStandalone()
+  return ModList.standalone
+end
 
 --- Loads the mod list
-function self.load()
-  self.unloadMods()
-  self.mods = {}
-  self.standalone = nil
+function ModList.load()
+  ModList.unloadMods()
+  ModList.mods = {}
+  ModList.standalone = nil
 
   local mods_dirs = love.filesystem.getDirectoryItems("mods")
   for _, mod_dir in ipairs(mods_dirs) do
@@ -19,9 +35,10 @@ function self.load()
       end
 
       if love.filesystem.getInfo("mods/" .. mod_dir .. "/mod.lua") ~= nil then
-        self.preloadMod(mod_dir)
+        ModList.preloadMod(mod_dir)
       end
-      if self.standalone ~= nil then return end
+
+      if ModList.standalone ~= nil then return end
     end
   end
 end
@@ -29,14 +46,13 @@ end
 --- Preloads a mod
 --- @param mod_id string
 --- @private
-function self.preloadMod(mod_id)
+function ModList.preloadMod(mod_id)
   local success, mod = pcall(require, "mods." .. mod_id .. ".mod")
-  if self.isModValid(success, mod) then
+  if ModList.isModValid(success, mod) then
     if mod.standalone == true then
-      self.mods = {}
+      ModList.mods = {}
       mod.id = mod_id
-      self.standalone = mod
-      self.loadMod(mod)
+      ModList.standalone = mod
       return
     end
   else
@@ -52,12 +68,12 @@ function self.preloadMod(mod_id)
   end
 
   mod.id = mod_id
-  table.insert(self.mods, mod)
+  table.insert(ModList.mods, mod)
 end
 
 --- Loads a mod
 ---@param mod Dummy.Mod
-function self.loadMod(mod)
+function ModList.loadMod(mod)
   love.filesystem.mount("mods/" .. mod:getId() .. "/assets", "assets")
   love.filesystem.mount("mods/" .. mod:getId() .. "/scripts", "scripts")
 
@@ -68,13 +84,13 @@ function self.loadMod(mod)
 end
 
 --- Unloads all mods
-function self.unloadMods()
-  if self.mods == nil then return end
+function ModList.unloadMods()
+  if ModList.mods == nil then return end
 
-  for _, mod in ipairs(self.mods) do
-    love.filesystem.unmount("mods/" .. mod.id .. "/scripts")
-    love.filesystem.unmount("mods/" .. mod.id .. "/assets")
-    love.filesystem.unmount("mods/" .. mod.id .. ".zip")
+  for _, mod in ipairs(ModList.mods) do
+    love.filesystem.unmount("mods/" .. mod:getId() .. "/scripts")
+    love.filesystem.unmount("mods/" .. mod:getId() .. "/assets")
+    love.filesystem.unmount("mods/" .. mod:getId() .. ".zip")
   end
 end
 
@@ -82,7 +98,7 @@ end
 --- @param success boolean
 --- @param mod Dummy.Mod
 --- @return boolean
-function self.isModValid(success, mod)
+function ModList.isModValid(success, mod)
   if not success then return false end
   if type(mod) ~= "table" then return false end
   if type(mod.getClass) ~= "function" then return false end
@@ -91,4 +107,14 @@ function self.isModValid(success, mod)
   return true
 end
 
-return self
+--- Sets the window title and icon
+--- @param title string|nil
+function ModList.setWindowTitleAndIcon(title)
+  if title ~= nil then
+    love.window.setTitle(title)
+  end
+
+  love.window.setIcon(love.image.newImageData("assets/icon.png"))
+end
+
+return ModList

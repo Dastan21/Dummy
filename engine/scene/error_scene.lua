@@ -13,11 +13,12 @@ local error = {}
 function error.load(err)
   error.traceback = Lang.translate("ERROR_LABEL") .. " " .. err
 
-  local _, wrapped_error = Font.FONTS.MAIN_TEXT:getWrap(error.traceback, 630)
+  local main_text_font = Assets.getFont("main_text")
+  local _, wrapped_error = main_text_font:getWrap(error.traceback, 630)
   error.error_text = Text:new(table.concat(wrapped_error, "\n"))
   error.error_text:setPosition(5, 5)
   error.error_text:setOrigin(0, 0)
-  error.error_text:setFont(Font.FONTS.MAIN_TEXT)
+  error.error_text:setFont(main_text_font)
 
   Drawable:new(function()
     love.graphics.setColor(0, 0, 0, 1)
@@ -27,13 +28,13 @@ function error.load(err)
   error.back_main_menu_text = Text:new("ERROR_BACK_MAIN_MENU")
   error.back_main_menu_text:setPosition(5, 455)
   error.back_main_menu_text:setOrigin(0, 1)
-  error.back_main_menu_text:setFont(Font.FONTS.MAIN_TEXT)
+  error.back_main_menu_text:setFont(main_text_font)
   error.back_main_menu_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
   error.copy_traceback_text = Text:new("ERROR_COPY_TRACEBACK")
   error.copy_traceback_text:setPosition(5, 475)
   error.copy_traceback_text:setOrigin(0, 1)
-  error.copy_traceback_text:setFont(Font.FONTS.MAIN_TEXT)
+  error.copy_traceback_text:setFont(main_text_font)
   error.copy_traceback_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
   error.copied_delay = 1
