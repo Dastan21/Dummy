@@ -7,7 +7,9 @@
 --- @field protected df number
 --- @field protected speed number
 --- @field protected speed_factor number
---- @field protected hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
+--- @field protected scale_x number
+--- @field protected scale_y number
+--- @field protected hitbox { [1]: number, [2]: number, [3]: number, [4]: number }
 --- @field protected soul_sprite Dummy.Sprite
 --- @field protected name string
 --- @field protected name_text Dummy.Text
@@ -16,6 +18,8 @@
 --- @field protected hp_value_text Dummy.Text
 --- @field protected is_fleeing boolean
 --- @field protected flee_speed number
+--- @field protected weapon Dummy.Item.Equipment
+--- @field protected armor Dummy.Item.Equipment
 --- @field protected items Dummy.Item[]
 local Player = {}
 
@@ -28,6 +32,8 @@ function Player.load()
   Player.df = 10
   Player.speed = 4
   Player.speed_factor = 1
+  Player.scale_x = 1
+  Player.scale_y = 1
   Player.hitbox = { 4, 4, 8, 8 }
 
   Player.soul_sprite = Sprite:new("heart")
@@ -56,6 +62,9 @@ function Player.load()
   Player.is_fleeing = false
   Player.flee_speed = 3
 
+  Player.weapon = ItemEquipment:new("Stick", "Stick", 0, "weapon")
+  Player.armor = ItemEquipment:new("Bandage", "Bandage", 0, "armor")
+
   Player.items = {}
 
   Player.setLV(1, true)
@@ -63,8 +72,10 @@ function Player.load()
   Drawable:new(function()
     if Debugger.show_hitbox and not Player.isHidden() then
       local x, y = Player.getPosition()
+      local scale_x, scale_y = Player.getScale()
       love.graphics.setColor(0, 1, 0, 1)
-      love.graphics.rectangle("line", x - Player.hitbox[1], y - Player.hitbox[2], Player.hitbox[3], Player.hitbox[4])
+      love.graphics.rectangle("line", x - Player.hitbox[1] * scale_x, y - Player.hitbox[2] * scale_y,
+        Player.hitbox[3] * scale_x, Player.hitbox[4] * scale_y)
     end
   end):setLayer(Constants.LAYERS.ABOVE_SOUL)
 end
@@ -166,7 +177,7 @@ function Player.setHP(hp)
 
   Player.hp = math.clamp(hp, 0, math.min(Player.max_hp, 99))
   Player.hp_value_text:setText(string.format("%02d", Player.hp) .. " / " .. tostring(Player.max_hp))
-  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 400)
+  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.lv + 20, 25, 120), 400)
 end
 
 --- Heals the player
@@ -177,6 +188,18 @@ function Player.heal(amount, silent)
 
   if not silent then
     Assets.playSound("heal")
+  end
+end
+
+--- Hurts the player
+--- @param amount number
+--- @param silent? boolean wether to play then sound and animation (Defaults to `false`)
+function Player.hurt(amount, silent)
+  local damage = math.max(0, math.round(amount - ((Player.df + Player.weapon:getValue()) / 5)))
+  Player.setHP(Player.hp - damage)
+
+  if not silent then
+    Assets.playSound("hurt")
   end
 end
 
@@ -194,7 +217,7 @@ function Player.setMaxHP(max_hp, heal)
 
   Player.max_hp = math.clamp(max_hp, 20, 99)
   Player.hp_value_text:setText(tostring(Player.hp) .. " / " .. tostring(Player.max_hp))
-  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 400)
+  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.lv + 20, 25, 120), 400)
 
   if heal == true then
     Player.setHP(Player.max_hp)
@@ -237,27 +260,139 @@ function Player.setSpeed(speed)
   Player.speed_factor = speed
 end
 
+--- Gets the player's scale
+--- @return number, number
+function Player.getScale()
+  return Player.scale_x, Player.scale_y
+end
+
+--- Sets the player's scales
+--- @overload fun(scale: number)
+--- @param scale_x number
+--- @param scale_y number
+function Player.setScale(scale_x, scale_y)
+  if type(scale_x) == "number" and scale_y == nil then
+    Player.scale_x = scale_x
+    Player.scale_y = scale_x
+  else
+    Player.scale_x = scale_x
+    Player.scale_y = scale_y
+  end
+end
+
+--- Gets the player's weapon
+--- @return Dummy.Item.Equipment
+function Player.getWeapon()
+  return Player.weapon
+end
+
+--- Sets the player's weapon
+--- @param weapon Dummy.Item.Equipment
+function Player.setWeapon(weapon)
+  Player.weapon = weapon
+end
+
+--- Gets the player's armor
+--- @return Dummy.Item.Equipment
+function Player.getArmor()
+  return Player.armor
+end
+
+--- Sets the player's armor
+--- @param armor Dummy.Item.Equipment
+function Player.setArmor(armor)
+  Player.armor = armor
+end
+
 --- Wether the player's hitbox collides bullet's hitbox
 --- @param bullet Dummy.Bullet
 function Player.isColliding(bullet)
-  local player_x, player_y = Player.soul_sprite:getPosition()
-  local bullet_scale = bullet:getScale()
-  local bullet_origin = bullet:getOrigin()
+  local player_x, player_y = Player.getPosition()
+  local player_scale_x, player_scale_y = Player.getScale()
+  local player_hitbox_x = player_x - Player.hitbox[1] * player_scale_x
+  local player_hitbox_y = player_y - Player.hitbox[2] * player_scale_y
+  local player_hitbox_width = Player.hitbox[3] * player_scale_x
+  local player_hitbox_height = Player.hitbox[4] * player_scale_y
+  local bullet_x, bullet_y = bullet:getPosition()
+  local bullet_scale_x, bullet_scale_y = bullet:getScale()
+  local bullet_origin_x, bullet_origin_y = bullet:getOrigin()
+  local bullet_angle = math.rad(bullet:getAngle())
   local bullet_hitbox = bullet:getHitbox()
+  local bullet_polygon_points = Utils.getPolygonPoints(bullet_x, bullet_y, bullet_hitbox[3], bullet_hitbox[4],
+    bullet_scale_x, bullet_scale_y, bullet_origin_x, bullet_origin_y, bullet_angle)
+
+  local bullet_hitbox_points = {}
+  bullet_hitbox_points[1] = { bullet_polygon_points[1], bullet_polygon_points[2] }
+  bullet_hitbox_points[2] = { bullet_polygon_points[3], bullet_polygon_points[4] }
+  bullet_hitbox_points[3] = { bullet_polygon_points[5], bullet_polygon_points[6] }
+  bullet_hitbox_points[4] = { bullet_polygon_points[7], bullet_polygon_points[8] }
+
+  local function pointInPlayerHitbox(x, y)
+    return x >= player_hitbox_x and x <= player_hitbox_x + player_hitbox_width and y >= player_hitbox_y and
+        y <= player_hitbox_y + player_hitbox_height
+  end
+
+  local function checkPointsInPlayerHitbox(points)
+    for i = 1, 4 do
+      if pointInPlayerHitbox(points[i][1], points[i][2]) then
+        return true
+      end
+    end
+    return false
+  end
+
+  local function doLinesIntersect(p1, p2, p3, p4)
+    local function cross(o, a, b) return (a[1] - o[1]) * (b[2] - o[2]) - (a[2] - o[2]) * (b[1] - o[1]) end
+    return cross(p1, p3, p4) * cross(p2, p3, p4) < 0 and cross(p3, p1, p2) * cross(p4, p1, p2) < 0
+  end
+
+  local function checkPointsIntersectPlayerHitboxEdges(points)
+    local edges = {
+      { player_hitbox_x,                       player_hitbox_y,                        player_hitbox_x + player_hitbox_width, player_hitbox_y },
+      { player_hitbox_x + player_hitbox_width, player_hitbox_y,                        player_hitbox_x + player_hitbox_width, player_hitbox_y + player_hitbox_height },
+      { player_hitbox_x + player_hitbox_width, player_hitbox_y + player_hitbox_height, player_hitbox_x,                       player_hitbox_y + player_hitbox_height },
+      { player_hitbox_x,                       player_hitbox_y + player_hitbox_height, player_hitbox_x,                       player_hitbox_y }
+    }
+
+    for _, edge in ipairs(edges) do
+      local x1, y1, x2, y2 = edge[1], edge[2], edge[3], edge[4]
+
+      for i = 1, 4 do
+        local p1 = points[i]
+        local p2 = points[(i % 4) + 1]
+        if doLinesIntersect({ x1, y1 }, { x2, y2 }, p1, p2) then
+          return true
+        end
+      end
+    end
+    return false
+  end
+
+  if checkPointsInPlayerHitbox(bullet_hitbox_points) then
+    return true
+  end
+
+  if checkPointsIntersectPlayerHitboxEdges(bullet_hitbox_points) then
+    return true
+  end
+
+  return false
 end
 
 --- Animates the soul escaping
-function Player.escape(dt)
+function Player.flee()
   if not Player.is_fleeing then
+    Player.is_fleeing = true
     Player.soul_escape_sprite = Sprite:new({ "heart_escape1", "heart_escape2" }, 2 / 30, true)
     Player.soul_escape_sprite:setPosition(Player.getPosition())
     Player.soul_escape_sprite:setLayer(Constants.LAYERS.SOUL)
     Player.soul_sprite:setVisible(false)
-    Player.is_fleeing = true
   end
 
-  local x, y = Player.soul_escape_sprite:getPosition()
-  Player.soul_escape_sprite:setPosition(x - Player.flee_speed * dt * 30, y)
+  Timer.during(2, function(dt)
+    local x, y = Player.soul_escape_sprite:getPosition()
+    Player.soul_escape_sprite:setPosition(x - Player.flee_speed * dt * 30, y)
+  end)
 end
 
 --- Wether the playing is playing the escape animation
@@ -307,7 +442,8 @@ function Player.update(dt)
   if Input.isDown(Input.Left) then dir_x = dir_x - 1 end
   if Input.isDown(Input.Right) then dir_x = dir_x + 1 end
 
-  local s = Player.speed * dt * 30
+  local slow = Input.isDown(Input.Cancel) and 0.5 or 1
+  local s = Player.speed * slow * dt * 30
   local x, y = Player.soul_sprite:getPosition()
   Player.setPosition(x + dir_x * s, y + dir_y * s)
 end

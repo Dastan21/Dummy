@@ -8,11 +8,12 @@
 
 --- @class Dummy.Bullet : Dummy.Sprite
 ---
+--- @field protected damage number
 --- @field protected hitbox Dummy.Bullet.Hitbox
---- @field protected persistent boolean
+--- @field protected is_destroyed boolean
 Bullet = {}
 
---- @alias Dummy.Bullet.Hitbox {[1]:number, [2]:number, [3]:number, [4]:number}
+--- @alias Dummy.Bullet.Hitbox { [1]:number, [2]:number, [3]:number, [4]:number }
 
 --- Gets the class name
 --- @return string
@@ -26,13 +27,28 @@ function Bullet:getHitbox() end
 --- @param hitbox Dummy.Bullet.Hitbox
 function Bullet:setHitbox(hitbox) end
 
---- Wether the bullet is persistent after wave ends
---- @return boolean
-function Bullet:getPersistent() end
+--- Gets the bullet's damage
+--- @return number
+function Bullet:getDamage() end
 
---- Sets wether the bullet is persistent after wave ends
---- @param persistent boolean
-function Bullet:setPersistent(persistent) end
+--- Sets the bullet's damage
+--- @param damage number
+function Bullet:setDamage(damage) end
+
+--- Sets the bullet's sprite
+--- @param sprite_name string
+function Bullet:setSprite(sprite_name) end
+
+--- Sets the bullet's hitbox from the sprite
+--- @protected
+function Bullet:setHitboxFromSprite() end
+
+--- Destroys the bullet
+function Bullet:destroy() end
+
+--- Updates the bullet
+--- @param dt number
+function Bullet:update(dt) end
 
 --- Creates a bullet
 --- @return Dummy.Bullet

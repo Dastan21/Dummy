@@ -16,8 +16,17 @@ ItemConsumable = {}
 --- @return string
 function ItemConsumable:getClass() end
 
---- Uses the item
-function ItemConsumable:use() end
+--- Gets the item's heal amount
+--- @return number
+function ItemConsumable:getHeal() end
+
+--- Gets the item's type
+--- @return "food" | "drink"
+function ItemConsumable:getType() end
+
+--- [INTERNAL] Called when the item is used
+--- @private
+function ItemConsumable:__use() end
 
 --- Creates a consumable item
 --- @param name Dummy.Text.Text

@@ -137,25 +137,14 @@ function Scene.draw()
           )
 
           if Debugger.show_hitbox then
-            love.graphics.setColor(0, 0, 1, 1)
+            love.graphics.setColor(0, 0, 1, 0.5)
 
-            if angle % 2 * math.pi == 0 then
+            if angle % (2 * math.pi) == 0 then
               local hitbox_x = x - width * origin_x * scale_x
               local hitbox_y = y - height * origin_y * scale_y
               love.graphics.rectangle("line", hitbox_x, hitbox_y, width * scale_x, height * scale_y)
             else
-              local points = {}
-
-              local function addPoint(point_x, point_y)
-                table.insert(points, math.cos(angle) * (point_x - x) - math.sin(angle) * (point_y - y) + x)
-                table.insert(points, math.sin(angle) * (point_x - x) + math.cos(angle) * (point_y - y) + y)
-              end
-
-              addPoint(x - origin_x * width * scale_x, y - origin_y * height * scale_y)
-              addPoint(x - origin_x * width * scale_x, y + origin_y * height * scale_y)
-              addPoint(x + origin_x * width * scale_x, y + origin_y * height * scale_y)
-              addPoint(x + origin_x * width * scale_x, y - origin_y * height * scale_y)
-
+              local points = Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x, origin_y, angle)
               love.graphics.polygon("line", table.unpack(points))
             end
           end

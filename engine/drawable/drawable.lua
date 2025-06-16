@@ -121,8 +121,7 @@ end
 
 --- Sets drawable layer
 --- @param layer number
---- @param silent? boolean wether to dispatch event to the scene (Defaults to `true`)
-function Drawable:setLayer(layer, silent)
+function Drawable:setLayer(layer)
   self.layer = layer
 
   Scene.removeDrawable(self)
@@ -169,6 +168,11 @@ end
 --- @param persistent boolean
 function Drawable:setPersistent(persistent)
   self.persistent = persistent
+end
+
+--- Destroys the drawable
+function Drawable:destroy()
+  Scene.removeDrawable(self)
 end
 
 --- Creates a drawable

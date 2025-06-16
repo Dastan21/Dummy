@@ -46,7 +46,7 @@ function Arena.load()
     love.graphics.rectangle("fill", x - b, y + Arena.height, Arena.width + b * 2, b)
     love.graphics.rectangle("fill", x - b, y - b, b, Arena.height + b * 2)
     love.graphics.rectangle("fill", x + Arena.width, y - b, b, Arena.height + b * 2)
-  end):setLayer(Constants.LAYERS.ABOVE_BULLETS)
+  end):setLayer(Constants.LAYERS.ABOVE_BULLET)
 end
 
 --- Updates the arena

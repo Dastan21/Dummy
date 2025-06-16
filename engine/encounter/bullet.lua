@@ -1,7 +1,8 @@
 --- @class Dummy.Bullet : Dummy.Sprite
 ---
+--- @field protected damage number
 --- @field protected hitbox Dummy.Bullet.Hitbox
---- @field protected persistent boolean
+--- @field protected is_destroyed boolean
 local Bullet = Class:extend(Sprite)
 
 --- Gets the class name
@@ -10,7 +11,7 @@ function Bullet:getClass()
   return "Dummy.Bullet"
 end
 
---- @alias Dummy.Bullet.Hitbox {[1]:number, [2]:number, [3]:number, [4]:number}
+--- @alias Dummy.Bullet.Hitbox { [1]:number, [2]:number, [3]:number, [4]:number }
 
 --- Gets the bullet's hitbox
 --- @return Dummy.Bullet.Hitbox
@@ -24,22 +25,82 @@ function Bullet:setHitbox(hitbox)
   self.hitbox = hitbox
 end
 
---- Wether the bullet is persistent after wave ends
---- @return boolean
-function Bullet:getPersistent()
-  return self.persistent
+--- Gets the bullet's damage
+--- @return number
+function Bullet:getDamage()
+  return self.damage
 end
 
---- Sets wether the bullet is persistent after wave ends
---- @param persistent boolean
-function Bullet:setPersistent(persistent)
-  self.persistent = persistent
+--- Sets the bullet's damage
+--- @param damage number
+function Bullet:setDamage(damage)
+  self.damage = damage
 end
+
+local set_sprite = Bullet.setSprite
+--- Sets the bullet's sprite
+--- @param sprite_name string
+function Bullet:setSprite(sprite_name)
+  set_sprite(self, sprite_name)
+  self:setHitboxFromSprite()
+end
+
+--- Sets the bullet's hitbox from the sprite
+--- @protected
+function Bullet:setHitboxFromSprite()
+  local sprite = self:getSprite()
+  if sprite == nil then return end
+
+  local width, height = sprite:getWidth(), sprite:getHeight()
+  self:setHitbox({ 0, 0, width, height })
+end
+
+--- Destroys the bullet
+function Bullet:destroy()
+  self.is_destroyed = true
+  self:setVisible(false)
+  Scene.removeDrawable(self)
+end
+
+--- Updates the bullet
+--- @param dt number
+function Bullet:update(dt) end
 
 --- Creates a bullet
 --- @return Dummy.Bullet
 function Bullet:new()
-  return Class:new(Bullet)
+  local bullet = Class:new(Bullet, {
+    damage = 4,
+    hitbox = { 0, 0, 0, 0 },
+    is_destroyed = false
+  }, { "bullet" })
+
+  bullet:setLayer(Constants.LAYERS.BULLET)
+  bullet:setHitboxFromSprite()
+
+  Drawable:new(function()
+    if Debugger.show_hitbox and bullet:isVisible() then
+      love.graphics.setColor(0, 1, 0, 1)
+
+      local x, y = bullet:getPosition()
+      local origin_x, origin_y = bullet:getOrigin()
+      local scale_x, scale_y = bullet:getScale()
+      local angle = math.rad(bullet:getAngle())
+      local hitbox = bullet:getHitbox()
+      local width, height = hitbox[3], hitbox[4]
+
+      if angle % (2 * math.pi) == 0 then
+        local hitbox_x = x - width * origin_x * scale_x
+        local hitbox_y = y - height * origin_y * scale_y
+        love.graphics.rectangle("line", hitbox_x, hitbox_y, width * scale_x, height * scale_y)
+      else
+        local points = Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x, origin_y, angle)
+        love.graphics.polygon("line", table.unpack(points))
+      end
+    end
+  end):setLayer(Constants.LAYERS.ABOVE_BULLET)
+
+  return bullet
 end
 
 return Bullet

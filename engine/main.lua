@@ -1,19 +1,4 @@
-local dummy = {
-  window = {
-    width = 640,
-    height = 480,
-    translate_x = 0,
-    translate_y = 0,
-    scale = 1,
-  },
-  next_time = 0
-}
-
-Config = {
-  language = "en",
-  fps = 30,
-  fullscreen = false
-}
+require "constants"
 
 -- libraries
 JSON = require "lib.json"
@@ -22,7 +7,6 @@ UTF8 = require "lib.utf8"
 require "lib.stable_sort"
 
 -- engine
-require "constants"
 Utils = require "utils"
 Class = require "class"
 Assets = require "assets"
@@ -44,11 +28,29 @@ ActionMenu = require "encounter.action_menu"
 Encounter = require "encounter.encounter"
 Enemy = require "encounter.enemy"
 ACT = require "encounter.act"
+Wave = require "encounter.wave"
+Bullet = require "encounter.bullet"
 -- encounter item
 Item = require "encounter.item"
 ItemConsumable = require "encounter.item.consumable"
 ItemEquipment = require "encounter.item.equipment"
 
+local dummy = {
+  window = {
+    width = Constants.WIDTH,
+    height = Constants.HEIGHT,
+    translate_x = 0,
+    translate_y = 0,
+    scale = 1,
+  },
+  next_time = 0
+}
+
+Config = {
+  language = "en",
+  fps = 30,
+  fullscreen = false
+}
 
 local function loadConfig()
   if love.filesystem.getInfo("settings.json") ~= nil then

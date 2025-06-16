@@ -61,12 +61,12 @@ function Lang.translate(key, ...)
     key = key[1]
   end
 
-  key = tostring(key):gsub("\\n", "\n")
+  key = tostring(key)
 
   local txt = (Lang.translations[Lang.language_code] and Lang.translations[Lang.language_code][key]) or key or ""
   local i = 1
 
-  return (txt:gsub("{}", function()
+  return (txt:gsub("\\n", "\n"):gsub("{}", function()
     local str = tostring(data[i])
     i = i + 1
     return str

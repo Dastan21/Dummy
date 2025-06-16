@@ -29,6 +29,7 @@ ENCOUNTER_ITEM_HEAL_MAX=* PV entièrement restaurés.
 ENCOUNTER_ITEM_FOOD_USE=* Vous mangez le {}.
 ENCOUNTER_ITEM_DRINK_USE=* Vous buvez le {}.
 ENCOUNTER_ITEM_EQUIPMENT_USE=* Vous vous équipez de {}.
+ENCOUNTER_ITEM_USE_BANDAGE=* Vous remettez le pansement.\n* Il colle encore un peu.
 
 GAME_OVER_TITLE_GAME=FIN DE
 GAME_OVER_TITLE_OVER=PARTIE

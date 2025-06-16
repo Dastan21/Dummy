@@ -16,10 +16,17 @@ ItemEquipment = {}
 --- @return string
 function ItemEquipment:getClass() end
 
+--- Gets the item's value
+--- @return number
+function ItemEquipment:getValue() end
+
+--- Gets the item's type
+--- @return "weapon" | "armor"
 function ItemEquipment:getType() end
 
---- Uses the item
-function ItemEquipment:use() end
+--- [INTERNAL] Called when the item is used
+--- @private
+function ItemEquipment:__use() end
 
 --- Creates a weapon item
 --- @param name Dummy.Text.Text

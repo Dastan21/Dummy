@@ -6,22 +6,25 @@ Constants = {
     VERSION = "0.01"
   },
 
+  WIDTH = 640,
+  HEIGHT = 480,
+
   LAYERS = {
-    BOTTOM        = -1000,
-    BELOW_ARENA   = 0,
-    ARENA         = 1,
-    ABOVE_ARENA   = 2,
-    BELOW_UI      = 3,
-    UI            = 4,
-    ABOVE_UI      = 5,
-    BELOW_SOUL    = 6,
-    SOUL          = 7,
-    ABOVE_SOUL    = 8,
-    BELOW_BULLETS = 9,
-    BULLETS       = 10,
-    ABOVE_BULLETS = 11,
-    TOP           = 1000,
-    DEBUG         = 1001
+    BOTTOM       = -1000,
+    BELOW_ARENA  = 0,
+    ARENA        = 1,
+    ABOVE_ARENA  = 2,
+    BELOW_UI     = 3,
+    UI           = 4,
+    ABOVE_UI     = 5,
+    BELOW_BULLET = 6,
+    BULLET       = 7,
+    ABOVE_BULLET = 8,
+    BELOW_SOUL   = 9,
+    SOUL         = 10,
+    ABOVE_SOUL   = 11,
+    TOP          = 1000,
+    DEBUG        = 1001
   },
 
   ENCOUNTER_STATES = {

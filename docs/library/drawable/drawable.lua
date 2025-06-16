@@ -86,8 +86,7 @@ function Drawable:getLayer() end
 
 --- Sets drawable layer
 --- @param layer number
---- @param silent? boolean wether to dispatch event to the scene (Defaults to `true`)
-function Drawable:setLayer(layer, silent) end
+function Drawable:setLayer(layer) end
 
 --- Wether the drawable is visible
 --- @return boolean
@@ -116,6 +115,9 @@ function Drawable:isPersistent() end
 --- Sets wether the drawable is persistent between scenes
 --- @param persistent boolean
 function Drawable:setPersistent(persistent) end
+
+--- Destroys the drawable
+function Drawable:destroy() end
 
 --- Creates a drawable
 --- @param draw? fun() custom draw function

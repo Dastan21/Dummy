@@ -10,8 +10,21 @@ function ItemConsumable:getClass()
   return "Dummy.Item.Consumable"
 end
 
---- Uses the item
-function ItemConsumable:use()
+--- Gets the item's heal amount
+--- @return number
+function ItemConsumable:getHeal()
+  return self.heal
+end
+
+--- Gets the item's type
+--- @return "food" | "drink"
+function ItemConsumable:getType()
+  return self.type
+end
+
+--- [INTERNAL] Called when the item is used
+--- @private
+function ItemConsumable:__use()
   local heal_text = Lang.translate("ENCOUNTER_ITEM_HEAL", self.heal)
   if self.heal + Player.getHP() >= Player.getMaxHP() then
     heal_text = Lang.translate("ENCOUNTER_ITEM_HEAL_MAX")
@@ -24,11 +37,15 @@ function ItemConsumable:use()
 
   Encounter.playDialogue(dialogue_text)
   Player.removeItem(self)
-
   Assets.playSound("swallow")
+
   Timer.after(0.5, function()
     Player.heal(self.heal)
   end)
+
+  if (type(self.use) == "function") then
+    self:use()
+  end
 end
 
 --- Creates a consumable item

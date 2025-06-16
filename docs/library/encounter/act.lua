@@ -19,6 +19,10 @@ function ACT:getClass() end
 --- @return Dummy.Text.Text
 function ACT:getName() end
 
+--- [INTERNAL] Called when the ACT is used
+--- @private
+function ACT:__use() end
+
 --- Called when the ACT is used
 function ACT:use() end
 

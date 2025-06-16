@@ -33,8 +33,8 @@ function love.conf(t)
 
   t.window.title          = Constants.CREDITS.NAME
   t.window.icon           = "assets/icon.png"
-  t.window.width          = 640
-  t.window.height         = 480
+  t.window.width          = Constants.WIDTH
+  t.window.height         = Constants.HEIGHT
   t.window.borderless     = false
   t.window.resizable      = false
   t.window.minwidth       = 1

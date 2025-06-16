@@ -14,7 +14,7 @@ function Text:getClass()
   return "Dummy.Text"
 end
 
---- @alias love.Color {[1]: number, [2]: number, [3]: number}
+--- @alias love.Color { [1]: number, [2]: number, [3]: number }
 
 --- Gets the text value
 --- @return Dummy.Text.Text

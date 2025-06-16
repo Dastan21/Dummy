@@ -15,7 +15,9 @@
 --- @field protected df number
 --- @field protected speed number
 --- @field protected speed_factor number
---- @field protected hitbox {[1]: number, [2]: number, [3]: number, [4]: number}
+--- @field protected scale_x number
+--- @field protected scale_y number
+--- @field protected hitbox { [1]: number, [2]: number, [3]: number, [4]: number }
 --- @field protected soul_sprite Dummy.Sprite
 --- @field protected name string
 --- @field protected name_text Dummy.Text
@@ -24,6 +26,8 @@
 --- @field protected hp_value_text Dummy.Text
 --- @field protected is_fleeing boolean
 --- @field protected flee_speed number
+--- @field protected weapon Dummy.Item.Equipment
+--- @field protected armor Dummy.Item.Equipment
 --- @field protected items Dummy.Item[]
 Player = {}
 
@@ -81,6 +85,11 @@ function Player.setHP(hp) end
 --- @param silent? boolean wether to play a sound (Defaults to `false`)
 function Player.heal(amount, silent) end
 
+--- Hurts the player
+--- @param amount number
+--- @param silent? boolean wether to play then sound and animation (Defaults to `false`)
+function Player.hurt(amount, silent) end
+
 --- Gets the player's max HP
 --- @return number
 function Player.getMaxHP() end
@@ -114,12 +123,38 @@ function Player.getSpeed() end
 --- @param speed number
 function Player.setSpeed(speed) end
 
+--- Gets the player's scale
+--- @return number, number
+function Player.getScale() end
+
+--- Sets the player's scales
+--- @overload fun(scale: number)
+--- @param scale_x number
+--- @param scale_y number
+function Player.setScale(scale_x, scale_y) end
+
+--- Gets the player's weapon
+--- @return Dummy.Item.Equipment
+function Player.getWeapon() end
+
+--- Sets the player's weapon
+--- @param weapon Dummy.Item.Equipment
+function Player.setWeapon(weapon) end
+
+--- Gets the player's armor
+--- @return Dummy.Item.Equipment
+function Player.getArmor() end
+
+--- Sets the player's armor
+--- @param armor Dummy.Item.Equipment
+function Player.setArmor(armor) end
+
 --- Wether the player's hitbox collides bullet's hitbox
 --- @param bullet Dummy.Bullet
 function Player.isColliding(bullet) end
 
 --- Animates the soul escaping
-function Player.escape(dt) end
+function Player.flee() end
 
 --- Wether the playing is playing the escape animation
 ---@return boolean

@@ -15,6 +15,12 @@ function ACT:getName()
   return self.name
 end
 
+--- [INTERNAL] Called when the ACT is used
+--- @private
+function ACT:__use()
+  self:use()
+end
+
 --- Called when the ACT is used
 function ACT:use() end
 

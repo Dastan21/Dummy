@@ -191,6 +191,9 @@ function Utils.getOrDefault(value, default_value)
   return value == nil and default_value or value
 end
 
+--- Checks if a file has an extension
+--- @param path string
+--- @param ... string
 function Utils.checkExtension(path, ...)
   for _, v in ipairs({ ... }) do
     if path:sub(- #v - 1):lower() == "." .. v then
@@ -199,8 +202,43 @@ function Utils.checkExtension(path, ...)
   end
 end
 
+--- Gets a filename without extension
+--- @param filename string
 function Utils.getFilenameWithoutExt(filename)
   return filename:gsub("%.[^.]*$", "")
+end
+
+--- Gets the points of a rectangle
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- @param scale_x? number
+--- @param scale_y? number
+--- @param origin_x? number
+--- @param origin_y? number
+--- @param angle? number
+--- @return table
+function Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x, origin_y, angle)
+  scale_x = Utils.getOrDefault(scale_x, 1)
+  scale_y = Utils.getOrDefault(scale_y, 1)
+  origin_x = Utils.getOrDefault(origin_x, 0.5)
+  origin_y = Utils.getOrDefault(origin_y, 0.5)
+  angle = Utils.getOrDefault(angle, 0)
+
+  local points = {}
+
+  local function addPoint(point_x, point_y)
+    table.insert(points, math.cos(angle) * (point_x - x) - math.sin(angle) * (point_y - y) + x)
+    table.insert(points, math.sin(angle) * (point_x - x) + math.cos(angle) * (point_y - y) + y)
+  end
+
+  addPoint(x - origin_x * width * scale_x, y - origin_y * height * scale_y)
+  addPoint(x - origin_x * width * scale_x, y + origin_y * height * scale_y)
+  addPoint(x + origin_x * width * scale_x, y + origin_y * height * scale_y)
+  addPoint(x + origin_x * width * scale_x, y - origin_y * height * scale_y)
+
+  return points
 end
 
 return Utils

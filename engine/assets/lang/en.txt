@@ -29,6 +29,7 @@ ENCOUNTER_ITEM_HEAL_MAX=* Your HP was maxed out.
 ENCOUNTER_ITEM_FOOD_USE=* You eat the {}.
 ENCOUNTER_ITEM_DRINK_USE=* You drink the {}.
 ENCOUNTER_ITEM_EQUIPMENT_USE=* You equipped {}.
+ENCOUNTER_ITEM_USE_BANDAGE=* You re-applied the bandage.\n* Still kind of gooey.
 
 GAME_OVER_TITLE_GAME=GAME
 GAME_OVER_TITLE_OVER=OVER

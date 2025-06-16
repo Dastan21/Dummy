@@ -8,11 +8,11 @@
 
 --- @class Dummy.Encounter
 ---
---- @field protected encounter Dummy.Encounter
 --- @field protected text Dummy.Text.Text
 --- @field protected can_flee boolean
 --- @field protected music love.Source
 --- @field protected enemies Dummy.Enemy[]
+--- @field protected wave Dummy.Wave
 --- @field protected current_state string
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
@@ -60,6 +60,10 @@ function Encounter.setText(text) end
 ---@param ... Dummy.Enemy
 function Encounter.addEnemy(enemy, ...) end
 
+--- Sets the encounter's next wave
+--- @param wave Dummy.Wave
+function Encounter.setWave(wave) end
+
 --- Wether the player can flee the encounter
 --- @return boolean
 function Encounter.canFlee() end
@@ -81,19 +85,43 @@ function Encounter.setMusic(music) end
 ---@param can_skip? boolean
 function Encounter.playDialogue(text, can_skip) end
 
+--- Flees the encounter
+function Encounter.flee() end
+
+--- Loads the encounter
 function Encounter.load() end
+
+--- Gets the encounter's fight enemy menu
+--- @return Dummy.Encounter.ActionMenu
+function Encounter.getFightEnemyMenu() end
 
 --- Loads fight enemy menu
 function Encounter.loadFightEnemyMenu() end
 
+--- Gets the encounter's act enemy menu
+--- @return Dummy.Encounter.ActionMenu
+function Encounter.getActEnemyMenu() end
+
 --- Loads act enemy menu
 function Encounter.loadActEnemyMenu() end
+
+--- Gets the encounter's act menus
+--- @return Dummy.Encounter.ActionMenu[]
+function Encounter.getActMenus() end
 
 --- Loads act menus
 function Encounter.loadActMenus() end
 
+--- Gets the encounter's item menu
+--- @return Dummy.Encounter.ActionMenu
+function Encounter.getItemMenu() end
+
 --- Loads item menu
 function Encounter.loadItemMenu() end
+
+--- Gets the encounter's mercy menu
+--- @return Dummy.Encounter.ActionMenu
+function Encounter.getMercyMenu() end
 
 --- Loads mercy menu
 function Encounter.loadMercyMenu() end
@@ -145,6 +173,7 @@ function Encounter.startDefending() end
 --- Updates defending
 function Encounter.updateDefending(dt) end
 
+--- Updates the encounter
 function Encounter.update(dt) end
 
 --- Called when the encounter state changes

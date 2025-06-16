@@ -16,7 +16,7 @@ Text = {}
 
 --- @alias Dummy.Text.Text string|table|fun(): string|table
 
---- @alias love.Color {[1]: number, [2]: number, [3]: number}
+--- @alias love.Color { [1]: number, [2]: number, [3]: number }
 
 --- Gets the class name
 --- @return string

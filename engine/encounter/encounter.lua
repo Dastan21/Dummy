@@ -1,10 +1,10 @@
 --- @class Dummy.Encounter
 ---
---- @field protected encounter Dummy.Encounter
 --- @field protected text Dummy.Text.Text
 --- @field protected can_flee boolean
 --- @field protected music love.Source
 --- @field protected enemies Dummy.Enemy[]
+--- @field protected wave Dummy.Wave
 --- @field protected current_state string
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
@@ -35,6 +35,7 @@
 --- @field protected action.mercy_hover_sprite Dummy.Sprite
 local Encounter = {}
 
+--- Encounter actions
 Encounter.ACTIONS = {
   --- FIGHT action
   FIGHT = 1,
@@ -89,6 +90,12 @@ function Encounter.addEnemy(enemy, ...)
   Encounter.loadActEnemyMenu()
 end
 
+--- Sets the encounter's next wave
+--- @param wave Dummy.Wave
+function Encounter.setWave(wave)
+  Encounter.wave = wave
+end
+
 --- Wether the player can flee the encounter
 --- @return boolean
 function Encounter.canFlee()
@@ -123,6 +130,46 @@ function Encounter.playDialogue(text, can_skip)
   Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
 end
 
+--- Flees the encounter
+function Encounter.flee()
+  Encounter.mercy_menu:setActive(false)
+
+  Timer.after(1.5, function()
+    Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
+  end)
+
+  Player.flee()
+
+  Timer.after(1, function()
+    local time = 0
+    Encounter.black_sprite:setVisible(true)
+
+    Timer.during(0.4, function(dt)
+      time = time + dt
+      Encounter.black_sprite:setAlpha(time / 0.4)
+    end)
+  end)
+
+  Assets.playSound("escaped")
+
+  local flee_value = math.random(20)
+  local flee_text_key
+  if flee_value <= 1 then
+    flee_text_key = "ENCOUNTER_FLEE_TEXT_1"
+  elseif flee_value == 2 then
+    flee_text_key = "ENCOUNTER_FLEE_TEXT_2"
+  elseif flee_value == 3 then
+    flee_text_key = "ENCOUNTER_FLEE_TEXT_3"
+  else
+    flee_text_key = "ENCOUNTER_FLEE_TEXT_4"
+  end
+  Encounter.dialogue_text:setText("   * " .. Lang.translate(flee_text_key))
+  Encounter.dialogue_text:setCanSkip(true)
+  Encounter.dialogue_text:setVisible(true)
+  Encounter.dialogue_text:skip()
+end
+
+--- Loads the encounter
 function Encounter.load()
   -- background
   Encounter.bg_sprite = Sprite:new("battle_bg")
@@ -195,12 +242,12 @@ function Encounter.load()
 
   -- enemy hp bar & damage text
   Encounter.enemy_hp_draw = Drawable:new()
-  Encounter.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_BULLETS)
+  Encounter.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_BULLET)
   Encounter.enemy_hp_draw:setVisible(false)
 
   Encounter.enemy_hp_text = Text:new("")
   Encounter.enemy_hp_text:setColor(1, 0, 0)
-  Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_BULLETS)
+  Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_BULLET)
   Encounter.enemy_hp_text:setFont(Assets.getFont("damage"))
   Encounter.enemy_hp_text:setScale(1)
   Encounter.enemy_hp_text:setVisible(false)
@@ -209,6 +256,12 @@ function Encounter.load()
   Encounter.setMusic("battle")
 
   Encounter.enemies = {}
+end
+
+--- Gets the encounter's fight enemy menu
+--- @return Dummy.Encounter.ActionMenu
+function Encounter.getFightEnemyMenu()
+  return Encounter.fight_enemy_menu
 end
 
 --- Loads fight enemy menu
@@ -242,6 +295,12 @@ function Encounter.loadFightEnemyMenu()
   end)
 end
 
+--- Gets the encounter's act enemy menu
+--- @return Dummy.Encounter.ActionMenu
+function Encounter.getActEnemyMenu()
+  return Encounter.act_enemy_menu
+end
+
 --- Loads act enemy menu
 function Encounter.loadActEnemyMenu()
   --- @type Dummy.Menu.Options
@@ -264,6 +323,12 @@ function Encounter.loadActEnemyMenu()
   end)
 end
 
+--- Gets the encounter's act menus
+--- @return Dummy.Encounter.ActionMenu[]
+function Encounter.getActMenus()
+  return Encounter.act_menus
+end
+
 --- Loads act menus
 function Encounter.loadActMenus()
   Encounter.act_menus = {}
@@ -283,13 +348,15 @@ function Encounter.loadActMenus()
       })
     end
 
-    for _, item in ipairs(enemy:getACTs()) do
+    for _, act in ipairs(enemy:getACTs()) do
       table.insert(options, {
-        text = Text:new(item:getName()),
+        text = Text:new(act:getName()),
         action = function()
           Assets.playSound("menu_select")
-          if type(item.use) == "function" then
-            item:use()
+          ---@diagnostic disable-next-line: invisible
+          local use = act.__use
+          if type(use) == "function" then
+            use(act)
           end
         end
       })
@@ -299,6 +366,12 @@ function Encounter.loadActMenus()
       Encounter.setState(Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU)
     end)
   end
+end
+
+--- Gets the encounter's item menu
+--- @return Dummy.Encounter.ActionMenu
+function Encounter.getItemMenu()
+  return Encounter.item_menu
 end
 
 --- Loads item menu
@@ -311,8 +384,10 @@ function Encounter.loadItemMenu()
       text = Text:new(item:getShortName()),
       action = function()
         Assets.playSound("menu_select")
-        if type(item.use) == "function" then
-          item:use()
+        ---@diagnostic disable-next-line: invisible
+        local use = item.__use
+        if type(use) == "function" then
+          use(item)
         end
       end
     })
@@ -321,6 +396,12 @@ function Encounter.loadItemMenu()
   Encounter.item_menu = ActionMenu:new(options, "horizontal", true, function()
     Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
+end
+
+--- Gets the encounter's mercy menu
+--- @return Dummy.Encounter.ActionMenu
+function Encounter.getMercyMenu()
+  return Encounter.mercy_menu
 end
 
 --- Loads mercy menu
@@ -343,43 +424,7 @@ function Encounter.loadMercyMenu()
       action = function()
         if Player.isFleeing() then return end
 
-        Encounter.mercy_menu:setActive(false)
-
-        Timer.after(1.5, function()
-          Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
-        end)
-
-        Timer.during(2, function(dt)
-          Player.escape(dt)
-        end)
-
-        Timer.after(1, function()
-          local time = 0
-          Encounter.black_sprite:setVisible(true)
-
-          Timer.during(0.4, function(dt)
-            time = time + dt
-            Encounter.black_sprite:setAlpha(time / 0.4)
-          end)
-        end)
-
-        Assets.playSound("escaped")
-
-        local flee_value = math.random(20)
-        local flee_text_key
-        if flee_value <= 1 then
-          flee_text_key = "ENCOUNTER_FLEE_TEXT_1"
-        elseif flee_value == 2 then
-          flee_text_key = "ENCOUNTER_FLEE_TEXT_2"
-        elseif flee_value == 3 then
-          flee_text_key = "ENCOUNTER_FLEE_TEXT_3"
-        else
-          flee_text_key = "ENCOUNTER_FLEE_TEXT_4"
-        end
-        Encounter.dialogue_text:setText("   * " .. Lang.translate(flee_text_key))
-        Encounter.dialogue_text:setCanSkip(true)
-        Encounter.dialogue_text:setVisible(true)
-        Encounter.dialogue_text:skip()
+        Encounter.flee()
         Encounter.unselectAction()
         Encounter.leaveMenu()
       end,
@@ -589,9 +634,7 @@ function Encounter.startEnemyDialogue()
 
   Encounter.unselectAction()
 
-  -- FIXME: get arena width/height in wave
-  local wave_arena_width = 175
-  Arena.resize(wave_arena_width, 130, false, function()
+  Arena.resize(130, 130, false, function()
     Encounter.enemy_hp_draw:setVisible(false)
     Encounter.enemy_hp_text:setVisible(false)
     Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
@@ -776,25 +819,22 @@ end
 function Encounter.startDefending()
   Encounter.unselectAction()
 
-  -- FIXME: get arena width/height in wave
-  local wave_arena_width = 175
-  local wave_arena_height = 175
-  local wave_arena_x = 0
-  local wave_arena_y = -45
-  Arena.resize(wave_arena_width, wave_arena_height)
-  Arena.move(wave_arena_x, wave_arena_y)
+  -- default wave arena size
+  Arena.resize(130, 130)
+
+  ---@diagnostic disable-next-line: invisible
+  Encounter.wave:__start()
 end
 
 --- Updates defending
 function Encounter.updateDefending(dt)
   Player.update(dt)
 
-  -- FIXME: remove when waves are implemented
-  if Input.isPressed(Input.Cancel) then
-    Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
-  end
+  ---@diagnostic disable-next-line: invisible
+  Encounter.wave:__update(dt)
 end
 
+--- Updates the encounter
 function Encounter.update(dt)
   -- start
   if Encounter.current_state ~= Encounter.previous_state then

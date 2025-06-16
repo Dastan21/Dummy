@@ -10,16 +10,47 @@ function ItemEquipment:getClass()
   return "Dummy.Item.Equipment"
 end
 
+--- Gets the item's value
+--- @return number
+function ItemEquipment:getValue()
+  return self.value
+end
+
+--- Gets the item's type
+--- @return "weapon" | "armor"
 function ItemEquipment:getType()
   return self.type
 end
 
---- Uses the item
-function ItemEquipment:use()
+--- [INTERNAL] Called when the item is used
+--- @private
+function ItemEquipment:__use()
+  local armor = Player.getArmor()
+  if armor:getName() == "Bandage" then
+    local bandage = ItemConsumable:new("Bandage", "Bandage", 10, "food")
+    function bandage:use()
+      Encounter.playDialogue("ENCOUNTER_ITEM_USE_BANDAGE")
+    end
+
+    Player.addItem(bandage)
+  end
+
   Encounter.playDialogue({ "ENCOUNTER_ITEM_EQUIPMENT_USE", self.name })
   Player.removeItem(self)
-
   Assets.playSound("item")
+
+  if self.type == "weapon" then
+    Player.setAT(Player.getAT() + self.value)
+    Player.setWeapon(self)
+  elseif self.type == "armor" then
+    Player.setDF(Player.getDF() + self.value)
+    Player.setArmor(self)
+  end
+
+
+  if (type(self.use) == "function") then
+    self:use()
+  end
 end
 
 --- Creates a weapon item
