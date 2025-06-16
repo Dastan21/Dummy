@@ -9,14 +9,11 @@
 --- @class Dummy.Text : Dummy.Drawable
 ---
 --- @field protected text Dummy.Text.Text
---- @field protected color love.Color
 --- @field protected font love.Font
 --- @field protected sprite love.Text
 Text = {}
 
 --- @alias Dummy.Text.Text string|table|fun(): string|table
-
---- @alias love.Color { [1]: number, [2]: number, [3]: number }
 
 --- Gets the class name
 --- @return string
@@ -34,10 +31,6 @@ function Text:setText(value) end
 --- @protected
 function Text:updateText() end
 
---- Gets the text color
---- @return love.Color
-function Text:getColor() end
-
 --- Sets the text color
 --- @overload fun(self: Dummy.Text, color: love.Color)
 --- @param r number red
@@ -53,10 +46,6 @@ function Text:getFont() end
 --- Sets the text font
 --- @param font love.Font
 function Text:setFont(font) end
-
---- Gets the text alpha
---- @return number
-function Text:getAlpha() end
 
 --- Sets the text alpha
 --- @param alpha number

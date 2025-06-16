@@ -68,7 +68,7 @@ function Wave:__update(dt)
   for bullet in pairs(self.bullets) do
     bullet:update(dt)
 
-    if bullet:isVisible() and Player.isColliding(bullet) then
+    if bullet:isVisible() and not Player.isInvincible() and Player.isColliding(bullet) then
       bullet:destroy()
       Player.hurt(bullet:getDamage())
     end
@@ -98,11 +98,11 @@ function Wave:update(dt) end
 function Wave:done() end
 
 --- Creates an enemy Waveing
---- @param duration? number wave duration, in seconds (Defaults to `10`)
+--- @param duration? number wave duration, in seconds (Defaults to `8`)
 --- @return Dummy.Wave
 function Wave:new(duration)
   return Class:new(Wave, {
-    duration = Utils.getOrDefault(duration, 10),
+    duration = Utils.getOrDefault(duration, 8),
     time = 0,
     is_done = false
   })

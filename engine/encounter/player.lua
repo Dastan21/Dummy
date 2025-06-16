@@ -9,6 +9,9 @@
 --- @field protected speed_factor number
 --- @field protected scale_x number
 --- @field protected scale_y number
+--- @field protected is_invincible boolean
+--- @field protected invincible boolean
+--- @field protected invincible_duration number
 --- @field protected hitbox { [1]: number, [2]: number, [3]: number, [4]: number }
 --- @field protected soul_sprite Dummy.Sprite
 --- @field protected name string
@@ -23,7 +26,7 @@
 --- @field protected items Dummy.Item[]
 local Player = {}
 
---- Inits the player
+--- Initializes the player
 function Player.load()
   Player.lv = 1
   Player.hp = 20
@@ -34,9 +37,12 @@ function Player.load()
   Player.speed_factor = 1
   Player.scale_x = 1
   Player.scale_y = 1
+  Player.is_invincible = false
+  Player.invincible = false
+  Player.invincible_duration = 1
   Player.hitbox = { 4, 4, 8, 8 }
 
-  Player.soul_sprite = Sprite:new("heart")
+  Player.soul_sprite = Sprite:new({ "heart", "heart_hurt" }, 2 / 30, nil, false)
   Player.soul_sprite:setPosition(320, 240)
   Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
 
@@ -196,7 +202,15 @@ end
 --- @param silent? boolean wether to play then sound and animation (Defaults to `false`)
 function Player.hurt(amount, silent)
   local damage = math.max(0, math.round(amount - ((Player.df + Player.weapon:getValue()) / 5)))
+  print("damage taken", damage)
   Player.setHP(Player.hp - damage)
+  Player.soul_sprite:play()
+  Player.is_invincible = true
+
+  Timer.after(Player.invincible_duration, function(dt)
+    Player.soul_sprite:stop()
+    Player.is_invincible = false
+  end)
 
   if not silent then
     Assets.playSound("hurt")
@@ -278,6 +292,30 @@ function Player.setScale(scale_x, scale_y)
     Player.scale_x = scale_x
     Player.scale_y = scale_y
   end
+end
+
+--- Wether the player is invincible
+--- @return boolean
+function Player.isInvincible()
+  return Player.invincible or Player.is_invincible
+end
+
+--- Sets wether the player is invincible
+---@param invincible boolean
+function Player.setInvincible(invincible)
+  Player.invincible = invincible
+end
+
+--- Gets the player's invincibility duration, in seconds
+--- @return number
+function Player.getInvincibility()
+  return Player.invincible_duration
+end
+
+--- Sets the player's invincibility duration, in seconds
+--- @param invincibility number
+function Player.setInvincibility(invincibility)
+  Player.invincible_duration = invincibility
 end
 
 --- Gets the player's weapon
@@ -383,15 +421,16 @@ end
 function Player.flee()
   if not Player.is_fleeing then
     Player.is_fleeing = true
-    Player.soul_escape_sprite = Sprite:new({ "heart_escape1", "heart_escape2" }, 2 / 30, true)
-    Player.soul_escape_sprite:setPosition(Player.getPosition())
-    Player.soul_escape_sprite:setLayer(Constants.LAYERS.SOUL)
-    Player.soul_sprite:setVisible(false)
+    Player.soul_sprite:setSprite({ "heart_escape1", "heart_escape2" })
+    Player.soul_sprite:setSpeed(2 / 30)
+    Player.soul_sprite:setPosition(Player.getPosition())
+    Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
+    Player.soul_sprite:play()
   end
 
   Timer.during(2, function(dt)
-    local x, y = Player.soul_escape_sprite:getPosition()
-    Player.soul_escape_sprite:setPosition(x - Player.flee_speed * dt * 30, y)
+    local x, y = Player.soul_sprite:getPosition()
+    Player.soul_sprite:setPosition(x - Player.flee_speed * dt * 30, y)
   end)
 end
 

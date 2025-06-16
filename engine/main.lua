@@ -12,6 +12,7 @@ Class = require "class"
 Assets = require "assets"
 Input = require "input"
 Lang = require "lang"
+Fader = require "fader"
 Drawable = require "drawable.drawable"
 Sprite = require "drawable.sprite"
 Text = require "drawable.text"
@@ -84,6 +85,7 @@ function love.load()
   Lang.load()
   Assets.load()
   Scene.load()
+  Fader.load()
   Debugger.load()
 
   Scene.change("MAIN_MENU")
@@ -104,6 +106,7 @@ local function update(dt)
 
   Input.update()
   Scene.update(dt)
+  Fader.update(dt)
   Debugger.update()
   Timer.update(dt)
 

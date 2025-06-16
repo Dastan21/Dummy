@@ -1,20 +1,17 @@
+--- @alias Dummy.Text.Text string|table|fun(): string|table
+
 --- @class Dummy.Text : Dummy.Drawable
 ---
 --- @field protected text Dummy.Text.Text
---- @field protected color love.Color
 --- @field protected font love.Font
 --- @field protected sprite love.Text
 local Text = Class:extend(Drawable)
-
---- @alias Dummy.Text.Text string|table|fun(): string|table
 
 --- Gets the class name
 --- @return string
 function Text:getClass()
   return "Dummy.Text"
 end
-
---- @alias love.Color { [1]: number, [2]: number, [3]: number }
 
 --- Gets the text value
 --- @return Dummy.Text.Text
@@ -37,12 +34,7 @@ function Text:updateText()
   end
 end
 
---- Gets the text color
---- @return love.Color
-function Text:getColor()
-  return self.color
-end
-
+local set_color = Text.setColor
 --- Sets the text color
 --- @overload fun(self: Dummy.Text, color: love.Color)
 --- @param r number red
@@ -50,16 +42,7 @@ end
 --- @param b number blue
 --- @param a number alpha
 function Text:setColor(r, g, b, a)
-  if type(r) == "table" then
-    self.color = r
-  else
-    self.color = { r, g, b }
-  end
-
-  if a ~= nil then
-    self.alpha = a
-  end
-
+  set_color(self, r, g, b, a)
   self:updateText()
 end
 
@@ -74,12 +57,6 @@ end
 function Text:setFont(font)
   self.font = font
   self.sprite:setFont(font)
-end
-
---- Gets the text alpha
---- @return number
-function Text:getAlpha()
-  return self.alpha
 end
 
 --- Sets the text alpha

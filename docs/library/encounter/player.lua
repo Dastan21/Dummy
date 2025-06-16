@@ -17,6 +17,9 @@
 --- @field protected speed_factor number
 --- @field protected scale_x number
 --- @field protected scale_y number
+--- @field protected is_invincible boolean
+--- @field protected invincible boolean
+--- @field protected invincible_duration number
 --- @field protected hitbox { [1]: number, [2]: number, [3]: number, [4]: number }
 --- @field protected soul_sprite Dummy.Sprite
 --- @field protected name string
@@ -31,7 +34,7 @@
 --- @field protected items Dummy.Item[]
 Player = {}
 
---- Inits the player
+--- Initializes the player
 function Player.load() end
 
 --- Gets the player's soul position
@@ -132,6 +135,22 @@ function Player.getScale() end
 --- @param scale_x number
 --- @param scale_y number
 function Player.setScale(scale_x, scale_y) end
+
+--- Wether the player is invincible
+--- @return boolean
+function Player.isInvincible() end
+
+--- Sets wether the player is invincible
+---@param invincible boolean
+function Player.setInvincible(invincible) end
+
+--- Gets the player's invincibility duration, in seconds
+--- @return number
+function Player.getInvincibility() end
+
+--- Sets the player's invincibility duration, in seconds
+--- @param invincibility number
+function Player.setInvincibility(invincibility) end
 
 --- Gets the player's weapon
 --- @return Dummy.Item.Equipment

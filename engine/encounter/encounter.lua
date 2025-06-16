@@ -9,7 +9,6 @@
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
---- @field protected black_sprite Dummy.Sprite
 --- @field protected dialogue_text Dummy.DialogueText
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
@@ -134,19 +133,11 @@ end
 function Encounter.flee()
   Encounter.mercy_menu:setActive(false)
 
-  Timer.after(1.5, function()
-    Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
-  end)
-
   Player.flee()
 
   Timer.after(1, function()
-    local time = 0
-    Encounter.black_sprite:setVisible(true)
-
-    Timer.during(0.4, function(dt)
-      time = time + dt
-      Encounter.black_sprite:setAlpha(time / 0.4)
+    Fader.fadeIn(nil, function()
+      Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
     end)
   end)
 
@@ -163,7 +154,7 @@ function Encounter.flee()
   else
     flee_text_key = "ENCOUNTER_FLEE_TEXT_4"
   end
-  Encounter.dialogue_text:setText("   * " .. Lang.translate(flee_text_key))
+  Encounter.dialogue_text:setText(flee_text_key)
   Encounter.dialogue_text:setCanSkip(true)
   Encounter.dialogue_text:setVisible(true)
   Encounter.dialogue_text:skip()
@@ -175,11 +166,6 @@ function Encounter.load()
   Encounter.bg_sprite = Sprite:new("battle_bg")
   Encounter.bg_sprite:setPosition(319.5, 127)
   Encounter.bg_sprite:setLayer(Constants.LAYERS.BOTTOM)
-  Encounter.black_sprite = Sprite:new("black")
-  Encounter.black_sprite:setOrigin(0, 0)
-  Encounter.black_sprite:setVisible(false)
-  Encounter.black_sprite:setAlpha(0)
-  Encounter.black_sprite:setLayer(Constants.LAYERS.TOP)
 
   -- state
   Encounter.previous_state = Constants.ENCOUNTER_STATES.ACTION_SELECT
@@ -204,8 +190,7 @@ function Encounter.load()
   Encounter.target_sprite:setPosition(320, 320)
   Encounter.target_sprite:setLayer(Constants.LAYERS.UI)
   Encounter.target_sprite:setVisible(false)
-  Encounter.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1)
-  Encounter.target_bar_sprite:stop()
+  Encounter.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1, nil, false)
   Encounter.target_bar_sprite:setVisible(false)
   Encounter.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
 
@@ -224,8 +209,7 @@ function Encounter.load()
     "strike4",
     "strike5",
     "strike6"
-  }, 4 / 30, false, false)
-  Encounter.strike_sprite:stop()
+  }, 4 / 30, false, false, false)
   Encounter.strike_sprite:setOrigin(0.5, 0.5)
   Encounter.strike_sprite:setScale(1.5)
   Encounter.strike_sprite:setVisible(false)
@@ -832,6 +816,12 @@ function Encounter.updateDefending(dt)
 
   ---@diagnostic disable-next-line: invisible
   Encounter.wave:__update(dt)
+
+  -- DEBUG
+  if Input.isPressed(Input.Cancel) then
+    ---@diagnostic disable-next-line: invisible
+    Encounter.wave.time = 9999
+  end
 end
 
 --- Updates the encounter

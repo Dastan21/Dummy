@@ -1,3 +1,5 @@
+--- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage"
+
 --- @class Dummy.Assets
 ---
 --- @field private fonts table<Dummy.Assets.Font, love.Font>
@@ -6,8 +8,6 @@ local Assets = {}
 
 ---@type table<string, love.FileData>
 local cache = {}
-
---- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage"
 
 function Assets.load()
   Assets.fonts = {}

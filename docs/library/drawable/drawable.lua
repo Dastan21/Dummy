@@ -15,6 +15,7 @@
 --- @field protected scale_y number
 --- @field protected origin_x number
 --- @field protected origin_y number
+--- @field protected color love.Color
 --- @field protected alpha number
 --- @field protected layer number
 --- @field protected visible boolean
@@ -22,6 +23,8 @@
 --- @field protected draw fun()|nil
 --- @field protected persistent boolean
 Drawable = {}
+
+--- @alias love.Color { [1]: number, [2]: number, [3]: number }
 
 --- Gets the class name
 --- @return string
@@ -71,6 +74,18 @@ function Drawable:getOrigin() end
 --- @param origin_x number
 --- @param origin_y number
 function Drawable:setOrigin(origin_x, origin_y) end
+
+--- Gets the drawable color
+--- @return love.Color
+function Drawable:getColor() end
+
+--- Sets the drawable color
+--- @overload fun(self: Dummy.Drawable, color: love.Color)
+--- @param r number red
+--- @param g number green
+--- @param b number blue
+--- @param a number alpha
+function Drawable:setColor(r, g, b, a) end
 
 --- Gets the drawable alpha
 --- @return number

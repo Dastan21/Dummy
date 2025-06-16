@@ -1,3 +1,5 @@
+--- @alias love.Color { [1]: number, [2]: number, [3]: number }
+
 --- @class Dummy.Drawable : Dummy.Class
 ---
 --- @field protected x number
@@ -7,6 +9,7 @@
 --- @field protected scale_y number
 --- @field protected origin_x number
 --- @field protected origin_y number
+--- @field protected color love.Color
 --- @field protected alpha number
 --- @field protected layer number
 --- @field protected visible boolean
@@ -101,6 +104,30 @@ function Drawable:setOrigin(origin_x, origin_y)
   end
 end
 
+--- Gets the drawable color
+--- @return love.Color
+function Drawable:getColor()
+  return self.color
+end
+
+--- Sets the drawable color
+--- @overload fun(self: Dummy.Drawable, color: love.Color)
+--- @param r number red
+--- @param g number green
+--- @param b number blue
+--- @param a number alpha
+function Drawable:setColor(r, g, b, a)
+  if type(r) == "table" then
+    self.color = r
+  else
+    self.color = { r, g, b }
+  end
+
+  if a ~= nil then
+    self.alpha = a
+  end
+end
+
 --- Gets the drawable alpha
 --- @return number
 function Drawable:getAlpha()
@@ -188,6 +215,7 @@ function Drawable:new(draw, persistent)
     scale_y = 1,
     origin_x = 0.5,
     origin_y = 0.5,
+    color = { 1, 1, 1 },
     alpha = 1,
     layer = Constants.LAYERS.UI,
     visible = true,

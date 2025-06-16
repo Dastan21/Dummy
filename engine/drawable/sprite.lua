@@ -66,16 +66,25 @@ function Sprite:getSprite()
 end
 
 --- Sets the sprite's value
---- @param sprite_name string
-function Sprite:setSprite(sprite_name)
-  if self.sprite ~= nil then
-    Scene.removeDrawable(self)
+--- @overload fun(self: Dummy.Sprite, sprite_name: string): Dummy.Sprite
+--- @param sprites_names string[]
+function Sprite:setSprite(sprites_names)
+  self:stop()
+
+  if type(sprites_names) == "table" then
+    self.frames = {}
+    self.frame_index = 1
+    for i, frame in ipairs(sprites_names) do
+      self.frames[i] = self:loadSprite(frame)
+    end
+  else
+    self.sprite = self:loadSprite(sprites_names)
+    self.sprite_name = sprites_names
+
+    if self.sprite ~= nil then
+      Scene.addDrawable(self)
+    end
   end
-
-  self.sprite = self:loadSprite(sprite_name)
-  self.sprite_name = sprite_name
-
-  Scene.addDrawable(self)
 end
 
 --- Gets the sprite's width
@@ -127,6 +136,12 @@ function Sprite:stop()
   self.frame_index = 1
 end
 
+--- Wether the sprite's animation is playing
+--- @return boolean
+function Sprite:isPlaying()
+  return self.timer ~= nil
+end
+
 --- Sets the current sprite's animation frame
 --- @param index number
 function Sprite:setFrame(index)
@@ -143,33 +158,34 @@ end
 --- Sets the sprite's animation speed
 --- @param speed number
 function Sprite:setSpeed(speed)
+  local was_playing = self:isPlaying()
+  self:stop()
   self.speed = speed
+
+  if was_playing then
+    self:play()
+  end
 end
 
 --- Creates a sprite
---- @overload fun(self: Dummy.Sprite, sprite: string): Dummy.Sprite
---- @param frames string[]
+--- @overload fun(self: Dummy.Sprite, sprite_name: string): Dummy.Sprite
+--- @param sprites_names string[]
 --- @param speed? number time between frames, in seconds (Defaults to 1/30)
 --- @param loop? boolean loops the animation (Defaults to `true`)
+--- @param play? boolean wether the animation should start playing instantly (Defaults to `true`)
 --- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
 --- @return Dummy.Sprite
-function Sprite:new(frames, speed, loop, keep_last_frame)
+function Sprite:new(sprites_names, speed, loop, play, keep_last_frame)
   local sprite = Class:new(Sprite)
 
-  if type(frames) == "table" then
-    sprite.frames = {}
-    sprite.frame_index = 1
-    for i, frame in ipairs(frames) do
-      sprite.frames[i] = sprite:loadSprite(frame)
-    end
+  sprite.speed = Utils.getOrDefault(speed, 1 / 30)
+  sprite.loop = Utils.getOrDefault(loop, true)
+  sprite.keep_last_frame = Utils.getOrDefault(keep_last_frame, true)
 
-    sprite.speed = Utils.getOrDefault(speed, 1 / 30)
-    sprite.loop = Utils.getOrDefault(loop, true)
-    sprite.keep_last_frame = Utils.getOrDefault(keep_last_frame, true)
+  sprite:setSprite(sprites_names)
 
+  if Utils.getOrDefault(play, true) then
     sprite:play()
-  else
-    sprite:setSprite(frames)
   end
 
   return sprite

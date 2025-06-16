@@ -2,12 +2,11 @@
 ---
 --- @field private title_game_text Dummy.Text
 --- @field private title_over_text Dummy.Text
---- @field private title_delay number
---- @field private title_timer number
+--- @field private show_title boolean
+--- @field private hide_title boolean
+--- @field private alpha number
 --- @field private player_sprite Dummy.Sprite
 --- @field private player_shards table[]
---- @field private black_sprite Dummy.Sprite
---- @field private fade_time number
 --- @field private dialogue_text Dummy.DialogueText
 --- @field private dialogue_index number
 --- @field private game_over_music love.Source
@@ -32,8 +31,10 @@ function game_over.load(x, y)
   game_over.title_over_text:setScale(8)
   game_over.title_over_text:setAlpha(0)
   game_over.title_over_text:setVisible(false)
-  game_over.title_delay = 1.7
-  game_over.title_timer = 0
+
+  game_over.show_title = false
+  game_over.hide_title = false
+  game_over.alpha = 0
 
   -- heart
   game_over.player_sprite = Sprite:new("heart")
@@ -46,8 +47,7 @@ function game_over.load(x, y)
       "heart_shard2",
       "heart_shard3",
       "heart_shard4"
-    }, 4 / 30)
-    shard_sprite:stop()
+    }, 4 / 30, nil, false)
     shard_sprite:setPosition(x, y)
     shard_sprite:setVisible(false)
     game_over.player_shards[i] = {
@@ -56,14 +56,6 @@ function game_over.load(x, y)
       vel_y = (math.random() - 0.5) * 7
     }
   end
-
-  -- black fade
-  game_over.black_sprite = Sprite:new("black")
-  game_over.black_sprite:setOrigin(0, 0)
-  game_over.black_sprite:setVisible(false)
-  game_over.black_sprite:setAlpha(0)
-  game_over.black_sprite:setLayer(Constants.LAYERS.TOP)
-  game_over.fade_time = 1
 
   -- dialogue
   game_over.dialogue_text = DialogueText:new("")
@@ -94,6 +86,8 @@ function game_over.load(x, y)
       Assets.playSound("heart_explode")
 
       Timer.after(1.5, function()
+        game_over.alpha = 0
+        game_over.show_title = true
         game_over.title_game_text:setVisible(true)
         game_over.title_over_text:setVisible(true)
         game_over.game_over_music:play()
@@ -118,16 +112,20 @@ function game_over.update(dt)
       elseif game_over.dialogue_index == 3 then
         game_over.dialogue_text:setText("")
       elseif game_over.dialogue_index == 4 then
-        game_over.black_sprite:setVisible(true)
+        game_over.alpha = 1
+        game_over.hide_title = true
       end
     end
   end
 
-  if game_over.title_game_text:isVisible() and game_over.title_over_text:isVisible() and game_over.title_timer < game_over.title_delay then
-    game_over.title_timer = game_over.title_timer + dt
-    local alpha = math.min(1, game_over.title_timer / game_over.title_delay)
-    game_over.title_game_text:setAlpha(alpha)
-    game_over.title_over_text:setAlpha(alpha)
+  if game_over.show_title then
+    game_over.alpha = math.max(0, game_over.alpha + 0.02 * dt * 30)
+    game_over.title_game_text:setAlpha(game_over.alpha)
+    game_over.title_over_text:setAlpha(game_over.alpha)
+
+    if game_over.alpha >= 1 then
+      game_over.show_title = false
+    end
   end
 
   if not game_over.player_sprite:isVisible() then
@@ -146,12 +144,13 @@ function game_over.update(dt)
     end
   end
 
-  if game_over.black_sprite:isVisible() then
-    game_over.fade_time = math.max(0, game_over.fade_time - 0.02 * dt * 30)
-    game_over.black_sprite:setAlpha(1 - game_over.fade_time)
-    game_over.game_over_music:setVolume(game_over.fade_time)
+  if game_over.hide_title then
+    game_over.alpha = math.max(0, game_over.alpha - 0.02 * dt * 30)
+    game_over.title_game_text:setAlpha(game_over.alpha)
+    game_over.title_over_text:setAlpha(game_over.alpha)
+    game_over.game_over_music:setVolume(game_over.alpha)
 
-    if game_over.fade_time <= 0 then
+    if game_over.alpha <= 0 then
       Scene.change("MAIN_MENU")
     end
   end

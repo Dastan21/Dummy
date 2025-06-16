@@ -7,13 +7,14 @@ function self.load()
 
   self.show_hitbox = false
 
-  self.log_bg_sprite = Sprite:new("black")
+  self.log_bg_sprite = Sprite:new("pixel")
   self.log_bg_sprite:setPosition(0, 0)
   self.log_bg_sprite:setOrigin(0, 0)
   self.log_bg_sprite:setLayer(Constants.LAYERS.DEBUG)
   self.log_bg_sprite:setAlpha(0.4)
   self.log_bg_sprite:setVisible(false)
   self.log_bg_sprite:setPersistent(true)
+  self.log_bg_sprite:setScale(Constants.WIDTH, Constants.HEIGHT)
 
   self.log_text = Text:new("")
   self.log_text:setPosition(self.margin, Constants.HEIGHT - self.margin)

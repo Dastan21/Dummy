@@ -120,7 +120,8 @@ function Scene.draw()
       if type(draw) == "function" then
         draw()
       else
-        love.graphics.setColor(1, 1, 1, drawable:getAlpha())
+        local color = drawable:getColor()
+        love.graphics.setColor(color[1], color[2], color[3], drawable:getAlpha())
 
         local sprite = drawable:getSprite()
         if sprite ~= nil then

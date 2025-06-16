@@ -57,7 +57,7 @@ function Wave:update(dt) end
 function Wave:done() end
 
 --- Creates an enemy Waveing
---- @param duration? number wave duration, in seconds (Defaults to `10`)
+--- @param duration? number wave duration, in seconds (Defaults to `8`)
 --- @return Dummy.Wave
 function Wave:new(duration) end
 

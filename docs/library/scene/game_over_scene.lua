@@ -10,12 +10,11 @@
 ---
 --- @field private title_game_text Dummy.Text
 --- @field private title_over_text Dummy.Text
---- @field private title_delay number
---- @field private title_timer number
+--- @field private show_title boolean
+--- @field private hide_title boolean
+--- @field private alpha number
 --- @field private player_sprite Dummy.Sprite
 --- @field private player_shards table[]
---- @field private black_sprite Dummy.Sprite
---- @field private fade_time number
 --- @field private dialogue_text Dummy.DialogueText
 --- @field private dialogue_index number
 --- @field private game_over_music love.Source

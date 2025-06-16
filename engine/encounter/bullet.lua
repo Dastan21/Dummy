@@ -1,3 +1,5 @@
+--- @alias Dummy.Bullet.Hitbox { [1]:number, [2]:number, [3]:number, [4]:number }
+
 --- @class Dummy.Bullet : Dummy.Sprite
 ---
 --- @field protected damage number
@@ -10,8 +12,6 @@ local Bullet = Class:extend(Sprite)
 function Bullet:getClass()
   return "Dummy.Bullet"
 end
-
---- @alias Dummy.Bullet.Hitbox { [1]:number, [2]:number, [3]:number, [4]:number }
 
 --- Gets the bullet's hitbox
 --- @return Dummy.Bullet.Hitbox

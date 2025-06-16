@@ -17,7 +17,6 @@
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
---- @field protected black_sprite Dummy.Sprite
 --- @field protected dialogue_text Dummy.DialogueText
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
