@@ -4,7 +4,11 @@
     {
       "label": "Build engine",
       "type": "shell",
-      "command": "makelove --config ../makelove.toml",
+      "command": "makelove",
+      "args": [
+        "--config",
+        "../makelove.toml"
+      ],
       "options": {
         "cwd": "${workspaceFolder}/engine"
       }

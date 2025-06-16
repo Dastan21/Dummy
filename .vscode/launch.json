@@ -2,14 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug",
       "type": "lua-local",
       "request": "launch",
-      "name": "Debug",
       "program": {
         "command": "love"
       },
+      "cwd": "${workspaceFolder}/engine",
       "args": [
-        "./engine"
+        "."
       ],
     }
   ]
