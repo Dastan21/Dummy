@@ -39,8 +39,9 @@ function ItemConsumable:__use()
   Player.removeItem(self)
   Assets.playSound("swallow")
 
+  Player.heal(self.heal, true)
   Timer.after(0.5, function()
-    Player.heal(self.heal)
+    Assets.playSound("heal")
   end)
 
   if (type(self.use) == "function") then
