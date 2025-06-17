@@ -26,6 +26,7 @@ function main_menu.load()
   main_menu.credits_text:setPosition(320, 476)
   main_menu.credits_text:setOrigin(0.5, 1)
   main_menu.credits_text:setScale(2)
+
   main_menu.background_sprite = Sprite:new("background")
   main_menu.background_sprite:setOrigin(0, 0)
   main_menu.background_sprite:setLayer(Constants.LAYERS.BOTTOM)

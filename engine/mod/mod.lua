@@ -13,7 +13,7 @@
 --- @field df number|nil
 --- @field xp number|nil
 --- @field gold number|nil
---- @field check Dummy.Text.Text|Dummy.Text.Text[]|nil
+--- @field check Dummy.Text.Text|nil
 --- @field position { [1]: number, [2]: number }|nil
 --- @field size { [1]: number, [2]: number }|nil
 
@@ -22,6 +22,7 @@
 ---
 --- @field name string
 --- @field title string|nil
+--- @field version string|nil
 --- @field standalone boolean|nil
 
 
@@ -29,6 +30,7 @@
 ---
 --- @field protected id string
 --- @field protected name string
+--- @field protected version string
 --- @field protected title string|nil
 --- @field protected standalone boolean
 local Mod = Class()
@@ -49,6 +51,12 @@ end
 --- @return string
 function Mod:getName()
   return self.name
+end
+
+--- Gets the mod's version
+--- @return string
+function Mod:getVersion()
+  return self.version
 end
 
 --- Gets the mod's title
@@ -76,6 +84,7 @@ function Mod:new(data)
   return Class:new(Mod, {
     name = data.name,
     title = data.title,
+    version = Utils.getOrDefault(data.version, "???"),
     standalone = Utils.getOrDefault(data.standalone, false),
   })
 end

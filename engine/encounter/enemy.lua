@@ -7,7 +7,7 @@
 --- @field protected df number
 --- @field protected xp number
 --- @field protected gold number
---- @field protected check Dummy.Text.Text|string[]|nil
+--- @field protected check Dummy.Text.Text|nil
 --- @field protected x number
 --- @field protected y number
 --- @field protected width number
@@ -92,22 +92,13 @@ function Enemy:hasCheck()
 end
 
 --- Gets the enemy's check
---- @return string
+--- @return Dummy.Text.Text
 function Enemy:getCheck()
-  local check = self.check
-  if type(check) == "table" then
-    local t = {}
-    for _, txt in ipairs(check) do
-      table.insert(t, Lang.translate(txt))
-    end
-    return "* " .. table.concat(t, "\n* ")
-  end
-
-  return "* " .. check
+  return self.check
 end
 
 --- Sets the enemy's check
---- @param check Dummy.Text.Text|Dummy.Text.Text[]
+--- @param check Dummy.Text.Text
 function Enemy:setCheck(check)
   self.check = check
 end
@@ -118,7 +109,7 @@ function Enemy:getCheckText()
   local check = "* " .. self:getName():upper() .. " - "
   check = check .. Lang.translate("ENCOUNTER_STAT_AT") .. " " .. self:getAT() .. " "
   check = check .. Lang.translate("ENCOUNTER_STAT_DF") .. " " .. self:getDF()
-  check = check .. "\n" .. self:getCheck()
+  check = check .. "\n" .. Lang.translate(self:getCheck())
   return check
 end
 

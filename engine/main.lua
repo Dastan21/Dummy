@@ -21,6 +21,7 @@ DialogueText = require "drawable.dialogue_text"
 Debugger = require "debugger"
 Scene = require "scene"
 MainMenu = require "main_menu"
+ModList = require "mod.mod_list"
 Mod = require "mod.mod"
 
 -- encounter
@@ -37,10 +38,8 @@ Item = require "encounter.item"
 ItemConsumable = require "encounter.item.consumable"
 ItemEquipment = require "encounter.item.equipment"
 
-local dummy = {
+local engine = {
   window = {
-    width = Constants.WIDTH,
-    height = Constants.HEIGHT,
     translate_x = 0,
     translate_y = 0,
     scale = 1,
@@ -94,7 +93,7 @@ function love.load()
 
   Scene.change("MAIN_MENU")
 
-  dummy.next_time = love.timer.getTime()
+  engine.next_time = love.timer.getTime()
 end
 
 local function updateFullscreen()
@@ -106,7 +105,7 @@ local function updateFullscreen()
 end
 
 local function update(dt)
-  dummy.next_time = dummy.next_time + (1 / Config["fps"])
+  engine.next_time = engine.next_time + (1 / Config["fps"])
 
   Input.update()
   Scene.update(dt)
@@ -122,33 +121,32 @@ end
 
 local function limitFPS()
   local cur_time = love.timer.getTime()
-  if dummy.next_time <= cur_time then
-    dummy.next_time = cur_time
+  if engine.next_time <= cur_time then
+    engine.next_time = cur_time
     return
   end
-  love.timer.sleep(dummy.next_time - cur_time)
+  love.timer.sleep(engine.next_time - cur_time)
 end
 
 local function draw()
   if not love.graphics.isActive() then return end
 
   limitFPS()
-  love.graphics.translate(dummy.window.translate_x, dummy.window.translate_y)
-  love.graphics.scale(dummy.window.scale)
+  love.graphics.translate(engine.window.translate_x, engine.window.translate_y)
+  love.graphics.scale(engine.window.scale)
 
   Scene.draw()
 
   love.graphics.setColor(0, 0, 0, 1)
-  love.graphics.rectangle("fill", -dummy.window.translate_x, 0, dummy.window.translate_x, dummy.window.height)
-  love.graphics.rectangle("fill", dummy.window.width, 0, dummy.window.translate_x, dummy.window.height)
+  love.graphics.rectangle("fill", -engine.window.translate_x, 0, engine.window.translate_x, Constants.HEIGHT)
+  love.graphics.rectangle("fill", Constants.WIDTH, 0, engine.window.translate_x, Constants.HEIGHT)
 end
 
 function love.resize(width, height)
-  local target_width, target_height = dummy.window.width, dummy.window.height
-  local scale = math.min(width / target_width, height / target_height)
-  dummy.window.translate_x = (width - target_width * scale) / 2
-  dummy.window.translate_y = (height - target_height * scale) / 2
-  dummy.window.scale = scale
+  local scale = math.min(width / Constants.WIDTH, height / Constants.HEIGHT)
+  engine.window.translate_x = (width - Constants.WIDTH * scale) / 2
+  engine.window.translate_y = (height - Constants.HEIGHT * scale) / 2
+  engine.window.scale = scale
 end
 
 function love.quit()

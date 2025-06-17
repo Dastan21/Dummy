@@ -1,6 +1,7 @@
 --- @class Dummy.ModList
 ---
 --- @field private mods Dummy.Mod[]
+--- @field private current_mod Dummy.Mod|nil
 --- @field private standalone Dummy.Mod|nil
 local ModList = {}
 
@@ -16,10 +17,17 @@ function ModList.getStandalone()
   return ModList.standalone
 end
 
+--- Gets the current loaded mod
+--- @return Dummy.Mod|nil
+function ModList.getCurrentMod()
+  return ModList.standalone or ModList.current_mod
+end
+
 --- Loads the mod list
 function ModList.load()
   ModList.unloadMods()
   ModList.mods = {}
+  ModList.current_mod = nil
   ModList.standalone = nil
 
   local mods_dirs = love.filesystem.getDirectoryItems("mods")
@@ -80,11 +88,14 @@ function ModList.loadMod(mod)
   if type(mod.load) == "function" then
     Lang.loadLanguages()
     mod:load()
+    ModList.current_mod = mod
   end
 end
 
 --- Unloads all mods
 function ModList.unloadMods()
+  ModList.current_mod = nil
+
   if ModList.mods == nil then return end
 
   for _, mod in ipairs(ModList.mods) do

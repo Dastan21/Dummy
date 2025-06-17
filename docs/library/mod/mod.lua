@@ -10,6 +10,7 @@
 ---
 --- @field protected id string
 --- @field protected name string
+--- @field protected version string
 --- @field protected title string|nil
 --- @field protected standalone boolean
 Mod = {}
@@ -29,7 +30,7 @@ Mod = {}
 --- @field df number|nil
 --- @field xp number|nil
 --- @field gold number|nil
---- @field check Dummy.Text.Text|Dummy.Text.Text[]|nil
+--- @field check Dummy.Text.Text|nil
 --- @field position { [1]: number, [2]: number }|nil
 --- @field size { [1]: number, [2]: number }|nil
 
@@ -38,6 +39,7 @@ Mod = {}
 ---
 --- @field name string
 --- @field title string|nil
+--- @field version string|nil
 --- @field standalone boolean|nil
 
 
@@ -52,6 +54,10 @@ function Mod:getId() end
 --- Gets the mod's name
 --- @return string
 function Mod:getName() end
+
+--- Gets the mod's version
+--- @return string
+function Mod:getVersion() end
 
 --- Gets the mod's title
 --- @return string|nil
