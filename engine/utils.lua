@@ -161,6 +161,9 @@ end
 
 -- math --
 
+--- Returns the sign of `x`.
+--- @param x number
+--- @return number
 function math.sign(x)
   if x > 0 then
     return 1
@@ -170,12 +173,29 @@ function math.sign(x)
   return 0
 end
 
+--- Clamps `x` between `min` and `max`.
+--- @param x number
+--- @param min number
+--- @param max number
+--- @return number
 function math.clamp(x, min, max)
   return math.max(math.min(x, max), min)
 end
 
+--- Returns the nearest integer value to `x`.
+--- @param x number
+--- @return integer
 function math.round(x)
   return math.floor(x + 0.5)
+end
+
+--- Linearly interpolates between `a` and `b` by `t`.
+--- @param a number
+--- @param b number
+--- @param t number
+--- @return number
+function math.lerp(a, b, t)
+  return a + (b - a) * t
 end
 
 -- other --

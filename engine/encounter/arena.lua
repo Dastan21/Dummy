@@ -104,7 +104,7 @@ end
 --- @param width number target width of the arena
 --- @param height number target height of the arena
 --- @param instant? boolean resizes the arena instantly (Defaults to `false`)
---- @param resize_callback? fun() called after finished resizing
+--- @param resize_callback? fun() called when the resize is done
 function Arena.resize(width, height, instant, resize_callback)
   if Utils.getOrDefault(instant, false) then
     Arena.width = width
@@ -126,7 +126,7 @@ end
 ---@param x number target x position of the arena
 ---@param y number target y position of the arena
 --- @param instant? boolean moves the arena instantly (Defaults to `false`)
---- @param move_callback? fun() called after finished moving
+--- @param move_callback? fun() called when the move is done
 function Arena.move(x, y, instant, move_callback)
   local abs_x = Arena.x + x
   local abs_y = Arena.y + y
@@ -147,7 +147,7 @@ function Arena.move(x, y, instant, move_callback)
 end
 
 --- Resets the arena bounds
---- @param reset_callback? fun() called after finished resetting
+--- @param reset_callback? fun() called when the reset is done
 function Arena.reset(reset_callback)
   local finished_resizing = false
   local finished_moving = false

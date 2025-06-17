@@ -17,6 +17,7 @@
 --- @field private menu_music love.Source
 main_menu = {}
 
+--- Loads the main menu
 function main_menu.load() end
 
 --- Loads menus

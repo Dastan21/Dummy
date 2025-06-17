@@ -24,6 +24,7 @@
 --- @field protected strike_sprite Dummy.Sprite
 --- @field protected enemy_hp_draw Dummy.Drawable
 --- @field protected enemy_hp_text Dummy.Text
+--- @field protected enemy_hp_text_timer table|nil
 --- @field protected battle_music love.Source
 --- @field protected fight_enemy_menu Dummy.Encounter.ActionMenu
 --- @field protected act_enemy_menu Dummy.Encounter.ActionMenu

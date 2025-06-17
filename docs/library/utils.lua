@@ -22,11 +22,29 @@ function string:trim() end
 --- @param self string
 function string:split(delimiter) end
 
+--- Returns the sign of `x`.
+--- @param x number
+--- @return number
 function math.sign(x) end
 
+--- Clamps `x` between `min` and `max`.
+--- @param x number
+--- @param min number
+--- @param max number
+--- @return number
 function math.clamp(x, min, max) end
 
+--- Returns the nearest integer value to `x`.
+--- @param x number
+--- @return integer
 function math.round(x) end
+
+--- Linearly interpolates between `a` and `b` by `t`.
+--- @param a number
+--- @param b number
+--- @param t number
+--- @return number
+function math.lerp(a, b, t) end
 
 --- Get value or default
 --- @generic T

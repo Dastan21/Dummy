@@ -16,6 +16,7 @@
 --- @field protected strike_sprite Dummy.Sprite
 --- @field protected enemy_hp_draw Dummy.Drawable
 --- @field protected enemy_hp_text Dummy.Text
+--- @field protected enemy_hp_text_timer table|nil
 --- @field protected battle_music love.Source
 --- @field protected fight_enemy_menu Dummy.Encounter.ActionMenu
 --- @field protected act_enemy_menu Dummy.Encounter.ActionMenu
@@ -137,7 +138,7 @@ function Encounter.flee()
   Player.flee()
 
   Timer.after(1, function()
-    Fader.fadeIn(nil, function()
+    Fader.fadeIn(1 / 2.4, function()
       Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
     end)
   end)

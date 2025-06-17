@@ -9,7 +9,9 @@
 --- @field private menu_music love.Source
 local main_menu = {}
 
+--- Loads the main menu
 function main_menu.load()
+  Fader.reset()
   main_menu.mod_list = require "mod.mod_list"
   main_menu.mod_list.load()
 

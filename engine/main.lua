@@ -108,7 +108,6 @@ local function update(dt)
 
   Input.update()
   Scene.update(dt)
-  Fader.update(dt)
   Debugger.update()
   Timer.update(dt)
 

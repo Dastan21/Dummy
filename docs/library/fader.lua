@@ -9,30 +9,28 @@
 --- @class Dummy.Fader
 ---
 --- @field protected background Dummy.Sprite
---- @field protected default_speed number
---- @field protected speed number
---- @field protected is_fading boolean
---- @field protected is_fade_in boolean
---- @field protected is_fade_done boolean
---- @field protected fade_callback fun()|nil
+--- @field protected fade_timer table|nil
 Fader = {}
 
 --- Loads the fader
 function Fader.load() end
 
+--- Fades in or out
+--- @param fade_in boolean wether to fade in or out
+--- @param duration? number duration of the fade, in seconds (Defaults to `1`)
+--- @param fade_callback? fun() called when the fade is done
+function Fader.fade(fade_in, duration, fade_callback) end
+
 --- Fades in
---- @param speed? number
---- @param fade_callback? fun()
-function Fader.fadeIn(speed, fade_callback) end
+--- @param duration? number duration of the fade, in seconds (Defaults to `1`)
+--- @param fade_callback? fun() called when the fade is done
+function Fader.fadeIn(duration, fade_callback) end
 
 --- Fades out
---- @param speed? number
---- @param fade_callback? fun()
-function Fader.fadeOut(speed, fade_callback) end
+--- @param duration? number duration of the fade, in seconds (Defaults to `1`)
+--- @param fade_callback? fun() called when the fade is done
+function Fader.fadeOut(duration, fade_callback) end
 
---- Called when the fade is done
-function Fader.onDone() end
-
---- Updates the fader
-function Fader.update(dt) end
+--- Resets the fader
+function Fader.reset() end
 
