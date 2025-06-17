@@ -15,8 +15,6 @@
 --- @field protected df number
 --- @field protected speed number
 --- @field protected speed_factor number
---- @field protected scale_x number
---- @field protected scale_y number
 --- @field protected is_invincible boolean
 --- @field protected invincible boolean
 --- @field protected invincible_duration number
@@ -72,8 +70,7 @@ function Player.getLV() end
 
 --- Sets the player's LV
 --- @param lv number level
---- @param heal? boolean set HP to max HP
-function Player.setLV(lv, heal) end
+function Player.setLV(lv) end
 
 --- Gets the player's HP
 --- @return number

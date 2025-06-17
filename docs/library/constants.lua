@@ -17,6 +17,8 @@ Constants = {
   WIDTH = 640,
   HEIGHT = 480,
 
+  DEBUG = false,
+
   LAYERS = {
     BOTTOM       = -1000,
     BELOW_ARENA  = 0,
@@ -32,7 +34,7 @@ Constants = {
     SOUL         = 10,
     ABOVE_SOUL   = 11,
     TOP          = 1000,
-    DEBUG        = 1001
+    DEBUG        = 9999999
   },
 
   ENCOUNTER_STATES = {
