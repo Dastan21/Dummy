@@ -33,7 +33,7 @@ function Fader.fade(fade_in, duration, fade_callback)
   Timer.tween(duration, Fader.background, { alpha = math.abs(1 - alpha) })
 
   Fader.fade_timer = Timer.after(duration, function()
-    if fade_callback ~= nil then
+    if type(fade_callback) == "function" then
       fade_callback()
     end
   end)
