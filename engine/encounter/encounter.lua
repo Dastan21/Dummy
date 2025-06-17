@@ -672,7 +672,7 @@ function Encounter.startAttacking()
       local enemy_width, enemy_height = enemy:getSize()
       local enemy_top_y = enemy_y - enemy_height / 2 - 16
 
-      if miss == true then
+      if miss == true or damage == 0 then
         Encounter.miss_text:setPosition(enemy_x, enemy_top_y)
         Encounter.miss_text:setVisible(true)
 
@@ -759,7 +759,7 @@ function Encounter.startAttacking()
       local target_bar_x = Encounter.target_bar_sprite:getPosition()
       local bonus_factor = math.abs(target_x - target_bar_x)
       local stretch = (target_width - bonus_factor) / target_width
-      damage = Player:getAT() - enemy:getDF() + (math.random() * 2)
+      damage = math.max(0, Player:getAT() - enemy:getDF() + (math.random() * 2))
       if bonus_factor <= 12 then
         damage = math.round(damage * 2.2)
       else
