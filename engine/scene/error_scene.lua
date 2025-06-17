@@ -52,7 +52,7 @@ function error.update(dt)
     error.escape = true
   end
 
-  if (Input.isDown("lctrl") or Input.isDown("rctrl")) and Input.isPressed("c") then
+  if Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("c") then
     love.system.setClipboardText(error.traceback)
     error.copied_timer = error.copied_delay
   end

@@ -53,8 +53,12 @@ function self.update()
     local visible = not self.log_bg_sprite:isVisible()
     self.log_bg_sprite:setVisible(visible)
     self.log_text:setVisible(visible)
-  elseif (Input.isDown("lctrl") or Input.isDown("rctrl")) and Input.isPressed("r") then
-    Scene.reload()
+  elseif Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("r") then
+    if Input.isDown({ "lshift", "rshift" }) then
+      Scene.fullReload()
+    else
+      Scene.reload()
+    end
   elseif Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
   end

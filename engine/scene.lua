@@ -97,6 +97,11 @@ function Scene.reload()
   Scene.change(scene_name, table.unpack(Scene.scene_data))
 end
 
+--- Fully reloads the engine
+function Scene.fullReload()
+  Scene.change("MAIN_MENU")
+end
+
 --- Updates the current scene
 ---@param dt number
 function Scene.update(dt)

@@ -40,6 +40,9 @@ function Scene.updateQuitting(dt) end
 --- Reloads the current scene
 function Scene.reload() end
 
+--- Fully reloads the engine
+function Scene.fullReload() end
+
 --- Updates the current scene
 ---@param dt number
 function Scene.update(dt) end
@@ -50,6 +53,10 @@ function Scene.draw() end
 --- Gets the current scene name
 --- @return string
 function Scene.getSceneName() end
+
+--- Gets the current scene
+--- @return Dummy.Scene.Scene
+function Scene.getCurrentScene() end
 
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
