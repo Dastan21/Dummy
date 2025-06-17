@@ -44,7 +44,8 @@ function error.load(err)
   error.copy_traceback_text:setScale(0.5)
   error.copy_traceback_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
-  error.engine_info_text = Text:new(Constants.CREDITS.NAME .. " v" .. Constants.CREDITS.VERSION)
+  error.engine_info = Constants.CREDITS.NAME .. " v" .. Constants.CREDITS.VERSION
+  error.engine_info_text = Text:new(error.engine_info)
   error.engine_info_text:setPosition(Constants.SCREEN_WIDTH - MARGIN_INFO, Constants.SCREEN_HEIGHT - MARGIN_INFO)
   error.engine_info_text:setOrigin(1, 1)
   error.engine_info_text:setFont(main_text_font)
@@ -53,7 +54,8 @@ function error.load(err)
 
   local mod = ModList.getCurrentMod()
   if mod ~= nil then
-    error.mod_info_text = Text:new({ "ERROR_MOD_INFO", mod:getName() .. " " .. mod:getVersion() })
+    error.mod_info = Lang.translate({ "ERROR_MOD_INFO", mod:getName() .. " v" .. mod:getVersion() })
+    error.mod_info_text = Text:new(error.mod_info)
     error.mod_info_text:setPosition(Constants.SCREEN_WIDTH - MARGIN_INFO, Constants.SCREEN_HEIGHT - 20 - MARGIN_INFO)
     error.mod_info_text:setOrigin(1, 1)
     error.mod_info_text:setFont(main_text_font)
@@ -77,7 +79,7 @@ function error.update(dt)
   end
 
   if Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("c") then
-    love.system.setClipboardText(error.traceback)
+    love.system.setClipboardText(error.traceback .. "\n\n" .. error.engine_info .. "\n" .. error.mod_info)
     error.copied_timer = error.copied_delay
   end
 

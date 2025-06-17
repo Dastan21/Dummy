@@ -86,9 +86,9 @@ function ModList.loadMod(mod)
   love.filesystem.mount("mods/" .. mod:getId() .. "/scripts", "scripts")
 
   if type(mod.load) == "function" then
+    ModList.current_mod = mod
     Lang.loadLanguages()
     mod:load()
-    ModList.current_mod = mod
   end
 end
 
