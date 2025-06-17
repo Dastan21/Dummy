@@ -7,8 +7,6 @@
 --- @field protected df number
 --- @field protected speed number
 --- @field protected speed_factor number
---- @field protected scale_x number
---- @field protected scale_y number
 --- @field protected is_invincible boolean
 --- @field protected invincible boolean
 --- @field protected invincible_duration number
@@ -35,8 +33,6 @@ function Player.load()
   Player.df = 10
   Player.speed = 4
   Player.speed_factor = 1
-  Player.scale_x = 1
-  Player.scale_y = 1
   Player.is_invincible = false
   Player.invincible = false
   Player.invincible_duration = 1
@@ -73,7 +69,7 @@ function Player.load()
 
   Player.items = {}
 
-  Player.setLV(1, true)
+  Player.setLV(1)
 
   Drawable:new(function()
     if Debugger.show_hitbox and not Player.isHidden() then
@@ -101,9 +97,11 @@ function Player.setPosition(x, y, ignore_arena_bounds)
   if not ignore_arena_bounds then
     local arena_x, arena_y = Arena.getPosition()
     local arena_width, arena_height = Arena.getWidth(), Arena.getHeight()
-    local player_offset = Player.hitbox[3] - Player.hitbox[1] + 4
-    x = math.clamp(x, arena_x - arena_width / 2 + player_offset, arena_x + arena_width / 2 - player_offset)
-    y = math.clamp(y, arena_y - arena_height + player_offset, arena_y - player_offset)
+    local scale_x, scale_y = Player.getScale()
+    local player_offset_x = (Player.hitbox[3] - Player.hitbox[1]) * scale_x
+    local player_offset_y = (Player.hitbox[4] - Player.hitbox[2]) * scale_y
+    x = math.clamp(x, arena_x - arena_width / 2 + player_offset_x, arena_x + arena_width / 2 - player_offset_x)
+    y = math.clamp(y, arena_y - arena_height + player_offset_y, arena_y - player_offset_y)
   end
 
   Player.soul_sprite:setPosition(x, y)
@@ -149,8 +147,7 @@ end
 
 --- Sets the player's LV
 --- @param lv number level
---- @param heal? boolean set HP to max HP
-function Player.setLV(lv, heal)
+function Player.setLV(lv)
   if type(lv) ~= "number" then return end
 
   Player.lv = math.clamp(lv, 1, 20)
@@ -163,9 +160,6 @@ function Player.setLV(lv, heal)
   end
 
   Player.setHP(math.min(Player.hp, Player.max_hp))
-  if heal == true then
-    Player.setHP(Player.max_hp)
-  end
   Player.setAT(8 + 2 * Player.lv)
   Player.setDF(9 + math.ceil(Player.lv / 4))
 end
@@ -202,6 +196,8 @@ end
 --- @param silent? boolean wether to play then sound and animation (Defaults to `false`)
 function Player.hurt(amount, silent)
   local damage = math.max(0, math.round(amount - ((Player.df + Player.weapon:getValue()) / 5)))
+  print("Player.df", Player.df)
+  print("Player.weapon:getValue()", Player.weapon:getValue())
   print("damage taken", damage)
   Player.setHP(Player.hp - damage)
   Player.soul_sprite:play()
@@ -277,7 +273,7 @@ end
 --- Gets the player's scale
 --- @return number, number
 function Player.getScale()
-  return Player.scale_x, Player.scale_y
+  return Player.soul_sprite:getScale()
 end
 
 --- Sets the player's scales
@@ -285,13 +281,7 @@ end
 --- @param scale_x number
 --- @param scale_y number
 function Player.setScale(scale_x, scale_y)
-  if type(scale_x) == "number" and scale_y == nil then
-    Player.scale_x = scale_x
-    Player.scale_y = scale_x
-  else
-    Player.scale_x = scale_x
-    Player.scale_y = scale_y
-  end
+  Player.soul_sprite:setScale(scale_x, scale_y)
 end
 
 --- Wether the player is invincible
