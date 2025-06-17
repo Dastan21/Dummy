@@ -87,7 +87,7 @@ function Player.heal(amount, silent) end
 
 --- Hurts the player
 --- @param amount number
---- @param silent? boolean wether to play then sound and animation (Defaults to `false`)
+--- @param silent? boolean wether to play then sound, animation and shake (Defaults to `false`)
 function Player.hurt(amount, silent) end
 
 --- Gets the player's max HP

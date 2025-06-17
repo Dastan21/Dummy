@@ -19,6 +19,7 @@ function Fader.load() end
 --- @param fade_in boolean wether to fade in or out
 --- @param duration? number duration of the fade, in seconds (Defaults to `1`)
 --- @param fade_callback? fun() called when the fade is done
+--- @private
 function Fader.fade(fade_in, duration, fade_callback) end
 
 --- Fades in
@@ -31,6 +32,6 @@ function Fader.fadeIn(duration, fade_callback) end
 --- @param fade_callback? fun() called when the fade is done
 function Fader.fadeOut(duration, fade_callback) end
 
---- Resets the fader
+--- Resets the currently playing fader
 function Fader.reset() end
 

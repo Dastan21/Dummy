@@ -13,6 +13,7 @@ Assets = require "assets"
 Input = require "input"
 Lang = require "lang"
 Fader = require "fader"
+Shaker = require "shaker"
 Drawable = require "drawable.drawable"
 Sprite = require "drawable.sprite"
 Text = require "drawable.text"
@@ -88,6 +89,7 @@ function love.load()
   Assets.load()
   Scene.load()
   Fader.load()
+  Shaker.load()
   Debugger.load()
 
   Scene.change("MAIN_MENU")

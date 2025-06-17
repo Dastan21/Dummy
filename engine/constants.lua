@@ -12,6 +12,7 @@ Constants = {
   DEBUG = false,
 
   LAYERS = {
+    SHAKER       = -9999999,
     BOTTOM       = -1000,
     BELOW_ARENA  = 0,
     ARENA        = 1,

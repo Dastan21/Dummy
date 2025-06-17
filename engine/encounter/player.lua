@@ -193,23 +193,41 @@ end
 
 --- Hurts the player
 --- @param amount number
---- @param silent? boolean wether to play then sound and animation (Defaults to `false`)
+--- @param silent? boolean wether to play then sound, animation and shake (Defaults to `false`)
 function Player.hurt(amount, silent)
   local damage = math.max(0, math.round(amount - ((Player.df + Player.weapon:getValue()) / 5)))
-  print("Player.df", Player.df)
-  print("Player.weapon:getValue()", Player.weapon:getValue())
-  print("damage taken", damage)
   Player.setHP(Player.hp - damage)
-  Player.soul_sprite:play()
-  Player.is_invincible = true
-
-  Timer.after(Player.invincible_duration, function(dt)
-    Player.soul_sprite:stop()
-    Player.is_invincible = false
-  end)
 
   if not silent then
     Assets.playSound("hurt")
+    Player.soul_sprite:play()
+    Player.is_invincible = true
+
+    Timer.after(Player.invincible_duration, function()
+      Player.soul_sprite:stop()
+      Player.is_invincible = false
+    end)
+
+    local hshake = 2
+    local vshake = 2
+    Shaker.shakeCustom(0.25, 2 / 30, function()
+      if hshake ~= 0 then
+        if hshake < 0 then
+          hshake = hshake + 1
+        end
+        hshake = -hshake
+      end
+      if vshake ~= 0 then
+        if vshake < 0 then
+          vshake = vshake + 1
+        end
+        vshake = -vshake
+      end
+
+      return hshake, vshake
+    end, function()
+      Shaker.reset()
+    end)
   end
 end
 
