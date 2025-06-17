@@ -66,7 +66,9 @@ end
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
   love.audio.stop()
-  love.audio.setVolume(0) -- DEBUG
+  if Constants.DEBUG then
+    love.audio.setVolume(0)
+  end
 
   love.filesystem.createDirectory("mods")
   love.filesystem.createDirectory("saves")

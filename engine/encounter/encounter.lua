@@ -74,15 +74,16 @@ function Encounter.addEnemy(enemy, ...)
   for _, enemy in ipairs(enemies) do
     table.insert(Encounter.enemies, enemy)
 
-    -- DEBUG
-    Drawable:new(function()
-      local x, y = enemy:getPosition()
-      local w, h = enemy:getSize()
-      love.graphics.setColor(1, 1, 1, 0.2)
-      love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
-      love.graphics.setColor(1, 1, 1, 1)
-      love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
-    end):setLayer(Constants.LAYERS.BELOW_ARENA)
+    if Constants.DEBUG then
+      Drawable:new(function()
+        local x, y = enemy:getPosition()
+        local w, h = enemy:getSize()
+        love.graphics.setColor(1, 1, 1, 0.2)
+        love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
+      end):setLayer(Constants.LAYERS.BELOW_ARENA)
+    end
   end
 
   Encounter.loadFightEnemyMenu()
@@ -816,12 +817,6 @@ function Encounter.updateDefending(dt)
 
   ---@diagnostic disable-next-line: invisible
   Encounter.wave:__update(dt)
-
-  -- DEBUG
-  if Input.isPressed(Input.Cancel) then
-    ---@diagnostic disable-next-line: invisible
-    Encounter.wave.time = 9999
-  end
 end
 
 --- Updates the encounter
