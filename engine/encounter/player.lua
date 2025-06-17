@@ -472,7 +472,7 @@ function Player.update(dt)
   if Input.isDown(Input.Right) then dir_x = dir_x + 1 end
 
   local slow = Input.isDown(Input.Cancel) and 0.5 or 1
-  local s = Player.speed * slow * dt * 30
+  local s = Player.speed * Player.speed_factor * slow * dt * 30
   local x, y = Player.soul_sprite:getPosition()
   Player.setPosition(x + dir_x * s, y + dir_y * s)
 end
