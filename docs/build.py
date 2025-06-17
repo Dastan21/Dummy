@@ -7,6 +7,7 @@ import shutil
 SRC_PATH = os.path.join("..", "engine")
 
 ignore = [
+  os.path.join("main.lua"),
   os.path.join("conf.lua"),
   os.path.join("scene", "encounter.lua"),
   os.path.join("scene", "error.lua"),
