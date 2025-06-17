@@ -138,14 +138,14 @@ local function draw()
   Scene.draw()
 
   love.graphics.setColor(0, 0, 0, 1)
-  love.graphics.rectangle("fill", -engine.window.translate_x, 0, engine.window.translate_x, Constants.HEIGHT)
-  love.graphics.rectangle("fill", Constants.WIDTH, 0, engine.window.translate_x, Constants.HEIGHT)
+  love.graphics.rectangle("fill", -engine.window.translate_x, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)
+  love.graphics.rectangle("fill", Constants.SCREEN_WIDTH, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)
 end
 
 function love.resize(width, height)
-  local scale = math.min(width / Constants.WIDTH, height / Constants.HEIGHT)
-  engine.window.translate_x = (width - Constants.WIDTH * scale) / 2
-  engine.window.translate_y = (height - Constants.HEIGHT * scale) / 2
+  local scale = math.min(width / Constants.SCREEN_WIDTH, height / Constants.SCREEN_HEIGHT)
+  engine.window.translate_x = (width - Constants.SCREEN_WIDTH * scale) / 2
+  engine.window.translate_y = (height - Constants.SCREEN_HEIGHT * scale) / 2
   engine.window.scale = scale
 end
 

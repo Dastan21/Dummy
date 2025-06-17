@@ -7,13 +7,13 @@ local Fader = {}
 --- Loads the fader
 function Fader.load()
   Fader.background = Sprite:new("pixel")
-  Fader.background:setPosition(-Constants.WIDTH / 2, -Constants.HEIGHT / 2)
+  Fader.background:setPosition(-Constants.SCREEN_WIDTH / 2, -Constants.SCREEN_HEIGHT / 2)
   Fader.background:setOrigin(0, 0)
   Fader.background:setVisible(false)
   Fader.background:setPersistent(true)
   Fader.background:setAlpha(0)
   Fader.background:setLayer(Constants.LAYERS.TOP)
-  Fader.background:setScale(Constants.WIDTH * 2, Constants.HEIGHT * 2)
+  Fader.background:setScale(Constants.SCREEN_WIDTH * 2, Constants.SCREEN_HEIGHT * 2)
   Fader.background:setColor(0, 0, 0)
 end
 

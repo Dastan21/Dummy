@@ -3,11 +3,11 @@ Constants = {
     NAME    = "DUMMY",
     AUTHOR  = "Dastan",
     YEAR    = "2025",
-    VERSION = "0.01"
+    VERSION = "0.0.1"
   },
 
-  WIDTH = 640,
-  HEIGHT = 480,
+  SCREEN_WIDTH = 640,
+  SCREEN_HEIGHT = 480,
 
   DEBUG = false,
 
