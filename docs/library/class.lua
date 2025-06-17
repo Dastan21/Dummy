@@ -8,20 +8,20 @@
 
 --- @class Dummy.Class
 ---
---- @field protected __extend Dummy.Class
+--- @field private __extend Dummy.Class
 Class = {}
 
 --- Extends a class
 --- @generic T : Dummy.Class
---- @param extend? T
+--- @param extend? T the class to extend
 --- @return T
 function Class:extend(extend) end
 
 --- Creates a new instance of a class
 --- @generic T : Dummy.Class
---- @param c T
---- @param d? any[]
---- @param p? any[]
+--- @param c T the class to instantiate
+--- @param d? any[] the data to pass to the constructor
+--- @param p? any[] the data to pass to the parent constructor
 --- @return T
 function Class:new(c, d, p) end
 
