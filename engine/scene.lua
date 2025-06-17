@@ -163,6 +163,12 @@ function Scene.getSceneName()
   return Scene.scene_name
 end
 
+--- Gets the current scene
+--- @return Dummy.Scene.Scene
+function Scene.getCurrentScene()
+  return Scene.scene
+end
+
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
 function Scene.addDrawable(drawable)
