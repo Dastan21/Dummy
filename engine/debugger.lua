@@ -53,6 +53,9 @@ function self.update()
     local visible = not self.log_bg_sprite:isVisible()
     self.log_bg_sprite:setVisible(visible)
     self.log_text:setVisible(visible)
+  elseif Input.isPressed("f9") then
+    Assets.playSound("screenshot")
+    love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
   elseif Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("r") then
     if Input.isDown({ "lshift", "rshift" }) then
       Scene.fullReload()
@@ -61,6 +64,11 @@ function self.update()
     end
   elseif Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
+  elseif Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("g") then
+    if Scene.getSceneName() ~= "ENCOUNTER" then return end
+
+    local x, y = Player.getPosition()
+    Scene.change("GAME_OVER", x, y)
   end
 end
 

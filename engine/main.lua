@@ -122,10 +122,6 @@ local function update(dt)
   Timer.update(dt)
 
   updateFullscreen()
-  if Input.isPressed("f9") then
-    Assets.playSound("screenshot")
-    love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
-  end
 end
 
 local function limitFPS()
