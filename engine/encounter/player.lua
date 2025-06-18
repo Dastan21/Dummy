@@ -98,8 +98,9 @@ function Player.setPosition(x, y, ignore_arena_bounds)
     local arena_x, arena_y = Arena.getPosition()
     local arena_width, arena_height = Arena.getWidth(), Arena.getHeight()
     local scale_x, scale_y = Player.getScale()
-    local player_offset_x = (Player.hitbox[3] - Player.hitbox[1]) * scale_x
-    local player_offset_y = (Player.hitbox[4] - Player.hitbox[2]) * scale_y
+    local width, height = Player.soul_sprite:getWidth(), Player.soul_sprite:getHeight()
+    local player_offset_x = width / 2 * scale_x
+    local player_offset_y = height / 2 * scale_y
     x = math.clamp(x, arena_x - arena_width / 2 + player_offset_x, arena_x + arena_width / 2 - player_offset_x)
     y = math.clamp(y, arena_y - arena_height + player_offset_y, arena_y - player_offset_y)
   end
