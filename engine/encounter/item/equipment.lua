@@ -27,9 +27,7 @@ function ItemEquipment:use()
   local armor = Player.getArmor()
   if armor:getName() == "Bandage" then
     local bandage = ItemConsumable:new("Bandage", "Bandage", 10, "food")
-    function bandage:onUse()
-      Encounter.playDialogue("ENCOUNTER_ITEM_USE_BANDAGE")
-    end
+    bandage:setText("ENCOUNTER_ITEM_USE_BANDAGE")
 
     Player.addItem(bandage)
   end
