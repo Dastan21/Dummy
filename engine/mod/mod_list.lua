@@ -82,6 +82,7 @@ end
 --- Loads a mod
 ---@param mod Dummy.Mod
 function ModList.loadMod(mod)
+  ModList.unloadMod(mod)
   love.filesystem.mount("mods/" .. mod:getId() .. "/assets", "assets")
   love.filesystem.mount("mods/" .. mod:getId() .. "/scripts", "scripts")
 
@@ -92,6 +93,14 @@ function ModList.loadMod(mod)
   end
 end
 
+--- Unloads a mod
+--- @param mod Dummy.Mod
+function ModList.unloadMod(mod)
+  love.filesystem.unmount("mods/" .. mod:getId() .. "/scripts")
+  love.filesystem.unmount("mods/" .. mod:getId() .. "/assets")
+  love.filesystem.unmount("mods/" .. mod:getId() .. ".zip")
+end
+
 --- Unloads all mods
 function ModList.unloadMods()
   ModList.current_mod = nil
@@ -99,9 +108,7 @@ function ModList.unloadMods()
   if ModList.mods == nil then return end
 
   for _, mod in ipairs(ModList.mods) do
-    love.filesystem.unmount("mods/" .. mod:getId() .. "/scripts")
-    love.filesystem.unmount("mods/" .. mod:getId() .. "/assets")
-    love.filesystem.unmount("mods/" .. mod:getId() .. ".zip")
+    ModList.unloadMod(mod)
   end
 end
 
