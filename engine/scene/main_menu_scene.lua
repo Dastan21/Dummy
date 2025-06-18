@@ -125,6 +125,23 @@ function main_menu.loadSettingsMenu()
         option.text:setText({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] })
       end,
     },
+    {
+      text = Text:new({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config["window_scale"] }),
+      action = function(option)
+        local scale = { 0.5, 1, 2, 3, 4 }
+        local scale_index = 2
+        for i, v in ipairs(scale) do
+          if v == Config["window_scale"] then
+            scale_index = i
+            break
+          end
+        end
+        Config["window_scale"] = scale[(scale_index % #scale) + 1]
+        option.text:setText({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config["window_scale"] })
+
+        love.scale()
+      end,
+    }
   }, function()
     main_menu.changeMenu(main_menu.main_menu)
   end)

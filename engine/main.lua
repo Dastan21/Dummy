@@ -50,6 +50,7 @@ local engine = {
 Config = {
   language = "en",
   fps = 30,
+  window_scale = 1,
   fullscreen = false
 }
 
@@ -61,6 +62,17 @@ end
 
 local function saveConfig()
   love.filesystem.write("settings.json", JSON.encode(Config))
+end
+
+function love.scale()
+  if Config["fullscreen"] == true then
+    love.window.setFullscreen(true)
+  else
+    local width = Constants.SCREEN_WIDTH * Config["window_scale"]
+    local height = Constants.SCREEN_HEIGHT * Config["window_scale"]
+    love.window.setMode(width, height)
+    love.resize(width, height)
+  end
 end
 
 function love.load()
@@ -78,10 +90,7 @@ function love.load()
 
   loadConfig()
 
-  if Config["fullscreen"] == true then
-    love.window.setFullscreen(true)
-  end
-  love.resize(love.window.getMode())
+  love.scale()
 
   Input.load()
   Lang.load()
@@ -98,9 +107,9 @@ end
 
 local function updateFullscreen()
   if Input.isPressed("f4") or (Input.isDown("lalt") and Input.isPressed("return")) then
-    local is_fullscreen = love.window.getFullscreen()
-    love.window.setFullscreen(not is_fullscreen)
-    Config["fullscreen"] = not is_fullscreen
+    local fullscreen = not love.window.getFullscreen()
+    Config["fullscreen"] = fullscreen
+    love.scale()
   end
 end
 
