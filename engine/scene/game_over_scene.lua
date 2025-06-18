@@ -51,9 +51,9 @@ function game_over.load(x, y)
     shard_sprite:setPosition(x, y)
     shard_sprite:setVisible(false)
     game_over.player_shards[i] = {
-      sprite = shard_sprite,
-      vel_x = (math.random() - 0.5) * 7,
-      vel_y = (math.random() - 0.5) * 7
+      ["sprite"] = shard_sprite,
+      ["vel_x"] = (math.random() - 0.5) * 7,
+      ["vel_y"] = (math.random() - 0.5) * 7
     }
   end
 
@@ -79,9 +79,9 @@ function game_over.load(x, y)
 
     Timer.after(1.3, function()
       game_over.player_sprite:setVisible(false)
-      for i, shard in ipairs(game_over.player_shards) do
-        shard.sprite:setVisible(true)
-        shard.sprite:play()
+      for _, shard in ipairs(game_over.player_shards) do
+        shard["sprite"]:setVisible(true)
+        shard["sprite"]:play()
       end
       Assets.playSound("heart_explode")
 
@@ -129,16 +129,16 @@ function game_over.update(dt)
   end
 
   if not game_over.player_sprite:isVisible() then
-    for i, shard in ipairs(game_over.player_shards) do
-      if shard.sprite:isVisible() then
-        local x, y = shard.sprite:getPosition()
-        x = x + shard.vel_x * dt * 30
-        y = y + shard.vel_y * dt * 30
-        shard.sprite:setPosition(x, y)
-        shard.vel_y = shard.vel_y + 0.2 * dt * 30
+    for _, shard in ipairs(game_over.player_shards) do
+      if shard["sprite"]:isVisible() then
+        local x, y = shard["sprite"]:getPosition()
+        x = x + shard["vel_x"] * dt * 30
+        y = y + shard["vel_y"] * dt * 30
+        shard["sprite"]:setPosition(x, y)
+        shard["vel_y"] = shard["vel_y"] + 0.2 * dt * 30
 
         if y > 500 then
-          shard.sprite:setVisible(false)
+          shard["sprite"]:setVisible(false)
         end
       end
     end
