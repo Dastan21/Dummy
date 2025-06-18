@@ -18,7 +18,7 @@ local function hasAnyKey(keys, callback)
 end
 
 --- Check if a keybind is being pressed
---- @param keybind string|table
+--- @param keybind string|string[]
 function self.isDown(keybind)
   return hasAnyKey(keybind, function(k)
     if k:sub(1, 8) == "gamepad:" then
@@ -29,13 +29,13 @@ function self.isDown(keybind)
 end
 
 --- Check if a keybind is not being pressed
---- @param keybind string|table
+--- @param keybind string|string[]
 function self.isUp(keybind)
   return not self.isDown(keybind)
 end
 
 --- Check if a keybind has been pressed once
---- @param keybind string|table
+--- @param keybind string|string[]
 function self.isPressed(keybind)
   return hasAnyKey(keybind, function(k)
     return keys_pressed[k] == 0
@@ -43,7 +43,7 @@ function self.isPressed(keybind)
 end
 
 --- Check if a keybind has been released once
---- @param keybind string|table
+--- @param keybind string|string[]
 function self.isReleased(keybind)
   return hasAnyKey(keybind, function(k)
     return keys_released[k] == 0

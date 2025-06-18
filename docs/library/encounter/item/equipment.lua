@@ -24,9 +24,8 @@ function ItemEquipment:getValue() end
 --- @return "weapon" | "armor"
 function ItemEquipment:getType() end
 
---- [INTERNAL] Called when the item is used
---- @private
-function ItemEquipment:__use() end
+--- Uses the equipment item
+function ItemEquipment:use() end
 
 --- Creates a weapon item
 --- @param name Dummy.Text.Text

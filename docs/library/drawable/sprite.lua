@@ -63,6 +63,9 @@ function Sprite:getSpeed() end
 --- @param speed number
 function Sprite:setSpeed(speed) end
 
+--- Transforms the sprite into dust
+function Sprite:dust() end
+
 --- Creates a sprite
 --- @overload fun(self: Dummy.Sprite, sprite_name: string): Dummy.Sprite
 --- @param sprites_names string[]

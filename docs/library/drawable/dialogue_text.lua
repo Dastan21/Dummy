@@ -12,7 +12,7 @@
 --- @field protected speed number
 --- @field protected time number
 --- @field protected text_index number
---- @field protected voice string
+--- @field protected voice string|nil
 DialogueText = {}
 
 --- Gets the class name
@@ -58,11 +58,11 @@ function DialogueText:getSpeed() end
 function DialogueText:setSpeed(speed) end
 
 --- Gets the dialogue voice
---- @return string
+--- @return string|nil
 function DialogueText:getVoice() end
 
 --- Sets the dialogue voice
---- @param voice string
+--- @param voice string|nil
 function DialogueText:setVoice(voice) end
 
 --- Updates the dialogue

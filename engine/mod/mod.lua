@@ -71,7 +71,7 @@ function Mod:setTitle(title)
   self.title = title
 end
 
---- Called when the mod is loaded
+--- Called when the mod is loading
 function Mod:load() end
 
 --- Called when the main menu is loaded, for standalone mods only

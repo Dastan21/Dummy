@@ -35,14 +35,13 @@ function Item:setText(text)
   self.text = text
 end
 
---- [INTERNAL] Called when the item is used
---- @private
-function Item:__use()
-  self:use()
+--- Uses the item
+function Item:use()
+  self:onUse()
 end
 
 --- Called when the item is used
-function Item:use() end
+function Item:onUse() end
 
 --- Creates an item
 --- @param name Dummy.Text.Text

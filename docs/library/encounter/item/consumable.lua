@@ -24,9 +24,8 @@ function ItemConsumable:getHeal() end
 --- @return "food" | "drink"
 function ItemConsumable:getType() end
 
---- [INTERNAL] Called when the item is used
---- @private
-function ItemConsumable:__use() end
+--- Uses the consumable item
+function ItemConsumable:use() end
 
 --- Creates a consumable item
 --- @param name Dummy.Text.Text

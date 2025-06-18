@@ -33,12 +33,11 @@ function Item:getText() end
 --- @param text Dummy.Text.Text
 function Item:setText(text) end
 
---- [INTERNAL] Called when the item is used
---- @private
-function Item:__use() end
+--- Uses the item
+function Item:use() end
 
 --- Called when the item is used
-function Item:use() end
+function Item:onUse() end
 
 --- Creates an item
 --- @param name Dummy.Text.Text

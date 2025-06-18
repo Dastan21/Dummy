@@ -15,14 +15,13 @@ function ACT:getName()
   return self.name
 end
 
---- [INTERNAL] Called when the ACT is used
---- @private
-function ACT:__use()
-  self:use()
+--- Does the ACT
+function ACT:use()
+  self:onUse()
 end
 
 --- Called when the ACT is used
-function ACT:use() end
+function ACT:onUse() end
 
 --- Creates an enemy ACTing
 --- @param name Dummy.Text.Text

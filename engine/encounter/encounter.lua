@@ -74,17 +74,6 @@ function Encounter.addEnemy(enemy, ...)
   if #enemy >= 1 then enemies = enemy end
   for _, enemy in ipairs(enemies) do
     table.insert(Encounter.enemies, enemy)
-
-    if Constants.DEBUG then
-      Drawable:new(function()
-        local x, y = enemy:getPosition()
-        local w, h = enemy:getSize()
-        love.graphics.setColor(1, 1, 1, 0.2)
-        love.graphics.rectangle("fill", x - w / 2, y - h / 2, w, h)
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.rectangle("fill", x - 1, y - 1, 2, 2)
-      end):setLayer(Constants.LAYERS.BELOW_ARENA)
-    end
   end
 
   Encounter.loadFightEnemyMenu()
@@ -339,10 +328,8 @@ function Encounter.loadActMenus()
         text = Text:new(act:getName()),
         action = function()
           Assets.playSound("menu_select")
-          ---@diagnostic disable-next-line: invisible
-          local use = act.__use
-          if type(use) == "function" then
-            use(act)
+          if type(act.use) == "function" then
+            act:use()
           end
         end
       })
@@ -370,10 +357,8 @@ function Encounter.loadItemMenu()
       text = Text:new(item:getShortName()),
       action = function()
         Assets.playSound("menu_select")
-        ---@diagnostic disable-next-line: invisible
-        local use = item.__use
-        if type(use) == "function" then
-          use(item)
+        if type(item.use) == "function" then
+          item:use()
         end
       end
     })
@@ -727,6 +712,9 @@ function Encounter.startAttacking()
           fight_option.disabled = true
           local act_option = Encounter.act_enemy_menu:getOptionByIndex(Encounter.enemy_selected_index)
           act_option.disabled = true
+          if type(enemy.onKilled) == "function" then
+            enemy:onKilled()
+          end
         end
       end
 

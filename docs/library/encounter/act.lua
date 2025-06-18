@@ -19,12 +19,11 @@ function ACT:getClass() end
 --- @return Dummy.Text.Text
 function ACT:getName() end
 
---- [INTERNAL] Called when the ACT is used
---- @private
-function ACT:__use() end
+--- Does the ACT
+function ACT:use() end
 
 --- Called when the ACT is used
-function ACT:use() end
+function ACT:onUse() end
 
 --- Creates an enemy ACTing
 --- @param name Dummy.Text.Text

@@ -4,7 +4,7 @@
 --- @field protected speed number
 --- @field protected time number
 --- @field protected text_index number
---- @field protected voice string
+--- @field protected voice string|nil
 local DialogueText = Class:extend(Text)
 
 --- Gets the class name
@@ -92,13 +92,13 @@ function DialogueText:setSpeed(speed)
 end
 
 --- Gets the dialogue voice
---- @return string
+--- @return string|nil
 function DialogueText:getVoice()
   return self.voice
 end
 
 --- Sets the dialogue voice
---- @param voice string
+--- @param voice string|nil
 function DialogueText:setVoice(voice)
   self.voice = voice
 end

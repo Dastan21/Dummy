@@ -22,9 +22,8 @@ function ItemConsumable:getType()
   return self.type
 end
 
---- [INTERNAL] Called when the item is used
---- @private
-function ItemConsumable:__use()
+--- Uses the consumable item
+function ItemConsumable:use()
   local heal_text = Lang.translate("ENCOUNTER_ITEM_HEAL", self.heal)
   if self.heal + Player.getHP() >= Player.getMaxHP() then
     heal_text = Lang.translate("ENCOUNTER_ITEM_HEAL_MAX")
@@ -44,8 +43,8 @@ function ItemConsumable:__use()
     Assets.playSound("heal")
   end)
 
-  if (type(self.use) == "function") then
-    self:use()
+  if (type(self.onUse) == "function") then
+    self:onUse()
   end
 end
 

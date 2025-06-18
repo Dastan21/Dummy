@@ -22,13 +22,12 @@ function ItemEquipment:getType()
   return self.type
 end
 
---- [INTERNAL] Called when the item is used
---- @private
-function ItemEquipment:__use()
+--- Uses the equipment item
+function ItemEquipment:use()
   local armor = Player.getArmor()
   if armor:getName() == "Bandage" then
     local bandage = ItemConsumable:new("Bandage", "Bandage", 10, "food")
-    function bandage:use()
+    function bandage:onUse()
       Encounter.playDialogue("ENCOUNTER_ITEM_USE_BANDAGE")
     end
 
@@ -48,8 +47,8 @@ function ItemEquipment:__use()
   end
 
 
-  if (type(self.use) == "function") then
-    self:use()
+  if (type(self.onUse) == "function") then
+    self:onUse()
   end
 end
 

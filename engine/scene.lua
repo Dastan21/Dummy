@@ -177,6 +177,8 @@ end
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
 function Scene.addDrawable(drawable)
+  if drawable == nil then return end
+
   Scene.removeDrawable(drawable)
   table.insert(Scene.drawables, drawable)
 
@@ -188,6 +190,8 @@ end
 --- Removes a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()
 function Scene.removeDrawable(drawable)
+  if drawable == nil then return end
+
   for i, d in ipairs(Scene.drawables) do
     if d == drawable then
       table.remove(Scene.drawables, i)

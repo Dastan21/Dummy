@@ -110,6 +110,13 @@ function Enemy:getACTs() end
 ---@param ... Dummy.ACT
 function Enemy:addACT(act, ...) end
 
+--- Wether the enemy is dead
+--- @return boolean
+function Enemy:isDead() end
+
+--- Called when the enemy is killed
+function Enemy:onKilled() end
+
 --- Creates an enemy
 --- @param data Dummy.Mod.Enemy
 --- @return Dummy.Enemy
