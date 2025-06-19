@@ -156,6 +156,7 @@ end
 function Player.setLV(lv, silent)
   if type(lv) ~= "number" then return end
 
+  local lv_old = Player.lv
   Player.lv = math.max(1, lv)
   Player.lv_text:setText(Lang.translate("ENCOUNTER_STAT_LV") .. " " .. tostring(Player.lv))
 
@@ -169,7 +170,7 @@ function Player.setLV(lv, silent)
   Player.setAT(8 + 2 * Player.lv)
   Player.setDF(9 + math.ceil(Player.lv / 4))
 
-  if silent == false then
+  if silent == false and lv_old ~= Player.lv then
     Assets.playSound("levelup")
   end
 end
