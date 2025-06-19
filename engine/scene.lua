@@ -142,7 +142,7 @@ function Scene.draw()
             origin_x * width, origin_y * height
           )
 
-          if Debugger.show_hitbox then
+          if Debugger.shouldDisplayHitbox() then
             love.graphics.setColor(0, 0, 1, 0.5)
 
             if angle % (2 * math.pi) == 0 then

@@ -9,7 +9,8 @@
 --- @class Dummy.Assets
 ---
 --- @field private fonts table<Dummy.Assets.Font, love.Font>
---- @field private current_music love.Source
+--- @field private current_music love.Source|nil
+--- @field private current_sound love.Source|nil
 Assets = {}
 
 --- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage"
@@ -48,8 +49,9 @@ function Assets.playMusic(music_name, play, loop, replace) end
 --- @param sound_name string the sound name to play
 --- @param play? boolean wether the sound should play instantly (Defaults to `true`)
 --- @param loop? boolean wether the sound should loop (Defaults to `false`)
+--- @param replace? boolean wether to replace the current playing music (Defaults to `false`)
 --- @return love.Source
-function Assets.playSound(sound_name, play, loop) end
+function Assets.playSound(sound_name, play, loop, replace) end
 
 --- Clears the cache
 function Assets.clear() end

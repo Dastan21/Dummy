@@ -11,6 +11,7 @@
 --- @field protected invincible boolean
 --- @field protected invincible_duration number
 --- @field protected hitbox { [1]: number, [2]: number, [3]: number, [4]: number }
+--- @field protected override boolean
 --- @field protected soul_sprite Dummy.Sprite
 --- @field protected name string
 --- @field protected name_text Dummy.Text
@@ -31,12 +32,15 @@ function Player.load()
   Player.max_hp = 20
   Player.at = 10
   Player.df = 10
+  Player.exp = 0
+  Player.gold = 0
   Player.speed = 4
   Player.speed_factor = 1
   Player.is_invincible = false
   Player.invincible = false
   Player.invincible_duration = 1
   Player.hitbox = { 4, 4, 8, 8 }
+  Player.override = false
 
   Player.soul_sprite = Sprite:new({ "heart", "heart_hurt" }, 2 / 30, nil, false)
   Player.soul_sprite:setPosition(320, 240)
@@ -72,7 +76,7 @@ function Player.load()
   Player.setLV(1)
 
   Drawable:new(function()
-    if Debugger.show_hitbox and not Player.isHidden() then
+    if Debugger.shouldDisplayHitbox() and not Player.isHidden() then
       local x, y = Player.getPosition()
       local scale_x, scale_y = Player.getScale()
       love.graphics.setColor(0, 1, 0, 1)
@@ -148,10 +152,11 @@ end
 
 --- Sets the player's LV
 --- @param lv number level
-function Player.setLV(lv)
+--- @param silent? boolean wether to play level up sound (Defaults to `true`)
+function Player.setLV(lv, silent)
   if type(lv) ~= "number" then return end
 
-  Player.lv = math.clamp(lv, 1, 20)
+  Player.lv = math.max(1, lv)
   Player.lv_text:setText(Lang.translate("ENCOUNTER_STAT_LV") .. " " .. tostring(Player.lv))
 
   if Player.lv < 20 then
@@ -163,6 +168,10 @@ function Player.setLV(lv)
   Player.setHP(math.min(Player.hp, Player.max_hp))
   Player.setAT(8 + 2 * Player.lv)
   Player.setDF(9 + math.ceil(Player.lv / 4))
+
+  if silent == false then
+    Assets.playSound("levelup")
+  end
 end
 
 --- Gets the player's HP
@@ -176,7 +185,7 @@ end
 function Player.setHP(hp)
   if type(hp) ~= "number" then return end
 
-  Player.hp = math.clamp(hp, 0, math.min(Player.max_hp, 99))
+  Player.hp = math.clamp(hp, 0, Player.max_hp)
   Player.hp_value_text:setText(string.format("%02d", Player.hp) .. " / " .. tostring(Player.max_hp))
   Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.lv + 20, 25, 120), 400)
 end
@@ -240,17 +249,12 @@ end
 
 --- Sets the player's max HP
 --- @param max_hp number maximum health points
---- @param heal? boolean set HP to max HP
-function Player.setMaxHP(max_hp, heal)
+function Player.setMaxHP(max_hp)
   if type(max_hp) ~= "number" then return end
 
-  Player.max_hp = math.clamp(max_hp, 20, 99)
+  Player.max_hp = math.max(0, max_hp)
   Player.hp_value_text:setText(tostring(Player.hp) .. " / " .. tostring(Player.max_hp))
   Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.lv + 20, 25, 120), 400)
-
-  if heal == true then
-    Player.setHP(Player.max_hp)
-  end
 end
 
 --- Gets the player's AT
@@ -275,6 +279,77 @@ end
 --- @param df number defense point
 function Player.setDF(df)
   Player.df = df
+end
+
+--- Gets the player's EXP
+--- @return number
+function Player.getEXP(exp)
+  return Player.exp
+end
+
+--- Sets the player's EXP
+--- @param exp number
+function Player.setEXP(exp)
+  Player.exp = exp
+
+  local level = 0
+  if Player.exp < 10 then
+    level = 1
+  elseif Player.exp < 30 then
+    level = 2
+  elseif Player.exp < 70 then
+    level = 3
+  elseif Player.exp < 120 then
+    level = 4
+  elseif Player.exp < 200 then
+    level = 5
+  elseif Player.exp < 300 then
+    level = 6
+  elseif Player.exp < 500 then
+    level = 7
+  elseif Player.exp < 800 then
+    level = 8
+  elseif Player.exp < 1200 then
+    level = 9
+  elseif Player.exp < 1700 then
+    level = 10
+  elseif Player.exp < 2500 then
+    level = 11
+  elseif Player.exp < 3500 then
+    level = 12
+  elseif Player.exp < 5000 then
+    level = 13
+  elseif Player.exp < 7000 then
+    level = 14
+  elseif Player.exp < 10000 then
+    level = 15
+  elseif Player.exp < 15000 then
+    level = 16
+  elseif Player.exp < 25000 then
+    level = 17
+  elseif Player.exp < 50000 then
+    level = 18
+  elseif Player.exp < 99999 then
+    level = 19
+  else
+    level = 20
+  end
+
+  if level > 0 then
+    Player.setLV(level, false)
+  end
+end
+
+--- Gets the player's gold
+--- @return number
+function Player.getGold(gold)
+  return Player.gold
+end
+
+--- Sets the player's gold
+--- @param gold number
+function Player.setGold(gold)
+  Player.gold = gold
 end
 
 --- Gets the player's speed
@@ -325,6 +400,18 @@ end
 --- @param invincibility number
 function Player.setInvincibility(invincibility)
   Player.invincible_duration = invincibility
+end
+
+--- Wether the player is overriden
+---@return boolean
+function Player.isOverride()
+  return Player.override
+end
+
+--- Sets wether the player is overriden
+--- @param override boolean
+function Player.setOverride(override)
+  Player.override = override
 end
 
 --- Gets the player's weapon
@@ -428,19 +515,27 @@ end
 
 --- Animates the soul escaping
 function Player.flee()
-  if not Player.is_fleeing then
-    Player.is_fleeing = true
-    Player.soul_sprite:setSprite({ "heart_escape1", "heart_escape2" })
-    Player.soul_sprite:setSpeed(2 / 30)
-    Player.soul_sprite:setPosition(Player.getPosition())
-    Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
-    Player.soul_sprite:play()
-  end
+  if Player.is_fleeing then return end
+
+  Player.is_fleeing = true
+  Player.soul_sprite:setSprite({ "heart_escape1", "heart_escape2" })
+  Player.soul_sprite:setSpeed(2 / 30)
+  Player.soul_sprite:setPosition(Player.getPosition())
+  Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
+  Player.soul_sprite:play()
 
   Timer.during(2, function(dt)
     local x, y = Player.soul_sprite:getPosition()
     Player.soul_sprite:setPosition(x - Player.flee_speed * dt * 30, y)
   end)
+
+  Timer.after(1, function()
+    Fader.fadeIn(1 / 2.4, function()
+      Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
+    end)
+  end)
+
+  Assets.playSound("escaped")
 end
 
 --- Wether the playing is playing the escape animation
@@ -484,6 +579,8 @@ end
 --- Updates the player
 --- @param dt number
 function Player.update(dt)
+  if Player.isOverride() then return end
+
   local dir_x, dir_y = 0, 0
   if Input.isDown(Input.Up) then dir_y = dir_y - 1 end
   if Input.isDown(Input.Down) then dir_y = dir_y + 1 end

@@ -6,13 +6,29 @@
 
 ---@meta
 
-self = {}
+--- @class Dummy.Debugger
+---
+--- @field protected logs string[]
+--- @field protected margin number
+--- @field protected scale number
+--- @field protected display_hitbox boolean
+--- @field protected log_bg_sprite Dummy.Sprite
+--- @field protected log_text Dummy.Text
+--- @field protected fps_text Dummy.Text
+Debugger = {}
 
-function self.load() end
+--- Wether the hitboxes should be displayed
+--- @return boolean
+function Debugger.shouldDisplayHitbox() end
 
-function self.saveLogs() end
+--- Loads the debugger
+function Debugger.load() end
 
-function self.update() end
+--- Saves the logs
+function Debugger.saveLogs() end
+
+--- Updates the debugger
+function Debugger.update() end
 
 function print(...) end
 

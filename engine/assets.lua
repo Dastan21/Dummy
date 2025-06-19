@@ -3,11 +3,12 @@
 --- @class Dummy.Assets
 ---
 --- @field private fonts table<Dummy.Assets.Font, love.Font>
---- @field private current_music love.Source
+--- @field private current_music love.Source|nil
+--- @field private current_sound love.Source|nil
 local Assets = {}
 
 ---@type table<string, love.FileData>
-local cache = {}
+local audio_cache = {}
 
 function Assets.load()
   Assets.fonts = {}
@@ -71,7 +72,7 @@ function Assets.playAudio(folder, audio_name, type, play, loop)
 
   local source = nil
   local success = true
-  local file_data = cache[filename]
+  local file_data = audio_cache[filename]
 
   if file_data == nil then
     success, file_data = pcall(love.filesystem.newFileData, filename)
@@ -81,8 +82,8 @@ function Assets.playAudio(folder, audio_name, type, play, loop)
   success, source = pcall(love.audio.newSource, file_data, type)
   assert(success, "Audio \"" .. audio_name .. "\" not found")
 
-  if cache[filename] == nil then
-    cache[filename] = file_data
+  if audio_cache[filename] == nil then
+    audio_cache[filename] = file_data
   end
 
   if loop then source:setLooping(loop) end
@@ -102,29 +103,43 @@ function Assets.playMusic(music_name, play, loop, replace)
   loop = Utils.getOrDefault(loop, true)
   replace = Utils.getOrDefault(replace, true)
 
-  if replace and Assets.current_music ~= nil then
-    Assets.current_music:stop()
+  local source = Assets.playAudio("assets/music/", music_name, "stream", play, loop)
+
+  if replace then
+    if Assets.current_music ~= nil then
+      Assets.current_music:stop()
+    end
   end
 
-  Assets.current_music = Assets.playAudio("assets/music/", music_name, "stream", play, loop)
-  return Assets.current_music
+  Assets.current_music = source
+  return source
 end
 
 --- Plays a sound
 --- @param sound_name string the sound name to play
 --- @param play? boolean wether the sound should play instantly (Defaults to `true`)
 --- @param loop? boolean wether the sound should loop (Defaults to `false`)
+--- @param replace? boolean wether to replace the current playing music (Defaults to `false`)
 --- @return love.Source
-function Assets.playSound(sound_name, play, loop)
+function Assets.playSound(sound_name, play, loop, replace)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, false)
 
-  return Assets.playAudio("assets/sounds/", sound_name, "static", play, loop)
+  local source = Assets.playAudio("assets/sounds/", sound_name, "static", play, loop)
+
+  if replace == true then
+    if Assets.current_sound ~= nil then
+      Assets.current_sound:stop()
+    end
+  end
+
+  Assets.current_sound = source
+  return source
 end
 
 --- Clears the cache
 function Assets.clear()
-  cache = {}
+  audio_cache = {}
 end
 
 return Assets

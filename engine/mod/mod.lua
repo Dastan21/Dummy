@@ -1,23 +1,3 @@
---- @class Dummy.Mod.Encounter
----
---- @field text Dummy.Text.Text|nil the encounter text
---- @field can_flee boolean|nil wether the action is displayed (Defaults to `true`)
---- @field music string|nil the encounter music (Defaults to `"battle"`)
-
-
---- @class Dummy.Mod.Enemy
----
---- @field name string
---- @field hp number|nil
---- @field at number|nil
---- @field df number|nil
---- @field xp number|nil
---- @field gold number|nil
---- @field check Dummy.Text.Text|nil
---- @field position { [1]: number, [2]: number }|nil
---- @field size { [1]: number, [2]: number }|nil
-
-
 --- @class Dummy.Mod.Data
 ---
 --- @field name string
@@ -81,9 +61,11 @@ function Mod:preview() end
 --- @param data Dummy.Mod.Data
 --- @return Dummy.Mod
 function Mod:new(data)
+  assert(data.name ~= nil, "Mod has no name")
+
   return Class:new(Mod, {
     name = data.name,
-    title = data.title,
+    title = Utils.getOrDefault(data.title, data.name),
     version = Utils.getOrDefault(data.version, "???"),
     standalone = Utils.getOrDefault(data.standalone, false),
   })

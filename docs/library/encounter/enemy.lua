@@ -6,14 +6,14 @@
 
 ---@meta
 
---- @class Dummy.Enemy : Dummy.Class
+--- @class Dummy.Enemy : Dummy.Sprite
 ---
 --- @field protected name string
 --- @field protected hp number
 --- @field protected max_hp number
 --- @field protected at number
 --- @field protected df number
---- @field protected xp number
+--- @field protected exp number
 --- @field protected gold number
 --- @field protected check Dummy.Text.Text|nil
 --- @field protected x number
@@ -21,6 +21,8 @@
 --- @field protected width number
 --- @field protected height number
 --- @field protected acts Dummy.ACT[]
+--- @field protected can_be_spared boolean
+--- @field protected is_spared boolean
 Enemy = {}
 
 --- Gets the class name
@@ -67,6 +69,22 @@ function Enemy:getDF() end
 --- @param df number defense point
 function Enemy:setDF(df) end
 
+--- Gets the enemy's EXP
+--- @return number
+function Enemy:getEXP() end
+
+--- Sets the enemy's EXP
+--- @param exp number experience points
+function Enemy:setEXP(exp) end
+
+--- Gets the enemy's gold
+--- @return number
+function Enemy:getGold() end
+
+--- Sets the enemy's gold
+--- @param gold number gold
+function Enemy:setGold(gold) end
+
 --- Wether the enemy has a check dialogue
 --- @return boolean
 function Enemy:hasCheck() end
@@ -83,24 +101,6 @@ function Enemy:setCheck(check) end
 --- @return string
 function Enemy:getCheckText() end
 
---- Gets the enemy's center position
----@return number, number
-function Enemy:getPosition() end
-
---- Sets the enemy's center position
----@param x number
----@param y number
-function Enemy:setPosition(x, y) end
-
---- Gets the enemy's size
----@return number, number
-function Enemy:getSize() end
-
---- Sets the enemy's size
----@param width number
----@param height number
-function Enemy:setSize(width, height) end
-
 --- Gets the enemy's ACTs
 --- @return Dummy.ACT[]
 function Enemy:getACTs() end
@@ -110,15 +110,52 @@ function Enemy:getACTs() end
 ---@param ... Dummy.ACT
 function Enemy:addACT(act, ...) end
 
---- Wether the enemy is dead
+--- Wether the enemy can be spared
 --- @return boolean
-function Enemy:isDead() end
+function Enemy:getCanBeSpared() end
+
+--- Sets wether the enemy can be spared
+---@param can_be_spared boolean
+function Enemy:setCanBeSpared(can_be_spared) end
+
+--- Wether the enemy has been spared
+--- @return boolean
+function Enemy:isSpared() end
+
+--- Spares the enemy
+function Enemy:spare() end
+
+--- Wether the enemy has been killed
+--- @return boolean
+function Enemy:isKilled() end
+
+--- Gets the enemy's hurt sound
+--- @return love.Source|nil
+function Enemy:getHurtSound() end
+
+--- Sets the enemy's hurt sound
+--- @param hurt_sound string|nil
+function Enemy:setHurtSound(hurt_sound) end
+
+--- Called when trying to spare an enemy
+--- @param spared boolean wether the enemy has been spared
+function Enemy:onSpared(spared) end
+
+--- Called before the enemy is damaged
+--- @param damage number calculated damage
+--- @return number|nil damage override damage
+function Enemy:onBeforeDamage(damage) end
+
+--- Called when the enemy is damaged
+--- @param damage number damage taken
+function Enemy:onDamage(damage) end
 
 --- Called when the enemy is killed
 function Enemy:onKilled() end
 
 --- Creates an enemy
---- @param data Dummy.Mod.Enemy
+--- @param name string
+--- @param sprite string
 --- @return Dummy.Enemy
-function Enemy:new(data) end
+function Enemy:new(name, sprite) end
 

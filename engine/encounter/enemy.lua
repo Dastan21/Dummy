@@ -1,11 +1,11 @@
---- @class Dummy.Enemy : Dummy.Class
+--- @class Dummy.Enemy : Dummy.Sprite
 ---
 --- @field protected name string
 --- @field protected hp number
 --- @field protected max_hp number
 --- @field protected at number
 --- @field protected df number
---- @field protected xp number
+--- @field protected exp number
 --- @field protected gold number
 --- @field protected check Dummy.Text.Text|nil
 --- @field protected x number
@@ -13,7 +13,9 @@
 --- @field protected width number
 --- @field protected height number
 --- @field protected acts Dummy.ACT[]
-local Enemy = Class()
+--- @field protected can_be_spared boolean
+--- @field protected is_spared boolean
+local Enemy = Class:extend(Sprite)
 
 --- Gets the class name
 --- @return string
@@ -58,7 +60,7 @@ end
 function Enemy:setMaxHP(max_hp)
   if type(max_hp) ~= "number" then return end
 
-  self.max_hp = math.clamp(max_hp, 20, 99)
+  self.max_hp = max_hp
 end
 
 --- Gets the enemy's AT
@@ -83,6 +85,30 @@ end
 --- @param df number defense point
 function Enemy:setDF(df)
   self.df = df
+end
+
+--- Gets the enemy's EXP
+--- @return number
+function Enemy:getEXP()
+  return self.exp
+end
+
+--- Sets the enemy's EXP
+--- @param exp number experience points
+function Enemy:setEXP(exp)
+  self.exp = exp
+end
+
+--- Gets the enemy's gold
+--- @return number
+function Enemy:getGold()
+  return self.gold
+end
+
+--- Sets the enemy's gold
+--- @param gold number gold
+function Enemy:setGold(gold)
+  self.gold = gold
 end
 
 --- Wether the enemy has a check dialogue
@@ -113,34 +139,6 @@ function Enemy:getCheckText()
   return check
 end
 
---- Gets the enemy's center position
----@return number, number
-function Enemy:getPosition()
-  return self.x, self.y
-end
-
---- Sets the enemy's center position
----@param x number
----@param y number
-function Enemy:setPosition(x, y)
-  self.x = x
-  self.y = y
-end
-
---- Gets the enemy's size
----@return number, number
-function Enemy:getSize()
-  return self.width, self.height
-end
-
---- Sets the enemy's size
----@param width number
----@param height number
-function Enemy:setSize(width, height)
-  self.width = width
-  self.height = height
-end
-
 --- Gets the enemy's ACTs
 --- @return Dummy.ACT[]
 function Enemy:getACTs()
@@ -158,37 +156,172 @@ function Enemy:addACT(act, ...)
   end
 end
 
---- Wether the enemy is dead
+--- Wether the enemy can be spared
 --- @return boolean
-function Enemy:isDead()
+function Enemy:getCanBeSpared()
+  return self.can_be_spared and not self:isSpared() and not self:isKilled()
+end
+
+--- Sets wether the enemy can be spared
+---@param can_be_spared boolean
+function Enemy:setCanBeSpared(can_be_spared)
+  self.can_be_spared = can_be_spared
+end
+
+--- Wether the enemy has been spared
+--- @return boolean
+function Enemy:isSpared()
+  return self.is_spared
+end
+
+--- Spares the enemy
+function Enemy:spare()
+  if self:isSpared() then return end
+  self.is_spared = true
+
+  self:setAlpha(0.5)
+  Assets.playSound("spare", true, false, true)
+
+  local x, y = self:getPosition()
+  local width, height = self:getWidth(), self:getHeight()
+
+  --- @type Dummy.Sprite[]
+  local dustclouds = {}
+  for _ = 1, 14 do
+    local dustcloud = Sprite:new({ "dustcloud1", "dustcloud2", "dustcloud3" }, 4 / 30, false, true, false)
+    dustcloud:setScale(math.random() + 0.7)
+    local dust_x = (math.random() * width / 2) + width / 4 + x - 8
+    local dust_y = (math.random() * height / 2) + height / 4 + y - 8
+    dustcloud:setPosition(dust_x - width / 2, dust_y - height)
+
+    local rightside = (8 + dust_x - x) / (width / 2)
+    local topside = (8 + dust_y - y) / (height / 2)
+    local direction = math.random() * 360
+    if rightside < 0.75 then
+      direction = 180
+    end
+    if rightside > 1.25 then
+      direction = 0
+    end
+    if topside > 1.25 and rightside > 1.25 then
+      direction = 45
+    end
+    if topside > 1.25 and rightside > 0.75 and rightside < 1.25 then
+      direction = 90
+    end
+    if topside > 1.25 and rightside < 0.75 then
+      direction = 135
+    end
+    if topside < 0.75 and rightside > 1.25 then
+      direction = 315
+    end
+    if topside < 0.75 and rightside > 0.75 and rightside < 1.25 then
+      direction = 270
+    end
+    if topside < 0.75 and rightside < 0.75 then
+      direction = 235
+    end
+    dustcloud["vel_x"] = math.cos(math.rad(direction)) * 6
+    dustcloud["vel_y"] = math.sin(math.rad(direction)) * 6
+
+    table.insert(dustclouds, dustcloud)
+  end
+
+  local function applyFriction(vel, friction)
+    if vel > 0 then
+      vel = vel - friction
+      if vel < 0 then vel = 0 end
+    elseif vel < 0 then
+      vel = vel + friction
+      if vel > 0 then vel = 0 end
+    end
+    return vel
+  end
+
+  Timer.during(1, function(dt)
+    for _, dustcloud in ipairs(dustclouds) do
+      local x, y = dustcloud:getPosition()
+      dustcloud:setAlpha(math.max(0, dustcloud:getAlpha() - 0.03 * 30 * dt))
+      dustcloud:setPosition(x + dustcloud["vel_x"] * 30 * dt, y + dustcloud["vel_y"] * 30 * dt)
+
+      dustcloud["vel_x"] = applyFriction(dustcloud["vel_x"], 0.8 * 30 * dt)
+      dustcloud["vel_y"] = applyFriction(dustcloud["vel_y"], 0.8 * 30 * dt)
+    end
+  end, function()
+    for _, dustcloud in ipairs(dustclouds) do
+      Scene.removeDrawable(dustcloud)
+    end
+  end)
+end
+
+--- Wether the enemy has been killed
+--- @return boolean
+function Enemy:isKilled()
   return self.hp <= 0
 end
+
+--- Gets the enemy's hurt sound
+--- @return love.Source|nil
+function Enemy:getHurtSound()
+  return self.hurt_sound
+end
+
+--- Sets the enemy's hurt sound
+--- @param hurt_sound string|nil
+function Enemy:setHurtSound(hurt_sound)
+  if self.hurt_sound ~= nil then
+    self.hurt_sound:stop()
+  end
+
+  if hurt_sound == nil then
+    self.hurt_sound = nil
+  else
+    self.hurt_sound = Assets.playSound(hurt_sound, false)
+  end
+end
+
+--- Called when trying to spare an enemy
+--- @param spared boolean wether the enemy has been spared
+function Enemy:onSpared(spared) end
+
+--- Called before the enemy is damaged
+--- @param damage number calculated damage
+--- @return number|nil damage override damage
+function Enemy:onBeforeDamage(damage) return damage end
+
+--- Called when the enemy is damaged
+--- @param damage number damage taken
+function Enemy:onDamage(damage) end
 
 --- Called when the enemy is killed
 function Enemy:onKilled() end
 
 --- Creates an enemy
---- @param data Dummy.Mod.Enemy
+--- @param name string
+--- @param sprite string
 --- @return Dummy.Enemy
-function Enemy:new(data)
-  local position = Utils.getOrDefault(data.position, {})
-  local size = Utils.getOrDefault(data.size, {})
+function Enemy:new(name, sprite)
+  assert(name ~= nil, "Enemy name is nil")
+  assert(sprite ~= nil, "Enemy \"" .. name .. "\" sprite is nil")
 
-  return Class:new(Enemy, {
-    name = Utils.getOrDefault(data.name, "Monster"),
-    hp = Utils.getOrDefault(data.hp, 20),
-    max_hp = Utils.getOrDefault(data.hp, 20),
-    at = Utils.getOrDefault(data.at, 0),
-    df = Utils.getOrDefault(data.df, 0),
-    exp = Utils.getOrDefault(data.xp, 0),
-    gold = Utils.getOrDefault(data.gold, 0),
-    check = Utils.getOrDefault(data.check, ""),
-    x = Utils.getOrDefault(position[1], 320),
-    y = Utils.getOrDefault(position[2], 200),
-    width = Utils.getOrDefault(size[1], 80),
-    height = Utils.getOrDefault(size[2], 110),
-    acts = {}
-  })
+  local enemy = Class:new(Enemy, {
+    name = name,
+    hp = 20,
+    max_hp = 20,
+    at = 0,
+    df = 0,
+    exp = 0,
+    gold = 0,
+    check = "",
+    acts = {},
+    can_be_spared = false,
+  }, { sprite })
+
+  enemy:setOrigin(0.5, 1)
+  enemy:setLayer(Constants.LAYERS.BELOW_UI)
+  enemy:setPosition(320, 240)
+
+  return enemy
 end
 
 return Enemy

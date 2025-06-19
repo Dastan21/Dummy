@@ -63,6 +63,14 @@ function Sprite:getSpeed() end
 --- @param speed number
 function Sprite:setSpeed(speed) end
 
+--- Wether the sprite's animation loops
+--- @return boolean
+function Sprite:getLoop() end
+
+--- Sets wether the sprite's animation loops
+--- @param loop boolean
+function Sprite:setLoop(loop) end
+
 --- Transforms the sprite into dust
 function Sprite:dust() end
 

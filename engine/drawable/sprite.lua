@@ -167,6 +167,24 @@ function Sprite:setSpeed(speed)
   end
 end
 
+--- Wether the sprite's animation loops
+--- @return boolean
+function Sprite:getLoop()
+  return self.loop
+end
+
+--- Sets wether the sprite's animation loops
+--- @param loop boolean
+function Sprite:setLoop(loop)
+  local was_playing = self:isPlaying()
+  self:stop()
+  self.loop = loop
+
+  if was_playing then
+    self:play()
+  end
+end
+
 --- Transforms the sprite into dust
 function Sprite:dust()
   -- TODO

@@ -7,6 +7,7 @@
 --- @field draw fun(self: Dummy.Menu.Option)|nil draw along the option
 --- @field drawable Dummy.Drawable|nil option drawable created from `option.draw`
 --- @field disabled boolean|nil wether the option is disabled
+--- @field silent boolean|nil wether the option is silent
 --- @field selected boolean|nil wether the option is selected
 --- @field menu Dummy.MainMenu|nil sub menu
 

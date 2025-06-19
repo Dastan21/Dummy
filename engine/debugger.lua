@@ -1,58 +1,76 @@
-local self = {}
+--- @class Dummy.Debugger
+---
+--- @field protected logs string[]
+--- @field protected margin number
+--- @field protected scale number
+--- @field protected display_hitbox boolean
+--- @field protected log_bg_sprite Dummy.Sprite
+--- @field protected log_text Dummy.Text
+--- @field protected fps_text Dummy.Text
+local Debugger = {}
 
-function self.load()
-  self.logs = {}
-  self.margin = 5
-  self.scale = 1
-
-  self.show_hitbox = false
-
-  self.log_bg_sprite = Sprite:new("pixel")
-  self.log_bg_sprite:setPosition(0, 0)
-  self.log_bg_sprite:setOrigin(0, 0)
-  self.log_bg_sprite:setLayer(Constants.LAYERS.DEBUG)
-  self.log_bg_sprite:setAlpha(0.4)
-  self.log_bg_sprite:setVisible(false)
-  self.log_bg_sprite:setPersistent(true)
-  self.log_bg_sprite:setScale(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)
-
-  self.log_text = Text:new("")
-  self.log_text:setPosition(self.margin, Constants.SCREEN_HEIGHT - self.margin)
-  self.log_text:setOrigin(0, 1)
-  self.log_text:setScale(self.scale)
-  self.log_text:setLayer(Constants.LAYERS.DEBUG)
-  self.log_text:setFont(Assets.getFont("main_text"))
-  self.log_text:setVisible(false)
-  self.log_text:setPersistent(true)
-
-  self.fps_text = Text:new("")
-  self.fps_text:setPosition(Constants.SCREEN_WIDTH - self.margin, self.margin)
-  self.fps_text:setOrigin(1, 0)
-  self.fps_text:setScale(self.scale)
-  self.fps_text:setLayer(Constants.LAYERS.DEBUG)
-  self.fps_text:setFont(Assets.getFont("main_text"))
-  self.fps_text:setVisible(false)
-  self.fps_text:setPersistent(true)
+--- Wether the hitboxes should be displayed
+--- @return boolean
+function Debugger.shouldDisplayHitbox()
+  return Debugger.display_hitbox
 end
 
-function self.saveLogs()
-  if #self.logs <= 0 then return end
+--- Loads the debugger
+function Debugger.load()
+  Debugger.logs = {}
+  Debugger.margin = 5
+  Debugger.scale = 1
 
-  love.filesystem.write("logs.txt", table.concat(self.logs, "\n"))
+  Debugger.display_hitbox = false
+
+  Debugger.log_bg_sprite = Sprite:new("pixel")
+  Debugger.log_bg_sprite:setPosition(0, 0)
+  Debugger.log_bg_sprite:setOrigin(0, 0)
+  Debugger.log_bg_sprite:setLayer(Constants.LAYERS.DEBUG)
+  Debugger.log_bg_sprite:setColor(0, 0, 0, 0.4)
+  Debugger.log_bg_sprite:setVisible(false)
+  Debugger.log_bg_sprite:setPersistent(true)
+  Debugger.log_bg_sprite:setScale(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)
+
+  Debugger.log_text = Text:new("")
+  Debugger.log_text:setPosition(Debugger.margin, Constants.SCREEN_HEIGHT - Debugger.margin)
+  Debugger.log_text:setOrigin(0, 1)
+  Debugger.log_text:setScale(Debugger.scale)
+  Debugger.log_text:setLayer(Constants.LAYERS.DEBUG)
+  Debugger.log_text:setFont(Assets.getFont("main_text"))
+  Debugger.log_text:setVisible(false)
+  Debugger.log_text:setPersistent(true)
+
+  Debugger.fps_text = Text:new("")
+  Debugger.fps_text:setPosition(Constants.SCREEN_WIDTH - Debugger.margin, Debugger.margin)
+  Debugger.fps_text:setOrigin(1, 0)
+  Debugger.fps_text:setScale(Debugger.scale)
+  Debugger.fps_text:setLayer(Constants.LAYERS.DEBUG)
+  Debugger.fps_text:setFont(Assets.getFont("main_text"))
+  Debugger.fps_text:setVisible(false)
+  Debugger.fps_text:setPersistent(true)
 end
 
-function self.update()
-  self.fps_text:setText(tostring(love.timer.getFPS()))
-  self.log_text:setText(table.concat(self.logs or {}, "\n"))
+--- Saves the logs
+function Debugger.saveLogs()
+  if #Debugger.logs <= 0 then return end
+
+  love.filesystem.write("logs.txt", table.concat(Debugger.logs, "\n"))
+end
+
+--- Updates the debugger
+function Debugger.update()
+  Debugger.fps_text:setText(tostring(love.timer.getFPS()))
+  Debugger.log_text:setText(table.concat(Debugger.logs or {}, "\n"))
 
   if Input.isPressed("f6") then
-    self.fps_text:setVisible(not self.fps_text:isVisible())
+    Debugger.fps_text:setVisible(not Debugger.fps_text:isVisible())
   elseif Input.isPressed("f7") then
-    self.show_hitbox = not self.show_hitbox
+    Debugger.display_hitbox = not Debugger.display_hitbox
   elseif Input.isPressed("f8") then
-    local visible = not self.log_bg_sprite:isVisible()
-    self.log_bg_sprite:setVisible(visible)
-    self.log_text:setVisible(visible)
+    local visible = not Debugger.log_bg_sprite:isVisible()
+    Debugger.log_bg_sprite:setVisible(visible)
+    Debugger.log_text:setVisible(visible)
   elseif Input.isPressed("f9") then
     Assets.playSound("screenshot")
     love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
@@ -62,7 +80,7 @@ function self.update()
     else
       Scene.reload()
     end
-  elseif Input.isPressed(";") then
+  elseif Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
   elseif Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("g") then
     if Scene.getSceneName() ~= "ENCOUNTER" then return end
@@ -79,15 +97,15 @@ function print(...)
     table.insert(t, tostring(v))
   end
 
-  if self.logs ~= nil then
-    local _, w = self.log_text:getFont():getWrap(table.concat(t, "	"), (600 / self.scale) - (self.margin * 2))
-    local len = #self.logs
+  if Debugger.logs ~= nil then
+    local _, w = Debugger.log_text:getFont():getWrap(table.concat(t, "	"), (600 / Debugger.scale) - (Debugger.margin * 2))
+    local len = #Debugger.logs
     for i, s in ipairs(w) do
-      self.logs[len + i] = (i == 1 and "> " or "  ") .. s
+      Debugger.logs[len + i] = (i == 1 and "> " or "  ") .. s
     end
   end
 
   return _print(...)
 end
 
-return self
+return Debugger

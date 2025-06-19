@@ -128,15 +128,15 @@ function main_menu.loadSettingsMenu()
     {
       text = Text:new({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config["window_scale"] }),
       action = function(option)
-        local scale = { 0.5, 1, 2, 3, 4 }
+        local scales = { 0.5, 1, 2, 3, 4 }
         local scale_index = 2
-        for i, v in ipairs(scale) do
+        for i, v in ipairs(scales) do
           if v == Config["window_scale"] then
             scale_index = i
             break
           end
         end
-        Config["window_scale"] = scale[(scale_index % #scale) + 1]
+        Config["window_scale"] = scales[(scale_index % #scales) + 1]
         option.text:setText({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config["window_scale"] })
 
         love.scale()

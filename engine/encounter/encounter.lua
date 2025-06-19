@@ -33,6 +33,8 @@
 --- @field protected action.item_hover_sprite Dummy.Sprite
 --- @field protected action.mercy_sprite Dummy.Sprite
 --- @field protected action.mercy_hover_sprite Dummy.Sprite
+--- @field protected exp_reward number
+--- @field protected gold_reward number
 local Encounter = {}
 
 --- Encounter actions
@@ -64,6 +66,12 @@ end
 function Encounter.setText(text)
   Encounter.text = text
   Encounter.dialogue_text:setText(Encounter.getText())
+end
+
+--- Gets the encounter's enemies
+--- @return Dummy.Enemy[]
+function Encounter.getEnemies()
+  return Encounter.enemies
 end
 
 --- Adds one or more enemies to the encounter
@@ -113,42 +121,52 @@ end
 
 --- Plays a text dialogue
 ---@param text Dummy.Text.Text
----@param can_skip? boolean
-function Encounter.playDialogue(text, can_skip)
+---@param can_skip? boolean wether the dialogue can be skipped (Defaults to `true`)
+---@param instant? boolean wether the dialogue should be played instantly (Defaults to `false`)
+function Encounter.playDialogue(text, can_skip, instant)
   Encounter.dialogue_text:setText(text)
   Encounter.dialogue_text:setCanSkip(Utils.getOrDefault(can_skip, true))
+  if instant == true then
+    Encounter.dialogue_text:skip()
+  end
+  Encounter.dialogue_text:setVisible(true)
   Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
 end
 
---- Flees the encounter
-function Encounter.flee()
-  Encounter.mercy_menu:setActive(false)
-
-  Player.flee()
-
-  Timer.after(1, function()
-    Fader.fadeIn(1 / 2.4, function()
-      Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
-    end)
-  end)
-
-  Assets.playSound("escaped")
-
-  local flee_value = math.random(20)
-  local flee_text_key
-  if flee_value <= 1 then
-    flee_text_key = "ENCOUNTER_FLEE_TEXT_1"
-  elseif flee_value == 2 then
-    flee_text_key = "ENCOUNTER_FLEE_TEXT_2"
-  elseif flee_value == 3 then
-    flee_text_key = "ENCOUNTER_FLEE_TEXT_3"
-  else
-    flee_text_key = "ENCOUNTER_FLEE_TEXT_4"
+--- Wether all the enemies are spared
+--- @return boolean
+function Encounter.allSpared()
+  for _, enemy in ipairs(Encounter.enemies) do
+    if not enemy:isSpared() then
+      return false
+    end
   end
-  Encounter.dialogue_text:setText(flee_text_key)
-  Encounter.dialogue_text:setCanSkip(true)
-  Encounter.dialogue_text:setVisible(true)
-  Encounter.dialogue_text:skip()
+
+  return true
+end
+
+--- Wether all the enemies are dead
+--- @return boolean
+function Encounter.allDead()
+  for _, enemy in ipairs(Encounter.enemies) do
+    if not enemy:isKilled() then
+      return false
+    end
+  end
+
+  return true
+end
+
+--- Wether all the enemies are spared or killed
+--- @return boolean
+function Encounter.allSparedOrKilled()
+  for _, enemy in ipairs(Encounter.enemies) do
+    if not enemy:isSpared() and not enemy:isKilled() then
+      return false
+    end
+  end
+
+  return true
 end
 
 --- Loads the encounter
@@ -231,6 +249,10 @@ function Encounter.load()
   Encounter.setMusic("battle")
 
   Encounter.enemies = {}
+  Encounter.enemy_selected_index = 1
+
+  Encounter.exp_reward = 0
+  Encounter.gold_reward = 0
 end
 
 --- Gets the encounter's fight enemy menu
@@ -245,11 +267,17 @@ function Encounter.loadFightEnemyMenu()
   local options = {}
 
   for i, enemy in ipairs(Encounter.enemies) do
+    local text = Text:new("* " .. enemy:getName())
+    if enemy:getCanBeSpared() then
+      text:setColor(1, 1, 0)
+    else
+      text:setColor(1, 1, 1)
+    end
+
     options[i] = {
-      text = Text:new("* " .. enemy:getName()),
+      text = text,
       action = function()
         Encounter.enemy_selected_index = i
-        Assets.playSound("menu_select")
         Encounter.setState(Constants.ENCOUNTER_STATES.ATTACKING)
       end,
       draw = function(option)
@@ -260,7 +288,8 @@ function Encounter.loadFightEnemyMenu()
         love.graphics.rectangle("fill", hp_x, hp_y, hp_width, hp_height)
         love.graphics.setColor(0, 1, 0, 1)
         love.graphics.rectangle("fill", hp_x, hp_y, hp_width * enemy:getHP() / enemy:getMaxHP(), hp_height)
-      end
+      end,
+      disabled = enemy:isKilled() or enemy:isSpared()
     }
   end
 
@@ -282,13 +311,20 @@ function Encounter.loadActEnemyMenu()
   local options = {}
 
   for i, enemy in ipairs(Encounter.enemies) do
+    local text = Text:new("* " .. enemy:getName())
+    if enemy:getCanBeSpared() then
+      text:setColor(1, 1, 0)
+    else
+      text:setColor(1, 1, 1)
+    end
+
     options[i] = {
-      text = Text:new("* " .. enemy:getName()),
+      text = text,
       action = function()
         Encounter.enemy_selected_index = i
-        Assets.playSound("menu_select")
         Encounter.setState(Constants.ENCOUNTER_STATES.ACT_MENU)
-      end
+      end,
+      disabled = enemy:isKilled() or enemy:isSpared()
     }
   end
 
@@ -315,7 +351,6 @@ function Encounter.loadActMenus()
       table.insert(options, {
         text = Text:new("ENCOUNTER_MENU_ACT_CHECK"),
         action = function()
-          Assets.playSound("menu_select")
           Encounter.dialogue_text:setText(enemy:getCheckText())
           Encounter.dialogue_text:setCanSkip(true)
           Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
@@ -327,7 +362,6 @@ function Encounter.loadActMenus()
       table.insert(options, {
         text = Text:new(act:getName()),
         action = function()
-          Assets.playSound("menu_select")
           if type(act.use) == "function" then
             act:use()
           end
@@ -356,7 +390,6 @@ function Encounter.loadItemMenu()
     table.insert(options, {
       text = Text:new(item:getShortName()),
       action = function()
-        Assets.playSound("menu_select")
         if type(item.use) == "function" then
           item:use()
         end
@@ -377,14 +410,61 @@ end
 
 --- Loads mercy menu
 function Encounter.loadMercyMenu()
+  local spare_text = Text:new("ENCOUNTER_MENU_MERCY_SPARE")
+  spare_text:setColor(1, 1, 1)
+  for _, enemy in ipairs(Encounter.enemies) do
+    if enemy:getCanBeSpared() and not enemy:isSpared() then
+      spare_text:setColor(1, 1, 0)
+      break
+    end
+  end
+
   --- @type Dummy.Menu.Options
   local options = {
     {
-      text = Text:new("ENCOUNTER_MENU_MERCY_SPARE"),
+      text = spare_text,
       action = function()
-        Assets.playSound("menu_select")
-        -- self:setState(Constants.ENCOUNTER_STATES.NONE)
-        Player.setHP(0)
+        local has_spared = false
+        for _, enemy in ipairs(Encounter.enemies) do
+          if enemy:getCanBeSpared() then
+            enemy:spare()
+            enemy:onSpared(true)
+            has_spared = true
+          end
+
+          if enemy:isSpared() then
+            local gold_ratio = (enemy:getMaxHP() - enemy:getHP()) / enemy:getMaxHP()
+            if gold_ratio == 0 then Encounter.gold_reward = Encounter.gold_reward + enemy:getGold() end
+            Encounter.gold_reward = Encounter.gold_reward + math.floor(enemy:getGold() * gold_ratio)
+          elseif enemy:isKilled() then
+            Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
+            Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
+          end
+        end
+
+        if Encounter.allSparedOrKilled() then
+          local win_text = Lang.translate("ENCOUNTER_WIN_REWARD", Encounter.exp_reward, Encounter.gold_reward)
+          local level_old = Player.getLV()
+          Player.setEXP(Player.getEXP() + Encounter.exp_reward)
+          Player.setGold(Player.getGold() + Encounter.gold_reward)
+          local level = Player.getLV()
+          if level ~= level_old then
+            win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
+          end
+          Encounter.playDialogue(win_text)
+        else
+          Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+
+          if not has_spared then
+            for _, enemy in ipairs(Encounter.enemies) do
+              if not enemy:isKilled() then
+                if type(enemy.onSpared) == "function" then
+                  enemy:onSpared(false)
+                end
+              end
+            end
+          end
+        end
       end
     }
   }
@@ -393,11 +473,33 @@ function Encounter.loadMercyMenu()
     table.insert(options, {
       text = Text:new("ENCOUNTER_MENU_MERCY_FLEE"),
       action = function()
-        if Player.isFleeing() then return end
+        Player.flee()
 
-        Encounter.flee()
+        Encounter.mercy_menu:setActive(false)
         Encounter.unselectAction()
         Encounter.leaveMenu()
+
+        --- @type Dummy.Text.Text
+        local flee_text = ""
+        if Encounter.exp_reward > 0 or Encounter.gold_reward > 0 then
+          flee_text = { "ENCOUNTER_FLEE_REWARD", Encounter.exp_reward, Encounter.gold_reward }
+        else
+          local flee_value = math.random(20)
+          if flee_value <= 1 then
+            flee_text = "ENCOUNTER_FLEE_1"
+          elseif flee_value == 2 then
+            flee_text = "ENCOUNTER_FLEE_2"
+          elseif flee_value == 3 then
+            flee_text = "ENCOUNTER_FLEE_3"
+          else
+            flee_text = "ENCOUNTER_FLEE_4"
+          end
+        end
+
+        Encounter.dialogue_text:setText(flee_text)
+        Encounter.dialogue_text:setCanSkip(true)
+        Encounter.dialogue_text:setVisible(true)
+        Encounter.dialogue_text:skip()
       end,
       silent = true
     })
@@ -595,7 +697,11 @@ end
 --- Updates text dialogue
 function Encounter.updateTextDialogue()
   if Input.isPressed(Input.Confirm) and Encounter.dialogue_text:isDone() then
-    Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+    if Encounter.allSparedOrKilled() then
+      Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
+    else
+      Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+    end
   end
 end
 
@@ -604,6 +710,7 @@ function Encounter.startEnemyDialogue()
   Encounter.dialogue_text:setVisible(false)
 
   Encounter.unselectAction()
+  Encounter.leaveMenu()
 
   Arena.resize(130, 130, false, function()
     Encounter.enemy_hp_draw:setVisible(false)
@@ -648,14 +755,18 @@ function Encounter.startAttacking()
 
     local enemy = Encounter.enemies[Encounter.enemy_selected_index]
     local enemy_x, enemy_y = enemy:getPosition()
-    Encounter.strike_sprite:setPosition(enemy_x, enemy_y)
+    Encounter.strike_sprite:setPosition(enemy_x, enemy_y - enemy:getHeight() / 2)
 
     local damage = 0
     local enemy_hp_text_vel_y = -4
 
     local proceed_attack = function()
-      local enemy_width, enemy_height = enemy:getSize()
-      local enemy_top_y = enemy_y - enemy_height / 2 - 16
+      if type(enemy.onBeforeDamage) == "function" then
+        damage = Utils.getOrDefault(enemy:onBeforeDamage(damage), damage)
+      end
+
+      local enemy_width, enemy_height = enemy:getWidth(), enemy:getHeight()
+      local enemy_top_y = enemy_y - enemy_height - 16
 
       if miss == true or damage == 0 then
         Encounter.miss_text:setPosition(enemy_x, enemy_top_y)
@@ -690,7 +801,7 @@ function Encounter.startAttacking()
         end)
 
         local enemy_hp_text_x = enemy_x
-        local enemy_hp_text_y_start = enemy_y - enemy_height / 2 - 31
+        local enemy_hp_text_y_start = enemy_y - enemy_height - 31
         local enemy_hp_text_y = enemy_hp_text_y_start
         Encounter.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
         Encounter.enemy_hp_text:setVisible(true)
@@ -708,13 +819,22 @@ function Encounter.startAttacking()
 
         enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
         if enemy:getHP() <= 0 then
-          local fight_option = Encounter.fight_enemy_menu:getOptionByIndex(Encounter.enemy_selected_index)
-          fight_option.disabled = true
-          local act_option = Encounter.act_enemy_menu:getOptionByIndex(Encounter.enemy_selected_index)
-          act_option.disabled = true
+          Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
+          Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
+
+          enemy:setVisible(false)
+
           if type(enemy.onKilled) == "function" then
             enemy:onKilled()
           end
+        end
+
+        if enemy:getHurtSound() ~= nil then
+          Timer.after(0.37, function()
+            if enemy:getHurtSound() ~= nil then
+              enemy:getHurtSound():play()
+            end
+          end)
         end
       end
 

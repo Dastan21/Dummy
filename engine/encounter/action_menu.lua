@@ -303,6 +303,9 @@ function ActionMenu:update()
   elseif Input.isPressed(Input.Confirm) then
     local option = self:getSelectedOption()
     if type(option.action) == "function" then
+      if option.silent ~= true then
+        Assets.playSound("menu_select")
+      end
       option.action(option)
     end
   elseif Input.isPressed(Input.Cancel) then

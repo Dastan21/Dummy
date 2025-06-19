@@ -41,6 +41,8 @@
 --- @field protected action.item_hover_sprite Dummy.Sprite
 --- @field protected action.mercy_sprite Dummy.Sprite
 --- @field protected action.mercy_hover_sprite Dummy.Sprite
+--- @field protected exp_reward number
+--- @field protected gold_reward number
 Encounter = {}
 
 --- Gets the class name
@@ -54,6 +56,10 @@ function Encounter.getText() end
 --- Sets the encounter's text
 --- @param text Dummy.Text.Text
 function Encounter.setText(text) end
+
+--- Gets the encounter's enemies
+--- @return Dummy.Enemy[]
+function Encounter.getEnemies() end
 
 --- Adds one or more enemies to the encounter
 ---@param enemy Dummy.Enemy|Dummy.Enemy[]
@@ -82,11 +88,21 @@ function Encounter.setMusic(music) end
 
 --- Plays a text dialogue
 ---@param text Dummy.Text.Text
----@param can_skip? boolean
-function Encounter.playDialogue(text, can_skip) end
+---@param can_skip? boolean wether the dialogue can be skipped (Defaults to `true`)
+---@param instant? boolean wether the dialogue should be played instantly (Defaults to `false`)
+function Encounter.playDialogue(text, can_skip, instant) end
 
---- Flees the encounter
-function Encounter.flee() end
+--- Wether all the enemies are spared
+--- @return boolean
+function Encounter.allSpared() end
+
+--- Wether all the enemies are dead
+--- @return boolean
+function Encounter.allDead() end
+
+--- Wether all the enemies are spared or killed
+--- @return boolean
+function Encounter.allSparedOrKilled() end
 
 --- Loads the encounter
 function Encounter.load() end

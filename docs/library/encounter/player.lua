@@ -19,6 +19,7 @@
 --- @field protected invincible boolean
 --- @field protected invincible_duration number
 --- @field protected hitbox { [1]: number, [2]: number, [3]: number, [4]: number }
+--- @field protected override boolean
 --- @field protected soul_sprite Dummy.Sprite
 --- @field protected name string
 --- @field protected name_text Dummy.Text
@@ -70,7 +71,8 @@ function Player.getLV() end
 
 --- Sets the player's LV
 --- @param lv number level
-function Player.setLV(lv) end
+--- @param silent? boolean wether to play level up sound (Defaults to `true`)
+function Player.setLV(lv, silent) end
 
 --- Gets the player's HP
 --- @return number
@@ -96,8 +98,7 @@ function Player.getMaxHP() end
 
 --- Sets the player's max HP
 --- @param max_hp number maximum health points
---- @param heal? boolean set HP to max HP
-function Player.setMaxHP(max_hp, heal) end
+function Player.setMaxHP(max_hp) end
 
 --- Gets the player's AT
 --- @return number
@@ -114,6 +115,22 @@ function Player.getDF() end
 --- Sets the player's DE
 --- @param df number defense point
 function Player.setDF(df) end
+
+--- Gets the player's EXP
+--- @return number
+function Player.getEXP(exp) end
+
+--- Sets the player's EXP
+--- @param exp number
+function Player.setEXP(exp) end
+
+--- Gets the player's gold
+--- @return number
+function Player.getGold(gold) end
+
+--- Sets the player's gold
+--- @param gold number
+function Player.setGold(gold) end
 
 --- Gets the player's speed
 --- @return number
@@ -148,6 +165,14 @@ function Player.getInvincibility() end
 --- Sets the player's invincibility duration, in seconds
 --- @param invincibility number
 function Player.setInvincibility(invincibility) end
+
+--- Wether the player is overriden
+---@return boolean
+function Player.isOverride() end
+
+--- Sets wether the player is overriden
+--- @param override boolean
+function Player.setOverride(override) end
 
 --- Gets the player's weapon
 --- @return Dummy.Item.Equipment

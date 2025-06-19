@@ -79,7 +79,7 @@ function Bullet:new()
   bullet:setHitboxFromSprite()
 
   Drawable:new(function()
-    if Debugger.show_hitbox and bullet:isVisible() then
+    if Debugger.shouldDisplayHitbox() and bullet:isVisible() then
       love.graphics.setColor(0, 1, 0, 1)
 
       local x, y = bullet:getPosition()

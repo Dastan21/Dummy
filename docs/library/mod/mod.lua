@@ -15,26 +15,6 @@
 --- @field protected standalone boolean
 Mod = {}
 
---- @class Dummy.Mod.Encounter
----
---- @field text Dummy.Text.Text|nil the encounter text
---- @field can_flee boolean|nil wether the action is displayed (Defaults to `true`)
---- @field music string|nil the encounter music (Defaults to `"battle"`)
-
-
---- @class Dummy.Mod.Enemy
----
---- @field name string
---- @field hp number|nil
---- @field at number|nil
---- @field df number|nil
---- @field xp number|nil
---- @field gold number|nil
---- @field check Dummy.Text.Text|nil
---- @field position { [1]: number, [2]: number }|nil
---- @field size { [1]: number, [2]: number }|nil
-
-
 --- @class Dummy.Mod.Data
 ---
 --- @field name string
