@@ -9,6 +9,7 @@
 --- @class Dummy.Class
 ---
 --- @field private __extend Dummy.Class
+--- @field protected super Dummy.Class
 Class = {}
 
 --- Extends a class

@@ -2,6 +2,7 @@
 
 --- @class Dummy.Text : Dummy.Drawable
 ---
+--- @field protected super Dummy.Drawable
 --- @field protected text Dummy.Text.Text
 --- @field protected font love.Font
 --- @field protected sprite love.Text
@@ -34,7 +35,6 @@ function Text:updateText()
   end
 end
 
-local set_color = Text.setColor
 --- Sets the text color
 --- @overload fun(self: Dummy.Text, color: love.Color)
 --- @param r number red
@@ -42,7 +42,7 @@ local set_color = Text.setColor
 --- @param b number blue
 --- @param a number alpha
 function Text:setColor(r, g, b, a)
-  set_color(self, r, g, b, a)
+  self.super:setColor(r, g, b, a)
   self:updateText()
 end
 

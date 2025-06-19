@@ -1,5 +1,6 @@
 --- @class Dummy.DialogueText : Dummy.Text
 ---
+--- @field protected super Dummy.Text
 --- @field protected full_text string
 --- @field protected speed number
 --- @field protected time number

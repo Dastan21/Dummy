@@ -1,5 +1,6 @@
 --- @class Dummy.Item.Consumable : Dummy.Item
 ---
+--- @field protected super Dummy.Item
 --- @field protected heal number
 --- @field protected type "food" | "drink"
 local ItemConsumable = Class:extend(Item)

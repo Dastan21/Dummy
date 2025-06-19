@@ -1,6 +1,7 @@
 --- @class Dummy.Class
 ---
 --- @field private __extend Dummy.Class
+--- @field protected super Dummy.Class
 local Class = {}
 
 --- Extends a class
@@ -26,6 +27,7 @@ function Class:new(c, d, p)
   local o = {}
   ---@diagnostic disable-next-line: undefined-field
   if c.__extend ~= nil then o = c.__extend:new(table.unpack(p or {})) end
+  c.super = o
   for k, v in pairs(c) do o[k] = v end
   for k, v in pairs(d or {}) do o[k] = v end
   setmetatable(o, { __index = self })

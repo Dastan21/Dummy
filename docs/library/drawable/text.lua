@@ -8,6 +8,7 @@
 
 --- @class Dummy.Text : Dummy.Drawable
 ---
+--- @field protected super Dummy.Drawable
 --- @field protected text Dummy.Text.Text
 --- @field protected font love.Font
 --- @field protected sprite love.Text
