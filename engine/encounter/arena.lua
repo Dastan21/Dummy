@@ -24,6 +24,9 @@ function Arena.load()
   Arena.target_width = Constants.ARENA.DEFAULT_WIDTH
   Arena.target_height = Constants.ARENA.DEFAULT_HEIGHT
 
+  Arena.resize_callback = nil
+  Arena.move_callback = nil
+
   Arena.layer = Constants.LAYERS.ARENA
 
   --- arena background
