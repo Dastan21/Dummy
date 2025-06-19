@@ -2,7 +2,6 @@
 
 --- @class Dummy.Bullet : Dummy.Sprite
 ---
---- @field protected super Dummy.Sprite
 --- @field protected damage number
 --- @field protected hitbox Dummy.Bullet.Hitbox
 --- @field protected is_destroyed boolean
@@ -38,11 +37,11 @@ function Bullet:setDamage(damage)
   self.damage = damage
 end
 
+local set_sprite = Bullet.setSprite
 --- Sets the bullet's sprite
---- @overload fun(self: Dummy.Bullet, sprite_name: string)
---- @param sprites_names string[]
-function Bullet:setSprite(sprites_names)
-  self.super:setSprite(sprites_names)
+--- @param sprite_name string
+function Bullet:setSprite(sprite_name)
+  set_sprite(self, sprite_name)
   self:setHitboxFromSprite()
 end
 

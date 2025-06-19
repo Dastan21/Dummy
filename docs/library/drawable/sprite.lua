@@ -8,7 +8,6 @@
 
 --- @class Dummy.Sprite : Dummy.Drawable
 ---
---- @field protected super Dummy.Drawable
 --- @field protected sprite love.Image
 --- @field protected frames table
 --- @field protected speed number
@@ -30,7 +29,7 @@ function Sprite.clear() end
 function Sprite:getSprite() end
 
 --- Sets the sprite's value
---- @overload fun(self: Dummy.Sprite, sprite_name: string)
+--- @overload fun(self: Dummy.Sprite, sprite_name: string): Dummy.Sprite
 --- @param sprites_names string[]
 function Sprite:setSprite(sprites_names) end
 

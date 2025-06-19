@@ -8,7 +8,6 @@
 
 --- @class Dummy.Bullet : Dummy.Sprite
 ---
---- @field protected super Dummy.Sprite
 --- @field protected damage number
 --- @field protected hitbox Dummy.Bullet.Hitbox
 --- @field protected is_destroyed boolean
@@ -37,9 +36,8 @@ function Bullet:getDamage() end
 function Bullet:setDamage(damage) end
 
 --- Sets the bullet's sprite
---- @overload fun(self: Dummy.Bullet, sprite_name: string)
---- @param sprites_names string[]
-function Bullet:setSprite(sprites_names) end
+--- @param sprite_name string
+function Bullet:setSprite(sprite_name) end
 
 --- Sets the bullet's hitbox from the sprite
 --- @protected

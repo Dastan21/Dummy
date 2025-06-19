@@ -8,7 +8,6 @@
 
 --- @class Dummy.Enemy : Dummy.Sprite
 ---
---- @field protected super Dummy.Sprite
 --- @field protected name string
 --- @field protected hp number
 --- @field protected max_hp number

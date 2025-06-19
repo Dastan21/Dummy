@@ -8,7 +8,6 @@
 
 --- @class Dummy.Item.Equipment : Dummy.Item
 ---
---- @field protected super Dummy.Item
 --- @field protected value number
 --- @field protected type "weapon" | "armor"
 ItemEquipment = {}
