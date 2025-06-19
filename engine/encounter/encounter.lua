@@ -436,9 +436,6 @@ function Encounter.loadMercyMenu()
             local gold_ratio = (enemy:getMaxHP() - enemy:getHP()) / enemy:getMaxHP()
             if gold_ratio == 0 then Encounter.gold_reward = Encounter.gold_reward + enemy:getGold() end
             Encounter.gold_reward = Encounter.gold_reward + math.floor(enemy:getGold() * gold_ratio)
-          elseif enemy:isKilled() then
-            Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
-            Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
           end
         end
 
