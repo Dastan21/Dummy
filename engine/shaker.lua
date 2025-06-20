@@ -3,8 +3,6 @@
 --- @field protected drawable Dummy.Drawable
 --- @field protected dx number
 --- @field protected dy number
---- @field protected vertical_shake number
---- @field protected horizontal_shake number
 --- @field protected duration_timer table|nil
 --- @field protected interval_timer table|nil
 local Shaker = {}
@@ -19,6 +17,8 @@ function Shaker.load()
 
   Shaker.dx = 0
   Shaker.dy = 0
+  Shaker.duration_timer = nil
+  Shaker.interval_timer = nil
 end
 
 --- Shakes the screen

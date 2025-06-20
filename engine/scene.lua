@@ -92,6 +92,8 @@ end
 
 --- Reloads the current scene
 function Scene.reload()
+  Fader.reset()
+  Shaker.reset()
   local scene_name = Scene.scene_name
   Scene.scene_name = nil
   Scene.change(scene_name, table.unpack(Scene.scene_data))

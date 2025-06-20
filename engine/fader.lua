@@ -15,6 +15,8 @@ function Fader.load()
   Fader.background:setLayer(Constants.LAYERS.TOP)
   Fader.background:setScale(Constants.SCREEN_WIDTH * 2, Constants.SCREEN_HEIGHT * 2)
   Fader.background:setColor(0, 0, 0)
+
+  Fader.fade_timer = nil
 end
 
 --- Fades in or out
