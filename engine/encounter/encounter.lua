@@ -822,17 +822,11 @@ function Encounter.startAttacking()
           end
         end)
 
-        enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
-        if enemy:getHP() <= 0 then
-          Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
-          Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
-
-          enemy:setVisible(false)
-
-          if type(enemy.onKilled) == "function" then
-            enemy:onKilled()
-          end
+        if type(enemy.onDamage) == "function" then
+          enemy:onDamage(damage)
         end
+
+        enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
 
         if enemy:getHurtSound() ~= nil then
           Timer.after(0.37, function()
@@ -841,6 +835,36 @@ function Encounter.startAttacking()
             end
           end)
         end
+
+        local shudder = 16
+        Timer.every(2 / 30, function()
+          if shudder == 0 then return end
+
+          local x, y = enemy:getPosition()
+          enemy:setPosition(x + shudder, y)
+          if shudder < 0 then
+            shudder = -(shudder + 2)
+          else
+            shudder = -shudder
+          end
+
+          if shudder == 0 then
+            if type(enemy.onAfterDamage) == "function" then
+              enemy:onAfterDamage()
+            end
+
+            if enemy:getHP() <= 0 then
+              Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
+              Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
+
+              enemy:setVisible(false) -- DEBUG
+
+              if type(enemy.onKilled) == "function" then
+                enemy:onKilled()
+              end
+            end
+          end
+        end, 16)
       end
 
       Timer.after(1, function()

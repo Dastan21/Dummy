@@ -293,6 +293,9 @@ function Enemy:onBeforeDamage(damage) return damage end
 --- @param damage number damage taken
 function Enemy:onDamage(damage) end
 
+--- Called after when the enemy is damaged
+function Enemy:onAfterDamage() end
+
 --- Called when the enemy is killed
 function Enemy:onKilled() end
 
