@@ -778,14 +778,22 @@ function Encounter.startAttacking()
         enemy_width = math.max(100, enemy_width)
         local stretchfactor = enemy_width / enemy:getMaxHP()
         local width = math.round(enemy:getMaxHP() * stretchfactor)
-        local enemy_current_hp = enemy:getHP()
-        local enemy_hp_draw_width = math.round(enemy_current_hp * stretchfactor)
+        local enemy_apparent_hp = enemy:getHP()
+        local enemy_hp_draw_width = math.round(enemy_apparent_hp * stretchfactor)
         local enemy_hp_draw_x = enemy_x - enemy_width / 2
 
-        Timer.during(1, function(dt)
-          enemy_current_hp = math.max(enemy:getHP(), enemy_current_hp - damage * dt)
-          enemy_hp_draw_width = math.round(enemy_current_hp * stretchfactor)
-        end)
+        local fps = Config["fps"]
+        if fps > 30 then
+          Timer.during(1, function(dt)
+            enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - damage * dt)
+            enemy_hp_draw_width = math.round(enemy_apparent_hp * stretchfactor)
+          end)
+        else
+          Timer.every(2 / 30, function()
+            enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - (damage / 15))
+            enemy_hp_draw_width = math.round(enemy_apparent_hp * stretchfactor)
+          end, 15)
+        end
 
         Encounter.enemy_hp_draw:setVisible(true)
         Encounter.enemy_hp_draw:setDraw(function()
