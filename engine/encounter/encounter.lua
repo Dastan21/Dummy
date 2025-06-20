@@ -169,6 +169,30 @@ function Encounter.allSparedOrKilled()
   return true
 end
 
+--- Checks if the encounter is done
+function Encounter.checkEncounterEnd()
+  -- DEBUG
+  for _, enemy in ipairs(Encounter.enemies) do
+    if enemy:isKilled() then
+      enemy:setVisible(false)
+    end
+  end
+
+  if Encounter.allSparedOrKilled() then
+    local win_text = Lang.translate("ENCOUNTER_WIN_REWARD", Encounter.exp_reward, Encounter.gold_reward)
+    local level_old = Player.getLV()
+    Player.setEXP(Player.getEXP() + Encounter.exp_reward)
+    Player.setGold(Player.getGold() + Encounter.gold_reward)
+    local level = Player.getLV()
+    if level ~= level_old then
+      win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
+    end
+    Encounter.playDialogue(win_text)
+  else
+    Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+  end
+end
+
 --- Loads the encounter
 function Encounter.load()
   -- background
@@ -439,19 +463,7 @@ function Encounter.loadMercyMenu()
           end
         end
 
-        if Encounter.allSparedOrKilled() then
-          local win_text = Lang.translate("ENCOUNTER_WIN_REWARD", Encounter.exp_reward, Encounter.gold_reward)
-          local level_old = Player.getLV()
-          Player.setEXP(Player.getEXP() + Encounter.exp_reward)
-          Player.setGold(Player.getGold() + Encounter.gold_reward)
-          local level = Player.getLV()
-          if level ~= level_old then
-            win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
-          end
-          Encounter.playDialogue(win_text)
-        else
-          Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
-
+        if not Encounter.allSparedOrKilled() then
           if not has_spared then
             for _, enemy in ipairs(Encounter.enemies) do
               if not enemy:isKilled() then
@@ -462,6 +474,8 @@ function Encounter.loadMercyMenu()
             end
           end
         end
+
+        Encounter.checkEncounterEnd()
       end
     }
   }
@@ -853,16 +867,18 @@ function Encounter.startAttacking()
               enemy:onAfterDamage()
             end
 
-            if enemy:getHP() <= 0 then
+            if enemy:isKilled() then
+              -- TODO: play dust effect
+
               Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
               Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
-
-              enemy:setVisible(false) -- DEBUG
 
               if type(enemy.onKilled) == "function" then
                 enemy:onKilled()
               end
             end
+
+            Encounter.checkEncounterEnd()
           end
         end, 16)
       end
@@ -881,10 +897,6 @@ function Encounter.startAttacking()
         end)
 
         Encounter.target_bar_sprite:setVisible(false)
-
-        Timer.after(0.05, function()
-          Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
-        end)
       end)
     end
 

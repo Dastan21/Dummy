@@ -104,6 +104,9 @@ function Encounter.allDead() end
 --- @return boolean
 function Encounter.allSparedOrKilled() end
 
+--- Checks if the encounter is done
+function Encounter.checkEncounterEnd() end
+
 --- Loads the encounter
 function Encounter.load() end
 
