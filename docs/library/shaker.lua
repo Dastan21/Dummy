@@ -11,8 +11,6 @@
 --- @field protected drawable Dummy.Drawable
 --- @field protected dx number
 --- @field protected dy number
---- @field protected vertical_shake number
---- @field protected horizontal_shake number
 --- @field protected duration_timer table|nil
 --- @field protected interval_timer table|nil
 Shaker = {}
