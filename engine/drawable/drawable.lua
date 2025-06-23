@@ -119,11 +119,15 @@ function Drawable:setColor(r, g, b, a)
   if type(r) == "table" then
     self.color = r
   else
-    self.color = { r, g, b }
+    self.color = {
+      math.clamp(r, 0, 1),
+      math.clamp(g, 0, 1),
+      math.clamp(b, 0, 1)
+    }
   end
 
   if a ~= nil then
-    self.alpha = a
+    self.alpha = math.clamp(a, 0, 1)
   end
 end
 
@@ -136,7 +140,7 @@ end
 --- Sets drawable alpha
 --- @param alpha number
 function Drawable:setAlpha(alpha)
-  self.alpha = alpha
+  self.alpha = math.clamp(alpha, 0, 1)
 end
 
 --- Gets the drawable layer
