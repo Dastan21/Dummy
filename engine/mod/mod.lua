@@ -61,6 +61,11 @@ function Mod:preview() end
 --- @param dt number
 function Mod:update(dt) end
 
+--- Called when the encounter state changes
+--- @param current_state string
+--- @param previous_state string
+function Mod:onStateChange(current_state, previous_state) end
+
 --- Creates a mod
 --- @param data Dummy.Mod.Data
 --- @return Dummy.Mod

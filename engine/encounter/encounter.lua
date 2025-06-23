@@ -514,6 +514,12 @@ function Encounter.loadMercyMenu()
   end)
 end
 
+--- Gets the current encounter state
+--- @return string
+function Encounter.getCurrentState()
+  return Encounter.current_state
+end
+
 --- Sets current encounter state
 --- @param state string
 function Encounter.setState(state)
@@ -975,7 +981,6 @@ end
 function Encounter.update(dt)
   -- start
   if Encounter.current_state ~= Encounter.previous_state then
-    Encounter.onStateChange(Encounter.current_state, Encounter.previous_state)
     Encounter.previous_state = Encounter.current_state
 
     if Encounter.current_state == Constants.ENCOUNTER_STATES.ACTION_SELECT then
@@ -1042,10 +1047,5 @@ function Encounter.update(dt)
     Scene.change("GAME_OVER", x, y)
   end
 end
-
---- Called when the encounter state changes
---- @param current_state string
---- @param previous_state string
-function Encounter.onStateChange(current_state, previous_state) end
 
 return Encounter

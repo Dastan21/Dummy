@@ -9,6 +9,7 @@
 --- @class Dummy.Scene.Encounter : Dummy.Scene.Scene
 ---
 --- @field protected mod Dummy.Mod
+--- @field protected previous_state string
 encounter = {}
 
 --- Loads the encounter scene

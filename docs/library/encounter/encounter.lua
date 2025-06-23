@@ -144,6 +144,10 @@ function Encounter.getMercyMenu() end
 --- Loads mercy menu
 function Encounter.loadMercyMenu() end
 
+--- Gets the current encounter state
+--- @return string
+function Encounter.getCurrentState() end
+
 --- Sets current encounter state
 --- @param state string
 function Encounter.setState(state) end
@@ -193,9 +197,4 @@ function Encounter.updateDefending(dt) end
 
 --- Updates the encounter
 function Encounter.update(dt) end
-
---- Called when the encounter state changes
---- @param current_state string
---- @param previous_state string
-function Encounter.onStateChange(current_state, previous_state) end
 
