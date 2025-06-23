@@ -114,12 +114,13 @@ function ActionMenu:show()
     option.text:setVisible(visible)
 
     if visible and type(option.draw) == "function" then
-      option.drawable = Drawable:new(function()
+      option.drawable = Drawable:new()
+      option.drawable:setLayer(Constants.LAYERS.UI)
+      function option.drawable:draw()
         if option.text:isVisible() then
           option.draw(option)
         end
-      end)
-      option.drawable:setLayer(Constants.LAYERS.UI)
+      end
     end
   end
 

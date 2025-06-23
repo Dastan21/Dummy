@@ -9,11 +9,13 @@ local Shaker = {}
 
 --- Loads the shaker
 function Shaker.load()
-  Shaker.drawable = Drawable:new(function()
-    love.graphics.translate(Shaker.dx, Shaker.dy)
-  end, true)
+  Shaker.drawable = Drawable:new()
+  Shaker.drawable:setPersistent(true)
   Shaker.drawable:setLayer(Constants.LAYERS.SHAKER)
   Shaker.drawable:setVisible(false)
+  function Shaker.drawable:draw()
+    love.graphics.translate(Shaker.dx, Shaker.dy)
+  end
 
   Shaker.dx = 0
   Shaker.dy = 0

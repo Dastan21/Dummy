@@ -121,16 +121,13 @@ end
 
 --- Plays a text dialogue
 ---@param text Dummy.Text.Text
----@param can_skip? boolean wether the dialogue can be skipped (Defaults to `true`)
----@param instant? boolean wether the dialogue should be played instantly (Defaults to `false`)
-function Encounter.playDialogue(text, can_skip, instant)
+---@return Dummy.DialogueText
+function Encounter.playDialogue(text)
   Encounter.dialogue_text:setText(text)
-  Encounter.dialogue_text:setCanSkip(Utils.getOrDefault(can_skip, true))
-  if instant == true then
-    Encounter.dialogue_text:skip()
-  end
   Encounter.dialogue_text:setVisible(true)
+  Encounter.dialogue_text:setCanSkip(false)
   Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
+  return Encounter.dialogue_text
 end
 
 --- Wether all the enemies are spared
@@ -188,6 +185,7 @@ function Encounter.checkEncounterEnd()
       win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
     end
     Encounter.playDialogue(win_text)
+    Encounter.dialogue_text:setCanSkip(false)
   else
     Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
   end
@@ -248,14 +246,16 @@ function Encounter.load()
   Encounter.strike_sprite:setVisible(false)
 
   -- player hp bar
-  Drawable:new(function()
+  local player_hp_bar_drawable = Drawable:new()
+  player_hp_bar_drawable:setLayer(Constants.LAYERS.UI)
+  function player_hp_bar_drawable:draw()
     local max_hp_bar_width = math.clamp(5 * Player.getLV() + 20, 25, 120)
     local hp_bar_width = max_hp_bar_width * Player.getHP() / Player.getMaxHP()
     love.graphics.setColor(1, 0, 0, 1)
     love.graphics.rectangle("fill", 275, 400, max_hp_bar_width, 21)
     love.graphics.setColor(1, 1, 0, 1)
     love.graphics.rectangle("fill", 275, 400, hp_bar_width, 21)
-  end):setLayer(Constants.LAYERS.UI)
+  end
 
   -- enemy hp bar & damage text
   Encounter.enemy_hp_draw = Drawable:new()
@@ -724,8 +724,6 @@ function Encounter.startEnemyDialogue()
   Encounter.leaveMenu()
 
   Arena.resize(130, 130, false, function()
-    Encounter.enemy_hp_draw:setVisible(false)
-    Encounter.enemy_hp_text:setVisible(false)
     Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
   end)
 
@@ -810,20 +808,22 @@ function Encounter.startAttacking()
         end
 
         Encounter.enemy_hp_draw:setVisible(true)
-        Encounter.enemy_hp_draw:setDraw(function()
+        Encounter.enemy_hp_draw:setVisible(false) -- DEBUG
+        function Encounter.enemy_hp_draw:draw()
           love.graphics.setColor(0, 0, 0, 1)
           love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, width + 2, 15)
           love.graphics.setColor(0.25, 0.25, 0.25, 1)
           love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, width, 13)
           love.graphics.setColor(0, 1, 0, 1)
           love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, enemy_hp_draw_width, 13)
-        end)
+        end
 
         local enemy_hp_text_x = enemy_x
         local enemy_hp_text_y_start = enemy_y - enemy_height - 31
         local enemy_hp_text_y = enemy_hp_text_y_start
         Encounter.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
         Encounter.enemy_hp_text:setVisible(true)
+        Encounter.enemy_hp_text:setVisible(false) -- DEBUG
         Encounter.enemy_hp_text:setText(tostring(damage))
         Encounter.enemy_hp_text_timer = Timer.during(1, function(dt)
           enemy_hp_text_vel_y = enemy_hp_text_vel_y + 0.5 * dt * 30
@@ -834,6 +834,11 @@ function Encounter.startAttacking()
             Timer.cancel(Encounter.enemy_hp_text_timer)
             Encounter.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
           end
+        end)
+
+        Timer.after(1.5, function()
+          Encounter.enemy_hp_draw:setVisible(false)
+          Encounter.enemy_hp_text:setVisible(false)
         end)
 
         if type(enemy.onDamage) == "function" then
@@ -863,18 +868,18 @@ function Encounter.startAttacking()
           end
 
           if shudder == 0 then
-            if type(enemy.onAfterDamage) == "function" then
-              enemy:onAfterDamage()
-            end
-
             if enemy:isKilled() then
-              -- TODO: play dust effect
-
               Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
               Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
 
               if type(enemy.onKilled) == "function" then
                 enemy:onKilled()
+              end
+
+              enemy:vaporize()
+            else
+              if type(enemy.onAfterDamage) == "function" then
+                enemy:onAfterDamage()
               end
             end
 
@@ -897,6 +902,12 @@ function Encounter.startAttacking()
         end)
 
         Encounter.target_bar_sprite:setVisible(false)
+
+        if not Encounter.allSparedOrKilled() then
+          Timer.after(0.05, function()
+            Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+          end)
+        end
       end)
     end
 

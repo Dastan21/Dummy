@@ -10,7 +10,7 @@
 ---
 --- @field protected damage number
 --- @field protected hitbox Dummy.Bullet.Hitbox
---- @field protected is_destroyed boolean
+--- @field protected removed boolean
 Bullet = {}
 
 --- @alias Dummy.Bullet.Hitbox { [1]:number, [2]:number, [3]:number, [4]:number }
@@ -43,8 +43,8 @@ function Bullet:setSprite(sprite_name) end
 --- @protected
 function Bullet:setHitboxFromSprite() end
 
---- Destroys the bullet
-function Bullet:destroy() end
+--- Removes the bullet
+function Bullet:remove() end
 
 --- Updates the bullet
 --- @param dt number

@@ -70,7 +70,9 @@ function love.scale()
   else
     local width = Constants.SCREEN_WIDTH * Config["window_scale"]
     local height = Constants.SCREEN_HEIGHT * Config["window_scale"]
-    love.window.setMode(width, height)
+    love.window.setMode(width, height, {
+      resizable = true,
+    })
     love.resize(width, height)
   end
 end
@@ -116,9 +118,10 @@ end
 local function update(dt)
   engine.next_time = engine.next_time + (1 / Config["fps"])
 
+  dt = Debugger.update(dt)
+
   Input.update()
   Scene.update(dt)
-  Debugger.update()
   Timer.update(dt)
 
   updateFullscreen()

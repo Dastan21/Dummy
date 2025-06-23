@@ -88,9 +88,8 @@ function Encounter.setMusic(music) end
 
 --- Plays a text dialogue
 ---@param text Dummy.Text.Text
----@param can_skip? boolean wether the dialogue can be skipped (Defaults to `true`)
----@param instant? boolean wether the dialogue should be played instantly (Defaults to `false`)
-function Encounter.playDialogue(text, can_skip, instant) end
+---@return Dummy.DialogueText
+function Encounter.playDialogue(text) end
 
 --- Wether all the enemies are spared
 --- @return boolean

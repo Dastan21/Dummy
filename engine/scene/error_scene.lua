@@ -24,11 +24,13 @@ function error.load(err)
   error.error_text:setFont(main_text_font)
   error.error_text:setScale(0.5)
 
-  Drawable:new(function()
+  local text_overlay_drawable = Drawable:new()
+  text_overlay_drawable:setLayer(Constants.LAYERS.ABOVE_UI)
+  function text_overlay_drawable:draw()
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", 0, Constants.SCREEN_HEIGHT - 40 - MARGIN_INFO, Constants.SCREEN_WIDTH,
       40 + MARGIN_INFO)
-  end):setLayer(Constants.LAYERS.ABOVE_UI)
+  end
 
   error.back_main_menu_text = Text:new("ERROR_BACK_MAIN_MENU")
   error.back_main_menu_text:setPosition(MARGIN_INFO, Constants.SCREEN_HEIGHT - 20 - MARGIN_INFO)
@@ -78,7 +80,7 @@ function error.update(dt)
     error.escape = true
   end
 
-  if Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("c") then
+  if Input.isDown("ctrl") and Input.isPressed("c") then
     love.system.setClipboardText(error.traceback .. "\n\n" .. error.engine_info .. "\n" .. error.mod_info)
     error.copied_timer = error.copied_delay
   end

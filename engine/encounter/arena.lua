@@ -30,16 +30,20 @@ function Arena.load()
   Arena.layer = Constants.LAYERS.ARENA
 
   --- arena background
-  Drawable:new(function()
+  local arena_background_drawable = Drawable:new()
+  arena_background_drawable:setLayer(Constants.LAYERS.ARENA)
+  function arena_background_drawable:draw()
     local arena_x = Arena.x - (Arena.width / 2)
     local arena_y = Arena.y - Arena.height
 
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
-  end):setLayer(Constants.LAYERS.ARENA)
+  end
 
   --- arena border
-  Drawable:new(function()
+  local arena_border_drawable = Drawable:new()
+  arena_border_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
+  function arena_border_drawable:draw()
     local b = Constants.ARENA.BORDER_WIDTH
     local x = Arena.x - (Arena.width / 2)
     local y = Arena.y - Arena.height
@@ -49,7 +53,7 @@ function Arena.load()
     love.graphics.rectangle("fill", x - b, y + Arena.height, Arena.width + b * 2, b)
     love.graphics.rectangle("fill", x - b, y - b, b, Arena.height + b * 2)
     love.graphics.rectangle("fill", x + Arena.width, y - b, b, Arena.height + b * 2)
-  end):setLayer(Constants.LAYERS.ABOVE_BULLET)
+  end
 end
 
 --- Updates the arena

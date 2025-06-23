@@ -5,6 +5,13 @@ local self = {}
 
 local function hasAnyKey(keys, callback)
   if type(callback) ~= "function" then return false end
+
+  if keys == "ctrl" then
+    keys = { "lctrl", "rctrl" }
+  elseif keys == "shift" then
+    keys = { "lshift", "rshift" }
+  end
+
   if type(keys) ~= "table" then
     keys = { tostring(keys) }
   end

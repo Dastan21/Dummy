@@ -4,6 +4,7 @@
 --- @field protected margin number
 --- @field protected scale number
 --- @field protected display_hitbox boolean
+--- @field protected paused boolean
 --- @field protected log_bg_sprite Dummy.Sprite
 --- @field protected log_text Dummy.Text
 --- @field protected fps_text Dummy.Text
@@ -15,6 +16,22 @@ function Debugger.shouldDisplayHitbox()
   return Debugger.display_hitbox
 end
 
+--- Wether the debugger is paused
+--- @return boolean
+function Debugger.isPaused()
+  return Debugger.paused
+end
+
+--- Pauses the game
+function Debugger.pause()
+  Debugger.paused = true
+end
+
+--- Resumes the game
+function Debugger.resume()
+  Debugger.paused = false
+end
+
 --- Loads the debugger
 function Debugger.load()
   Debugger.logs = {}
@@ -22,6 +39,7 @@ function Debugger.load()
   Debugger.scale = 1
 
   Debugger.display_hitbox = false
+  Debugger.paused = false
 
   Debugger.log_bg_sprite = Sprite:new("pixel")
   Debugger.log_bg_sprite:setPosition(0, 0)
@@ -59,7 +77,9 @@ function Debugger.saveLogs()
 end
 
 --- Updates the debugger
-function Debugger.update()
+--- @param dt number
+--- @return number
+function Debugger.update(dt)
   Debugger.fps_text:setText(tostring(love.timer.getFPS()))
   Debugger.log_text:setText(table.concat(Debugger.logs or {}, "\n"))
 
@@ -74,20 +94,28 @@ function Debugger.update()
   elseif Input.isPressed("f9") then
     Assets.playSound("screenshot")
     love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
-  elseif Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("r") then
+  elseif Input.isDown("ctrl") and Input.isPressed("r") then
     if Input.isDown({ "lshift", "rshift" }) then
       Scene.fullReload()
     else
       Scene.reload()
     end
-  elseif Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed(";") then
+  elseif Input.isDown("ctrl") and Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
-  elseif Input.isDown({ "lctrl", "rctrl" }) and Input.isPressed("g") then
-    if Scene.getSceneName() ~= "ENCOUNTER" then return end
-
-    local x, y = Player.getPosition()
-    Scene.change("GAME_OVER", x, y)
+  elseif Input.isDown("ctrl") and Input.isPressed("g") then
+    if Scene.getSceneName() == "ENCOUNTER" then
+      local x, y = Player.getPosition()
+      Scene.change("GAME_OVER", x, y)
+    end
+  elseif Input.isDown("ctrl") and Input.isPressed("p") then
+    Debugger.paused = not Debugger.paused
+  elseif Debugger.paused and (Input.isPressed("kp+") or (Input.isDown("ctrl") and Input.isDown("kp+"))) then
+    return dt
   end
+
+  if Debugger.paused then return 0 end
+
+  return dt
 end
 
 local _print = print

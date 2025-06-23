@@ -7,6 +7,8 @@
 ---@meta
 
 --- @class Dummy.Scene.Encounter : Dummy.Scene.Scene
+---
+--- @field protected mod Dummy.Mod
 encounter = {}
 
 --- Loads the encounter scene

@@ -4,7 +4,7 @@
 ---
 --- @field protected damage number
 --- @field protected hitbox Dummy.Bullet.Hitbox
---- @field protected is_destroyed boolean
+--- @field protected removed boolean
 local Bullet = Class:extend(Sprite)
 
 --- Gets the class name
@@ -55,9 +55,9 @@ function Bullet:setHitboxFromSprite()
   self:setHitbox({ 0, 0, width, height })
 end
 
---- Destroys the bullet
-function Bullet:destroy()
-  self.is_destroyed = true
+--- Removes the bullet
+function Bullet:remove()
+  self.removed = true
   self:setVisible(false)
   Scene.removeDrawable(self)
 end
@@ -72,13 +72,15 @@ function Bullet:new()
   local bullet = Class:new(Bullet, {
     damage = 4,
     hitbox = { 0, 0, 0, 0 },
-    is_destroyed = false
+    removed = false
   }, { "bullet" })
 
   bullet:setLayer(Constants.LAYERS.BULLET)
   bullet:setHitboxFromSprite()
 
-  Drawable:new(function()
+  local debug_hitbox_drawable = Drawable:new()
+  debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
+  function debug_hitbox_drawable:draw()
     if Debugger.shouldDisplayHitbox() and bullet:isVisible() then
       love.graphics.setColor(0, 1, 0, 1)
 
@@ -98,7 +100,7 @@ function Bullet:new()
         love.graphics.polygon("line", table.unpack(points))
       end
     end
-  end):setLayer(Constants.LAYERS.ABOVE_BULLET)
+  end
 
   return bullet
 end

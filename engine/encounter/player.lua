@@ -68,14 +68,16 @@ function Player.load()
   Player.is_fleeing = false
   Player.flee_speed = 3
 
-  Player.weapon = ItemEquipment:new("Stick", "Stick", 0, "weapon")
-  Player.armor = ItemEquipment:new("Bandage", "Bandage", 0, "armor")
+  Player.weapon = ItemEquipment:new("ENCOUNTER_ITEM_NAME_STICK", "ENCOUNTER_ITEM_SHORTNAME_STICK", 0, "weapon")
+  Player.armor = ItemEquipment:new("ENCOUNTER_ITEM_NAME_BANDAGE", "ENCOUNTER_ITEM_SHORTNAME_BANDAGE", 0, "armor")
 
   Player.items = {}
 
   Player.setLV(1)
 
-  Drawable:new(function()
+  local debug_hitbox_drawable = Drawable:new()
+  debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_SOUL)
+  function debug_hitbox_drawable:draw()
     if Debugger.shouldDisplayHitbox() and not Player.isHidden() then
       local x, y = Player.getPosition()
       local scale_x, scale_y = Player.getScale()
@@ -83,7 +85,7 @@ function Player.load()
       love.graphics.rectangle("line", x - Player.hitbox[1] * scale_x, y - Player.hitbox[2] * scale_y,
         Player.hitbox[3] * scale_x, Player.hitbox[4] * scale_y)
     end
-  end):setLayer(Constants.LAYERS.ABOVE_SOUL)
+  end
 end
 
 --- Gets the player's soul position

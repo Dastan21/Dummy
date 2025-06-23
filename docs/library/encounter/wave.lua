@@ -34,27 +34,27 @@ function Wave:spawnBullet(bullet) end
 --- @return Dummy.Bullet[]
 function Wave:getBullets() end
 
---- [INTERNAL] Called when the wave starts
+--- [INTERNAL] Starts the wave
 --- @private
 function Wave:__start() end
 
---- [INTERNAL] Called when the wave is updating
+--- [INTERNAL] Updates the wave
 --- @private
 function Wave:__update(dt) end
 
---- [INTERNAL] Called when the wave is done
+--- [INTERNAL] Ends the wave
 --- @private
-function Wave:__done() end
+function Wave:__end() end
 
 --- Called when the wave starts
-function Wave:start() end
+function Wave:onStart() end
 
---- Called when the wave is updating
+--- Called when the wave updates
 --- @param dt number
 function Wave:update(dt) end
 
---- Called when the wave is done
-function Wave:done() end
+--- Called when the wave ends
+function Wave:onEnd() end
 
 --- Creates an enemy Waveing
 --- @param duration? number wave duration, in seconds (Defaults to `8`)

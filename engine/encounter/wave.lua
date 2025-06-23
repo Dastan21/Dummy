@@ -40,17 +40,17 @@ function Wave:getBullets()
   return bullets
 end
 
---- [INTERNAL] Called when the wave starts
+--- [INTERNAL] Starts the wave
 --- @private
 function Wave:__start()
   self.bullets = {}
   self.time = 0
   self.is_done = false
 
-  self:start()
+  self:onStart()
 end
 
---- [INTERNAL] Called when the wave is updating
+--- [INTERNAL] Updates the wave
 --- @private
 function Wave:__update(dt)
   self.time = self.time + dt
@@ -58,8 +58,8 @@ function Wave:__update(dt)
     if not self.is_done then
       self.is_done = true
       Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
-      if (type(self.done) == "function") then
-        self:__done()
+      if (type(self.onEnd) == "function") then
+        self:__end()
       end
     end
     return
@@ -69,7 +69,7 @@ function Wave:__update(dt)
     bullet:update(dt)
 
     if bullet:isVisible() and not Player.isInvincible() and Player.isColliding(bullet) then
-      bullet:destroy()
+      bullet:remove()
       Player.hurt(bullet:getDamage())
     end
   end
@@ -77,25 +77,25 @@ function Wave:__update(dt)
   self:update(dt)
 end
 
---- [INTERNAL] Called when the wave is done
+--- [INTERNAL] Ends the wave
 --- @private
-function Wave:__done()
+function Wave:__end()
   for bullet in pairs(self.bullets) do
-    bullet:destroy()
+    bullet:remove()
   end
 
-  self:done()
+  self:onEnd()
 end
 
 --- Called when the wave starts
-function Wave:start() end
+function Wave:onStart() end
 
---- Called when the wave is updating
+--- Called when the wave updates
 --- @param dt number
 function Wave:update(dt) end
 
---- Called when the wave is done
-function Wave:done() end
+--- Called when the wave ends
+function Wave:onEnd() end
 
 --- Creates an enemy Waveing
 --- @param duration? number wave duration, in seconds (Defaults to `8`)

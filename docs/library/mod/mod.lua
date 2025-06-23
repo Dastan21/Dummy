@@ -53,6 +53,10 @@ function Mod:load() end
 --- Called when the main menu is loaded, for standalone mods only
 function Mod:preview() end
 
+--- Called when on every update
+--- @param dt number
+function Mod:update(dt) end
+
 --- Creates a mod
 --- @param data Dummy.Mod.Data
 --- @return Dummy.Mod

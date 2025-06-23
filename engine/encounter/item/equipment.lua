@@ -24,24 +24,39 @@ end
 
 --- Uses the equipment item
 function ItemEquipment:use()
-  local armor = Player.getArmor()
-  if armor:getName() == "Bandage" then
-    local bandage = ItemConsumable:new("Bandage", "Bandage", 10, "food")
-    bandage:setText("ENCOUNTER_ITEM_USE_BANDAGE")
-
-    Player.addItem(bandage)
-  end
-
-  Encounter.playDialogue({ "ENCOUNTER_ITEM_EQUIPMENT_USE", self.name })
+  local dialogue = Encounter.playDialogue({ "ENCOUNTER_ITEM_EQUIPMENT_USE", self.name })
+  dialogue:setCanSkip(true)
   Player.removeItem(self)
   Assets.playSound("item")
 
   if self.type == "weapon" then
+    local weapon = Player.getWeapon()
+
     Player.setAT(Player.getAT() + self.value)
     Player.setWeapon(self)
+
+    if weapon:getName() == "ENCOUNTER_ITEM_NAME_STICK" then
+      local stick = Item:new("ENCOUNTER_ITEM_NAME_STICK", "ENCOUNTER_ITEM_SHORTNAME_STICK")
+      stick:setText("ENCOUNTER_ITEM_USE_STICK")
+
+      Player.addItem(stick)
+    else
+      Player.addItem(weapon)
+    end
   elseif self.type == "armor" then
+    local armor = Player.getArmor()
+
     Player.setDF(Player.getDF() + self.value)
     Player.setArmor(self)
+
+    if armor:getName() == "ENCOUNTER_ITEM_NAME_BANDAGE" then
+      local bandage = ItemConsumable:new("ENCOUNTER_ITEM_NAME_BANDAGE", "ENCOUNTER_ITEM_SHORTNAME_BANDAGE", 10, "food")
+      bandage:setText("ENCOUNTER_ITEM_USE_BANDAGE")
+
+      Player.addItem(bandage)
+    else
+      Player.addItem(armor)
+    end
   end
 
 
