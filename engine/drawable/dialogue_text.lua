@@ -123,7 +123,7 @@ function DialogueText:new(value)
     speed = 1,
     time = 0,
     text_index = 0,
-    voice = "text_voice",
+    voice = "voice_text",
     max_width = 0,
     can_skip = true
   }, { value })
