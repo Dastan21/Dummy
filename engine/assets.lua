@@ -108,7 +108,7 @@ function Assets.playMusic(music_name, play, loop, replace)
   loop = Utils.getOrDefault(loop, true)
   replace = Utils.getOrDefault(replace, true)
 
-  local source = Assets.playAudio("assets/music/", music_name, "stream", play, loop)
+  local source = Assets.playAudio("assets/musics/", music_name, "stream", play, loop)
 
   if replace then
     if Assets.current_music ~= nil then

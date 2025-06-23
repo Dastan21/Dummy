@@ -75,14 +75,14 @@ end
 
 --- Loads languages from the lang folder
 function Lang.loadLanguages()
-  for _, filename in pairs(love.filesystem.getDirectoryItems("assets/lang")) do
+  for _, filename in pairs(love.filesystem.getDirectoryItems("assets/langs")) do
     if Utils.checkExtension(filename, "txt") then
       local code = filename:sub(1, #filename - 4)
       if Lang.translations[code] == nil then
         Lang.translations[code] = {}
         table.insert(Lang.languages, code)
       end
-      for txt in love.filesystem.lines("assets/lang/" .. filename) do
+      for txt in love.filesystem.lines("assets/langs/" .. filename) do
         if txt ~= "" and txt:sub(1, 1) ~= "#" then -- for comments
           local t = {}
           for str in string.gmatch(txt, "([^=]+)") do table.insert(t, str) end
