@@ -40,6 +40,13 @@ function Arena.resize(width, height, instant, resize_callback) end
 --- @param move_callback? fun() called when the move is done
 function Arena.move(x, y, instant, move_callback) end
 
+--- Moves the arena absolute
+--- @param x number target x position of the arena
+--- @param y number target y position of the arena
+--- @param instant? boolean moves the arena instantly (Defaults to `false`)
+--- @param move_callback? fun() called when the move is done
+function Arena.moveAbsolute(x, y, instant, move_callback) end
+
 --- Resets the arena bounds
 --- @param reset_callback? fun() called when the reset is done
 function Arena.reset(reset_callback) end
