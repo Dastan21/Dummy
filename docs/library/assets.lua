@@ -22,6 +22,11 @@ function Assets.load() end
 --- @return love.Font
 function Assets.getFont(name) end
 
+--- Adds a font
+--- @param font_name string
+--- @param font love.Font
+function Assets.addFont(font_name, font) end
+
 --- Checks which extension to use
 ---@param name string
 ---@param exts table<string, string>
