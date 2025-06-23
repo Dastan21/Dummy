@@ -168,13 +168,6 @@ end
 
 --- Checks if the encounter is done
 function Encounter.checkEncounterEnd()
-  -- DEBUG
-  for _, enemy in ipairs(Encounter.enemies) do
-    if enemy:isKilled() then
-      enemy:setVisible(false)
-    end
-  end
-
   if Encounter.allSparedOrKilled() then
     local win_text = Lang.translate("ENCOUNTER_WIN_REWARD", Encounter.exp_reward, Encounter.gold_reward)
     local level_old = Player.getLV()
@@ -808,7 +801,6 @@ function Encounter.startAttacking()
         end
 
         Encounter.enemy_hp_draw:setVisible(true)
-        Encounter.enemy_hp_draw:setVisible(false) -- DEBUG
         function Encounter.enemy_hp_draw:draw()
           love.graphics.setColor(0, 0, 0, 1)
           love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, width + 2, 15)
@@ -823,7 +815,6 @@ function Encounter.startAttacking()
         local enemy_hp_text_y = enemy_hp_text_y_start
         Encounter.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
         Encounter.enemy_hp_text:setVisible(true)
-        Encounter.enemy_hp_text:setVisible(false) -- DEBUG
         Encounter.enemy_hp_text:setText(tostring(damage))
         Encounter.enemy_hp_text_timer = Timer.during(1, function(dt)
           enemy_hp_text_vel_y = enemy_hp_text_vel_y + 0.5 * dt * 30
