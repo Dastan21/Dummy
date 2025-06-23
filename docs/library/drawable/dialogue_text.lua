@@ -45,10 +45,6 @@ function DialogueText:skip() end
 ---@return boolean
 function DialogueText:isDone() end
 
-function DialogueText:getMaxWidth() end
-
-function DialogueText:setMaxWidth(max_width) end
-
 --- Gets the dialogue speed
 --- @return number
 function DialogueText:getSpeed() end

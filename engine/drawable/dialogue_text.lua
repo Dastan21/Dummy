@@ -71,14 +71,6 @@ function DialogueText:isDone()
   return not self:isVisible() or self.text_index >= #self.full_text
 end
 
-function DialogueText:getMaxWidth()
-  return self.max_width
-end
-
-function DialogueText:setMaxWidth(max_width)
-  self.max_width = math.max(0, max_width)
-end
-
 --- Gets the dialogue speed
 --- @return number
 function DialogueText:getSpeed()

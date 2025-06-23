@@ -10,10 +10,13 @@
 ---
 --- @field protected text Dummy.Text.Text
 --- @field protected font love.Font
+--- @field protected max_width number
+--- @field protected align Dummy.Text.Align
 --- @field protected sprite love.Text
 Text = {}
 
 --- @alias Dummy.Text.Text string|table|fun(): string|table
+--- @alias Dummy.Text.Align "left" | "center" | "right" | "justify"
 
 --- Gets the class name
 --- @return string
@@ -46,6 +49,22 @@ function Text:getFont() end
 --- Sets the text font
 --- @param font love.Font
 function Text:setFont(font) end
+
+--- Gets the text max width
+--- @return number
+function Text:getMaxWidth() end
+
+--- Sets the text max width
+--- @param max_width number
+function Text:setMaxWidth(max_width) end
+
+--- Gets the text align
+--- @return Dummy.Text.Align
+function Text:getAlign() end
+
+--- Sets the text align
+--- @param align Dummy.Text.Align
+function Text:setAlign(align) end
 
 --- Sets the text alpha
 --- @param alpha number
