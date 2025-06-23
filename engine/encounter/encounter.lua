@@ -123,6 +123,12 @@ function Encounter.setMusic(music)
   Encounter.music:setVolume(0.5)
 end
 
+--- Gets the encounter dialogue
+--- @return Dummy.DialogueText
+function Encounter.getDialogue()
+  return Encounter.dialogue_text
+end
+
 --- Plays a text dialogue
 ---@param text Dummy.Text.Text
 ---@return Dummy.DialogueText

@@ -90,6 +90,10 @@ function Encounter.getMusic() end
 ---@param music string
 function Encounter.setMusic(music) end
 
+--- Gets the encounter dialogue
+--- @return Dummy.DialogueText
+function Encounter.getDialogue() end
+
 --- Plays a text dialogue
 ---@param text Dummy.Text.Text
 ---@return Dummy.DialogueText
