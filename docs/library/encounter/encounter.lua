@@ -22,6 +22,10 @@
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
 --- @field protected strike_sprite Dummy.Sprite
+--- @field protected player_name_text Dummy.Text
+--- @field protected player_lv_text Dummy.Text
+--- @field protected player_hp_sprite Dummy.Sprite
+--- @field protected player_hp_value_text Dummy.Text
 --- @field protected enemy_hp_draw Dummy.Drawable
 --- @field protected enemy_hp_text Dummy.Text
 --- @field protected enemy_hp_text_timer table|nil
@@ -197,4 +201,7 @@ function Encounter.updateDefending(dt) end
 
 --- Updates the encounter
 function Encounter.update(dt) end
+
+--- Updates the player UI
+function Encounter.updatePlayerUI() end
 

@@ -14,10 +14,6 @@
 --- @field protected override boolean
 --- @field protected soul_sprite Dummy.Sprite
 --- @field protected name string
---- @field protected name_text Dummy.Text
---- @field protected lv_text Dummy.Text
---- @field protected hp_sprite Dummy.Sprite
---- @field protected hp_value_text Dummy.Text
 --- @field protected is_fleeing boolean
 --- @field protected flee_speed number
 --- @field protected weapon Dummy.Item.Equipment
@@ -47,23 +43,6 @@ function Player.load()
   Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
 
   Player.name = "Frisk"
-  Player.name_text = Text:new(Player.name)
-  Player.name_text:setPosition(30, 400)
-  Player.name_text:setOrigin(0)
-  Player.name_text:setFont(Assets.getFont("curs"))
-
-  Player.lv_text = Text:new("")
-  Player.lv_text:setPosition(174, 400)
-  Player.lv_text:setOrigin(0)
-  Player.lv_text:setFont(Assets.getFont("curs"))
-
-  Player.hp_sprite = Sprite:new("hp")
-  Player.hp_sprite:setPosition(240, 400)
-  Player.hp_sprite:setOrigin(0)
-  Player.hp_value_text = Text:new("")
-  Player.hp_value_text:setPosition(400, 400)
-  Player.hp_value_text:setOrigin(0)
-  Player.hp_value_text:setFont(Assets.getFont("curs"))
 
   Player.is_fleeing = false
   Player.flee_speed = 3
@@ -142,8 +121,6 @@ function Player.setName(name)
   if name == nil then return end
 
   Player.name = Utils.getOrDefault(name, "Frisk")
-  Player.name_text:setText(Player.name)
-  Player.lv_text:setPosition(Player.name_text:getSprite():getWidth() + 57, 400)
 end
 
 --- Gets the player's LV
@@ -160,7 +137,6 @@ function Player.setLV(lv, silent)
 
   local lv_old = Player.lv
   Player.lv = math.max(1, lv)
-  Player.lv_text:setText(Lang.translate("ENCOUNTER_STAT_LV") .. " " .. tostring(Player.lv))
 
   if Player.lv < 20 then
     Player.setMaxHP(16 + 4 * Player.lv)
@@ -189,8 +165,6 @@ function Player.setHP(hp)
   if type(hp) ~= "number" then return end
 
   Player.hp = math.clamp(hp, 0, Player.max_hp)
-  Player.hp_value_text:setText(string.format("%02d", Player.hp) .. " / " .. tostring(Player.max_hp))
-  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.lv + 20, 25, 120), 400)
 end
 
 --- Heals the player
@@ -256,8 +230,6 @@ function Player.setMaxHP(max_hp)
   if type(max_hp) ~= "number" then return end
 
   Player.max_hp = math.max(0, max_hp)
-  Player.hp_value_text:setText(tostring(Player.hp) .. " / " .. tostring(Player.max_hp))
-  Player.hp_value_text:setPosition(289 + math.clamp(5 * Player.lv + 20, 25, 120), 400)
 end
 
 --- Gets the player's AT
@@ -532,12 +504,6 @@ function Player.flee()
     Player.soul_sprite:setPosition(x - Player.flee_speed * dt * 30, y)
   end)
 
-  Timer.after(1, function()
-    Fader.fadeIn(1 / 2.4, function()
-      Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
-    end)
-  end)
-
   Assets.playSound("escaped")
 end
 
@@ -562,8 +528,6 @@ function Player.addItem(item, ...)
   for _, item in ipairs(items) do
     table.insert(Player.items, item)
   end
-
-  Encounter.loadItemMenu()
 end
 
 --- Removes an item from the player
@@ -575,8 +539,6 @@ function Player.removeItem(item)
       break
     end
   end
-
-  Encounter.loadItemMenu()
 end
 
 --- Updates the player

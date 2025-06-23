@@ -16,6 +16,8 @@ function encounter.load(mod)
   local mod_list = require "mod.mod_list"
   mod_list.loadMod(mod)
   mod_list.setWindowTitleAndIcon(mod:getTitle())
+
+  Encounter.updatePlayerUI()
 end
 
 function encounter.update(dt)

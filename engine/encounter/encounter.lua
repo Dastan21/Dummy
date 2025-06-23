@@ -14,6 +14,10 @@
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
 --- @field protected strike_sprite Dummy.Sprite
+--- @field protected player_name_text Dummy.Text
+--- @field protected player_lv_text Dummy.Text
+--- @field protected player_hp_sprite Dummy.Sprite
+--- @field protected player_hp_value_text Dummy.Text
 --- @field protected enemy_hp_draw Dummy.Drawable
 --- @field protected enemy_hp_text Dummy.Text
 --- @field protected enemy_hp_text_timer table|nil
@@ -237,6 +241,27 @@ function Encounter.load()
   Encounter.strike_sprite:setOrigin(0.5, 0.5)
   Encounter.strike_sprite:setScale(1.5)
   Encounter.strike_sprite:setVisible(false)
+
+  -- player name
+  Encounter.player_name_text = Text:new(Player.getName())
+  Encounter.player_name_text:setPosition(30, 400)
+  Encounter.player_name_text:setOrigin(0)
+  Encounter.player_name_text:setFont(Assets.getFont("curs"))
+
+  -- player level
+  Encounter.player_lv_text = Text:new("")
+  Encounter.player_lv_text:setPosition(174, 400)
+  Encounter.player_lv_text:setOrigin(0)
+  Encounter.player_lv_text:setFont(Assets.getFont("curs"))
+
+  -- player hp text
+  Encounter.player_hp_sprite = Sprite:new("hp")
+  Encounter.player_hp_sprite:setPosition(240, 400)
+  Encounter.player_hp_sprite:setOrigin(0)
+  Encounter.player_hp_value_text = Text:new("")
+  Encounter.player_hp_value_text:setPosition(314, 400)
+  Encounter.player_hp_value_text:setOrigin(0)
+  Encounter.player_hp_value_text:setFont(Assets.getFont("curs"))
 
   -- player hp bar
   local player_hp_bar_drawable = Drawable:new()
@@ -478,6 +503,12 @@ function Encounter.loadMercyMenu()
       text = Text:new("ENCOUNTER_MENU_MERCY_FLEE"),
       action = function()
         Player.flee()
+
+        Timer.after(1, function()
+          Fader.fadeIn(1 / 2.4, function()
+            Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
+          end)
+        end)
 
         Encounter.mercy_menu:setActive(false)
         Encounter.unselectAction()
@@ -1046,6 +1077,18 @@ function Encounter.update(dt)
     local x, y = Player.getPosition()
     Scene.change("GAME_OVER", x, y)
   end
+
+  -- player UI
+  Encounter.updatePlayerUI()
+end
+
+--- Updates the player UI
+function Encounter.updatePlayerUI()
+  Encounter.player_name_text:setText(Player.getName())
+  Encounter.player_lv_text:setPosition(Encounter.player_name_text:getSprite():getWidth() + 57, 400)
+  Encounter.player_lv_text:setText(Lang.translate("ENCOUNTER_STAT_LV") .. " " .. tostring(Player.getLV()))
+  Encounter.player_hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 400)
+  Encounter.player_hp_value_text:setText(string.format("%02d", Player.getHP()) .. " / " .. tostring(Player.getMaxHP()))
 end
 
 return Encounter
