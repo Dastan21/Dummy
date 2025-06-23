@@ -8,13 +8,13 @@
 
 --- @class Dummy.Scene.MainMenu : Dummy.Scene.Scene
 ---
---- @field private mod_list Dummy.ModList
---- @field private options Dummy.Menu.Options
---- @field private current_menu Dummy.MainMenu
---- @field private logo_sprite Dummy.Sprite
---- @field private credits_text Dummy.Text
---- @field private background_sprite Dummy.Sprite
---- @field private menu_music love.Source
+--- @field protected mod_list Dummy.ModList
+--- @field protected options Dummy.Menu.Options
+--- @field protected current_menu Dummy.MainMenu
+--- @field protected logo_sprite Dummy.Sprite
+--- @field protected credits_text Dummy.Text
+--- @field protected background_sprite Dummy.Sprite
+--- @field protected menu_music love.Source
 main_menu = {}
 
 --- Loads the main menu

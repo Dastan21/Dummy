@@ -8,9 +8,10 @@
 
 --- @class Dummy.Assets
 ---
---- @field private fonts table<Dummy.Assets.Font, love.Font>
---- @field private current_music love.Source|nil
---- @field private current_sound love.Source|nil
+--- @field protected fonts table<Dummy.Assets.Font, love.Font>
+--- @field protected current_music love.Source|nil
+--- @field protected current_sound love.Source|nil
+--- @field protected audio_cache table<string, love.FileData>
 Assets = {}
 
 --- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage"

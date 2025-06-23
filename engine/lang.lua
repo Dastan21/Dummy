@@ -1,9 +1,9 @@
 --- @class Dummy.Lang
 ---
---- @field private translations table<string, table<string, string>>
---- @field private languages string[]
---- @field private language_code string
---- @field private language_name string
+--- @field protected translations table<string, table<string, string>>
+--- @field protected languages string[]
+--- @field protected language_code string
+--- @field protected language_name string
 local Lang = {}
 
 --- Gets the current language name

@@ -17,6 +17,8 @@
 --- @field protected timer table|nil
 --- @field protected vaporize_type "pixel" | "line" | nil
 --- @field protected vaporize_size number
+--- @field protected cache_image table<string, love.Image>
+--- @field protected cache_image_data table<string|love.Image, love.ImageData>
 Sprite = {}
 
 --- Gets the class name

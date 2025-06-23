@@ -2,13 +2,11 @@
 
 --- @class Dummy.Assets
 ---
---- @field private fonts table<Dummy.Assets.Font, love.Font>
---- @field private current_music love.Source|nil
---- @field private current_sound love.Source|nil
+--- @field protected fonts table<Dummy.Assets.Font, love.Font>
+--- @field protected current_music love.Source|nil
+--- @field protected current_sound love.Source|nil
+--- @field protected audio_cache table<string, love.FileData>
 local Assets = {}
-
----@type table<string, love.FileData>
-local audio_cache = {}
 
 function Assets.load()
   Assets.fonts = {}
@@ -79,7 +77,7 @@ function Assets.playAudio(folder, audio_name, type, play, loop)
 
   local source = nil
   local success = true
-  local file_data = audio_cache[filename]
+  local file_data = Assets.audio_cache[filename]
 
   if file_data == nil then
     success, file_data = pcall(love.filesystem.newFileData, filename)
@@ -89,8 +87,8 @@ function Assets.playAudio(folder, audio_name, type, play, loop)
   success, source = pcall(love.audio.newSource, file_data, type)
   assert(success, "Audio \"" .. audio_name .. "\" not found")
 
-  if audio_cache[filename] == nil then
-    audio_cache[filename] = file_data
+  if Assets.audio_cache[filename] == nil then
+    Assets.audio_cache[filename] = file_data
   end
 
   if loop then source:setLooping(loop) end
@@ -146,7 +144,7 @@ end
 
 --- Clears the cache
 function Assets.clear()
-  audio_cache = {}
+  Assets.audio_cache = {}
 end
 
 return Assets

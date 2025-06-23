@@ -1,13 +1,14 @@
 --- @class Dummy.Scene
 ---
---- @field private scene Dummy.Scene.Scene|nil
---- @field private scene_name string
---- @field private scene_data table
---- @field private quitting_delay number
---- @field private quitting_timer number
---- @field private quitting_sprite Dummy.Sprite
---- @field private drawables Dummy.Drawable[]
---- @field private dialogues Dummy.DialogueText[]
+--- @field protected scenes table<string, Dummy.Scene.Scene>
+--- @field protected scene Dummy.Scene.Scene|nil
+--- @field protected scene_name string
+--- @field protected scene_data table
+--- @field protected quitting_delay number
+--- @field protected quitting_timer number
+--- @field protected quitting_sprite Dummy.Sprite
+--- @field protected drawables Dummy.Drawable[]
+--- @field protected dialogues Dummy.DialogueText[]
 local Scene = {}
 
 --- @class Dummy.Scene.Scene
@@ -15,18 +16,17 @@ local Scene = {}
 --- @field load fun(...)
 --- @field update fun(dt: number)
 
-local scenes = {}
-
 local SCENE_QUITTING_DELAY = 0.8
 
 --- Loads the scene manager
 function Scene.load()
   Scene.clean()
 
-  scenes.MAIN_MENU = require "scene.main_menu_scene"
-  scenes.ENCOUNTER = require "scene.encounter_scene"
-  scenes.GAME_OVER = require "scene.game_over_scene"
-  scenes.ERROR = require "scene.error_scene"
+  Scene.scenes = {}
+  Scene.scenes.MAIN_MENU = require "scene.main_menu_scene"
+  Scene.scenes.ENCOUNTER = require "scene.encounter_scene"
+  Scene.scenes.GAME_OVER = require "scene.game_over_scene"
+  Scene.scenes.ERROR = require "scene.error_scene"
 
   Scene.quitting_delay = SCENE_QUITTING_DELAY
   Scene.quitting_timer = 0
@@ -36,16 +36,19 @@ end
 --- @param scene_name string
 --- @param ... any data to pass to the scene
 function Scene.change(scene_name, ...)
-  assert(type(scene_name) == "string", "Cannot change scene: invalid type \"" .. tostring(scene_name) .. "\"")
-  assert(scenes[scene_name:upper()] ~= nil, "Cannot change scene: unkwown scene \"" .. scene_name .. "\"")
+  scene_name = tostring(scene_name):upper()
+
+  assert(Scene.scenes[scene_name] ~= nil, "Cannot change scene: unkwown scene \"" .. scene_name .. "\"")
 
   if Scene.scene_name == scene_name then return end
 
   Scene.clean()
-  Scene.scene = scenes[scene_name]
+  Scene.scene = Scene.scenes[scene_name]
   Scene.scene_name = scene_name
   Scene.scene_data = { ... }
-  Scene.scene.load(...)
+  if type(Scene.scene.load) == "function" then
+    Scene.scene.load(...)
+  end
 
   Scene.quitting_delay = SCENE_QUITTING_DELAY
   Scene.quitting_timer = 0
@@ -114,7 +117,9 @@ function Scene.update(dt)
     dialogue_text:update(dt)
   end
 
-  Scene.scene.update(dt)
+  if type(Scene.scene.update) == "function" then
+    Scene.scene.update(dt)
+  end
   Scene.updateQuitting(dt)
 end
 
@@ -174,6 +179,15 @@ end
 --- @return Dummy.Scene.Scene
 function Scene.getCurrentScene()
   return Scene.scene
+end
+
+--- Adds a scene
+--- @param scene_name string
+--- @param scene Dummy.Scene.Scene
+function Scene.addScene(scene_name, scene)
+  scene_name = tostring(scene_name):upper()
+
+  Scene.scenes[scene_name] = scene
 end
 
 --- Adds a drawable in the current scene

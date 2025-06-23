@@ -8,14 +8,15 @@
 
 --- @class Dummy.Scene
 ---
---- @field private scene Dummy.Scene.Scene|nil
---- @field private scene_name string
---- @field private scene_data table
---- @field private quitting_delay number
---- @field private quitting_timer number
---- @field private quitting_sprite Dummy.Sprite
---- @field private drawables Dummy.Drawable[]
---- @field private dialogues Dummy.DialogueText[]
+--- @field protected scenes table<string, Dummy.Scene.Scene>
+--- @field protected scene Dummy.Scene.Scene|nil
+--- @field protected scene_name string
+--- @field protected scene_data table
+--- @field protected quitting_delay number
+--- @field protected quitting_timer number
+--- @field protected quitting_sprite Dummy.Sprite
+--- @field protected drawables Dummy.Drawable[]
+--- @field protected dialogues Dummy.DialogueText[]
 Scene = {}
 
 --- @class Dummy.Scene.Scene
@@ -57,6 +58,11 @@ function Scene.getSceneName() end
 --- Gets the current scene
 --- @return Dummy.Scene.Scene
 function Scene.getCurrentScene() end
+
+--- Adds a scene
+--- @param scene_name string
+--- @param scene Dummy.Scene.Scene
+function Scene.addScene(scene_name, scene) end
 
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable|fun()

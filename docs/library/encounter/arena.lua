@@ -8,16 +8,16 @@
 
 --- @class Dummy.Arena
 ---
---- @field private x number
---- @field private y number
---- @field private width number
---- @field private height number
---- @field private target_x number
---- @field private target_y number
---- @field private target_width number
---- @field private target_height number
---- @field private resize_callback fun()|nil
---- @field private move_callback fun()|nil
+--- @field protected x number
+--- @field protected y number
+--- @field protected width number
+--- @field protected height number
+--- @field protected target_x number
+--- @field protected target_y number
+--- @field protected target_width number
+--- @field protected target_height number
+--- @field protected resize_callback fun()|nil
+--- @field protected move_callback fun()|nil
 Arena = {}
 
 --- Loads the arena

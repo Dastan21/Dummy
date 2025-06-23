@@ -1,12 +1,12 @@
 --- @class Dummy.Scene.Error : Dummy.Scene.Scene
 ---
---- @field private traceback string
---- @field private error_text Dummy.Text
---- @field private back_main_menu_text Dummy.Text
---- @field private copy_traceback_text Dummy.Text
---- @field private copied_delay number
---- @field private copied_timer number
---- @field private escape boolean
+--- @field protected traceback string
+--- @field protected error_text Dummy.Text
+--- @field protected back_main_menu_text Dummy.Text
+--- @field protected copy_traceback_text Dummy.Text
+--- @field protected copied_delay number
+--- @field protected copied_timer number
+--- @field protected escape boolean
 local error = {}
 
 local MARGIN_ERROR = 15

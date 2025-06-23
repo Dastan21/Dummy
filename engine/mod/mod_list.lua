@@ -1,8 +1,8 @@
 --- @class Dummy.ModList
 ---
---- @field private mods Dummy.Mod[]
---- @field private current_mod Dummy.Mod|nil
---- @field private standalone Dummy.Mod|nil
+--- @field protected mods Dummy.Mod[]
+--- @field protected current_mod Dummy.Mod|nil
+--- @field protected standalone Dummy.Mod|nil
 local ModList = {}
 
 --- Gets the mods
