@@ -6,25 +6,48 @@
 
 ---@meta
 
-keys_pressed = {}
+--- @class Dummy.Input
+---
+--- @field Up string[]
+--- @field Down string[]
+--- @field Left string[]
+--- @field Right string[]
+--- @field Confirm string[]
+--- @field Cancel string[]
+---
+--- @field protected keys_pressed table<string, number>
+--- @field protected keys_released table<string, number>
+Input = {}
 
---- Check if a keybind is being pressed
+--- Wether a key is down, using a predicate function
+--- @param keys string|string[]
+--- @param predicate fun(key: string): boolean
+--- @return boolean
+function Input.hasAnyKey(keys, predicate) end
+
+--- Wether a keybind is being pressed
 --- @param keybind string|string[]
-function self.isDown(keybind) end
+--- @return boolean
+function Input.isDown(keybind) end
 
---- Check if a keybind is not being pressed
+--- Wether a keybind is not being pressed
 --- @param keybind string|string[]
-function self.isUp(keybind) end
+--- @return boolean
+function Input.isUp(keybind) end
 
---- Check if a keybind has been pressed once
+--- Wether a keybind has been pressed once
 --- @param keybind string|string[]
-function self.isPressed(keybind) end
+--- @return boolean
+function Input.isPressed(keybind) end
 
---- Check if a keybind has been released once
+--- Wether a keybind has been released once
 --- @param keybind string|string[]
-function self.isReleased(keybind) end
+--- @return boolean
+function Input.isReleased(keybind) end
 
-function self.load() end
+--- Loads the input
+function Input.load() end
 
-function self.update() end
+--- Updates the input
+function Input.update() end
 
