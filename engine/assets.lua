@@ -1,4 +1,4 @@
---- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage"
+--- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage" | "plain"
 
 --- @class Dummy.Assets
 ---
@@ -22,6 +22,8 @@ function Assets.load()
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
   Assets.fonts.wonder = love.graphics.newImageFont("assets/fonts/wonder.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
   Assets.fonts.damage = love.graphics.newImageFont("assets/fonts/damage.png",
+    " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+  Assets.fonts.plain = love.graphics.newImageFont("assets/fonts/plain.png",
     " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 
   -- Antialiazing
@@ -68,7 +70,7 @@ end
 --- Plays an audio
 --- @param folder string
 --- @param audio_name string
---- @param type "queue"|"static"|"stream"
+--- @param type "queue" | "static" | "stream"
 --- @param play boolean
 --- @param loop boolean
 --- @return love.Source

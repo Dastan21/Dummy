@@ -21,6 +21,30 @@
 --- @field protected items Dummy.Item[]
 local Player = {}
 
+--- The minimum amount of experience required by level
+Player.LV_EXP = {
+  [1] = 0,
+  [2] = 10,
+  [3] = 30,
+  [4] = 70,
+  [5] = 120,
+  [6] = 200,
+  [7] = 300,
+  [8] = 500,
+  [9] = 800,
+  [10] = 1200,
+  [11] = 1700,
+  [12] = 2500,
+  [13] = 3500,
+  [14] = 5000,
+  [15] = 7000,
+  [16] = 10000,
+  [17] = 15000,
+  [18] = 25000,
+  [19] = 50000,
+  [20] = 99999
+}
+
 --- Initializes the player
 function Player.load()
   Player.lv = 1
@@ -148,7 +172,11 @@ function Player.setLV(lv, silent)
   Player.setAT(8 + 2 * Player.lv)
   Player.setDF(9 + math.ceil(Player.lv / 4))
 
-  if silent == false and lv_old ~= Player.lv then
+  if Player.exp < Player.LV_EXP[Player.lv] then
+    Player.exp = Player.LV_EXP[Player.lv]
+  end
+
+  if silent == false and lv_old < Player.lv then
     Assets.playSound("levelup")
   end
 end
@@ -267,51 +295,16 @@ end
 function Player.setEXP(exp)
   Player.exp = exp
 
-  local level = 0
-  if Player.exp < 10 then
-    level = 1
-  elseif Player.exp < 30 then
-    level = 2
-  elseif Player.exp < 70 then
-    level = 3
-  elseif Player.exp < 120 then
-    level = 4
-  elseif Player.exp < 200 then
-    level = 5
-  elseif Player.exp < 300 then
-    level = 6
-  elseif Player.exp < 500 then
-    level = 7
-  elseif Player.exp < 800 then
-    level = 8
-  elseif Player.exp < 1200 then
-    level = 9
-  elseif Player.exp < 1700 then
-    level = 10
-  elseif Player.exp < 2500 then
-    level = 11
-  elseif Player.exp < 3500 then
-    level = 12
-  elseif Player.exp < 5000 then
-    level = 13
-  elseif Player.exp < 7000 then
-    level = 14
-  elseif Player.exp < 10000 then
-    level = 15
-  elseif Player.exp < 15000 then
-    level = 16
-  elseif Player.exp < 25000 then
-    level = 17
-  elseif Player.exp < 50000 then
-    level = 18
-  elseif Player.exp < 99999 then
-    level = 19
-  else
-    level = 20
+  local lv = 0
+  for level, experience in pairs(Player.LV_EXP) do
+    if Player.exp < experience then
+      lv = level - 1
+      break
+    end
   end
 
-  if level > 0 then
-    Player.setLV(level, false)
+  if lv > 0 and lv ~= Player.lv then
+    Player.setLV(lv, false)
   end
 end
 

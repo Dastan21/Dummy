@@ -85,7 +85,7 @@ function Enemy:getGold() end
 --- @param gold number gold
 function Enemy:setGold(gold) end
 
---- Wether the enemy has a check dialogue
+--- Wether the enemy has a check text
 --- @return boolean
 function Enemy:hasCheck() end
 
@@ -152,6 +152,9 @@ function Enemy:onDamage(damage) end
 
 --- Called after when the enemy is damaged
 function Enemy:onAfterDamage() end
+
+--- Called when the enemy should dialogue
+function Enemy:onDialogue() end
 
 --- Called when the enemy is killed
 function Enemy:onKilled() end

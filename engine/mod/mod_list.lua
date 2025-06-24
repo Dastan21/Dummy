@@ -32,7 +32,7 @@ function ModList.load()
 
   local mods_dirs = love.filesystem.getDirectoryItems("mods")
   for _, mod_dir in ipairs(mods_dirs) do
-    mod_dir_info = love.filesystem.getInfo("mods/" .. mod_dir)
+    local mod_dir_info = love.filesystem.getInfo("mods/" .. mod_dir)
     local is_folder = mod_dir_info.type == "directory"
     local is_zip = mod_dir_info.type == "file" and Utils.checkExtension(mod_dir, "zip")
     if is_folder or is_zip then

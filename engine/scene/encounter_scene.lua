@@ -21,9 +21,6 @@ function encounter.load(mod)
 end
 
 function encounter.update(dt)
-  Arena.update(dt)
-  Encounter.update(dt)
-
   if type(encounter.mod.update) == "function" then
     encounter.mod:update(dt)
   end
@@ -35,6 +32,11 @@ function encounter.update(dt)
 
     encounter.previous_state = Encounter.getCurrentState()
   end
+
+  if Scene.getSceneName() ~= "ENCOUNTER" then return end
+
+  Arena.update(dt)
+  Encounter.update(dt)
 end
 
 return encounter

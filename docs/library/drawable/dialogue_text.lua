@@ -8,65 +8,82 @@
 
 --- @class Dummy.DialogueText : Dummy.Text
 ---
+--- @field protected text_key Dummy.Text.Text
 --- @field protected full_text string
 --- @field protected speed number
 --- @field protected time number
 --- @field protected text_index number
 --- @field protected voice string|nil
+--- @field protected done_callback fun()|nil
+--- @field protected can_skip boolean
+--- @field protected can_confirm boolean
 DialogueText = {}
 
 --- Gets the class name
 --- @return string
 function DialogueText:getClass() end
 
---- Sets the dialogue text value
+--- Sets the dialogue's text value
 --- @param value Dummy.Text.Text
 function DialogueText:setText(value) end
 
---- Updates the dialogue text sprite value
+--- Updates the dialogue's text sprite value
 --- @protected
 function DialogueText:updateDialogue() end
 
---- Resets the dialogue current text
+--- Resets the dialogue's current text
 function DialogueText:reset() end
 
---- Wether the dialogue can be skipped
+--- Wether the dialogue's can be skipped
 --- @return boolean
 function DialogueText:canSkip() end
 
---- Sets wether the dialogue can be skipped
+--- Sets wether the dialogue's can be skipped
 --- @param can_skip boolean
 function DialogueText:setCanSkip(can_skip) end
 
---- Skips the dialogue
+--- Skips the dialogue's
 function DialogueText:skip() end
 
---- Wether the dialogue is done
+--- Wether the dialogue's can be confirmed
+--- @return boolean
+function DialogueText:canConfirm() end
+
+--- Sets wether the dialogue's can be confirmed
+--- @param can_confirm boolean
+function DialogueText:setCanConfirm(can_confirm) end
+
+--- Wether the dialogue's is done
 --- @return boolean
 function DialogueText:isDone() end
 
---- Gets the dialogue speed
+--- Gets the dialogue's speed
 --- @return number
 function DialogueText:getSpeed() end
 
---- Sets the dialogue speed
+--- Sets the dialogue's speed
 --- @param speed number
 function DialogueText:setSpeed(speed) end
 
---- Gets the dialogue voice
+--- Gets the dialogue's voice
 --- @return string|nil
 function DialogueText:getVoice() end
 
---- Sets the dialogue voice
+--- Sets the dialogue's voice
 --- @param voice string|nil
 function DialogueText:setVoice(voice) end
+
+--- Sets the text max width
+--- @param max_width number
+function DialogueText:setMaxWidth(max_width) end
 
 --- Updates the dialogue
 --- @param dt number
 function DialogueText:update(dt) end
 
 --- Creates a dialogue text
---- @param value Dummy.Text.Text
+--- @param value Dummy.Text.Text text value
+--- @param done_callback? fun() called when the dialogue is done
 --- @return Dummy.DialogueText
-function DialogueText:new(value) end
+function DialogueText:new(value, done_callback) end
 

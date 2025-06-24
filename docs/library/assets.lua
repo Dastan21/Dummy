@@ -14,7 +14,7 @@
 --- @field protected audio_cache table<string, love.FileData>
 Assets = {}
 
---- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage"
+--- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage" | "plain"
 
 function Assets.load() end
 
@@ -37,7 +37,7 @@ function Assets.checkFilenameExt(name, exts) end
 --- Plays an audio
 --- @param folder string
 --- @param audio_name string
---- @param type "queue"|"static"|"stream"
+--- @param type "queue" | "static" | "stream"
 --- @param play boolean
 --- @param loop boolean
 --- @return love.Source

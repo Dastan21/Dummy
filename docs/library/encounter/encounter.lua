@@ -18,6 +18,7 @@
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
 --- @field protected textbox_dialogue Dummy.DialogueText
+--- @field protected bubble_dialogues { [1]: Dummy.DialogueText[], [2]: Dummy.Sprite }
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
@@ -48,6 +49,8 @@
 --- @field protected exp_reward number
 --- @field protected gold_reward number
 Encounter = {}
+
+--- @alias Dummy.Encounter.BubbleType "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "tiny" | "tiny_above" | "top" | "bottom"
 
 --- Gets the class name
 --- @return string
@@ -94,9 +97,16 @@ function Encounter.setMusic(music) end
 --- @return Dummy.DialogueText
 function Encounter.getTextbox() end
 
---- Plays a text dialogue
---- @param text Dummy.Text.Text
+--- Plays a textbox dialogue
+--- @param text Dummy.Text.Text|Dummy.Text.Text[]
+--- @return Dummy.DialogueText
 function Encounter.playTextbox(text) end
+
+--- Plays a bubble dialogue
+--- @param text Dummy.Text.Text|Dummy.Text.Text[]
+--- @param bubble_type? Dummy.Encounter.BubbleType
+--- @return Dummy.DialogueText, Dummy.Sprite
+function Encounter.playDialogue(text, bubble_type) end
 
 --- Wether all the enemies are spared
 --- @return boolean
@@ -191,7 +201,7 @@ function Encounter.updateTextDialogue() end
 function Encounter.startEnemyDialogue() end
 
 --- Updates enemy dialogue
-function Encounter.updateEnemyDialogue(dt) end
+function Encounter.updateEnemyDialogue() end
 
 --- Starts attacking
 function Encounter.startAttacking() end

@@ -13,7 +13,7 @@
 --- @field protected indexes_y number[][]
 --- @field protected index_x number
 --- @field protected index_y number
---- @field protected direction "horizontal"|"vertical"
+--- @field protected direction "horizontal" | "vertical"
 --- @field protected pagination boolean
 --- @field protected onBack fun(i: number)|nil
 --- @field protected page_text Dummy.Text
@@ -111,7 +111,7 @@ function ActionMenu:update() end
 
 --- Creates an action menu
 --- @param options Dummy.Menu.Option[]
---- @param direction? "horizontal"|"vertical"
+--- @param direction? "horizontal" | "vertical"
 --- @param pagination? boolean
 --- @param onBack? fun(i: number)
 --- @return Dummy.Encounter.ActionMenu

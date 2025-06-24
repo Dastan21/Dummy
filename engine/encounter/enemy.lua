@@ -111,7 +111,7 @@ function Enemy:setGold(gold)
   self.gold = gold
 end
 
---- Wether the enemy has a check dialogue
+--- Wether the enemy has a check text
 --- @return boolean
 function Enemy:hasCheck()
   return self.check ~= nil
@@ -295,6 +295,9 @@ function Enemy:onDamage(damage) end
 
 --- Called after when the enemy is damaged
 function Enemy:onAfterDamage() end
+
+--- Called when the enemy should dialogue
+function Enemy:onDialogue() end
 
 --- Called when the enemy is killed
 function Enemy:onKilled() end

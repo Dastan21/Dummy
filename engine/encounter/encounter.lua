@@ -1,3 +1,5 @@
+--- @alias Dummy.Encounter.BubbleType "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "tiny" | "tiny_above" | "top" | "bottom"
+
 --- @class Dummy.Encounter
 ---
 --- @field protected text Dummy.Text.Text
@@ -10,6 +12,7 @@
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
 --- @field protected textbox_dialogue Dummy.DialogueText
+--- @field protected bubble_dialogues { [1]: Dummy.DialogueText[], [2]: Dummy.Sprite }
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
@@ -129,13 +132,38 @@ function Encounter.getTextbox()
   return Encounter.textbox_dialogue
 end
 
---- Plays a text dialogue
---- @param text Dummy.Text.Text
+--- Plays a textbox dialogue
+--- @param text Dummy.Text.Text|Dummy.Text.Text[]
+--- @return Dummy.DialogueText
 function Encounter.playTextbox(text)
   Encounter.textbox_dialogue:setText(text)
   Encounter.textbox_dialogue:setVisible(true)
   Encounter.textbox_dialogue:setCanSkip(false)
   Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
+  return Encounter.textbox_dialogue
+end
+
+--- Plays a bubble dialogue
+--- @param text Dummy.Text.Text|Dummy.Text.Text[]
+--- @param bubble_type? Dummy.Encounter.BubbleType
+--- @return Dummy.DialogueText, Dummy.Sprite
+function Encounter.playDialogue(text, bubble_type)
+  local bubble = Sprite:new("bubble_" .. Utils.getOrDefault(bubble_type, "right"))
+  bubble:setLayer(Constants.LAYERS.ABOVE_ARENA)
+
+  local dialogue = DialogueText:new("")
+  dialogue:setOrigin(0, 0)
+  dialogue:setText(text)
+  dialogue:setColor(0, 0, 0)
+  dialogue:setCanSkip(true)
+  dialogue:setCanConfirm(true)
+  dialogue:setVoice("voice_bubble")
+  dialogue:setFont(Assets.getFont("plain"))
+  dialogue:setLayer(Constants.LAYERS.ABOVE_ARENA)
+
+  table.insert(Encounter.bubble_dialogues, { dialogue, bubble })
+
+  return dialogue, bubble
 end
 
 --- Wether all the enemies are spared
@@ -216,6 +244,8 @@ function Encounter.load()
   Encounter.textbox_dialogue:setMaxWidth(Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
   Encounter.textbox_dialogue:setCanSkip(true)
   Encounter.textbox_dialogue:setText(Encounter.getText())
+
+  Encounter.bubble_dialogues = {}
 
   -- attack target
   Encounter.target_sprite = Sprite:new("target")
@@ -673,6 +703,8 @@ function Encounter.enterMenu(menu)
     return
   end
 
+  Arena.reset()
+
   Encounter.leaveMenu()
   Encounter.current_menu = menu
   Encounter.current_menu:show()
@@ -757,9 +789,15 @@ function Encounter.startEnemyDialogue()
   Encounter.unselectAction()
   Encounter.leaveMenu()
 
-  Arena.resize(130, 130, false, function()
-    Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
-  end)
+  Arena.resize(130, 130)
+
+  for _, enemy in ipairs(Encounter.enemies) do
+    if not enemy:isKilled() and not enemy:isSpared() then
+      if type(enemy.onDialogue) == "function" then
+        enemy:onDialogue()
+      end
+    end
+  end
 
   local x, y = Arena:getPosition()
   Player.setPosition(x, y - 65)
@@ -767,10 +805,34 @@ function Encounter.startEnemyDialogue()
 end
 
 --- Updates enemy dialogue
-function Encounter.updateEnemyDialogue(dt)
-  -- if Input.isPressed(Input.Confirm) then
-  --   Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
-  -- end
+function Encounter.updateEnemyDialogue()
+  local all_done = true
+  for _, dialogue in ipairs(Encounter.bubble_dialogues) do
+    if not dialogue[1]:isDone() then
+      all_done = false
+      break
+    end
+  end
+
+  if all_done then
+    local function defend()
+      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+
+      for _, dialogue in ipairs(Encounter.bubble_dialogues) do
+        dialogue[1]:remove()
+        dialogue[2]:remove()
+      end
+      Encounter.bubble_dialogues = {}
+    end
+
+    local defend_timer = Timer.after(1, defend)
+
+    if Input.isPressed(Input.Confirm) then
+      Timer.cancel(defend_timer)
+      defend()
+      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+    end
+  end
 end
 
 --- Starts attacking
@@ -803,13 +865,35 @@ function Encounter.startAttacking()
     local damage = 0
     local enemy_hp_text_vel_y = -4
 
-    local proceed_attack = function()
+    local do_attack = function()
       if type(enemy.onBeforeDamage) == "function" then
         damage = Utils.getOrDefault(enemy:onBeforeDamage(damage), damage)
       end
 
       local enemy_width, enemy_height = enemy:getWidth(), enemy:getHeight()
       local enemy_top_y = enemy_y - enemy_height - 16
+
+      local function end_attack()
+        Timer.during(0.5, function(dt)
+          alpha = math.clamp(alpha - 2.4 * dt, 0, 1)
+          Encounter.target_sprite:setAlpha(alpha)
+
+          scale_x = math.max(0.25, scale_x - 1.8 * dt)
+          Encounter.target_sprite:setScale(scale_x, 1)
+
+          if alpha <= 0 then
+            Encounter.target_sprite:setVisible(false)
+          end
+        end)
+
+        Encounter.target_bar_sprite:setVisible(false)
+
+        if not Encounter.allSparedOrKilled() then
+          Timer.after(0.05, function()
+            Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+          end)
+        end
+      end
 
       if miss == true or damage == 0 then
         Encounter.miss_text:setPosition(enemy_x, enemy_top_y)
@@ -818,6 +902,8 @@ function Encounter.startAttacking()
         Timer.after(1, function()
           Encounter.miss_text:setVisible(false)
         end)
+
+        end_attack()
       else
         Assets.playSound("damage")
 
@@ -918,33 +1004,15 @@ function Encounter.startAttacking()
             Encounter.checkEncounterEnd()
           end
         end, 16)
-      end
 
-      Timer.after(1, function()
-        Timer.during(0.5, function(dt)
-          alpha = math.clamp(alpha - 2.4 * dt, 0, 1)
-          Encounter.target_sprite:setAlpha(alpha)
-
-          scale_x = math.max(0.25, scale_x - 1.8 * dt)
-          Encounter.target_sprite:setScale(scale_x, 1)
-
-          if alpha <= 0 then
-            Encounter.target_sprite:setVisible(false)
-          end
+        Timer.after(1, function()
+          end_attack()
         end)
-
-        Encounter.target_bar_sprite:setVisible(false)
-
-        if not Encounter.allSparedOrKilled() then
-          Timer.after(0.05, function()
-            Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
-          end)
-        end
-      end)
+      end
     end
 
     if miss == true then
-      proceed_attack()
+      do_attack()
     else
       local target_x = Encounter.target_sprite:getPosition()
       local target_width = Encounter.target_sprite:getWidth()
@@ -967,7 +1035,7 @@ function Encounter.startAttacking()
       Encounter.target_bar_sprite:play()
       Assets.playSound("strike")
       local damage_delay = (1 / strike_speed_base * 6 + 3) / 30
-      Timer.after(damage_delay, proceed_attack)
+      Timer.after(damage_delay, do_attack)
     end
   end
 
@@ -1069,7 +1137,7 @@ function Encounter.update(dt)
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.TEXT_DIALOGUE then
     Encounter.updateTextDialogue()
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE then
-    Encounter.updateEnemyDialogue(dt)
+    Encounter.updateEnemyDialogue()
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.DEFENDING then
     Encounter.updateDefending(dt)
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.DONE then
