@@ -31,7 +31,7 @@ function DialogueText:updateDialogue() end
 function DialogueText:reset() end
 
 --- Wether the dialogue can be skipped
----@return boolean
+--- @return boolean
 function DialogueText:canSkip() end
 
 --- Sets wether the dialogue can be skipped
@@ -42,7 +42,7 @@ function DialogueText:setCanSkip(can_skip) end
 function DialogueText:skip() end
 
 --- Wether the dialogue is done
----@return boolean
+--- @return boolean
 function DialogueText:isDone() end
 
 --- Gets the dialogue speed

@@ -155,8 +155,8 @@ function MainMenu:update()
 end
 
 --- Creates a menu
----@param options Dummy.Menu.Options
----@param onBack? fun()
+--- @param options Dummy.Menu.Options
+--- @param onBack? fun()
 function MainMenu:new(options, onBack)
   local main_menu = Class:new(MainMenu, {
     options = Utils.getOrDefault(options, {}),

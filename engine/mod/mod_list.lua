@@ -80,7 +80,7 @@ function ModList.preloadMod(mod_id)
 end
 
 --- Loads a mod
----@param mod Dummy.Mod
+--- @param mod Dummy.Mod
 function ModList.loadMod(mod)
   ModList.unloadMod(mod)
 

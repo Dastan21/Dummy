@@ -24,7 +24,7 @@ end
 --- @return T
 function Class:new(c, d, p)
   local o = {}
-  ---@diagnostic disable-next-line: undefined-field
+  --- @diagnostic disable-next-line: undefined-field
   if c.__extend ~= nil then o = c.__extend:new(table.unpack(p or {})) end
   for k, v in pairs(c) do o[k] = v end
   for k, v in pairs(d or {}) do o[k] = v end

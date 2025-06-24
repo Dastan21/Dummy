@@ -39,11 +39,11 @@ function Drawable:getPosition() end
 function Drawable:setPosition(x, y) end
 
 --- Gets the drawable width
----@return number
+--- @return number
 function Drawable:getWidth() end
 
 --- Gets the drawable height
----@return number
+--- @return number
 function Drawable:getHeight() end
 
 --- Gets the drawable angle, in degree

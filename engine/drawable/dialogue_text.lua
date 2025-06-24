@@ -46,7 +46,7 @@ function DialogueText:reset()
 end
 
 --- Wether the dialogue can be skipped
----@return boolean
+--- @return boolean
 function DialogueText:canSkip()
   return self.can_skip
 end
@@ -66,7 +66,7 @@ function DialogueText:skip()
 end
 
 --- Wether the dialogue is done
----@return boolean
+--- @return boolean
 function DialogueText:isDone()
   return not self:isVisible() or self.text_index >= #self.full_text
 end

@@ -26,8 +26,8 @@ function Sprite.clear()
 end
 
 --- Loads a sprite
----@param sprite_path string
----@return love.Image
+--- @param sprite_path string
+--- @return love.Image
 function Sprite.loadSprite(sprite_path)
   local sprite_full_path = "assets/sprites/" .. Lang.getLanguage() .. "/" .. sprite_path .. ".png"
   -- try to get image data from cache
@@ -113,7 +113,7 @@ function Sprite:getFrames()
 end
 
 --- Gets the sprite's width
----@return number
+--- @return number
 function Sprite:getWidth()
   local sprite = self:getSprite()
   if sprite == nil then return 0 end
@@ -121,7 +121,7 @@ function Sprite:getWidth()
 end
 
 --- Gets the sprite's height
----@return number
+--- @return number
 function Sprite:getHeight()
   local sprite = self:getSprite()
   if sprite == nil then return 0 end

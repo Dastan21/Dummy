@@ -151,7 +151,7 @@ function Player.setScale(scale_x, scale_y) end
 function Player.isInvincible() end
 
 --- Sets wether the player is invincible
----@param invincible boolean
+--- @param invincible boolean
 function Player.setInvincible(invincible) end
 
 --- Gets the player's invincibility duration, in seconds
@@ -163,7 +163,7 @@ function Player.getInvincibility() end
 function Player.setInvincibility(invincibility) end
 
 --- Wether the player is overriden
----@return boolean
+--- @return boolean
 function Player.isOverride() end
 
 --- Sets wether the player is overriden
@@ -194,7 +194,7 @@ function Player.isColliding(bullet) end
 function Player.flee() end
 
 --- Wether the playing is playing the escape animation
----@return boolean
+--- @return boolean
 function Player.isFleeing() end
 
 --- Gets the player's items
@@ -202,8 +202,8 @@ function Player.isFleeing() end
 function Player.getItems() end
 
 --- Adds one or more items to the player
----@param item Dummy.Item|Dummy.Item[]
----@param ... Dummy.Item
+--- @param item Dummy.Item|Dummy.Item[]
+--- @param ... Dummy.Item
 function Player.addItem(item, ...) end
 
 --- Removes an item from the player

@@ -38,14 +38,14 @@ function Drawable:setPosition(x, y)
 end
 
 --- Gets the drawable width
----@return number
+--- @return number
 function Drawable:getWidth()
   if self.sprite == nil then return 0 end
   return self.sprite:getWidth()
 end
 
 --- Gets the drawable height
----@return number
+--- @return number
 function Drawable:getHeight()
   if self.sprite == nil then return 0 end
   return self.sprite:getHeight()

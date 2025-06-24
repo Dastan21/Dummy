@@ -45,7 +45,7 @@ function Scene.reload() end
 function Scene.fullReload() end
 
 --- Updates the current scene
----@param dt number
+--- @param dt number
 function Scene.update(dt) end
 
 --- Draws the current scene

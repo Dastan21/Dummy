@@ -29,9 +29,9 @@ function Assets.getFont(name) end
 function Assets.addFont(font_name, font) end
 
 --- Checks which extension to use
----@param name string
----@param exts table<string, string>
----@return string
+--- @param name string
+--- @param exts table<string, string>
+--- @return string
 function Assets.checkFilenameExt(name, exts) end
 
 --- Plays an audio

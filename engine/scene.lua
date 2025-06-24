@@ -109,7 +109,7 @@ function Scene.fullReload()
 end
 
 --- Updates the current scene
----@param dt number
+--- @param dt number
 function Scene.update(dt)
   if Scene.scene == nil then return end
 

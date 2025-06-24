@@ -146,8 +146,8 @@ function Enemy:getACTs()
 end
 
 --- Adds one or more ACTs to the enemy
----@param act Dummy.ACT|Dummy.ACT[]
----@param ... Dummy.ACT
+--- @param act Dummy.ACT|Dummy.ACT[]
+--- @param ... Dummy.ACT
 function Enemy:addACT(act, ...)
   local acts = { act, ... }
   if #act >= 1 then acts = act end
@@ -163,7 +163,7 @@ function Enemy:getCanBeSpared()
 end
 
 --- Sets wether the enemy can be spared
----@param can_be_spared boolean
+--- @param can_be_spared boolean
 function Enemy:setCanBeSpared(can_be_spared)
   self.can_be_spared = can_be_spared
 end

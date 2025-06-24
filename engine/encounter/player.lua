@@ -360,7 +360,7 @@ function Player.isInvincible()
 end
 
 --- Sets wether the player is invincible
----@param invincible boolean
+--- @param invincible boolean
 function Player.setInvincible(invincible)
   Player.invincible = invincible
 end
@@ -378,7 +378,7 @@ function Player.setInvincibility(invincibility)
 end
 
 --- Wether the player is overriden
----@return boolean
+--- @return boolean
 function Player.isOverride()
   return Player.override
 end
@@ -508,7 +508,7 @@ function Player.flee()
 end
 
 --- Wether the playing is playing the escape animation
----@return boolean
+--- @return boolean
 function Player.isFleeing()
   return Player.is_fleeing
 end
@@ -520,8 +520,8 @@ function Player.getItems()
 end
 
 --- Adds one or more items to the player
----@param item Dummy.Item|Dummy.Item[]
----@param ... Dummy.Item
+--- @param item Dummy.Item|Dummy.Item[]
+--- @param ... Dummy.Item
 function Player.addItem(item, ...)
   local items = { item, ... }
   if #item >= 1 then items = item end

@@ -29,8 +29,8 @@ function Sprite:getClass() end
 function Sprite.clear() end
 
 --- Loads a sprite
----@param sprite_path string
----@return love.Image
+--- @param sprite_path string
+--- @return love.Image
 function Sprite.loadSprite(sprite_path) end
 
 --- Gets the sprite's value
@@ -51,11 +51,11 @@ function Sprite:getSpriteData() end
 function Sprite:getFrames() end
 
 --- Gets the sprite's width
----@return number
+--- @return number
 function Sprite:getWidth() end
 
 --- Gets the sprite's height
----@return number
+--- @return number
 function Sprite:getHeight() end
 
 --- Plays the sprite's animation
