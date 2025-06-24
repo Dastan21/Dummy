@@ -9,7 +9,7 @@
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
---- @field protected dialogue_text Dummy.DialogueText
+--- @field protected textbox_dialogue Dummy.DialogueText
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
@@ -69,7 +69,7 @@ end
 --- @param text Dummy.Text.Text
 function Encounter.setText(text)
   Encounter.text = text
-  Encounter.dialogue_text:setText(Encounter.getText())
+  Encounter.textbox_dialogue:setText(Encounter.getText())
 end
 
 --- Gets the encounter's enemies
@@ -79,8 +79,8 @@ function Encounter.getEnemies()
 end
 
 --- Adds one or more enemies to the encounter
----@param enemy Dummy.Enemy|Dummy.Enemy[]
----@param ... Dummy.Enemy
+--- @param enemy Dummy.Enemy|Dummy.Enemy[]
+--- @param ... Dummy.Enemy
 function Encounter.addEnemy(enemy, ...)
   local enemies = { enemy, ... }
   if #enemy >= 1 then enemies = enemy end
@@ -105,7 +105,7 @@ function Encounter.canFlee()
 end
 
 --- Sets wether the player can flee the encounter
----@param can_flee boolean
+--- @param can_flee boolean
 function Encounter.setCanFlee(can_flee)
   Encounter.can_flee = can_flee
 end
@@ -117,27 +117,25 @@ function Encounter.getMusic()
 end
 
 --- Sets the encounter music
----@param music string
+--- @param music string
 function Encounter.setMusic(music)
   Encounter.music = Assets.playMusic(music)
   Encounter.music:setVolume(0.5)
 end
 
---- Gets the encounter dialogue
+--- Gets the encounter textbox dialogue
 --- @return Dummy.DialogueText
-function Encounter.getDialogue()
-  return Encounter.dialogue_text
+function Encounter.getTextbox()
+  return Encounter.textbox_dialogue
 end
 
 --- Plays a text dialogue
----@param text Dummy.Text.Text
----@return Dummy.DialogueText
-function Encounter.playDialogue(text)
-  Encounter.dialogue_text:setText(text)
-  Encounter.dialogue_text:setVisible(true)
-  Encounter.dialogue_text:setCanSkip(false)
+--- @param text Dummy.Text.Text
+function Encounter.playTextbox(text)
+  Encounter.textbox_dialogue:setText(text)
+  Encounter.textbox_dialogue:setVisible(true)
+  Encounter.textbox_dialogue:setCanSkip(false)
   Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
-  return Encounter.dialogue_text
 end
 
 --- Wether all the enemies are spared
@@ -187,8 +185,8 @@ function Encounter.checkEncounterEnd()
     if level ~= level_old then
       win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
     end
-    Encounter.playDialogue(win_text)
-    Encounter.dialogue_text:setCanSkip(false)
+    Encounter.playTextbox(win_text)
+    Encounter.textbox_dialogue:setCanSkip(false)
   else
     Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
   end
@@ -209,15 +207,15 @@ function Encounter.load()
   Encounter.loadActions()
 
   -- textbox dialogue
-  Encounter.dialogue_text = DialogueText:new("")
-  Encounter.dialogue_text:setPosition(52, 270)
-  Encounter.dialogue_text:setOrigin(0, 0)
-  Encounter.dialogue_text:setFont(Assets.getFont("main_text"))
-  Encounter.dialogue_text:setScale(2)
-  Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
-  Encounter.dialogue_text:setMaxWidth(Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
-  Encounter.dialogue_text:setCanSkip(true)
-  Encounter.dialogue_text:setText(Encounter.getText())
+  Encounter.textbox_dialogue = DialogueText:new("")
+  Encounter.textbox_dialogue:setPosition(52, 270)
+  Encounter.textbox_dialogue:setOrigin(0, 0)
+  Encounter.textbox_dialogue:setFont(Assets.getFont("main_text"))
+  Encounter.textbox_dialogue:setScale(2)
+  Encounter.textbox_dialogue:setLayer(Constants.LAYERS.ABOVE_ARENA)
+  Encounter.textbox_dialogue:setMaxWidth(Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
+  Encounter.textbox_dialogue:setCanSkip(true)
+  Encounter.textbox_dialogue:setText(Encounter.getText())
 
   -- attack target
   Encounter.target_sprite = Sprite:new("target")
@@ -399,8 +397,8 @@ function Encounter.loadActMenus()
       table.insert(options, {
         text = Text:new("ENCOUNTER_MENU_ACT_CHECK"),
         action = function()
-          Encounter.dialogue_text:setText(enemy:getCheckText())
-          Encounter.dialogue_text:setCanSkip(true)
+          Encounter.textbox_dialogue:setText(enemy:getCheckText())
+          Encounter.textbox_dialogue:setCanSkip(true)
           Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
         end
       })
@@ -537,10 +535,10 @@ function Encounter.loadMercyMenu()
           end
         end
 
-        Encounter.dialogue_text:setText(flee_text)
-        Encounter.dialogue_text:setCanSkip(true)
-        Encounter.dialogue_text:setVisible(true)
-        Encounter.dialogue_text:skip()
+        Encounter.textbox_dialogue:setText(flee_text)
+        Encounter.textbox_dialogue:setCanSkip(true)
+        Encounter.textbox_dialogue:setVisible(true)
+        Encounter.textbox_dialogue:skip()
       end,
       silent = true
     })
@@ -577,9 +575,9 @@ function Encounter.startActionSelect()
 
     Encounter.leaveMenu()
 
-    Encounter.dialogue_text:setText(Encounter.getText())
-    Encounter.dialogue_text:setCanSkip(true)
-    Encounter.dialogue_text:setVisible(true)
+    Encounter.textbox_dialogue:setText(Encounter.getText())
+    Encounter.textbox_dialogue:setCanSkip(true)
+    Encounter.textbox_dialogue:setVisible(true)
   end)
 end
 
@@ -679,7 +677,7 @@ function Encounter.enterMenu(menu)
   Encounter.current_menu = menu
   Encounter.current_menu:show()
 
-  Encounter.dialogue_text:setVisible(false)
+  Encounter.textbox_dialogue:setVisible(false)
 end
 
 --- Leaves the current menu
@@ -733,8 +731,8 @@ end
 
 --- Starts text dialogue
 function Encounter.startTextDialogue()
-  Encounter.dialogue_text:reset()
-  Encounter.dialogue_text:setVisible(true)
+  Encounter.textbox_dialogue:reset()
+  Encounter.textbox_dialogue:setVisible(true)
 
   Encounter.unselectAction()
   Player.hide()
@@ -743,7 +741,7 @@ end
 
 --- Updates text dialogue
 function Encounter.updateTextDialogue()
-  if Input.isPressed(Input.Confirm) and Encounter.dialogue_text:isDone() then
+  if Input.isPressed(Input.Confirm) and Encounter.textbox_dialogue:isDone() then
     if Encounter.allSparedOrKilled() then
       Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
     else
@@ -754,7 +752,7 @@ end
 
 --- Starts enemy dialogue
 function Encounter.startEnemyDialogue()
-  Encounter.dialogue_text:setVisible(false)
+  Encounter.textbox_dialogue:setVisible(false)
 
   Encounter.unselectAction()
   Encounter.leaveMenu()
@@ -771,7 +769,7 @@ end
 --- Updates enemy dialogue
 function Encounter.updateEnemyDialogue(dt)
   -- if Input.isPressed(Input.Confirm) then
-  --   self.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+  --   Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
   -- end
 end
 
@@ -1002,7 +1000,7 @@ function Encounter.startDefending()
   -- default wave arena size
   Arena.resize(130, 130)
 
-  ---@diagnostic disable-next-line: invisible
+  --- @diagnostic disable-next-line: invisible
   Encounter.wave:__start()
 end
 
@@ -1010,7 +1008,7 @@ end
 function Encounter.updateDefending(dt)
   Player.update(dt)
 
-  ---@diagnostic disable-next-line: invisible
+  --- @diagnostic disable-next-line: invisible
   Encounter.wave:__update(dt)
 end
 

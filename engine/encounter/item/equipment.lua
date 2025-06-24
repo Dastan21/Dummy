@@ -24,7 +24,8 @@ end
 
 --- Uses the equipment item
 function ItemEquipment:use()
-  local dialogue = Encounter.playDialogue({ "ENCOUNTER_ITEM_EQUIPMENT_USE", self.name })
+  Encounter.playTextbox({ "ENCOUNTER_ITEM_EQUIPMENT_USE", self.name })
+  local dialogue = Encounter.getTextbox()
   dialogue:setCanSkip(true)
   Player.removeItem(self)
   Assets.playSound("item")

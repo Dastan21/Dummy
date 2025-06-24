@@ -17,7 +17,7 @@
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
---- @field protected dialogue_text Dummy.DialogueText
+--- @field protected textbox_dialogue Dummy.DialogueText
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
@@ -66,8 +66,8 @@ function Encounter.setText(text) end
 function Encounter.getEnemies() end
 
 --- Adds one or more enemies to the encounter
----@param enemy Dummy.Enemy|Dummy.Enemy[]
----@param ... Dummy.Enemy
+--- @param enemy Dummy.Enemy|Dummy.Enemy[]
+--- @param ... Dummy.Enemy
 function Encounter.addEnemy(enemy, ...) end
 
 --- Sets the encounter's next wave
@@ -79,7 +79,7 @@ function Encounter.setWave(wave) end
 function Encounter.canFlee() end
 
 --- Sets wether the player can flee the encounter
----@param can_flee boolean
+--- @param can_flee boolean
 function Encounter.setCanFlee(can_flee) end
 
 --- Gets the encounter's text
@@ -87,17 +87,16 @@ function Encounter.setCanFlee(can_flee) end
 function Encounter.getMusic() end
 
 --- Sets the encounter music
----@param music string
+--- @param music string
 function Encounter.setMusic(music) end
 
---- Gets the encounter dialogue
+--- Gets the encounter textbox dialogue
 --- @return Dummy.DialogueText
-function Encounter.getDialogue() end
+function Encounter.getTextbox() end
 
 --- Plays a text dialogue
----@param text Dummy.Text.Text
----@return Dummy.DialogueText
-function Encounter.playDialogue(text) end
+--- @param text Dummy.Text.Text
+function Encounter.playTextbox(text) end
 
 --- Wether all the enemies are spared
 --- @return boolean
