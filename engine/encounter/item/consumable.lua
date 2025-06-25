@@ -57,10 +57,12 @@ end
 --- @param type "food" | "drink"
 --- @return Dummy.Item.Consumable
 function ItemConsumable:new(name, short_name, heal, type)
-  return Class:new(ItemConsumable, {
-    heal = heal,
-    text = type == "drink" and "ENCOUNTER_ITEM_DRINK_USE" or "ENCOUNTER_ITEM_FOOD_USE",
-  }, { name, short_name })
+  local item = Class:new(ItemConsumable, { name, short_name })
+
+  item.heal = heal
+  item.text = type == "drink" and "ENCOUNTER_ITEM_DRINK_USE" or "ENCOUNTER_ITEM_FOOD_USE"
+
+  return item
 end
 
 return ItemConsumable

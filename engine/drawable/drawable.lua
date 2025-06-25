@@ -17,19 +17,19 @@
 --- @field protected persistent boolean
 local Drawable = Class()
 
---- Gets the class name
+--- Gets the class's name
 --- @return string
-function Drawable:getClass()
+function Drawable.getClassName()
   return "Dummy.Drawable"
 end
 
---- Gets the drawable position
+--- Gets the drawable's position
 --- @return number, number
 function Drawable:getPosition()
   return self.x, self.y
 end
 
---- Sets drawable position
+--- Sets the drawable's position
 --- @param x number
 --- @param y number
 function Drawable:setPosition(x, y)
@@ -37,39 +37,39 @@ function Drawable:setPosition(x, y)
   self.y = y
 end
 
---- Gets the drawable width
+--- Gets the drawable's width
 --- @return number
 function Drawable:getWidth()
   if self.sprite == nil then return 0 end
   return self.sprite:getWidth()
 end
 
---- Gets the drawable height
+--- Gets the drawable's height
 --- @return number
 function Drawable:getHeight()
   if self.sprite == nil then return 0 end
   return self.sprite:getHeight()
 end
 
---- Gets the drawable angle, in degree
+--- Gets the drawable's angle, in degree
 --- @return number
 function Drawable:getAngle()
   return math.deg(self.angle)
 end
 
---- Sets drawable angle, in degree
+--- Sets the drawable's angle, in degree
 --- @param angle number
 function Drawable:setAngle(angle)
   self.angle = math.rad(angle)
 end
 
---- Gets the drawable scale
+--- Gets the drawable's scale
 --- @return number, number
 function Drawable:getScale()
   return self.scale_x, self.scale_y
 end
 
---- Sets drawable scale
+--- Sets the drawable's scale
 --- @overload fun(self: Dummy.Drawable, scale: number)
 --- @param scale_x number
 --- @param scale_y number
@@ -83,13 +83,13 @@ function Drawable:setScale(scale_x, scale_y)
   end
 end
 
---- Gets the drawable origin
+--- Gets the drawable's origin
 --- @return number, number
 function Drawable:getOrigin()
   return self.origin_x, self.origin_y
 end
 
---- Sets drawable origin
+--- Sets the drawable's origin
 --- @overload fun(self: Dummy.Drawable, origin: number)
 --- @param origin_x number
 --- @param origin_y number
@@ -103,13 +103,13 @@ function Drawable:setOrigin(origin_x, origin_y)
   end
 end
 
---- Gets the drawable color
+--- Gets the drawable's color
 --- @return love.Color
 function Drawable:getColor()
   return self.color
 end
 
---- Sets the drawable color
+--- Sets the drawable's color
 --- @overload fun(self: Dummy.Drawable, color: love.Color)
 --- @param r number red
 --- @param g number green
@@ -131,25 +131,25 @@ function Drawable:setColor(r, g, b, a)
   end
 end
 
---- Gets the drawable alpha
+--- Gets the drawable's alpha
 --- @return number
 function Drawable:getAlpha()
   return self.alpha
 end
 
---- Sets drawable alpha
+--- Sets the drawable's alpha
 --- @param alpha number
 function Drawable:setAlpha(alpha)
   self.alpha = math.clamp(alpha, 0, 1)
 end
 
---- Gets the drawable layer
+--- Gets the drawable's layer
 --- @return number
 function Drawable:getLayer()
   return self.layer
 end
 
---- Sets drawable layer
+--- Sets the drawable's layer
 --- @param layer number
 function Drawable:setLayer(layer)
   self.layer = layer
@@ -170,14 +170,11 @@ function Drawable:setVisible(visible)
   self.visible = visible
 end
 
---- Gets the drawable sprite
+--- Gets the drawable's sprite
 --- @return love.Image|love.Text
 function Drawable:getSprite()
   return self.sprite
 end
-
---- Draws the drawable
-function Drawable:draw() end
 
 --- Wether the drawable is persistent between scenes
 --- @return boolean
@@ -199,21 +196,21 @@ end
 --- Creates a drawable
 --- @return Dummy.Drawable
 function Drawable:new()
-  local drawable = Class:new(Drawable, {
-    x = 0,
-    y = 0,
-    angle = 0,
-    scale_x = 1,
-    scale_y = 1,
-    origin_x = 0.5,
-    origin_y = 0.5,
-    color = { 1, 1, 1 },
-    alpha = 1,
-    layer = Constants.LAYERS.UI,
-    visible = true,
-    persistent = false,
-    sprite = nil,
-  })
+  local drawable = Class:new(Drawable)
+
+  drawable.x = 0
+  drawable.y = 0
+  drawable.angle = 0
+  drawable.scale_x = 1
+  drawable.scale_y = 1
+  drawable.origin_x = 0.5
+  drawable.origin_y = 0.5
+  drawable.color = { 1, 1, 1 }
+  drawable.alpha = 1
+  drawable.layer = Constants.LAYERS.UI
+  drawable.visible = true
+  drawable.persistent = false
+  drawable.sprite = nil
 
   Scene.addDrawable(drawable)
 

@@ -72,12 +72,14 @@ function Mod:onStateChange(current_state, previous_state) end
 function Mod:new(data)
   assert(data.name ~= nil, "Mod has no name")
 
-  return Class:new(Mod, {
-    name = data.name,
-    title = Utils.getOrDefault(data.title, data.name),
-    version = Utils.getOrDefault(data.version, "???"),
-    standalone = Utils.getOrDefault(data.standalone, false),
-  })
+  local mod = Class:new(Mod)
+
+  mod.name = data.name
+  mod.title = Utils.getOrDefault(data.title, data.name)
+  mod.version = Utils.getOrDefault(data.version, "???")
+  mod.standalone = Utils.getOrDefault(data.standalone, false)
+
+  return mod
 end
 
 return Mod

@@ -107,14 +107,14 @@ end
 --- @param value Dummy.Text.Text
 --- @return Dummy.Text
 function Text:new(value)
-  local text = Class:new(Text, {
-    text = value,
-    font = love.graphics.getFont(),
-    max_width = Constants.SCREEN_WIDTH,
-    align = "left",
-    color = { 1, 1, 1 },
-    sprite = love.graphics.newText(love.graphics.getFont(), { { 1, 1, 1 }, Lang.translate(value) }),
-  })
+  local text = Class:new(Text)
+
+  text.text = value
+  text.font = love.graphics.getFont()
+  text.max_width = Constants.SCREEN_WIDTH
+  text.align = "left"
+  text.color = { 1, 1, 1 }
+  text.sprite = love.graphics.newText(love.graphics.getFont(), { { 1, 1, 1 }, Lang.translate(value) })
 
   return text
 end

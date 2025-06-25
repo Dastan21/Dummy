@@ -158,11 +158,11 @@ end
 --- @param options Dummy.Menu.Options
 --- @param onBack? fun()
 function MainMenu:new(options, onBack)
-  local main_menu = Class:new(MainMenu, {
-    options = Utils.getOrDefault(options, {}),
-    selected_index = 1,
-    onBack = onBack,
-  })
+  local main_menu = Class:new(MainMenu)
+
+  main_menu.options = Utils.getOrDefault(options, {})
+  main_menu.selected_index = 1
+  main_menu.onBack = onBack
 
   main_menu:init()
 

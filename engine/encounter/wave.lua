@@ -101,11 +101,13 @@ function Wave:onEnd() end
 --- @param duration? number wave duration, in seconds (Defaults to `8`)
 --- @return Dummy.Wave
 function Wave:new(duration)
-  return Class:new(Wave, {
-    duration = Utils.getOrDefault(duration, 8),
-    time = 0,
-    is_done = false
-  })
+  local wave = Class:new(Wave)
+
+  wave.duration = Utils.getOrDefault(duration, 8)
+  wave.time = 0
+  wave.is_done = false
+
+  return wave
 end
 
 return Wave

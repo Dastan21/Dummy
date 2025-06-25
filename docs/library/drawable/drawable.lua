@@ -25,60 +25,60 @@ Drawable = {}
 
 --- @alias love.Color { [1]: number, [2]: number, [3]: number }
 
---- Gets the class name
+--- Gets the class's name
 --- @return string
-function Drawable:getClass() end
+function Drawable.getClassName() end
 
---- Gets the drawable position
+--- Gets the drawable's position
 --- @return number, number
 function Drawable:getPosition() end
 
---- Sets drawable position
+--- Sets the drawable's position
 --- @param x number
 --- @param y number
 function Drawable:setPosition(x, y) end
 
---- Gets the drawable width
+--- Gets the drawable's width
 --- @return number
 function Drawable:getWidth() end
 
---- Gets the drawable height
+--- Gets the drawable's height
 --- @return number
 function Drawable:getHeight() end
 
---- Gets the drawable angle, in degree
+--- Gets the drawable's angle, in degree
 --- @return number
 function Drawable:getAngle() end
 
---- Sets drawable angle, in degree
+--- Sets the drawable's angle, in degree
 --- @param angle number
 function Drawable:setAngle(angle) end
 
---- Gets the drawable scale
+--- Gets the drawable's scale
 --- @return number, number
 function Drawable:getScale() end
 
---- Sets drawable scale
+--- Sets the drawable's scale
 --- @overload fun(self: Dummy.Drawable, scale: number)
 --- @param scale_x number
 --- @param scale_y number
 function Drawable:setScale(scale_x, scale_y) end
 
---- Gets the drawable origin
+--- Gets the drawable's origin
 --- @return number, number
 function Drawable:getOrigin() end
 
---- Sets drawable origin
+--- Sets the drawable's origin
 --- @overload fun(self: Dummy.Drawable, origin: number)
 --- @param origin_x number
 --- @param origin_y number
 function Drawable:setOrigin(origin_x, origin_y) end
 
---- Gets the drawable color
+--- Gets the drawable's color
 --- @return love.Color
 function Drawable:getColor() end
 
---- Sets the drawable color
+--- Sets the drawable's color
 --- @overload fun(self: Dummy.Drawable, color: love.Color)
 --- @param r number red
 --- @param g number green
@@ -86,19 +86,19 @@ function Drawable:getColor() end
 --- @param a number alpha
 function Drawable:setColor(r, g, b, a) end
 
---- Gets the drawable alpha
+--- Gets the drawable's alpha
 --- @return number
 function Drawable:getAlpha() end
 
---- Sets drawable alpha
+--- Sets the drawable's alpha
 --- @param alpha number
 function Drawable:setAlpha(alpha) end
 
---- Gets the drawable layer
+--- Gets the drawable's layer
 --- @return number
 function Drawable:getLayer() end
 
---- Sets drawable layer
+--- Sets the drawable's layer
 --- @param layer number
 function Drawable:setLayer(layer) end
 
@@ -110,12 +110,9 @@ function Drawable:isVisible() end
 --- @param visible boolean
 function Drawable:setVisible(visible) end
 
---- Gets the drawable sprite
+--- Gets the drawable's sprite
 --- @return love.Image|love.Text
 function Drawable:getSprite() end
-
---- Draws the drawable
-function Drawable:draw() end
 
 --- Wether the drawable is persistent between scenes
 --- @return boolean
@@ -131,4 +128,3 @@ function Drawable:remove() end
 --- Creates a drawable
 --- @return Dummy.Drawable
 function Drawable:new() end
-

@@ -310,18 +310,18 @@ function Enemy:new(name, sprite)
   assert(name ~= nil, "Enemy name is nil")
   assert(sprite ~= nil, "Enemy \"" .. name .. "\" sprite is nil")
 
-  local enemy = Class:new(Enemy, {
-    name = name,
-    hp = 20,
-    max_hp = 20,
-    at = 0,
-    df = 0,
-    exp = 0,
-    gold = 0,
-    check = "",
-    acts = {},
-    can_be_spared = false,
-  }, { sprite })
+  local enemy = Class:new(Enemy, { sprite })
+
+  enemy.name = name
+  enemy.hp = 20
+  enemy.max_hp = 20
+  enemy.at = 0
+  enemy.df = 0
+  enemy.exp = 0
+  enemy.gold = 0
+  enemy.check = ""
+  enemy.acts = {}
+  enemy.can_be_spared = false
 
   enemy:setOrigin(0.5, 1)
   enemy:setLayer(Constants.LAYERS.BELOW_UI)

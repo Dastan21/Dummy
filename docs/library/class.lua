@@ -20,8 +20,7 @@ function Class:extend(extend) end
 --- Creates a new instance of a class
 --- @generic T : Dummy.Class
 --- @param c T the class to instantiate
---- @param d? any[] the data to pass to the constructor
 --- @param p? any[] the data to pass to the parent constructor
 --- @return T
-function Class:new(c, d, p) end
+function Class:new(c, p) end
 

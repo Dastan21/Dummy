@@ -69,11 +69,11 @@ function Bullet:update(dt) end
 --- Creates a bullet
 --- @return Dummy.Bullet
 function Bullet:new()
-  local bullet = Class:new(Bullet, {
-    damage = 4,
-    hitbox = { 0, 0, 0, 0 },
-    removed = false
-  }, { "bullet" })
+  local bullet = Class:new(Bullet, { "bullet" })
+
+  bullet.damage = 4
+  bullet.hitbox = { 0, 0, 0, 0 }
+  bullet.removed = false
 
   bullet:setLayer(Constants.LAYERS.BULLET)
   bullet:setHitboxFromSprite()

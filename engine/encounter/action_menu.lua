@@ -117,7 +117,7 @@ function ActionMenu:show()
       option.drawable = Drawable:new()
       option.drawable:setLayer(Constants.LAYERS.UI)
       function option.drawable:draw()
-        if option.text:isVisible() then
+        if option.text:isVisible() and type(option.draw) == "function" then
           option.draw(option)
         end
       end
@@ -323,17 +323,17 @@ end
 --- @param onBack? fun(i: number)
 --- @return Dummy.Encounter.ActionMenu
 function ActionMenu:new(options, direction, pagination, onBack)
-  local action_menu = Class:new(ActionMenu, {
-    options = Utils.getOrDefault(options, {}),
-    indexes_x = {},
-    indexes_y = {},
-    index_x = 0,
-    index_y = 0,
-    direction = Utils.getOrDefault(direction, "horizontal"),
-    pagination = Utils.getOrDefault(pagination, false),
-    onBack = onBack,
-    active = true,
-  })
+  local action_menu = Class:new(ActionMenu)
+
+  action_menu.options = Utils.getOrDefault(options, {})
+  action_menu.indexes_x = {}
+  action_menu.indexes_y = {}
+  action_menu.index_x = 0
+  action_menu.index_y = 0
+  action_menu.direction = Utils.getOrDefault(direction, "horizontal")
+  action_menu.pagination = Utils.getOrDefault(pagination, false)
+  action_menu.onBack = onBack
+  action_menu.active = true
 
   action_menu:init()
 

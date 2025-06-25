@@ -54,10 +54,12 @@ function Item:onUse() end
 --- @param short_name Dummy.Text.Text
 --- @return Dummy.Item
 function Item:new(name, short_name)
-  return Class:new(Item, {
-    name = name,
-    short_name = short_name,
-  })
+  local item = Class:new(Item)
+
+  item.name = name
+  item.short_name = short_name
+
+  return item
 end
 
 return Item

@@ -340,15 +340,15 @@ end
 --- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
 --- @return Dummy.Sprite
 function Sprite:new(sprites_names, speed, loop, play, keep_last_frame)
-  local sprite = Class:new(Sprite, {
-    speed = Utils.getOrDefault(speed, 1 / 30),
-    loop = Utils.getOrDefault(loop, true),
-    keep_last_frame = Utils.getOrDefault(keep_last_frame, true),
-    frames = {},
-    frame_index = 1,
-    vaporize_type = nil,
-    vaporize_size = 2,
-  })
+  local sprite = Class:new(Sprite)
+
+  sprite.speed = Utils.getOrDefault(speed, 1 / 30)
+  sprite.loop = Utils.getOrDefault(loop, true)
+  sprite.keep_last_frame = Utils.getOrDefault(keep_last_frame, true)
+  sprite.frames = {}
+  sprite.frame_index = 1
+  sprite.vaporize_type = nil
+  sprite.vaporize_size = 2
 
 
   if sprites_names ~= nil then

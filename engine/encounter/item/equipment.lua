@@ -73,10 +73,12 @@ end
 --- @param type "weapon" | "armor"
 --- @return Dummy.Item.Equipment
 function ItemEquipment:new(name, short_name, value, type)
-  return Class:new(ItemEquipment, {
-    value = value,
-    type = type
-  }, { name, short_name })
+  local item = Class:new(ItemEquipment, { name, short_name })
+
+  item.value = value
+  item.type = type
+
+  return item
 end
 
 return ItemEquipment

@@ -148,17 +148,17 @@ end
 --- @param done_callback? fun() called when the dialogue is done
 --- @return Dummy.DialogueText
 function DialogueText:new(value, done_callback)
-  local dialogue_text = Class:new(DialogueText, {
-    text_key = value,
-    full_text = "",
-    speed = 1,
-    time = 0,
-    text_index = 0,
-    voice = "voice_text",
-    done_callback = done_callback,
-    can_skip = true,
-    can_confirm = true,
-  }, { value })
+  local dialogue_text = Class:new(DialogueText, { value })
+
+  dialogue_text.text_key = value
+  dialogue_text.full_text = ""
+  dialogue_text.speed = 1
+  dialogue_text.time = 0
+  dialogue_text.text_index = 0
+  dialogue_text.voice = "voice_text"
+  dialogue_text.done_callback = done_callback
+  dialogue_text.can_skip = true
+  dialogue_text.can_confirm = true
 
   Scene.addDialogue(dialogue_text)
 
