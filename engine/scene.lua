@@ -23,10 +23,6 @@ function Scene.load()
   Scene.clean()
 
   Scene.scenes = {}
-  Scene.scenes.MAIN_MENU = require "scene.main_menu_scene"
-  Scene.scenes.ENCOUNTER = require "scene.encounter_scene"
-  Scene.scenes.GAME_OVER = require "scene.game_over_scene"
-  Scene.scenes.ERROR = require "scene.error_scene"
 
   Scene.quitting_delay = SCENE_QUITTING_DELAY
   Scene.quitting_timer = 0

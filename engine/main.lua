@@ -70,9 +70,7 @@ function love.scale()
   else
     local width = Constants.SCREEN_WIDTH * Config["window_scale"]
     local height = Constants.SCREEN_HEIGHT * Config["window_scale"]
-    love.window.setMode(width, height, {
-      resizable = true,
-    })
+    love.window.setMode(width, height)
     love.resize(width, height)
   end
 end
@@ -102,6 +100,10 @@ function love.load()
   Shaker.load()
   Debugger.load()
 
+  Scene.addScene("MAIN_MENU", require "scene.main_menu_scene")
+  Scene.addScene("ENCOUNTER", require "scene.encounter_scene")
+  Scene.addScene("GAME_OVER", require "scene.game_over_scene")
+  Scene.addScene("ERROR", require "scene.error_scene")
   Scene.change("MAIN_MENU")
 
   engine.next_time = love.timer.getTime()
