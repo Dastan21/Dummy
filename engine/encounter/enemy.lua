@@ -192,7 +192,8 @@ function Enemy:spare()
     dustcloud:setScale(math.random() + 0.7)
     local dust_x = (math.random() * width / 2) + width / 4 + x - 8
     local dust_y = (math.random() * height / 2) + height / 4 + y - 8
-    dustcloud:setPosition(dust_x - width / 2, dust_y - height)
+    dustcloud:setPosition(0, -height / 2)
+    dustcloud:setParent(self)
 
     local rightside = (8 + dust_x - x) / (width / 2)
     local topside = (8 + dust_y - y) / (height / 2)
@@ -221,8 +222,8 @@ function Enemy:spare()
     if topside < 0.75 and rightside < 0.75 then
       direction = 235
     end
-    dustcloud["vel_x"] = math.cos(math.rad(direction)) * 6
-    dustcloud["vel_y"] = math.sin(math.rad(direction)) * 6
+    dustcloud["vel_x"] = math.cos(math.rad(direction)) * 8
+    dustcloud["vel_y"] = math.sin(math.rad(direction)) * 8
 
     table.insert(dustclouds, dustcloud)
   end
