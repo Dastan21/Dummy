@@ -195,6 +195,7 @@ function main_menu.switchLanguage()
   main_menu.current_menu:show()
 end
 
+--- Updates the main menu
 function main_menu.update()
   if main_menu.current_menu ~= nil then
     main_menu.current_menu:update()

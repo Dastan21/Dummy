@@ -36,8 +36,12 @@ function Arena.load()
     local arena_x = Arena.x - (Arena.width / 2)
     local arena_y = Arena.y - Arena.height
 
+    love.graphics.push()
+
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
+
+    love.graphics.pop()
   end
 
   --- arena border
@@ -48,11 +52,15 @@ function Arena.load()
     local x = Arena.x - (Arena.width / 2)
     local y = Arena.y - Arena.height
 
+    love.graphics.push()
+
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.rectangle("fill", x - b, y - b, Arena.width + b * 2, b)
     love.graphics.rectangle("fill", x - b, y + Arena.height, Arena.width + b * 2, b)
     love.graphics.rectangle("fill", x - b, y - b, b, Arena.height + b * 2)
     love.graphics.rectangle("fill", x + Arena.width, y - b, b, Arena.height + b * 2)
+
+    love.graphics.pop()
   end
 end
 

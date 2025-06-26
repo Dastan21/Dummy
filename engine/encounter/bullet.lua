@@ -82,6 +82,8 @@ function Bullet:new()
   debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
   function debug_hitbox_drawable:draw()
     if Debugger.shouldDisplayHitbox() and bullet:isVisible() then
+      love.graphics.push()
+
       love.graphics.setColor(0, 1, 0, 1)
 
       local x, y = bullet:getPosition()
@@ -94,11 +96,14 @@ function Bullet:new()
       if angle % (2 * math.pi) == 0 then
         local hitbox_x = x - width * origin_x * scale_x
         local hitbox_y = y - height * origin_y * scale_y
-        love.graphics.rectangle("line", hitbox_x, hitbox_y, width * scale_x, height * scale_y)
+        love.graphics.rectangle("line", hitbox_x + 0.5, hitbox_y + 0.5, width * scale_x - 1, height * scale_y - 1)
       else
-        local points = Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x, origin_y, angle)
+        local points = Utils.getPolygonPoints(x + 0.5, y + 0.5, width - 1, height - 1, scale_x, scale_y, origin_x,
+          origin_y, angle)
         love.graphics.polygon("line", table.unpack(points))
       end
+
+      love.graphics.pop()
     end
   end
 

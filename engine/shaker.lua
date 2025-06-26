@@ -14,7 +14,11 @@ function Shaker.load()
   Shaker.drawable:setLayer(Constants.LAYERS.SHAKER)
   Shaker.drawable:setVisible(false)
   function Shaker.drawable:draw()
+    love.graphics.push()
+
     love.graphics.translate(Shaker.dx, Shaker.dy)
+
+    love.graphics.pop()
   end
 
   Shaker.dx = 0

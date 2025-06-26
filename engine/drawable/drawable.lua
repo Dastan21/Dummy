@@ -2,6 +2,8 @@
 
 --- @class Dummy.Drawable : Dummy.Class
 ---
+--- @field protected parent Dummy.Drawable|nil
+--- @field protected children Dummy.Drawable[]
 --- @field protected x number
 --- @field protected y number
 --- @field protected angle number
@@ -23,13 +25,13 @@ function Drawable.getClassName()
   return "Dummy.Drawable"
 end
 
---- Gets the drawable's position
+--- Gets the drawable's relative position
 --- @return number, number
 function Drawable:getPosition()
   return self.x, self.y
 end
 
---- Sets the drawable's position
+--- Sets the drawable's relative position
 --- @param x number
 --- @param y number
 function Drawable:setPosition(x, y)
@@ -81,6 +83,12 @@ function Drawable:setScale(scale_x, scale_y)
     self.scale_x = scale_x
     self.scale_y = scale_y
   end
+end
+
+--- Gets the drawable's transform
+--- @return love.Transform
+function Drawable:getTransform()
+  return love.math.newTransform(self.x, self.y, self.angle, self.scale_x, self.scale_y)
 end
 
 --- Gets the drawable's origin
@@ -193,11 +201,90 @@ function Drawable:remove()
   Scene.removeDrawable(self)
 end
 
+--- Gets the drawable's parent
+--- @return Dummy.Drawable|nil
+function Drawable:getParent()
+  return self.parent
+end
+
+--- Sets the drawable's parent
+--- @param parent Dummy.Drawable|nil
+function Drawable:setParent(parent)
+  if self.parent ~= parent then
+    self.parent = parent
+
+    if parent ~= nil then
+      self:removeChild(parent)
+      parent:addChild(self)
+    end
+  end
+end
+
+--- Gets the drawable's children
+--- @return Dummy.Drawable[]
+function Drawable:getChildren()
+  return self.children
+end
+
+--- Adds a child to the drawable
+--- @param child Dummy.Drawable
+function Drawable:addChild(child)
+  if child == self then return end
+
+  if child == self.parent then
+    self.parent = nil
+  else
+    child.parent = self
+  end
+
+  table.insert(self.children, child)
+
+  self:sortChildren()
+end
+
+--- Removes a child from the drawable
+--- @param child Dummy.Drawable
+function Drawable:removeChild(child)
+  for i, c in ipairs(self.children) do
+    if c == child then
+      table.remove(self.children, i)
+      break
+    end
+  end
+
+  self:sortChildren()
+end
+
+--- Sorts drawable's children by layer
+function Drawable:sortChildren()
+  if #self.children <= 0 then return end
+
+  table.stable_sort(self.children, function(a, b)
+    return (a:getLayer() or 0) < (b:getLayer() or 0)
+  end)
+end
+
+--- Draws the drawable
+function Drawable:draw()
+  self:drawChildren()
+end
+
+--- Draws the drawable's children
+function Drawable:drawChildren()
+  if #self.children <= 0 then return end
+
+  for _, child in ipairs(self.children) do
+    child:draw()
+  end
+end
+
 --- Creates a drawable
 --- @return Dummy.Drawable
 function Drawable:new()
   local drawable = Class:new(Drawable)
 
+  drawable.parent = nil
+  drawable.children = {}
   drawable.x = 0
   drawable.y = 0
   drawable.angle = 0

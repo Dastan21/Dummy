@@ -90,6 +90,9 @@ function love.load()
 
   loadConfig()
 
+  engine.canvas = love.graphics.newCanvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)
+  engine.canvas:setFilter("nearest", "nearest")
+
   love.scale()
 
   Input.load()
@@ -142,10 +145,18 @@ local function draw()
   if not love.graphics.isActive() then return end
 
   limitFPS()
-  love.graphics.translate(engine.window.translate_x, engine.window.translate_y)
-  love.graphics.scale(engine.window.scale)
+
+  love.graphics.setCanvas(engine.canvas)
+  love.graphics.clear()
 
   Scene.draw()
+
+  love.graphics.setCanvas()
+
+  love.graphics.setColor(1, 1, 1, 1)
+  love.graphics.translate(engine.window.translate_x, engine.window.translate_y)
+  love.graphics.scale(engine.window.scale)
+  love.graphics.draw(engine.canvas)
 
   love.graphics.setColor(0, 0, 0, 1)
   love.graphics.rectangle("fill", -engine.window.translate_x, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)

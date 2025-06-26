@@ -103,6 +103,32 @@ function Text:getSprite()
   return self.sprite
 end
 
+--- Draws the text
+function Text:draw()
+  if not self:isVisible() then return end
+
+  local sprite = self:getSprite()
+  if sprite == nil then return end
+
+  love.graphics.push()
+
+  love.graphics.applyTransform(self:getTransform())
+  local origin_x, origin_y = self:getOrigin()
+
+  if Debugger.shouldDisplayHitbox() then
+    love.graphics.setColor(0, 0, 1, 1)
+    love.graphics.rectangle("line", -0.5 - self:getWidth() * origin_x, -0.5 - self:getHeight() * origin_y,
+      self:getWidth() + 1, self:getHeight() + 1)
+  end
+
+  love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
+  love.graphics.draw(sprite, -self:getWidth() * origin_x, -self:getHeight() * origin_y)
+
+  self:drawChildren()
+
+  love.graphics.pop()
+end
+
 --- Creates a text
 --- @param value Dummy.Text.Text
 --- @return Dummy.Text

@@ -122,45 +122,11 @@ end
 --- Draws the current scene
 function Scene.draw()
   if Scene.scene == nil then return end
-
   for _, drawable in pairs(Scene.drawables) do
     if drawable:isVisible() then
-      if type(drawable.draw) == "function" then
+      if drawable:getParent() == nil then
         drawable:draw()
       end
-
-      local color = drawable:getColor()
-      love.graphics.setColor(color[1], color[2], color[3], drawable:getAlpha())
-
-      local sprite = drawable:getSprite()
-      if sprite ~= nil then
-        local x, y = drawable:getPosition()
-        local width, height = drawable:getWidth(), drawable:getHeight()
-        local angle = math.rad(drawable:getAngle())
-        local scale_x, scale_y = drawable:getScale()
-        local origin_x, origin_y = drawable:getOrigin()
-        love.graphics.draw(sprite,
-          x, y,
-          angle,
-          scale_x, scale_y,
-          origin_x * width, origin_y * height
-        )
-
-        if Debugger.shouldDisplayHitbox() then
-          love.graphics.setColor(0, 0, 1, 0.5)
-
-          if angle % (2 * math.pi) == 0 then
-            local hitbox_x = x - width * origin_x * scale_x
-            local hitbox_y = y - height * origin_y * scale_y
-            love.graphics.rectangle("line", hitbox_x, hitbox_y, width * scale_x, height * scale_y)
-          else
-            local points = Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x, origin_y, angle)
-            love.graphics.polygon("line", table.unpack(points))
-          end
-        end
-      end
-
-      love.graphics.setColor(1, 1, 1, 1)
     end
   end
 end

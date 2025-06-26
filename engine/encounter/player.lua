@@ -81,12 +81,16 @@ function Player.load()
   local debug_hitbox_drawable = Drawable:new()
   debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_SOUL)
   function debug_hitbox_drawable:draw()
-    if Debugger.shouldDisplayHitbox() and not Player.isHidden() then
+    if not Player.isHidden() and Debugger.shouldDisplayHitbox() then
+      love.graphics.push()
+
       local x, y = Player.getPosition()
       local scale_x, scale_y = Player.getScale()
       love.graphics.setColor(0, 1, 0, 1)
-      love.graphics.rectangle("line", x - Player.hitbox[1] * scale_x, y - Player.hitbox[2] * scale_y,
-        Player.hitbox[3] * scale_x, Player.hitbox[4] * scale_y)
+      love.graphics.rectangle("line", x + 0.5 - Player.hitbox[1] * scale_x, y + 0.5 - Player.hitbox[2] * scale_y,
+        Player.hitbox[3] * scale_x - 1, Player.hitbox[4] * scale_y - 1)
+
+      love.graphics.pop()
     end
   end
 end

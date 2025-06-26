@@ -74,6 +74,9 @@ function Text:setAlpha(alpha) end
 --- @return love.Text
 function Text:getSprite() end
 
+--- Draws the text
+function Text:draw() end
+
 --- Creates a text
 --- @param value Dummy.Text.Text
 --- @return Dummy.Text

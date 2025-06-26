@@ -39,5 +39,6 @@ function main_menu.changeMenu(new_menu) end
 --- Switches current language
 function main_menu.switchLanguage() end
 
+--- Updates the main menu
 function main_menu.update() end
 

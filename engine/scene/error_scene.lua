@@ -27,9 +27,13 @@ function error.load(err)
   local text_overlay_drawable = Drawable:new()
   text_overlay_drawable:setLayer(Constants.LAYERS.ABOVE_UI)
   function text_overlay_drawable:draw()
+    love.graphics.push()
+
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", 0, Constants.SCREEN_HEIGHT - 40 - MARGIN_INFO, Constants.SCREEN_WIDTH,
       40 + MARGIN_INFO)
+
+    love.graphics.pop()
   end
 
   error.back_main_menu_text = Text:new("ERROR_BACK_MAIN_MENU")
