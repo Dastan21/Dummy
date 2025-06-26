@@ -44,7 +44,7 @@ local engine = {
     translate_y = 0,
     scale = 1,
   },
-  next_time = 0
+  time = 0
 }
 
 Config = {
@@ -77,10 +77,9 @@ end
 
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
+
   love.audio.stop()
-  if Constants.DEBUG then
-    love.audio.setVolume(0)
-  end
+  if Constants.DEBUG then love.audio.setVolume(0) end
 
   love.filesystem.createDirectory("mods")
   love.filesystem.createDirectory("saves")
@@ -109,7 +108,7 @@ function love.load()
   Scene.addScene("ERROR", require "scene.error_scene")
   Scene.change("MAIN_MENU")
 
-  engine.next_time = love.timer.getTime()
+  engine.time = love.timer.getTime()
 end
 
 local function updateFullscreen()
@@ -121,7 +120,7 @@ local function updateFullscreen()
 end
 
 local function update(dt)
-  engine.next_time = engine.next_time + (1 / Config["fps"])
+  engine.time = engine.time + (1 / Config["fps"])
 
   dt = Debugger.update(dt)
 
@@ -133,12 +132,12 @@ local function update(dt)
 end
 
 local function limitFPS()
-  local cur_time = love.timer.getTime()
-  if engine.next_time <= cur_time then
-    engine.next_time = cur_time
+  local time = love.timer.getTime()
+  if engine.time <= time then
+    engine.time = time
     return
   end
-  love.timer.sleep(engine.next_time - cur_time)
+  love.timer.sleep(engine.time - time)
 end
 
 local function draw()
