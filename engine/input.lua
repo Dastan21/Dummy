@@ -61,7 +61,7 @@ end
 --- @return boolean
 function Input.isPressed(keybind)
   return Input.hasAnyKey(keybind, function(k)
-    return Input.keys_pressed[k] == 0
+    return Input.keys_pressed[k] == 1
   end)
 end
 
@@ -70,7 +70,7 @@ end
 --- @return boolean
 function Input.isReleased(keybind)
   return Input.hasAnyKey(keybind, function(k)
-    return Input.keys_released[k] == 0
+    return Input.keys_released[k] == 1
   end)
 end
 
@@ -90,35 +90,33 @@ end
 --- Updates the input
 function Input.update()
   for key, value in pairs(Input.keys_pressed) do
-    if Input.keys_pressed[key] ~= nil and Input.keys_pressed[key] < 1 then
+    if not Input.isDown(key) and Input.keys_pressed[key] == 2 then
+      Input.keys_pressed[key] = 0
+    end
+
+    if Input.keys_pressed[key] < 2 then
       Input.keys_pressed[key] = value + 1
     end
   end
   for key, value in pairs(Input.keys_released) do
-    if Input.keys_released[key] ~= nil and Input.keys_released[key] < 1 then
+    if not Input.isDown(key) and Input.keys_released[key] == 2 then
+      Input.keys_pressed[key] = 0
+    end
+
+    if Input.keys_released[key] < 2 then
       Input.keys_released[key] = value + 1
     end
   end
 end
 
 function love.keypressed(_, key)
-  Input.keys_pressed[key] = -1
+  Input.keys_pressed[key] = 0
   Input.keys_released[key] = nil
 end
 
-function love.keyreleased(_, key)
-  Input.keys_pressed[key] = nil
-  Input.keys_released[key] = -1
-end
-
 function love.gamepadpressed(_, button)
-  Input.keys_pressed["gamepad:" .. button] = -1
+  Input.keys_pressed["gamepad:" .. button] = 0
   Input.keys_released["gamepad:" .. button] = nil
-end
-
-function love.gamepadreleased(_, button)
-  Input.keys_pressed["gamepad:" .. button] = nil
-  Input.keys_released["gamepad:" .. button] = -1
 end
 
 function love.gamepadaxis(_, axis, value)
@@ -127,12 +125,12 @@ function love.gamepadaxis(_, axis, value)
   if axis == "lefty" then
     if value < -stick_treshold then
       if Input.keys_pressed["gamepad:lsup"] == nil then
-        Input.keys_pressed["gamepad:lsup"] = -1
+        Input.keys_pressed["gamepad:lsup"] = 0
       end
       Input.keys_pressed["gamepad:lsdown"] = nil
     elseif value > stick_treshold then
       if Input.keys_pressed["gamepad:lsdown"] == nil then
-        Input.keys_pressed["gamepad:lsdown"] = -1
+        Input.keys_pressed["gamepad:lsdown"] = 0
       end
       Input.keys_pressed["gamepad:lsup"] = nil
     else
@@ -142,12 +140,12 @@ function love.gamepadaxis(_, axis, value)
   elseif axis == "leftx" then
     if value < -stick_treshold then
       if Input.keys_pressed["gamepad:lsleft"] == nil then
-        Input.keys_pressed["gamepad:lsleft"] = -1
+        Input.keys_pressed["gamepad:lsleft"] = 0
       end
       Input.keys_pressed["gamepad:lsright"] = nil
     elseif value > stick_treshold then
       if Input.keys_pressed["gamepad:lsright"] == nil then
-        Input.keys_pressed["gamepad:lsright"] = -1
+        Input.keys_pressed["gamepad:lsright"] = 0
       end
       Input.keys_pressed["gamepad:lsleft"] = nil
     else
