@@ -43,5 +43,3 @@ function Debugger.saveLogs() end
 --- @return number
 function Debugger.update(dt) end
 
-function print(...) end
-

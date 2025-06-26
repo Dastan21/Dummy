@@ -118,22 +118,22 @@ function Debugger.update(dt)
   return dt
 end
 
-local _print = print
-function print(...)
-  local t = {}
-  for _, v in pairs({ ... }) do
-    table.insert(t, tostring(v))
-  end
+-- local _print = print
+-- function print(...)
+--   local t = {}
+--   for _, v in pairs({ ... }) do
+--     table.insert(t, tostring(v))
+--   end
 
-  if Debugger.logs ~= nil then
-    local _, w = Debugger.log_text:getFont():getWrap(table.concat(t, "	"), (600 / Debugger.scale) - (Debugger.margin * 2))
-    local len = #Debugger.logs
-    for i, s in ipairs(w) do
-      Debugger.logs[len + i] = (i == 1 and "> " or "  ") .. s
-    end
-  end
+--   if Debugger.logs ~= nil then
+--     local _, w = Debugger.log_text:getFont():getWrap(table.concat(t, "	"), (600 / Debugger.scale) - (Debugger.margin * 2))
+--     local len = #Debugger.logs
+--     for i, s in ipairs(w) do
+--       Debugger.logs[len + i] = (i == 1 and "> " or "  ") .. s
+--     end
+--   end
 
-  return _print(...)
-end
+--   return _print(...)
+-- end
 
 return Debugger
