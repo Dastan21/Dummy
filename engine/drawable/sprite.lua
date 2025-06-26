@@ -246,10 +246,8 @@ function Sprite:vaporize(type, size)
 
   Assets.playSound("vaporized")
 
-  -- TODO: handle angle + scale
   local sprite_x, sprite_y = self:getPosition()
   local sprite_origin_x, sprite_origin_y = self:getOrigin()
-  local sprite_scale_x, sprite_scale_y = self:getScale()
   local sprite_width, sprite_height = self:getWidth(), self:getHeight()
   local sprite_image = self:getSprite()
   local sprite_data = self:getSpriteData()
@@ -260,24 +258,27 @@ function Sprite:vaporize(type, size)
   local j = 0
 
   local vaporize_drawable = Drawable:new()
+  vaporize_drawable:setPosition(sprite_x, sprite_y)
   function vaporize_drawable:draw()
-    local x, y = sprite:getPosition()
     local origin_x, origin_y = sprite:getOrigin()
-    local scale_x, scale_y = sprite:getScale()
     local width, height = sprite:getWidth(), sprite:getHeight()
-    local angle = math.rad(sprite:getAngle())
     local image = sprite:getSprite()
+
+    love.graphics.push()
+    love.graphics.applyTransform(sprite:getTransform())
 
     -- particles
     for particle in pairs(particles) do
       love.graphics.setColor(1, 1, 1, particle["alpha"])
-      love.graphics.rectangle("fill", particle["x"], particle["y"] - size, particle["width"], size * scale_y)
+      love.graphics.rectangle("fill", particle["x"], particle["y"] - size, particle["width"], size)
     end
 
     -- cut sprite
     love.graphics.setColor(1, 1, 1, 1)
     local quad = love.graphics.newQuad(0, j, width, (height - j), width, height)
-    love.graphics.draw(image, quad, x, y, angle, scale_x, scale_y, origin_x * width, origin_y * height - j)
+    love.graphics.draw(image, quad, 0, 0, 0, 1, 1, origin_x * width, origin_y * height - j)
+
+    love.graphics.pop()
   end
 
   self:setVisible(false)
@@ -292,13 +293,13 @@ function Sprite:vaporize(type, size)
       if a == 1 and r == 1 and g == 1 and b == 1 then
         if type == "pixel" or type == "line" and following_count <= 0 then
           particle = {}
-          particle["x"] = sprite_x - sprite_width * sprite_origin_x * sprite_scale_x + i * sprite_scale_x
-          particle["y"] = sprite_y - sprite_height * sprite_origin_y * sprite_scale_y + (j + size) * sprite_scale_y
+          particle["x"] = -sprite_width * sprite_origin_x + i
+          particle["y"] = -sprite_height * sprite_origin_y + (j + size)
           particle["vel_x"] = (math.random() * 4 - 2) * 30
           particle["acc_y"] = -(math.random() * 0.5 + 0.2) * 30 * 5
           particle["vel_y"] = particle["acc_y"]
           particle["alpha"] = 1
-          particle["width"] = size * sprite_scale_x
+          particle["width"] = size
           particles[particle] = true
         end
 
@@ -306,7 +307,7 @@ function Sprite:vaporize(type, size)
       else
         if type == "line" and following_count > 0 then
           if particles[particle] ~= nil then
-            particle["width"] = following_count * size * sprite_scale_x
+            particle["width"] = following_count * size
           end
 
           following_count = 0
