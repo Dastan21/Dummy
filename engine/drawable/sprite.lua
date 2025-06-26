@@ -9,8 +9,6 @@
 --- @field protected timer table|nil
 --- @field protected vaporize_type "pixel" | "line" | nil
 --- @field protected vaporize_size number
---- @field protected cache_image table<string, love.Image>
---- @field protected cache_image_data table<string|love.Image, love.ImageData>
 local Sprite = Class:extend(Drawable)
 
 --- Gets the class name
@@ -19,10 +17,15 @@ function Sprite:getClass()
   return "Dummy.Sprite"
 end
 
+--- @type table<string, love.Image>
+local cache_image = {}
+--- @type table<string|love.Image, love.ImageData>
+local cache_image_data = {}
+
 --- Clears the cache
 function Sprite.clear()
-  Sprite.cache_image = {}
-  Sprite.cache_image_data = {}
+  cache_image = {}
+  cache_image_data = {}
 end
 
 --- Loads a sprite
@@ -31,13 +34,13 @@ end
 function Sprite.loadSprite(sprite_path)
   local sprite_full_path = "assets/sprites/" .. Lang.getLanguage() .. "/" .. sprite_path .. ".png"
   -- try to get image data from cache
-  local image = Sprite.cache_image[sprite_full_path]
+  local image = cache_image[sprite_full_path]
   if image ~= nil then return image end
 
   local success, image_data
 
   -- try to get image data from cache
-  image_data = Sprite.cache_image_data[sprite_full_path]
+  image_data = cache_image_data[sprite_full_path]
   if image_data == nil then
     success, image_data = pcall(love.image.newImageData, sprite_full_path)
 
@@ -48,15 +51,15 @@ function Sprite.loadSprite(sprite_path)
       assert(success, "Sprite \"" .. sprite_path .. "\" not found : " .. tostring(image_data))
     end
 
-    Sprite.cache_image_data[sprite_full_path] = image_data
+    cache_image_data[sprite_full_path] = image_data
   end
 
   -- create an image from the sprite data
   success, image = pcall(love.graphics.newImage, image_data)
   assert(success, "Sprite \"" .. sprite_path .. "\" not found : " .. tostring(image))
 
-  Sprite.cache_image[sprite_full_path] = image
-  Sprite.cache_image_data[image] = image_data
+  cache_image[sprite_full_path] = image
+  cache_image_data[image] = image_data
 
   return image
 end
@@ -103,7 +106,7 @@ end
 --- Gets the sprite's image data
 --- @return love.ImageData
 function Sprite:getSpriteData()
-  return Sprite.cache_image_data[self.sprite]
+  return cache_image_data[self.sprite]
 end
 
 --- Gets the sprite's frames

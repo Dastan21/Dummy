@@ -5,7 +5,6 @@
 --- @field protected fonts table<Dummy.Assets.Font, love.Font>
 --- @field protected current_music love.Source|nil
 --- @field protected current_sound love.Source|nil
---- @field protected audio_cache table<string, love.FileData>
 local Assets = {}
 
 function Assets.load()
@@ -67,6 +66,9 @@ function Assets.checkFilenameExt(name, exts)
   return filename
 end
 
+--- @type table<string, love.FileData>
+local audio_cache = {}
+
 --- Plays an audio
 --- @param folder string
 --- @param audio_name string
@@ -79,7 +81,7 @@ function Assets.playAudio(folder, audio_name, type, play, loop)
 
   local source = nil
   local success = true
-  local file_data = Assets.audio_cache[filename]
+  local file_data = audio_cache[filename]
 
   if file_data == nil then
     success, file_data = pcall(love.filesystem.newFileData, filename)
@@ -89,8 +91,8 @@ function Assets.playAudio(folder, audio_name, type, play, loop)
   success, source = pcall(love.audio.newSource, file_data, type)
   assert(success, "Audio \"" .. audio_name .. "\" not found")
 
-  if Assets.audio_cache[filename] == nil then
-    Assets.audio_cache[filename] = file_data
+  if audio_cache[filename] == nil then
+    audio_cache[filename] = file_data
   end
 
   if loop then source:setLooping(loop) end
@@ -146,7 +148,7 @@ end
 
 --- Clears the cache
 function Assets.clear()
-  Assets.audio_cache = {}
+  audio_cache = {}
 end
 
 return Assets
