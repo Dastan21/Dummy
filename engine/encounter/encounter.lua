@@ -6,7 +6,7 @@
 --- @field protected can_flee boolean
 --- @field protected music love.Source
 --- @field protected enemies Dummy.Enemy[]
---- @field protected wave Dummy.Wave
+--- @field protected waves Dummy.Wave[]
 --- @field protected current_state string
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
@@ -95,10 +95,16 @@ function Encounter.addEnemy(enemy, ...)
   Encounter.loadActEnemyMenu()
 end
 
---- Sets the encounter's next wave
+--- Sets one or more waves to the encounter
 --- @param wave Dummy.Wave
-function Encounter.setWave(wave)
-  Encounter.wave = wave
+function Encounter.setWave(wave, ...)
+  Encounter.waves = {}
+
+  local waves = { wave, ... }
+  if #wave >= 1 then waves = wave end
+  for _, wave in ipairs(waves) do
+    table.insert(Encounter.waves, wave)
+  end
 end
 
 --- Wether the player can flee the encounter
@@ -241,7 +247,7 @@ function Encounter.load()
   Encounter.textbox_dialogue:setFont(Assets.getFont("main_text"))
   Encounter.textbox_dialogue:setScale(2)
   Encounter.textbox_dialogue:setLayer(Constants.LAYERS.ABOVE_ARENA)
-  Encounter.textbox_dialogue:setMaxWidth(Constants.ARENA.DEFAULT_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
+  Encounter.textbox_dialogue:setMaxWidth(Constants.ARENA.TEXTBOX_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
   Encounter.textbox_dialogue:setCanSkip(true)
   Encounter.textbox_dialogue:setText(Encounter.getText())
 
@@ -794,7 +800,7 @@ function Encounter.startEnemyDialogue()
   Encounter.unselectAction()
   Encounter.leaveMenu()
 
-  Arena.resize(130, 130)
+  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT)
 
   for _, enemy in ipairs(Encounter.enemies) do
     if not enemy:isKilled() and not enemy:isSpared() then
@@ -1071,18 +1077,31 @@ function Encounter.startDefending()
   Encounter.unselectAction()
 
   -- default wave arena size
-  Arena.resize(130, 130)
+  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT)
 
-  --- @diagnostic disable-next-line: invisible
-  Encounter.wave:__start()
+  for _, wave in ipairs(Encounter.waves) do
+    --- @diagnostic disable-next-line: invisible
+    wave:__start()
+  end
 end
 
 --- Updates defending
 function Encounter.updateDefending(dt)
   Player.update(dt)
 
-  --- @diagnostic disable-next-line: invisible
-  Encounter.wave:__update(dt)
+  local all_done = true
+  for _, wave in ipairs(Encounter.waves) do
+    --- @diagnostic disable-next-line: invisible
+    wave:__update(dt)
+
+    if not wave:isDone() then
+      all_done = false
+    end
+  end
+
+  if all_done then
+    Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
+  end
 end
 
 --- Updates the encounter

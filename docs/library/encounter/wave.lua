@@ -18,13 +18,24 @@ Wave = {}
 --- @return string
 function Wave:getClass() end
 
+--- Gets the wave's elapsed time
+--- @return number
+function Wave:getTime() end
+
 --- Gets the wave's duration
 --- @return number
 function Wave:getDuration() end
 
---- Gets the wave's elapsed time
---- @return number
-function Wave:getTime() end
+--- Sets the wave's duration
+--- @param duration number
+function Wave:setDuration(duration) end
+
+--- Wether the wave is done
+--- @return boolean
+function Wave:isDone() end
+
+--- Ends the wave
+function Wave:done() end
 
 --- Spawns a bullet
 --- @param bullet Dummy.Bullet the bullet to spawn

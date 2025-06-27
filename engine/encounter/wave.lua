@@ -12,16 +12,37 @@ function Wave:getClass()
   return "Dummy.Wave"
 end
 
+--- Gets the wave's elapsed time
+--- @return number
+function Wave:getTime()
+  return self.time
+end
+
 --- Gets the wave's duration
 --- @return number
 function Wave:getDuration()
   return self.duration
 end
 
---- Gets the wave's elapsed time
---- @return number
-function Wave:getTime()
-  return self.time
+--- Sets the wave's duration
+--- @param duration number
+function Wave:setDuration(duration)
+  self.duration = duration
+end
+
+--- Wether the wave is done
+--- @return boolean
+function Wave:isDone()
+  return self.is_done
+end
+
+--- Ends the wave
+function Wave:done()
+  self.is_done = true
+
+  if (type(self.onEnd) == "function") then
+    self:__end()
+  end
 end
 
 --- Spawns a bullet
@@ -53,11 +74,13 @@ end
 --- [INTERNAL] Updates the wave
 --- @private
 function Wave:__update(dt)
+  if self.is_done then return end
+
   self.time = self.time + dt
   if self.time >= self.duration then
     if not self.is_done then
       self.is_done = true
-      Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
+
       if (type(self.onEnd) == "function") then
         self:__end()
       end

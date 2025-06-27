@@ -12,7 +12,7 @@
 --- @field protected can_flee boolean
 --- @field protected music love.Source
 --- @field protected enemies Dummy.Enemy[]
---- @field protected wave Dummy.Wave
+--- @field protected waves Dummy.Wave[]
 --- @field protected current_state string
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
@@ -73,9 +73,9 @@ function Encounter.getEnemies() end
 --- @param ... Dummy.Enemy
 function Encounter.addEnemy(enemy, ...) end
 
---- Sets the encounter's next wave
+--- Sets one or more waves to the encounter
 --- @param wave Dummy.Wave
-function Encounter.setWave(wave) end
+function Encounter.setWave(wave, ...) end
 
 --- Wether the player can flee the encounter
 --- @return boolean

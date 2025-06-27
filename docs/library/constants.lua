@@ -67,7 +67,9 @@ Constants = {
 
   ARENA = {
     RESIZE_SPEED   = 30,
-    DEFAULT_WIDTH  = 565,
+    TEXTBOX_WIDTH  = 565,
+    TEXTBOX_HEIGHT = 130,
+    DEFAULT_WIDTH  = 130,
     DEFAULT_HEIGHT = 130,
     BORDER_WIDTH   = 5,
     DEFAULT_X      = 320,
