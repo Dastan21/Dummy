@@ -111,7 +111,10 @@ end
 
 function love.keypressed(_, key)
   Input.keys_pressed[key] = 0
-  Input.keys_released[key] = nil
+end
+
+function love.keyreleased(_, key)
+  Input.keys_released[key] = 0
 end
 
 function love.gamepadpressed(_, button)
