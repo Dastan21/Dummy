@@ -1,4 +1,4 @@
---- @alias love.Color { [1]: number, [2]: number, [3]: number }
+--- @alias love.Color [ number, number, number ]
 
 --- @class Dummy.Drawable : Dummy.Class
 ---

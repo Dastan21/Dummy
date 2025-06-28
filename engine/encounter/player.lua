@@ -10,7 +10,7 @@
 --- @field protected is_invincible boolean
 --- @field protected invincible boolean
 --- @field protected invincible_duration number
---- @field protected hitbox { [1]: number, [2]: number, [3]: number, [4]: number }
+--- @field protected hitbox Dummy.Bullet.Hitbox
 --- @field protected override boolean
 --- @field protected soul_sprite Dummy.Sprite
 --- @field protected name string

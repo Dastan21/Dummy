@@ -12,7 +12,7 @@
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
 --- @field protected textbox_dialogue Dummy.DialogueText
---- @field protected bubble_dialogues { [1]: Dummy.DialogueText[], [2]: Dummy.Sprite }
+--- @field protected bubble_dialogues [ Dummy.DialogueText[], Dummy.Sprite ]
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text

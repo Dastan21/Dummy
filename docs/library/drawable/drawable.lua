@@ -25,7 +25,7 @@
 --- @field protected persistent boolean
 Drawable = {}
 
---- @alias love.Color { [1]: number, [2]: number, [3]: number }
+--- @alias love.Color [ number, number, number ]
 
 --- Gets the class's name
 --- @return string

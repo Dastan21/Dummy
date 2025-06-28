@@ -1,4 +1,4 @@
---- @alias Dummy.Bullet.Hitbox { [1]:number, [2]:number, [3]:number, [4]:number }
+--- @alias Dummy.Bullet.Hitbox [ number, number, number, number ]
 
 --- @class Dummy.Bullet : Dummy.Sprite
 ---
