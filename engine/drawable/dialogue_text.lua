@@ -150,8 +150,6 @@ end
 function DialogueText:new(value, done_callback)
   local dialogue_text = Class:new(DialogueText, { value })
 
-  dialogue_text.text_key = value
-  dialogue_text.full_text = ""
   dialogue_text.speed = 1
   dialogue_text.time = 0
   dialogue_text.text_index = 0
@@ -159,6 +157,8 @@ function DialogueText:new(value, done_callback)
   dialogue_text.done_callback = done_callback
   dialogue_text.can_skip = true
   dialogue_text.can_confirm = true
+
+  dialogue_text:setText(value)
 
   Scene.addDialogue(dialogue_text)
 

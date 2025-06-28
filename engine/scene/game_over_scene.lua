@@ -58,7 +58,7 @@ function game_over.load(x, y)
   end
 
   -- dialogue
-  game_over.dialogue_text = DialogueText:new("")
+  game_over.dialogue_text = DialogueText:new(Lang.translate("GAME_OVER_TEXT_1"))
   game_over.dialogue_text:setPosition(120, 320)
   game_over.dialogue_text:setOrigin(0, 0)
   game_over.dialogue_text:setFont(Assets.getFont("main_text_mono"))
@@ -67,7 +67,6 @@ function game_over.load(x, y)
   game_over.dialogue_text:setVoice("voice_asgore")
   game_over.dialogue_text:setCanSkip(false)
   game_over.dialogue_text:setMaxWidth(400)
-  game_over.dialogue_text:setText(Lang.translate("GAME_OVER_TEXT_1"))
   game_over.dialogue_text:setVisible(false)
   game_over.dialogue_index = 1
 

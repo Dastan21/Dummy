@@ -157,9 +157,8 @@ function Encounter.playDialogue(text, bubble_type)
   local bubble = Sprite:new("bubble_" .. Utils.getOrDefault(bubble_type, "right"))
   bubble:setLayer(Constants.LAYERS.ABOVE_ARENA)
 
-  local dialogue = DialogueText:new("")
+  local dialogue = DialogueText:new(text)
   dialogue:setOrigin(0, 0)
-  dialogue:setText(text)
   dialogue:setColor(0, 0, 0)
   dialogue:setCanSkip(true)
   dialogue:setCanConfirm(true)
@@ -241,7 +240,7 @@ function Encounter.load()
   Encounter.loadActions()
 
   -- textbox dialogue
-  Encounter.textbox_dialogue = DialogueText:new("")
+  Encounter.textbox_dialogue = DialogueText:new(Encounter.getText())
   Encounter.textbox_dialogue:setPosition(52, 270)
   Encounter.textbox_dialogue:setOrigin(0, 0)
   Encounter.textbox_dialogue:setFont(Assets.getFont("main_text"))
@@ -249,7 +248,6 @@ function Encounter.load()
   Encounter.textbox_dialogue:setLayer(Constants.LAYERS.ABOVE_ARENA)
   Encounter.textbox_dialogue:setMaxWidth(Constants.ARENA.TEXTBOX_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
   Encounter.textbox_dialogue:setCanSkip(true)
-  Encounter.textbox_dialogue:setText(Encounter.getText())
 
   Encounter.bubble_dialogues = {}
 
