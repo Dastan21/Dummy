@@ -303,6 +303,10 @@ function Enemy:onDialogue() end
 --- Called when the enemy is killed
 function Enemy:onKilled() end
 
+--- Updates the enemy
+--- @param dt number
+function Enemy:update(dt) end
+
 --- Creates an enemy
 --- @param name string
 --- @param sprite string
