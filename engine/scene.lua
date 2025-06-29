@@ -153,7 +153,7 @@ function Scene.addScene(scene_name, scene)
 end
 
 --- Adds a drawable in the current scene
---- @param drawable Dummy.Drawable|fun()
+--- @param drawable Dummy.Drawable
 function Scene.addDrawable(drawable)
   if drawable == nil then return end
 
@@ -166,9 +166,15 @@ function Scene.addDrawable(drawable)
 end
 
 --- Removes a drawable in the current scene
---- @param drawable Dummy.Drawable|fun()
+--- @param drawable Dummy.Drawable
 function Scene.removeDrawable(drawable)
   if drawable == nil then return end
+
+  if drawable:hasChildren() then
+    for _, child in ipairs(drawable:getChildren()) do
+      Scene.removeDrawable(child)
+    end
+  end
 
   for i, d in ipairs(Scene.drawables) do
     if d == drawable then

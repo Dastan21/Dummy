@@ -128,7 +128,7 @@ function Drawable:isPersistent() end
 --- @param persistent boolean
 function Drawable:setPersistent(persistent) end
 
---- Destroys the drawable
+--- Removes the drawable from the current scene
 function Drawable:remove() end
 
 --- Gets the drawable's parent
@@ -138,6 +138,10 @@ function Drawable:getParent() end
 --- Sets the drawable's parent
 --- @param parent Dummy.Drawable|nil
 function Drawable:setParent(parent) end
+
+--- Wether the drawable has children
+--- @return boolean
+function Drawable:hasChildren() end
 
 --- Gets the drawable's children
 --- @return Dummy.Drawable[]

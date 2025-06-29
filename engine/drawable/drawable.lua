@@ -196,7 +196,7 @@ function Drawable:setPersistent(persistent)
   self.persistent = persistent
 end
 
---- Destroys the drawable
+--- Removes the drawable from the current scene
 function Drawable:remove()
   Scene.removeDrawable(self)
 end
@@ -218,6 +218,12 @@ function Drawable:setParent(parent)
       parent:addChild(self)
     end
   end
+end
+
+--- Wether the drawable has children
+--- @return boolean
+function Drawable:hasChildren()
+  return #self.children > 0
 end
 
 --- Gets the drawable's children
