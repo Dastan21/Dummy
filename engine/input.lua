@@ -49,6 +49,8 @@ function Input.isDown(keybind)
         end
       end
       return false
+    elseif k:sub(1, 9) == "joystick:" then
+      return Input.keys_pressed[k] ~= nil
     end
     return love.keyboard.isScancodeDown(k)
   end)
@@ -84,10 +86,10 @@ function Input.load()
   Input.keys_pressed = {}
   Input.keys_released = {}
 
-  Input.Up = { "w", "up", "gamepad:dpup", "gamepad:lsup" }
-  Input.Down = { "s", "down", "gamepad:dpdown", "gamepad:lsdown" }
-  Input.Left = { "a", "left", "gamepad:dpleft", "gamepad:lsleft" }
-  Input.Right = { "d", "right", "gamepad:dpright", "gamepad:lsright" }
+  Input.Up = { "w", "up", "joystick:dpup", "joystick:lsup" }
+  Input.Down = { "s", "down", "joystick:dpdown", "joystick:lsdown" }
+  Input.Left = { "a", "left", "joystick:dpleft", "joystick:lsleft" }
+  Input.Right = { "d", "right", "joystick:dpright", "joystick:lsright" }
   Input.Confirm = { "z", "return", "kpenter", "gamepad:a" }
   Input.Cancel = { "x", "rshift", "lshift", "gamepad:b" }
 end
@@ -135,33 +137,33 @@ function love.gamepadaxis(_, axis, value)
 
   if axis == "lefty" then
     if value < -stick_treshold then
-      if Input.keys_pressed["gamepad:lsup"] == nil then
-        Input.keys_pressed["gamepad:lsup"] = 0
+      if Input.keys_pressed["joystick:lsup"] == nil then
+        Input.keys_pressed["joystick:lsup"] = 0
       end
-      Input.keys_pressed["gamepad:lsdown"] = nil
+      Input.keys_pressed["joystick:lsdown"] = nil
     elseif value > stick_treshold then
-      if Input.keys_pressed["gamepad:lsdown"] == nil then
-        Input.keys_pressed["gamepad:lsdown"] = 0
+      if Input.keys_pressed["joystick:lsdown"] == nil then
+        Input.keys_pressed["joystick:lsdown"] = 0
       end
-      Input.keys_pressed["gamepad:lsup"] = nil
+      Input.keys_pressed["joystick:lsup"] = nil
     else
-      Input.keys_pressed["gamepad:lsdown"] = nil
-      Input.keys_pressed["gamepad:lsup"] = nil
+      Input.keys_pressed["joystick:lsdown"] = nil
+      Input.keys_pressed["joystick:lsup"] = nil
     end
   elseif axis == "leftx" then
     if value < -stick_treshold then
-      if Input.keys_pressed["gamepad:lsleft"] == nil then
-        Input.keys_pressed["gamepad:lsleft"] = 0
+      if Input.keys_pressed["joystick:lsleft"] == nil then
+        Input.keys_pressed["joystick:lsleft"] = 0
       end
-      Input.keys_pressed["gamepad:lsright"] = nil
+      Input.keys_pressed["joystick:lsright"] = nil
     elseif value > stick_treshold then
-      if Input.keys_pressed["gamepad:lsright"] == nil then
-        Input.keys_pressed["gamepad:lsright"] = 0
+      if Input.keys_pressed["joystick:lsright"] == nil then
+        Input.keys_pressed["joystick:lsright"] = 0
       end
-      Input.keys_pressed["gamepad:lsleft"] = nil
+      Input.keys_pressed["joystick:lsleft"] = nil
     else
-      Input.keys_pressed["gamepad:lsright"] = nil
-      Input.keys_pressed["gamepad:lsleft"] = nil
+      Input.keys_pressed["joystick:lsright"] = nil
+      Input.keys_pressed["joystick:lsleft"] = nil
     end
   end
 end
