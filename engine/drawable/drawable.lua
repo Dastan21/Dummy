@@ -198,6 +198,9 @@ end
 
 --- Removes the drawable from the current scene
 function Drawable:remove()
+  if self.parent ~= nil then
+    self.parent:removeChild(self)
+  end
   Scene.removeDrawable(self)
 end
 
