@@ -43,7 +43,12 @@ end
 function Input.isDown(keybind)
   return Input.hasAnyKey(keybind, function(k)
     if k:sub(1, 8) == "gamepad:" then
-      return Input.keys_pressed[k] ~= nil
+      for _, joystick in ipairs(love.joystick.getJoysticks()) do
+        if joystick:isGamepadDown(k:sub(9)) then
+          return true
+        end
+      end
+      return false
     end
     return love.keyboard.isScancodeDown(k)
   end)
@@ -119,7 +124,10 @@ end
 
 function love.gamepadpressed(_, button)
   Input.keys_pressed["gamepad:" .. button] = 0
-  Input.keys_released["gamepad:" .. button] = nil
+end
+
+function love.gamepadreleased(_, button)
+  Input.keys_released["gamepad:" .. button] = 0
 end
 
 function love.gamepadaxis(_, axis, value)
