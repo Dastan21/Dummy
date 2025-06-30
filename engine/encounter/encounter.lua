@@ -1,5 +1,3 @@
---- @alias Dummy.Encounter.BubbleType "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "tiny" | "tiny_above" | "top" | "bottom"
-
 --- @class Dummy.Encounter
 ---
 --- @field protected text Dummy.Text.Text
@@ -12,7 +10,7 @@
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
 --- @field protected textbox_dialogue Dummy.DialogueText
---- @field protected bubble_dialogues [ Dummy.DialogueText[], Dummy.Sprite ]
+--- @field protected bubble_dialogues Dummy.DialogueBubble[]
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
@@ -151,24 +149,12 @@ end
 
 --- Plays a bubble dialogue
 --- @param text Dummy.Text.Text|Dummy.Text.Text[]
---- @param bubble_type? Dummy.Encounter.BubbleType
---- @return Dummy.DialogueText, Dummy.Sprite
+--- @param bubble_type? Dummy.DialogueBubble.Type
+--- @return Dummy.DialogueBubble
 function Encounter.playDialogue(text, bubble_type)
-  local bubble = Sprite:new("bubble_" .. Utils.getOrDefault(bubble_type, "right"))
-  bubble:setLayer(Constants.LAYERS.ABOVE_ARENA)
-
-  local dialogue = DialogueText:new(text)
-  dialogue:setOrigin(0, 0)
-  dialogue:setColor(0, 0, 0)
-  dialogue:setCanSkip(true)
-  dialogue:setCanConfirm(true)
-  dialogue:setVoice("voice_bubble")
-  dialogue:setFont(Assets.getFont("plain"))
-  dialogue:setLayer(Constants.LAYERS.ABOVE_ARENA)
-
-  table.insert(Encounter.bubble_dialogues, { dialogue, bubble })
-
-  return dialogue, bubble
+  local dialogue = DialogueBubble:new(text, bubble_type)
+  table.insert(Encounter.bubble_dialogues, dialogue)
+  return dialogue
 end
 
 --- Wether all the enemies are spared
@@ -265,7 +251,7 @@ function Encounter.load()
   Encounter.miss_text:setVisible(false)
   Encounter.miss_text:setFont(Assets.getFont("damage"))
   Encounter.miss_text:setColor(0.75, 0.75, 0.75)
-  Encounter.miss_text:setLayer(Constants.LAYERS.UI)
+  Encounter.miss_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
   -- strike
   Encounter.strike_sprite = Sprite:new({
@@ -817,7 +803,7 @@ end
 function Encounter.updateEnemyDialogue()
   local all_done = true
   for _, dialogue in ipairs(Encounter.bubble_dialogues) do
-    if not dialogue[1]:isDone() then
+    if not dialogue:getDialogue():isDone() then
       all_done = false
       break
     end
@@ -828,8 +814,7 @@ function Encounter.updateEnemyDialogue()
       Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
 
       for _, dialogue in ipairs(Encounter.bubble_dialogues) do
-        dialogue[1]:remove()
-        dialogue[2]:remove()
+        dialogue:remove()
       end
       Encounter.bubble_dialogues = {}
     end

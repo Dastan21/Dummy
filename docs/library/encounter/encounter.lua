@@ -18,7 +18,7 @@
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
 --- @field protected textbox_dialogue Dummy.DialogueText
---- @field protected bubble_dialogues [ Dummy.DialogueText[], Dummy.Sprite ]
+--- @field protected bubble_dialogues Dummy.DialogueBubble[]
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
@@ -49,8 +49,6 @@
 --- @field protected exp_reward number
 --- @field protected gold_reward number
 Encounter = {}
-
---- @alias Dummy.Encounter.BubbleType "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "tiny" | "tiny_above" | "top" | "bottom"
 
 --- Gets the class name
 --- @return string
@@ -104,8 +102,8 @@ function Encounter.playTextbox(text) end
 
 --- Plays a bubble dialogue
 --- @param text Dummy.Text.Text|Dummy.Text.Text[]
---- @param bubble_type? Dummy.Encounter.BubbleType
---- @return Dummy.DialogueText, Dummy.Sprite
+--- @param bubble_type? Dummy.DialogueBubble.Type
+--- @return Dummy.DialogueBubble
 function Encounter.playDialogue(text, bubble_type) end
 
 --- Wether all the enemies are spared
