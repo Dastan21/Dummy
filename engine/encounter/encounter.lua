@@ -322,6 +322,8 @@ function Encounter.load()
   Encounter.enemies = {}
   Encounter.enemy_selected_index = 1
 
+  Encounter.waves = {}
+
   Encounter.exp_reward = 0
   Encounter.gold_reward = 0
 end
@@ -784,7 +786,11 @@ function Encounter.startEnemyDialogue()
   Encounter.unselectAction()
   Encounter.leaveMenu()
 
-  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT)
+  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, false, function()
+    if #Encounter.bubble_dialogues <= 0 then
+      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+    end
+  end)
 
   for _, enemy in ipairs(Encounter.enemies) do
     if not enemy:isKilled() and not enemy:isSpared() then
@@ -801,6 +807,8 @@ end
 
 --- Updates enemy dialogue
 function Encounter.updateEnemyDialogue()
+  if #Encounter.bubble_dialogues <= 0 then return end
+
   local all_done = true
   for _, dialogue in ipairs(Encounter.bubble_dialogues) do
     if not dialogue:getDialogue():isDone() then
