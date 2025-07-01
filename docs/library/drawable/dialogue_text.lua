@@ -73,10 +73,6 @@ function DialogueText:getVoice() end
 --- @param voice string|nil
 function DialogueText:setVoice(voice) end
 
---- Sets the text max width
---- @param max_width number
-function DialogueText:setMaxWidth(max_width) end
-
 --- Updates the dialogue
 --- @param dt number
 function DialogueText:update(dt) end

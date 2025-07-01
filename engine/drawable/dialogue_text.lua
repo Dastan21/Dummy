@@ -21,19 +21,7 @@ end
 --- @param value Dummy.Text.Text
 function DialogueText:setText(value)
   self.text_key = value
-
-  if self.max_width > 0 then
-    local scale_x = self:getScale()
-    local texts = Lang.translate(value):split("\n")
-    local _, wrapped_value
-    for i, txt in ipairs(texts) do
-      _, wrapped_value = self.font:getWrap(txt, self.max_width / scale_x)
-      texts[i] = table.concat(wrapped_value, "\n")
-    end
-    value = table.concat(texts, "\n")
-  end
-
-  self.full_text = Lang.translate(value)
+  self.full_text = Lang.translate(self:getWrappedText(value))
   self:reset()
 end
 
@@ -41,7 +29,7 @@ end
 --- @protected
 function DialogueText:updateDialogue()
   self.text = UTF8.sub(self.full_text, 1, self.text_index)
-  self:updateText()
+  self:init()
 end
 
 --- Resets the dialogue's current text
@@ -111,13 +99,6 @@ end
 --- @param voice string|nil
 function DialogueText:setVoice(voice)
   self.voice = voice
-end
-
---- Sets the text max width
---- @param max_width number
-function DialogueText:setMaxWidth(max_width)
-  self.max_width = max_width
-  self:setText(self.text_key)
 end
 
 --- Updates the dialogue

@@ -1178,7 +1178,7 @@ end
 --- Updates the player UI
 function Encounter.updatePlayerUI()
   Encounter.player_name_text:setText(Player.getName())
-  Encounter.player_lv_text:setPosition(Encounter.player_name_text:getSprite():getWidth() + 57, 400)
+  Encounter.player_lv_text:setPosition(Encounter.player_name_text:getWidth() + 57, 400)
   Encounter.player_lv_text:setText(Lang.translate("ENCOUNTER_STAT_LV") .. " " .. tostring(Player.getLV()))
   Encounter.player_hp_value_text:setPosition(289 + math.clamp(5 * Player.getLV() + 20, 25, 120), 400)
   Encounter.player_hp_value_text:setText(string.format("%02d", Player.getHP()) .. " / " .. tostring(Player.getMaxHP()))

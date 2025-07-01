@@ -198,6 +198,17 @@ function math.lerp(a, b, t)
   return a + (b - a) * t
 end
 
+--- Sums all values.
+--- @param ... number
+--- @return number
+function math.sum(...)
+  local s = 0
+  for _, v in pairs({ ... }) do
+    s = s + v
+  end
+  return s
+end
+
 -- other --
 
 local Utils = {}

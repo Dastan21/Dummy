@@ -39,20 +39,6 @@ function Drawable:setPosition(x, y)
   self.y = y
 end
 
---- Gets the drawable's width
---- @return number
-function Drawable:getWidth()
-  if self.sprite == nil then return 0 end
-  return self.sprite:getWidth()
-end
-
---- Gets the drawable's height
---- @return number
-function Drawable:getHeight()
-  if self.sprite == nil then return 0 end
-  return self.sprite:getHeight()
-end
-
 --- Gets the drawable's angle, in degree
 --- @return number
 function Drawable:getAngle()

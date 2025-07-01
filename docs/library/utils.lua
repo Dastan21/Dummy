@@ -46,6 +46,11 @@ function math.round(x) end
 --- @return number
 function math.lerp(a, b, t) end
 
+--- Sums all values.
+--- @param ... number
+--- @return number
+function math.sum(...) end
+
 --- Get value or default
 --- @generic T
 --- @param value T|nil
