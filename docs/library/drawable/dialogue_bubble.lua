@@ -12,7 +12,7 @@
 --- @field protected dialogue Dummy.DialogueText
 DialogueBubble = {}
 
---- @alias Dummy.DialogueBubble.Type "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "top" | "bottom" | "tiny" | "tiny_above" | "shock"
+--- @alias Dummy.DialogueBubble.Type "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "top" | "bottom" | "tiny" | "tiny_top" | "shock"
 
 --- Gets the class name
 --- @return string

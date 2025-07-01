@@ -1,4 +1,4 @@
---- @alias Dummy.DialogueBubble.Type "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "top" | "bottom" | "tiny" | "tiny_above" | "shock"
+--- @alias Dummy.DialogueBubble.Type "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "top" | "bottom" | "tiny" | "tiny_top" | "shock"
 
 --- @class Dummy.DialogueBubble : Dummy.Sprite
 ---
@@ -73,7 +73,13 @@ function DialogueBubble:init()
     self.dialogue:setPosition(25 - self:getWidth() / 2, 20)
     self.dialogue:setMaxWidth(164)
   elseif self.type == "tiny" then
-  elseif self.type == "tiny_above" then
+    self:setOrigin(0.5, 0)
+    self.dialogue:setPosition(25 - self:getWidth() / 2, 5)
+    self.dialogue:setMaxWidth(76)
+  elseif self.type == "tiny_top" then
+    self:setOrigin(0.5, 1)
+    self.dialogue:setPosition(32 - self:getWidth() / 2, 4 - self:getHeight())
+    self.dialogue:setMaxWidth(64)
   elseif self.type == "shock" then
     self.dialogue:setPosition(45 - self:getWidth() / 2, 39 - self:getHeight() / 2)
     self.dialogue:setMaxWidth(174)
