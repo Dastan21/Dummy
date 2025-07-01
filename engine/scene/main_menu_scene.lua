@@ -15,6 +15,14 @@ function main_menu.load()
   main_menu.mod_list = require "mod.mod_list"
   main_menu.mod_list.load()
 
+  local standalone = main_menu.mod_list.getStandalone()
+  if standalone ~= nil then
+    main_menu.mod_list.mountMod(standalone)
+    if type(standalone.preview) == "function" then
+      standalone:preview()
+    end
+  end
+
   main_menu.logo_sprite = Sprite:new("logo")
   main_menu.logo_sprite:setPosition(320, 120)
   main_menu.logo_sprite:setScale(6)
@@ -36,11 +44,6 @@ function main_menu.load()
 
   main_menu.menu_music = Assets.playMusic("main_menu")
   main_menu.menu_music:setVolume(0.5)
-
-  local standalone = main_menu.mod_list.getStandalone()
-  if standalone ~= nil and type(standalone.preview) == "function" then
-    standalone:preview()
-  end
 end
 
 --- Loads menus
@@ -76,7 +79,6 @@ function main_menu.loadMainMenu()
     table.insert(options, {
       text = Text:new("MAIN_MENU_PLAY"),
       action = function()
-        standalone:load()
         Scene.change("ENCOUNTER", standalone)
       end
     })

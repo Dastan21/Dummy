@@ -85,13 +85,21 @@ function ModList.loadMod(mod)
   ModList.unloadMod(mod)
 
   if type(mod.load) == "function" then
-    love.filesystem.mount("mods/" .. mod:getId() .. "/assets", "assets")
-    love.filesystem.mount("mods/" .. mod:getId() .. "/scripts", "scripts")
+    ModList.mountMod(mod)
 
     ModList.current_mod = mod
     Lang.loadLanguages()
     mod:load()
   end
+end
+
+--- Mounts a mod
+--- @param mod Dummy.Mod
+function ModList.mountMod(mod)
+  ModList.unloadMod(mod)
+
+  love.filesystem.mount("mods/" .. mod:getId() .. "/assets", "assets")
+  love.filesystem.mount("mods/" .. mod:getId() .. "/scripts", "scripts")
 end
 
 --- Unloads a mod
