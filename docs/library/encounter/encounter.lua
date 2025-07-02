@@ -37,6 +37,7 @@
 --- @field protected item_menu Dummy.Encounter.ActionMenu
 --- @field protected mercy_menu Dummy.Encounter.ActionMenu
 --- @field protected enemy_selected_index number
+--- @field protected action table
 --- @field protected action.index number
 --- @field protected action.fight_sprite Dummy.Sprite
 --- @field protected action.fight_hover_sprite Dummy.Sprite
