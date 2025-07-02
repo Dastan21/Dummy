@@ -13,6 +13,8 @@
 --- @field protected max_hp number
 --- @field protected at number
 --- @field protected df number
+--- @field protected exp number
+--- @field protected gold number
 --- @field protected speed number
 --- @field protected speed_factor number
 --- @field protected is_invincible boolean
