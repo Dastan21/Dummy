@@ -12,19 +12,22 @@
 --- @field protected font love.Font
 --- @field protected max_width number
 --- @field protected align Dummy.Text.Align
---- @field protected chars Dummy.Text.Char[]
 --- @field protected width number
 --- @field protected height number
+--- @field protected nodes Dummy.Text.Node[]
+--- @field protected state table<string, any>
+--- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
 Text = {}
 
 --- @alias Dummy.Text.Text string|table|fun(): string|table
 --- @alias Dummy.Text.Align "left" | "center" | "right"
 
---- @class Dummy.Text.Char
+--- @class Dummy.Text.Node
 ---
---- @field char string
---- @field font love.Font|nil
---- @field color love.Color|nil
+--- @field type "character" | "command"
+--- @field character string|nil
+--- @field command string|nil
+--- @field arguments string[]|nil
 
 --- Gets the class name
 --- @return string
@@ -37,11 +40,6 @@ function Text:getText() end
 --- Sets the text's value
 --- @param value Dummy.Text.Text
 function Text:setText(value) end
-
---- Gets the text's wrapped value
---- @param value Dummy.Text.Text
---- @return Dummy.Text.Text
-function Text:getWrappedText(value) end
 
 --- Gets the text's width
 --- @return number
@@ -83,24 +81,46 @@ function Text:getAlign() end
 --- @param align Dummy.Text.Align
 function Text:setAlign(align) end
 
---- Sets the text's alpha
---- @param alpha number
-function Text:setAlpha(alpha) end
-
---- Gets the text's characters
---- @return Dummy.Text.Char[]
-function Text:getCharacters() end
+--- Gets the text's nodes
+--- @return Dummy.Text.Node[]
+function Text:getNodes() end
 
 --- Gets the text's line width
 --- @param line number
 --- @return number
 function Text:getLineWidth(line) end
 
+--- Gets the text's char offset
+--- @param line number
+--- @return number
+function Text:getCharOffset(line) end
+
+--- Registers a text command
+--- @param command string
+--- @param func fun(node: Dummy.Text.Node)
+function Text:registerCommand(command, func) end
+
 --- Draws the text
 function Text:draw() end
 
---- Initialize the text
-function Text:init() end
+--- Draws a text node
+function Text:drawNodes() end
+
+--- Parses a text command
+--- @param text string
+--- @return Dummy.Text.Node|nil
+function Text:parseCommand(text) end
+
+--- Applies the node state
+--- @param node Dummy.Text.Node
+--- @param state table<string, any>
+--- @return table<string, any>
+function Text:applyNodeState(node, state) end
+
+--- Parses the text nodes
+--- @param value Dummy.Text.Text
+--- @return Dummy.Text.Node[]
+function Text:parseNodes(value) end
 
 --- Creates a text
 --- @param value Dummy.Text.Text

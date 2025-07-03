@@ -102,7 +102,7 @@ function table.clone(obj, seen)
   return setmetatable(res, getmetatable(obj))
 end
 
-function table.isarray(t)
+function table.isArray(t)
   for k in pairs(t) do
     if type(k) ~= "number" then
       return false
@@ -111,8 +111,12 @@ function table.isarray(t)
   return true
 end
 
+--- @generic T
+--- @param t1 T[]
+--- @param t2 T[]
+--- @return T[]
 function table.merge(t1, t2)
-  if table.isarray(t2) then
+  if table.isArray(t2) then
     for _, v in ipairs(t2) do
       table.insert(t1, v)
     end
@@ -135,9 +139,37 @@ end
 
 table.stable_sort = table.stable_sort or function(array, less) return array end
 
+--- @generic T
+--- @param t T[]
+--- @param f? integer
+--- @param l? integer
+--- @param s? integer
+--- @return T[]
+function table.slice(t, f, l, s)
+  local r = {}
+  for i = f or 1, l or #t, s or 1 do
+    r[#r + 1] = t[i]
+  end
+  return r
+end
+
+--- @generic T
+--- @param t T[]
+--- @param value T
+--- @return boolean
+function table.contains(t, value)
+  for _, v in ipairs(t) do
+    if v == value then
+      return true
+    end
+  end
+  return false
+end
+
 -- string --
 
 --- @param self string
+--- @return string
 function string:trim()
   return (string.gsub(self, "^%s*(.-)%s*$", "%1"))
 end

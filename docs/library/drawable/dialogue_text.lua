@@ -8,10 +8,12 @@
 
 --- @class Dummy.DialogueText : Dummy.Text
 ---
---- @field protected text_key Dummy.Text.Text
---- @field protected full_text string
+--- @field protected text_value Dummy.Text.Text
+--- @field protected nodes Dummy.Text.Node[]
+--- @field protected total_nodes Dummy.Text.Node[]
 --- @field protected speed number
 --- @field protected time number
+--- @field protected wait_time number
 --- @field protected text_index number
 --- @field protected voice string|nil
 --- @field protected done_callback fun()|nil
@@ -27,7 +29,7 @@ function DialogueText:getClass() end
 --- @param value Dummy.Text.Text
 function DialogueText:setText(value) end
 
---- Updates the dialogue's text sprite value
+--- Updates the dialogue's text value
 --- @protected
 function DialogueText:updateDialogue() end
 
@@ -72,6 +74,22 @@ function DialogueText:getVoice() end
 --- Sets the dialogue's voice
 --- @param voice string|nil
 function DialogueText:setVoice(voice) end
+
+--- Applies the node state
+--- @param node Dummy.Text.Node
+--- @param state table<string, any>
+--- @return table<string, any>
+function DialogueText:applyNodeState(node, state) end
+
+--- Parses the dialogue text command
+--- @param text string
+--- @return Dummy.Text.Node|nil
+function DialogueText:parseCommand(text) end
+
+--- Parses the dialogue text nodes
+--- @param value Dummy.Text.Text
+--- @return Dummy.Text.Node[]
+function DialogueText:parseNodes(value) end
 
 --- Updates the dialogue
 --- @param dt number

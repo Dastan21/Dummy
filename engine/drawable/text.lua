@@ -1,11 +1,12 @@
 --- @alias Dummy.Text.Text string|table|fun(): string|table
 --- @alias Dummy.Text.Align "left" | "center" | "right"
 
---- @class Dummy.Text.Char
+--- @class Dummy.Text.Node
 ---
---- @field char string
---- @field font love.Font|nil
---- @field color love.Color|nil
+--- @field type "character" | "command"
+--- @field character string|nil
+--- @field command string|nil
+--- @field arguments string[]|nil
 
 --- @class Dummy.Text : Dummy.Drawable
 ---
@@ -13,10 +14,22 @@
 --- @field protected font love.Font
 --- @field protected max_width number
 --- @field protected align Dummy.Text.Align
---- @field protected chars Dummy.Text.Char[]
 --- @field protected width number
 --- @field protected height number
+--- @field protected nodes Dummy.Text.Node[]
+--- @field protected state table<string, any>
+--- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
 local Text = Class:extend(Drawable)
+
+--- Text commands
+Text.COMMANDS = {
+  "reset",
+  "color",
+  "alpha",
+  "angle",
+  "scale",
+  "font",
+}
 
 --- Gets the class name
 --- @return string
@@ -34,25 +47,7 @@ end
 --- @param value Dummy.Text.Text
 function Text:setText(value)
   self.text = value
-  self:init()
-end
-
---- Gets the text's wrapped value
---- @param value Dummy.Text.Text
---- @return Dummy.Text.Text
-function Text:getWrappedText(value)
-  if self.max_width > 0 then
-    local scale_x = self:getScale()
-    local texts = Lang.translate(value):split("\n")
-    local _, wrapped_value
-    for i, txt in ipairs(texts) do
-      _, wrapped_value = self.font:getWrap(txt, self.max_width / scale_x)
-      texts[i] = table.concat(wrapped_value, "\n")
-    end
-    value = table.concat(texts, "\n")
-  end
-
-  return value
+  self.nodes = self:parseNodes(value)
 end
 
 --- Gets the text's width
@@ -88,7 +83,7 @@ end
 --- @param font love.Font
 function Text:setFont(font)
   self.font = font
-  self:init()
+  self.nodes = self:parseNodes(self.text)
 end
 
 --- Gets the text's max width
@@ -101,7 +96,7 @@ end
 --- @param max_width number
 function Text:setMaxWidth(max_width)
   self.max_width = max_width
-  self:init()
+  self.nodes = self:parseNodes(self.text)
 end
 
 --- Gets the text's align
@@ -116,36 +111,57 @@ function Text:setAlign(align)
   self.align = align
 end
 
---- Sets the text's alpha
---- @param alpha number
-function Text:setAlpha(alpha)
-  self.alpha = alpha
-end
-
---- Gets the text's characters
---- @return Dummy.Text.Char[]
-function Text:getCharacters()
-  return self.chars
+--- Gets the text's nodes
+--- @return Dummy.Text.Node[]
+function Text:getNodes()
+  return self.nodes
 end
 
 --- Gets the text's line width
 --- @param line number
 --- @return number
 function Text:getLineWidth(line)
+  local state = {}
   local width = 0
   local current_line = 1
-  for _, char in ipairs(self.chars) do
-    if current_line == line then
-      width = width + self.font:getWidth(char.char)
-    elseif current_line > line then
-      return width
-    end
+  for _, node in ipairs(self.nodes) do
+    if node.type == "character" then
+      if current_line == line then
+        local font = state.font or self.font
+        width = width + font:getWidth(node.character)
+      elseif current_line > line then
+        return width
+      end
 
-    if char.char == "\n" then
-      current_line = current_line + 1
+      if node.character == "\n" then
+        current_line = current_line + 1
+      end
+    elseif node.type == "command" then
+      state = self:applyNodeState(node, state)
     end
   end
   return width
+end
+
+--- Gets the text's char offset
+--- @param line number
+--- @return number
+function Text:getCharOffset(line)
+  if self.align == "right" then
+    return self:getWidth() - self:getLineWidth(line)
+  elseif self.align == "center" then
+    return self:getWidth() / 2 - self:getLineWidth(line) / 2
+  end
+  return 0
+end
+
+--- Registers a text command
+--- @param command string
+--- @param func fun(node: Dummy.Text.Node)
+function Text:registerCommand(command, func)
+  if Text.COMMANDS[command] ~= nil then return end
+
+  self.custom_commands[command] = func
 end
 
 --- Draws the text
@@ -155,75 +171,167 @@ function Text:draw()
   love.graphics.push()
 
   love.graphics.applyTransform(self:getTransform())
-  local origin_x, origin_y = self:getOrigin()
 
   if Debugger.shouldDisplayHitbox() then
     love.graphics.setColor(0, 0, 1, 1)
+    local origin_x, origin_y = self:getOrigin()
     love.graphics.rectangle("line", -0.5 - self:getWidth() * origin_x, -0.5 - self:getHeight() * origin_y,
       self:getWidth() + 1, self:getHeight() + 1)
   end
 
-  love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
-  local line = 1
-  local function getCharOffset()
-    if self.align == "right" then
-      return self:getWidth() - self:getLineWidth(line)
-    elseif self.align == "center" then
-      return self:getWidth() / 2 - self:getLineWidth(line) / 2
-    end
-    return 0
-  end
-  local char_x, char_y = getCharOffset(), 0
-  for _, char in ipairs(self.chars) do
-    local text = { char.color or self.color, char.char }
-    local font = char.font or self.font
-    love.graphics.print(text, font, char_x - self:getWidth() * origin_x, char_y - self:getHeight() * origin_y)
-
-    char_x = char_x + font:getWidth(char.char)
-    if char.char == "\n" then
-      line = line + 1
-      char_x = getCharOffset()
-      char_y = char_y + font:getHeight()
-    end
-  end
+  self:drawNodes()
 
   self:drawChildren()
 
   love.graphics.pop()
 end
 
---- Initialize the text
-function Text:init()
-  self.chars = {}
+--- Draws a text node
+function Text:drawNodes()
+  if #self.nodes <= 0 then return end
 
-  local width, height = 0, 0
+  love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
+
+  local state = {}
+  local origin_x, origin_y = self:getOrigin()
+  local line = 1
+  local char_x, char_y = self:getCharOffset(line), 0
+  local line_height = 0
+  for _, node in ipairs(self.nodes) do
+    if node.type == "character" then
+      local color = state.color or self.color
+      local alpha = state.alpha or self.alpha
+      local text = { { color[1], color[2], color[3], alpha }, node.character }
+      local angle = state.angle or 0
+      local scale_x = state.scale_x or 1
+      local scale_y = state.scale_y or 1
+      local font = state.font or self.font
+      local char_height = font:getHeight() * scale_y
+      line_height = math.max(line_height, char_height)
+      local line_diff = (line_height - char_height) / 2
+
+      local x = char_x - self:getWidth() * origin_x
+      local y = char_y - self:getHeight() * origin_y + line_diff
+      love.graphics.print(text, font, x, y, angle, scale_x, scale_y)
+
+      char_x = char_x + font:getWidth(node.character) * scale_x
+      if node.character == "\n" then
+        line = line + 1
+        char_x = self:getCharOffset(line)
+        char_y = char_y + char_height
+        line_height = 0
+      end
+    elseif node.type == "command" then
+      state = self:applyNodeState(node, state)
+      local func = self.custom_commands[node.command]
+      if type(func) == "function" then
+        func(node)
+      end
+    end
+  end
+end
+
+--- Parses a text command
+--- @param text string
+--- @return Dummy.Text.Node|nil
+function Text:parseCommand(text)
+  local split = text:split(":")
+  local command = split[1]
+  local arguments = (split[2] or ""):split(",")
+  if not table.contains(Text.COMMANDS, command) then return end
+
+  return {
+    type = "command",
+    command = command,
+    arguments = arguments
+  }
+end
+
+--- Applies the node state
+--- @param node Dummy.Text.Node
+--- @param state table<string, any>
+--- @return table<string, any>
+function Text:applyNodeState(node, state)
+  if node.type ~= "command" then return state end
+
+  if node.command == "reset" then
+    return {}
+  elseif node.command == "color" then
+    if #node.arguments == 3 then
+      local r = tonumber(node.arguments[1])
+      local g = tonumber(node.arguments[2])
+      local b = tonumber(node.arguments[3])
+      if r ~= nil and g ~= nil and b ~= nil then
+        state.color = { r, g, b }
+      end
+    end
+  elseif node.command == "alpha" then
+    state.alpha = tonumber(node.arguments[1])
+  elseif node.command == "angle" then
+    state.angle = tonumber(node.arguments[1])
+  elseif node.command == "scale" then
+    local scale_x = tonumber(node.arguments[1])
+    local scale_y = tonumber(node.arguments[2])
+    state.scale_x = scale_x
+    state.scale_y = Utils.getOrDefault(scale_x, scale_y)
+  elseif node.command == "font" then
+    state.font = Assets.getFont(node.arguments[1])
+  end
+
+  return state
+end
+
+--- Parses the text nodes
+--- @param value Dummy.Text.Text
+--- @return Dummy.Text.Node[]
+function Text:parseNodes(value)
+  value = Lang.translate(value)
+
+  local state = {}
+  local nodes = {}
+  local width = 0
   local line_width, line_height = 0, 0
   local lines_heights = {}
   local line_count = 1
-  local value = self:getWrappedText(Lang.translate(self.text))
   local length = UTF8.len(value)
+  local command = nil
   for i = 1, length do
-    local font = self.font
+    local char = UTF8.sub(value, i, i)
+    if char == "[" then
+      command = ""
+    elseif char == "]" and command ~= nil then
+      local node = self:parseCommand(command)
+      if node ~= nil then
+        state = self:applyNodeState(node, state)
+        table.insert(nodes, node)
+      end
+      command = nil
+    elseif command ~= nil then
+      command = command .. char
+    else
+      local font = state.font or self.font
+      local scale_x = state.scale_x or 1
+      local scale_y = state.scale_y or 1
+      line_width = line_width + font:getWidth(char) * scale_x
+      width = math.max(width, line_width)
+      line_height = math.max(line_height, font:getHeight() * scale_y)
+      lines_heights[line_count] = line_height
+      if char == "\n" then
+        line_width, line_height = 0, 0
+        line_count = line_count + 1
+      end
 
-    --- @type Dummy.Text.Char
-    local char = {
-      char = UTF8.sub(value, i, i)
-    }
-
-    line_width = line_width + font:getWidth(char.char)
-    width = math.max(width, line_width)
-    line_height = math.max(line_height, font:getHeight())
-    lines_heights[line_count] = line_height
-    if char.char == "\n" then
-      line_width, line_height = 0, 0
-      line_count = line_count + 1
+      table.insert(nodes, {
+        type = "character",
+        character = char
+      })
     end
-
-    table.insert(self.chars, char)
   end
 
   self.width = width
   self.height = math.sum(table.unpack(lines_heights))
+
+  return nodes
 end
 
 --- Creates a text
@@ -236,6 +344,7 @@ function Text:new(value)
   text.font = love.graphics.getFont()
   text.max_width = Constants.SCREEN_WIDTH
   text.align = "left"
+  text.custom_commands = {}
 
   text:setText(value)
 

@@ -12,11 +12,30 @@ function table.tostring(node) end
 
 function table.clone(obj, seen) end
 
-function table.isarray(t) end
+function table.isArray(t) end
 
+--- @generic T
+--- @param t1 T[]
+--- @param t2 T[]
+--- @return T[]
 function table.merge(t1, t2) end
 
+--- @generic T
+--- @param t T[]
+--- @param f? integer
+--- @param l? integer
+--- @param s? integer
+--- @return T[]
+function table.slice(t, f, l, s) end
+
+--- @generic T
+--- @param t T[]
+--- @param value T
+--- @return boolean
+function table.contains(t, value) end
+
 --- @param self string
+--- @return string
 function string:trim() end
 
 --- @param self string
