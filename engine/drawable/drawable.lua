@@ -62,13 +62,8 @@ end
 --- @param scale_x number
 --- @param scale_y number
 function Drawable:setScale(scale_x, scale_y)
-  if type(scale_x) == "number" and scale_y == nil then
-    self.scale_x = scale_x
-    self.scale_y = scale_x
-  else
-    self.scale_x = scale_x
-    self.scale_y = scale_y
-  end
+  self.scale_x = scale_x
+  self.scale_y = Utils.getOrDefault(scale_y, scale_x)
 end
 
 --- Gets the drawable's transform
@@ -88,13 +83,8 @@ end
 --- @param origin_x number
 --- @param origin_y number
 function Drawable:setOrigin(origin_x, origin_y)
-  if type(origin_x) == "number" and origin_y == nil then
-    self.origin_x = origin_x
-    self.origin_y = origin_x
-  else
-    self.origin_x = origin_x
-    self.origin_y = origin_y
-  end
+  self.origin_x = origin_x
+  self.origin_y = Utils.getOrDefault(origin_y, origin_x)
 end
 
 --- Gets the drawable's color
