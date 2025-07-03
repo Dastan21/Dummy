@@ -17,7 +17,7 @@
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
---- @field protected textbox_dialogue Dummy.DialogueText
+--- @field protected dialogue_text Dummy.DialogueText
 --- @field protected bubble_dialogues Dummy.DialogueBubble[]
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
@@ -92,20 +92,20 @@ function Encounter.getMusic() end
 --- @param music string
 function Encounter.setMusic(music) end
 
---- Gets the encounter textbox dialogue
+--- Gets the encounter dialogue text
 --- @return Dummy.DialogueText
-function Encounter.getTextbox() end
+function Encounter.getDialogueText() end
 
---- Plays a textbox dialogue
+--- Plays a dialogue text
 --- @param text Dummy.Text.Text|Dummy.Text.Text[]
 --- @return Dummy.DialogueText
-function Encounter.playTextbox(text) end
+function Encounter.playDialogueText(text) end
 
---- Plays a bubble dialogue
+--- Plays a dialogue bubble
 --- @param text Dummy.Text.Text|Dummy.Text.Text[]
 --- @param bubble_type? Dummy.DialogueBubble.Type
 --- @return Dummy.DialogueBubble
-function Encounter.playDialogue(text, bubble_type) end
+function Encounter.playDialogueBubble(text, bubble_type) end
 
 --- Wether all the enemies are spared
 --- @return boolean

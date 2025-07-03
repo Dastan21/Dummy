@@ -34,8 +34,8 @@ function ItemConsumable:use()
     dialogue_text = Lang.translate(self.text, self.name) .. "\n" .. heal_text
   end
 
-  Encounter.playTextbox(dialogue_text)
-  local dialogue = Encounter.getTextbox()
+  Encounter.playDialogueText(dialogue_text)
+  local dialogue = Encounter.getDialogueText()
   dialogue:setCanSkip(true)
   Player.removeItem(self)
   Assets.playSound("swallow")

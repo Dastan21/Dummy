@@ -9,7 +9,7 @@
 --- @field protected previous_state string
 --- @field protected current_menu Dummy.Encounter.ActionMenu|nil
 --- @field protected bg_sprite Dummy.Sprite
---- @field protected textbox_dialogue Dummy.DialogueText
+--- @field protected dialogue_text Dummy.DialogueText
 --- @field protected bubble_dialogues Dummy.DialogueBubble[]
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
@@ -71,7 +71,7 @@ end
 --- @param text Dummy.Text.Text
 function Encounter.setText(text)
   Encounter.text = text
-  Encounter.textbox_dialogue:setText(Encounter.getText())
+  Encounter.dialogue_text:setText(Encounter.getText())
 end
 
 --- Gets the encounter's enemies
@@ -131,28 +131,28 @@ function Encounter.setMusic(music)
   Encounter.music:setVolume(0.5)
 end
 
---- Gets the encounter textbox dialogue
+--- Gets the encounter dialogue text
 --- @return Dummy.DialogueText
-function Encounter.getTextbox()
-  return Encounter.textbox_dialogue
+function Encounter.getDialogueText()
+  return Encounter.dialogue_text
 end
 
---- Plays a textbox dialogue
+--- Plays a dialogue text
 --- @param text Dummy.Text.Text|Dummy.Text.Text[]
 --- @return Dummy.DialogueText
-function Encounter.playTextbox(text)
-  Encounter.textbox_dialogue:setText(text)
-  Encounter.textbox_dialogue:setVisible(true)
-  Encounter.textbox_dialogue:setCanSkip(false)
+function Encounter.playDialogueText(text)
+  Encounter.dialogue_text:setText(text)
+  Encounter.dialogue_text:setVisible(true)
+  Encounter.dialogue_text:setCanSkip(false)
   Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
-  return Encounter.textbox_dialogue
+  return Encounter.dialogue_text
 end
 
---- Plays a bubble dialogue
+--- Plays a dialogue bubble
 --- @param text Dummy.Text.Text|Dummy.Text.Text[]
 --- @param bubble_type? Dummy.DialogueBubble.Type
 --- @return Dummy.DialogueBubble
-function Encounter.playDialogue(text, bubble_type)
+function Encounter.playDialogueBubble(text, bubble_type)
   local dialogue = DialogueBubble:new(text, bubble_type)
   table.insert(Encounter.bubble_dialogues, dialogue)
   return dialogue
@@ -205,8 +205,8 @@ function Encounter.checkEncounterEnd()
     if level ~= level_old then
       win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
     end
-    Encounter.playTextbox(win_text)
-    Encounter.textbox_dialogue:setCanSkip(false)
+    Encounter.playDialogueText(win_text)
+    Encounter.dialogue_text:setCanSkip(false)
   else
     Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
   end
@@ -227,14 +227,14 @@ function Encounter.load()
   Encounter.loadActions()
 
   -- textbox dialogue
-  Encounter.textbox_dialogue = DialogueText:new(Encounter.getText())
-  Encounter.textbox_dialogue:setPosition(52, 270)
-  Encounter.textbox_dialogue:setOrigin(0, 0)
-  Encounter.textbox_dialogue:setFont(Assets.getFont("main_text"))
-  Encounter.textbox_dialogue:setScale(2)
-  Encounter.textbox_dialogue:setLayer(Constants.LAYERS.ABOVE_ARENA)
-  Encounter.textbox_dialogue:setMaxWidth(Constants.ARENA.TEXTBOX_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
-  Encounter.textbox_dialogue:setCanSkip(true)
+  Encounter.dialogue_text = DialogueText:new(Encounter.getText())
+  Encounter.dialogue_text:setPosition(52, 270)
+  Encounter.dialogue_text:setOrigin(0, 0)
+  Encounter.dialogue_text:setFont(Assets.getFont("main_text"))
+  Encounter.dialogue_text:setScale(2)
+  Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
+  Encounter.dialogue_text:setMaxWidth(Constants.ARENA.TEXTBOX_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
+  Encounter.dialogue_text:setCanSkip(true)
 
   Encounter.bubble_dialogues = {}
 
@@ -425,8 +425,8 @@ function Encounter.loadActMenus()
       table.insert(options, {
         text = Text:new("ENCOUNTER_MENU_ACT_CHECK"),
         action = function()
-          Encounter.textbox_dialogue:setText(enemy:getCheckText())
-          Encounter.textbox_dialogue:setCanSkip(true)
+          Encounter.dialogue_text:setText(enemy:getCheckText())
+          Encounter.dialogue_text:setCanSkip(true)
           Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
         end
       })
@@ -563,10 +563,10 @@ function Encounter.loadMercyMenu()
           end
         end
 
-        Encounter.textbox_dialogue:setText(flee_text)
-        Encounter.textbox_dialogue:setCanSkip(true)
-        Encounter.textbox_dialogue:setVisible(true)
-        Encounter.textbox_dialogue:skip()
+        Encounter.dialogue_text:setText(flee_text)
+        Encounter.dialogue_text:setCanSkip(true)
+        Encounter.dialogue_text:setVisible(true)
+        Encounter.dialogue_text:skip()
       end,
       silent = true
     })
@@ -603,9 +603,9 @@ function Encounter.startActionSelect()
 
     Encounter.leaveMenu()
 
-    Encounter.textbox_dialogue:setText(Encounter.getText())
-    Encounter.textbox_dialogue:setCanSkip(true)
-    Encounter.textbox_dialogue:setVisible(true)
+    Encounter.dialogue_text:setText(Encounter.getText())
+    Encounter.dialogue_text:setCanSkip(true)
+    Encounter.dialogue_text:setVisible(true)
   end)
 end
 
@@ -707,7 +707,7 @@ function Encounter.enterMenu(menu)
   Encounter.current_menu = menu
   Encounter.current_menu:show()
 
-  Encounter.textbox_dialogue:setVisible(false)
+  Encounter.dialogue_text:setVisible(false)
 end
 
 --- Leaves the current menu
@@ -761,8 +761,8 @@ end
 
 --- Starts text dialogue
 function Encounter.startTextDialogue()
-  Encounter.textbox_dialogue:reset()
-  Encounter.textbox_dialogue:setVisible(true)
+  Encounter.dialogue_text:reset()
+  Encounter.dialogue_text:setVisible(true)
 
   Encounter.unselectAction()
   Player.hide()
@@ -771,7 +771,7 @@ end
 
 --- Updates text dialogue
 function Encounter.updateTextDialogue()
-  if Input.isPressed(Input.Confirm) and Encounter.textbox_dialogue:isDone() then
+  if Input.isPressed(Input.Confirm) and Encounter.dialogue_text:isDone() then
     if Encounter.allSparedOrKilled() then
       Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
     else
@@ -782,7 +782,7 @@ end
 
 --- Starts enemy dialogue
 function Encounter.startEnemyDialogue()
-  Encounter.textbox_dialogue:setVisible(false)
+  Encounter.dialogue_text:setVisible(false)
 
   Encounter.unselectAction()
   Encounter.leaveMenu()

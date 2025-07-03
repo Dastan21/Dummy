@@ -38,8 +38,8 @@ end
 --- Uses the item
 function Item:use()
   if self.text ~= nil then
-    Encounter.playTextbox(self.text)
-    local dialogue = Encounter.getTextbox()
+    Encounter.playDialogueText(self.text)
+    local dialogue = Encounter.getDialogueText()
     dialogue:setCanSkip(true)
   end
 
