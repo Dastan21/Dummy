@@ -159,6 +159,7 @@ function Sprite:stop()
 
   if self.timer ~= nil then
     Timer.cancel(self.timer)
+    self.timer = nil
   end
 
   self.frame_index = 1

@@ -76,9 +76,11 @@ end
 function Shaker.reset()
   if Shaker.duration_timer ~= nil then
     Timer.cancel(Shaker.duration_timer)
+    Shaker.duration_timer = nil
   end
   if Shaker.interval_timer ~= nil then
     Timer.cancel(Shaker.interval_timer)
+    Shaker.interval_timer = nil
   end
 
   Shaker.drawable:setVisible(false)

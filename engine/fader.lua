@@ -60,6 +60,7 @@ end
 function Fader.reset()
   if Fader.fade_timer ~= nil then
     Timer.cancel(Fader.fade_timer)
+    Fader.fade_timer = nil
   end
 
   Fader.background:setVisible(false)
