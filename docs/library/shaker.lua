@@ -8,7 +8,6 @@
 
 --- @class Dummy.Shaker
 ---
---- @field protected drawable Dummy.Drawable
 --- @field protected dx number
 --- @field protected dy number
 --- @field protected duration_timer table|nil
@@ -42,4 +41,7 @@ function Shaker.shakeCustom(duration, interval, shake_function, shake_callback) 
 
 --- Resets the currently playing shaker
 function Shaker.reset() end
+
+--- Draws the shaker
+function Shaker.draw() end
 

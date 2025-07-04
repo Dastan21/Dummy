@@ -1,6 +1,5 @@
 --- @class Dummy.Shaker
 ---
---- @field protected drawable Dummy.Drawable
 --- @field protected dx number
 --- @field protected dy number
 --- @field protected duration_timer table|nil
@@ -9,18 +8,6 @@ local Shaker = {}
 
 --- Loads the shaker
 function Shaker.load()
-  Shaker.drawable = Drawable:new()
-  Shaker.drawable:setPersistent(true)
-  Shaker.drawable:setLayer(Constants.LAYERS.SHAKER)
-  Shaker.drawable:setVisible(false)
-  function Shaker.drawable:draw()
-    love.graphics.push()
-
-    love.graphics.translate(Shaker.dx, Shaker.dy)
-
-    love.graphics.pop()
-  end
-
   Shaker.dx = 0
   Shaker.dy = 0
   Shaker.duration_timer = nil
@@ -34,7 +21,6 @@ end
 --- @param shake_callback? fun() called when the shake is done
 function Shaker.shake(duration, interval, shake_function, shake_callback)
   Shaker.reset()
-  Shaker.drawable:setVisible(true)
 
   Shaker.duration_timer = Timer.after(duration, function()
     if type(shake_callback) == "function" then
@@ -83,9 +69,13 @@ function Shaker.reset()
     Shaker.interval_timer = nil
   end
 
-  Shaker.drawable:setVisible(false)
   Shaker.dx = 0
   Shaker.dy = 0
+end
+
+--- Draws the shaker
+function Shaker.draw()
+  love.graphics.translate(Shaker.dx, Shaker.dy)
 end
 
 return Shaker

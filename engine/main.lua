@@ -150,6 +150,7 @@ local function draw()
   love.graphics.clear()
 
   Scene.draw()
+  Shaker.draw()
 
   love.graphics.setCanvas()
 
