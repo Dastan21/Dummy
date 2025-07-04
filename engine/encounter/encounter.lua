@@ -72,7 +72,7 @@ end
 --- @param text Dummy.Text.Text
 function Encounter.setText(text)
   Encounter.text = text
-  Encounter.dialogue_text:setText(Encounter.getText())
+  Encounter.dialogue_text:setText(text)
 end
 
 --- Gets the encounter's enemies
@@ -296,14 +296,10 @@ function Encounter.load()
     local max_hp_bar_width = math.clamp(5 * Player.getLV() + 20, 25, 120)
     local hp_bar_width = max_hp_bar_width * Player.getHP() / Player.getMaxHP()
 
-    love.graphics.push()
-
     love.graphics.setColor(1, 0, 0, 1)
     love.graphics.rectangle("fill", 275, 400, max_hp_bar_width, 21)
     love.graphics.setColor(1, 1, 0, 1)
     love.graphics.rectangle("fill", 275, 400, hp_bar_width, 21)
-
-    love.graphics.pop()
   end
 
   -- enemy hp bar & damage text

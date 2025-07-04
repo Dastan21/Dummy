@@ -168,8 +168,6 @@ end
 function Text:draw()
   if not self:isVisible() then return end
 
-  love.graphics.push()
-
   love.graphics.applyTransform(self:getTransform())
 
   if Debugger.shouldDisplayHitbox() then
@@ -182,8 +180,6 @@ function Text:draw()
   self:drawNodes()
 
   self:drawChildren()
-
-  love.graphics.pop()
 end
 
 --- Draws a text node

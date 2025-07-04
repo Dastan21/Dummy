@@ -264,8 +264,6 @@ function Sprite:vaporize(type, size)
     local origin_x, origin_y = sprite:getOrigin()
     local width, height = sprite:getWidth(), sprite:getHeight()
     local image = sprite:getSprite()
-
-    love.graphics.push()
     love.graphics.applyTransform(sprite:getTransform())
 
     -- particles
@@ -278,8 +276,6 @@ function Sprite:vaporize(type, size)
     love.graphics.setColor(1, 1, 1, 1)
     local quad = love.graphics.newQuad(0, j, width, (height - j), width, height)
     love.graphics.draw(image, quad, 0, 0, 0, 1, 1, origin_x * width, origin_y * height - j)
-
-    love.graphics.pop()
   end
 
   self:setVisible(false)
@@ -343,8 +339,6 @@ function Sprite:draw()
   local sprite = self:getSprite()
   if sprite == nil then return end
 
-  love.graphics.push()
-
   love.graphics.applyTransform(self:getTransform())
   local origin_x, origin_y = self:getOrigin()
 
@@ -358,8 +352,6 @@ function Sprite:draw()
   love.graphics.draw(sprite, -self:getWidth() * origin_x, -self:getHeight() * origin_y)
 
   self:drawChildren()
-
-  love.graphics.pop()
 end
 
 --- Creates a sprite

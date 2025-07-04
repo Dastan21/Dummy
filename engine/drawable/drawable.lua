@@ -259,7 +259,9 @@ function Drawable:drawChildren()
   if #self.children <= 0 then return end
 
   for _, child in ipairs(self.children) do
+    love.graphics.push()
     child:draw()
+    love.graphics.pop()
   end
 end
 

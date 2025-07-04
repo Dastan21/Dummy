@@ -125,7 +125,9 @@ function Scene.draw()
   for _, drawable in pairs(Scene.drawables) do
     if drawable:isVisible() then
       if drawable:getParent() == nil then
+        love.graphics.push()
         drawable:draw()
+        love.graphics.pop()
       end
     end
   end
