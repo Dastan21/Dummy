@@ -139,14 +139,16 @@ function DialogueText:applyNodeState(node, state)
     local voice = node.arguments[1]
     if voice == "none" then
       state.voice = "none"
-    elseif voice == "default" then
-      state.voice = nil
     else
       local success = pcall(Assets.playSound, node.arguments[1], false, false, false)
       if success then
         state.voice = node.arguments[1]
       end
     end
+  end
+
+  if node.arguments[1] == "default" or node.arguments[1] == "reset" then
+    state[node.command] = nil
   end
 
   return state
