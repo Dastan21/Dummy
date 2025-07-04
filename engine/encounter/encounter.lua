@@ -41,6 +41,7 @@
 --- @field protected action.mercy_hover_sprite Dummy.Sprite
 --- @field protected exp_reward number
 --- @field protected gold_reward number
+--- @field protected defend_timer table|nil
 local Encounter = {}
 
 --- Encounter actions
@@ -820,20 +821,21 @@ function Encounter.updateEnemyDialogue()
 
   if all_done then
     local function defend()
-      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
-
       for _, dialogue in ipairs(Encounter.bubble_dialogues) do
         dialogue:remove()
       end
       Encounter.bubble_dialogues = {}
+      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
     end
 
-    local defend_timer = Timer.after(1, defend)
+    if Encounter.defend_timer == nil then
+      Encounter.defend_timer = Timer.after(1, defend)
+    end
 
     if Input.isPressed(Input.Confirm) then
-      Timer.cancel(defend_timer)
+      Timer.cancel(Encounter.defend_timer)
+      Encounter.defend_timer = nil
       defend()
-      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
     end
   end
 end
@@ -860,6 +862,7 @@ function Encounter.startAttacking()
 
     attacking = true
     Timer.cancel(attack_window_timer)
+    attack_window_timer = nil
 
     local enemy = Encounter.enemies[Encounter.enemy_selected_index]
     local enemy_x, enemy_y = enemy:getPosition()
@@ -953,6 +956,7 @@ function Encounter.startAttacking()
 
           if enemy_hp_text_y >= enemy_hp_text_y_start + 8 then
             Timer.cancel(Encounter.enemy_hp_text_timer)
+            Encounter.enemy_hp_text_timer = nil
             Encounter.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
           end
         end)
