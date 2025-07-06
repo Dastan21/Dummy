@@ -142,8 +142,6 @@ local function limitFPS()
 end
 
 local function draw()
-  if not love.graphics.isActive() then return end
-
   limitFPS()
 
   love.graphics.setCanvas(engine.canvas)
