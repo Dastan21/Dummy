@@ -45,7 +45,7 @@ end
 --- @param shake_callback? fun() called when the shake is done
 function Shaker.shakeRandom(duration, interval, horizontal_strength, vertical_strength, shake_callback)
   Shaker.shake(duration, interval, function()
-    return (math.random() - 0.5) * horizontal_strength, (math.random() - 0.5) * vertical_strength
+    return (love.math.random() - 0.5) * horizontal_strength, (love.math.random() - 0.5) * vertical_strength
   end, shake_callback)
 end
 

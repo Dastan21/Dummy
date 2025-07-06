@@ -292,8 +292,8 @@ function Sprite:vaporize(type, size)
           particle = {}
           particle["x"] = -sprite_width * sprite_origin_x + i
           particle["y"] = -sprite_height * sprite_origin_y + (j + size)
-          particle["vel_x"] = (math.random() * 4 - 2) * 30
-          particle["acc_y"] = -(math.random() * 0.5 + 0.2) * 30 * 5
+          particle["vel_x"] = (love.math.random() * 4 - 2) * 30
+          particle["acc_y"] = -(love.math.random() * 0.5 + 0.2) * 30 * 5
           particle["vel_y"] = particle["acc_y"]
           particle["alpha"] = 1
           particle["width"] = size

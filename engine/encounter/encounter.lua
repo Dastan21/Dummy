@@ -548,7 +548,7 @@ function Encounter.loadMercyMenu()
         if Encounter.exp_reward > 0 or Encounter.gold_reward > 0 then
           flee_text = { "ENCOUNTER_FLEE_REWARD", Encounter.exp_reward, Encounter.gold_reward }
         else
-          local flee_value = math.random(20)
+          local flee_value = love.math.random(20)
           if flee_value <= 1 then
             flee_text = "ENCOUNTER_FLEE_1"
           elseif flee_value == 2 then
@@ -1022,7 +1022,7 @@ function Encounter.startAttacking()
       local target_bar_x = Encounter.target_bar_sprite:getPosition()
       local bonus_factor = math.abs(target_x - target_bar_x)
       local stretch = (target_width - bonus_factor) / target_width
-      damage = math.max(0, Player:getAT() - enemy:getDF() + (math.random() * 2))
+      damage = math.max(0, Player:getAT() - enemy:getDF() + (love.math.random() * 2))
       if bonus_factor <= 12 then
         damage = math.round(damage * 2.2)
       else
@@ -1046,7 +1046,7 @@ function Encounter.startAttacking()
   Encounter.target_bar_sprite:setVisible(true)
   Encounter.target_bar_sprite:setFrame(1)
 
-  local bar_speed = attack_speed + (math.random() * 2)
+  local bar_speed = attack_speed + (love.math.random() * 2)
   attack_window_timer = Timer.during(2, function(dt)
     local x, y = Encounter.target_bar_sprite:getPosition()
     local target_bar_x = x + bar_speed * dt * 30

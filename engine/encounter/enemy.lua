@@ -189,15 +189,15 @@ function Enemy:spare()
   local dustclouds = {}
   for _ = 1, 14 do
     local dustcloud = Sprite:new({ "dustcloud1", "dustcloud2", "dustcloud3" }, 4 / 30, false, true, false)
-    dustcloud:setScale(math.random() + 0.7)
-    local dust_x = (math.random() * width / 2) + width / 4 + x - 8
-    local dust_y = (math.random() * height / 2) + height / 4 + y - 8
+    dustcloud:setScale(love.math.random() + 0.7)
+    local dust_x = (love.math.random() * width / 2) + width / 4 + x - 8
+    local dust_y = (love.math.random() * height / 2) + height / 4 + y - 8
     dustcloud:setPosition(0, -height / 2)
     dustcloud:setParent(self)
 
     local rightside = (8 + dust_x - x) / (width / 2)
     local topside = (8 + dust_y - y) / (height / 2)
-    local direction = math.random() * 360
+    local direction = love.math.random() * 360
     if rightside < 0.75 then
       direction = 180
     end
