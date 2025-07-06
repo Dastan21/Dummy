@@ -249,6 +249,10 @@ function Drawable:sortChildren()
   end)
 end
 
+--- Updates the drawable
+--- @param dt number
+function Drawable:update(dt) end
+
 --- Draws the drawable
 function Drawable:draw()
   self:drawChildren()

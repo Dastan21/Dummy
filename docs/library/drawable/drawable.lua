@@ -150,6 +150,10 @@ function Drawable:removeChild(child) end
 --- Sorts drawable's children by layer
 function Drawable:sortChildren() end
 
+--- Updates the drawable
+--- @param dt number
+function Drawable:update(dt) end
+
 --- Draws the drawable
 function Drawable:draw() end
 

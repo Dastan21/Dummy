@@ -16,7 +16,6 @@
 --- @field protected quitting_timer number
 --- @field protected quitting_sprite Dummy.Sprite
 --- @field protected drawables Dummy.Drawable[]
---- @field protected dialogues Dummy.DialogueText[]
 Scene = {}
 
 --- @class Dummy.Scene.Scene
@@ -74,10 +73,6 @@ function Scene.removeDrawable(drawable) end
 
 --- Sorts drawables by layer in the current scene
 function Scene.sortDrawables() end
-
---- Adds a dialogue text in the current scene
---- @param dialogue_text Dummy.DialogueText
-function Scene.addDialogue(dialogue_text) end
 
 --- Cleans the current scene
 function Scene.clean() end

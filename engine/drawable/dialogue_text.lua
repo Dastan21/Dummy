@@ -262,8 +262,6 @@ function DialogueText:new(value, done_callback)
 
   dialogue_text:setText(value)
 
-  Scene.addDialogue(dialogue_text)
-
   return dialogue_text
 end
 

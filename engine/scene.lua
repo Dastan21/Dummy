@@ -8,7 +8,6 @@
 --- @field protected quitting_timer number
 --- @field protected quitting_sprite Dummy.Sprite
 --- @field protected drawables Dummy.Drawable[]
---- @field protected dialogues Dummy.DialogueText[]
 local Scene = {}
 
 --- @class Dummy.Scene.Scene
@@ -109,8 +108,10 @@ end
 function Scene.update(dt)
   if Scene.scene == nil then return end
 
-  for _, dialogue_text in ipairs(Scene.dialogues) do
-    dialogue_text:update(dt)
+  for _, drawable in ipairs(Scene.drawables) do
+    if type(drawable.update) == "function" then
+      drawable:update(dt)
+    end
   end
 
   if type(Scene.scene.update) == "function" then
@@ -195,12 +196,6 @@ function Scene.sortDrawables()
   end)
 end
 
---- Adds a dialogue text in the current scene
---- @param dialogue_text Dummy.DialogueText
-function Scene.addDialogue(dialogue_text)
-  table.insert(Scene.dialogues, dialogue_text)
-end
-
 --- Cleans the current scene
 function Scene.clean()
   local tmp_drawables = {}
@@ -211,7 +206,6 @@ function Scene.clean()
   end
   Scene.drawables = tmp_drawables
 
-  Scene.dialogues = {}
   Sprite.clear()
   Assets.clear()
   love.audio.stop()
