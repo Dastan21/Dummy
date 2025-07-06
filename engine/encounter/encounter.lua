@@ -71,12 +71,7 @@ end
 --- Sets the encounter's text
 --- @param text Dummy.Text.Text
 function Encounter.setText(text)
-  text =
-  "[voice:voice_bubble]* Hello[scale:0.5][font:plain][speed:0.1][color:0.5,0,0.5][voice:default] les[wait:0.5s][speed:reset][font:curs][color:reset][voice:voice_asgore] amis.[test][reset][wait:15]\n* ...[test]"
   Encounter.text = text
-  Encounter.dialogue_text:registerCommand("test", function(node)
-    print("called 'test'", table.tostring(node))
-  end)
   Encounter.dialogue_text:setText(text)
 end
 
