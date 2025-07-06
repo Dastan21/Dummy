@@ -17,6 +17,7 @@
 --- @field protected nodes Dummy.Text.Node[]
 --- @field protected state table<string, any>
 --- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
+--- @field protected custom_commands_called table<Dummy.Text.Node, boolean>
 Text = {}
 
 --- @alias Dummy.Text.Text string|table|fun(): string|table

@@ -19,6 +19,7 @@
 --- @field protected nodes Dummy.Text.Node[]
 --- @field protected state table<string, any>
 --- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
+--- @field protected custom_commands_called table<Dummy.Text.Node, boolean>
 local Text = Class:extend(Drawable)
 
 --- Text commands
@@ -159,8 +160,6 @@ end
 --- @param command string
 --- @param func fun(node: Dummy.Text.Node)
 function Text:registerCommand(command, func)
-  if Text.COMMANDS[command] ~= nil then return end
-
   self.custom_commands[command] = func
 end
 
@@ -219,9 +218,13 @@ function Text:drawNodes()
       end
     elseif node.type == "command" then
       state = self:applyNodeState(node, state)
-      local func = self.custom_commands[node.command]
-      if type(func) == "function" then
-        func(node)
+
+      if not self.custom_commands_called[node] then
+        local func = self.custom_commands[node.command]
+        if type(func) == "function" then
+          func(node)
+        end
+        self.custom_commands_called[node] = true
       end
     end
   end
@@ -234,7 +237,7 @@ function Text:parseCommand(text)
   local split = text:split(":")
   local command = split[1]
   local arguments = (split[2] or ""):split(",")
-  if not table.contains(Text.COMMANDS, command) then return end
+  if not table.contains(Text.COMMANDS, command) and self.custom_commands[command] == nil then return end
 
   return {
     type = "command",
@@ -326,6 +329,7 @@ function Text:parseNodes(value)
 
   self.width = width
   self.height = math.sum(table.unpack(lines_heights))
+  self.custom_commands_called = {}
 
   return nodes
 end
@@ -341,6 +345,7 @@ function Text:new(value)
   text.max_width = Constants.SCREEN_WIDTH
   text.align = "left"
   text.custom_commands = {}
+  text.custom_commands_called = {}
 
   text:setText(value)
 

@@ -20,6 +20,9 @@ DialogueText.COMMANDS = {
   "voice",
 }
 
+--- Silent characters
+DialogueText.SILENT_CHARACTERS = { " ", "\n" }
+
 --- Gets the class name
 --- @return string
 function DialogueText:getClass()
@@ -44,6 +47,7 @@ function DialogueText:reset()
   self.time = 0
   self.wait_time = 0
   self.text_index = 0
+  self.is_skipping = false
   self:parseNodes(self.text_value)
   self:updateDialogue()
 end
@@ -64,8 +68,7 @@ end
 function DialogueText:skip()
   if self:isDone() or not self.can_skip then return end
 
-  self.text_index = #self.total_nodes
-  self:updateDialogue()
+  self.is_skipping = true
 end
 
 --- Wether the dialogue's can be confirmed
@@ -120,6 +123,9 @@ function DialogueText:applyNodeState(node, state)
 
   if node.command == "reset" then
     return {}
+  elseif node.arguments[1] == "default" or node.arguments[1] == "reset" then
+    state[node.command] = nil
+    return state
   end
 
   state = apply_node_state(self, node, state)
@@ -145,10 +151,6 @@ function DialogueText:applyNodeState(node, state)
         state.voice = node.arguments[1]
       end
     end
-  end
-
-  if node.arguments[1] == "default" or node.arguments[1] == "reset" then
-    state[node.command] = nil
   end
 
   return state
@@ -188,11 +190,16 @@ end
 --- @param dt number
 function DialogueText:update(dt)
   if self:isDone() or not self:isVisible() then return end
-  if self.state.wait ~= nil and self.state.wait > 0 then
-    self.state.wait = math.max(0, self.state.wait - dt)
+
+  if not self.is_skipping then
+    if self.state.wait ~= nil and self.state.wait > 0 then
+      self.state.wait = math.max(0, self.state.wait - dt)
+    else
+      local speed = self.state.speed or self.speed
+      self.time = self.time + dt * speed * 30
+    end
   else
-    local speed = self.state.speed or self.speed
-    self.time = self.time + dt * speed * 30
+    self.time = #self.total_nodes
   end
 
   while math.floor(self.time) > self.text_index do
@@ -204,17 +211,17 @@ function DialogueText:update(dt)
         self.text_index = math.floor(self.time)
       end
 
-      while node.type == "command" do
+      while node.type == "command" and self.text_index < #self.total_nodes do
         self.state = self:applyNodeState(node, self.state)
 
         self.time = self.time + 1
         self.text_index = self.text_index + 1
 
-        node = self.total_nodes[self.text_index]
+        node = self.total_nodes[math.min(self.text_index + 1, #self.total_nodes)]
       end
 
-      local voice = self.state.voice or self.voice
-      if self.state.voice ~= "none" and voice ~= nil and node.character ~= " " then
+      local voice = self.state.voice ~= "none" and nil or (self.state.voice or self.voice)
+      if voice ~= nil and node.character ~= nil and not table.contains(DialogueText.SILENT_CHARACTERS, node.character) and not self.is_skipping then
         Assets.playSound(voice)
       end
     end
@@ -228,8 +235,11 @@ function DialogueText:update(dt)
     self:skip()
   end
 
-  if self.text_index >= #self.total_nodes and type(self.done_callback) == "function" then
-    self.done_callback()
+  if self:isDone() then
+    self.is_skipping = false
+    if type(self.done_callback) == "function" then
+      self.done_callback()
+    end
   end
 
   self:updateDialogue()
