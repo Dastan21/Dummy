@@ -366,11 +366,10 @@ function Text:parseNodes(value)
   local escaping = false
   for i = 1, length do
     local char = UTF8.sub(value, i, i)
-    if char == "\\" then
+    local next_char = i < #value and UTF8.sub(value, i + 1, i + 1)
+    if char == "\\" and (next_char == "[" or next_char == "]") then
       escaping = true
-    end
-
-    if char == "[" and not escaping then
+    elseif char == "[" and not escaping then
       command = ""
     elseif char == "]" and not escaping and command ~= nil then
       local node = self:parseCommand(command)
@@ -383,6 +382,7 @@ function Text:parseNodes(value)
       command = command .. char
     else
       escaping = false
+
       local font = self.state.font or self.font
       local scale_x = self.state.scale_x or 1
       local scale_y = self.state.scale_y or 1
