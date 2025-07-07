@@ -821,6 +821,7 @@ function Encounter.updateEnemyDialogue()
         dialogue:remove()
       end
       Encounter.bubble_dialogues = {}
+      Encounter.defend_timer = nil
       Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
     end
 
