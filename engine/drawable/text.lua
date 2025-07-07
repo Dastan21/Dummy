@@ -155,7 +155,7 @@ function Text:getCharOffset(line)
   return 0
 end
 
---- Registers a text command
+--- Registers a custom text command
 --- @param command string
 --- @param func fun(node: Dummy.Text.Node)
 function Text:registerCommand(command, func)

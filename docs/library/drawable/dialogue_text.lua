@@ -19,6 +19,8 @@
 --- @field protected can_skip boolean
 --- @field protected can_confirm boolean
 --- @field protected wait number
+--- @field protected skipping boolean
+--- @field protected force_skip boolean
 DialogueText = {}
 
 --- Gets the class name

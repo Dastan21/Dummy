@@ -98,7 +98,7 @@ function Text:getLineWidth(line) end
 --- @return number
 function Text:getCharOffset(line) end
 
---- Registers a text command
+--- Registers a custom text command
 --- @param command string
 --- @param func fun(node: Dummy.Text.Node)
 function Text:registerCommand(command, func) end

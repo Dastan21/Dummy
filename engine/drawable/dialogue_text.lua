@@ -11,10 +11,12 @@
 --- @field protected can_skip boolean
 --- @field protected can_confirm boolean
 --- @field protected wait number
+--- @field protected skipping boolean
+--- @field protected force_skip boolean
 local DialogueText = Class:extend(Text)
 
 --- Dialogue text commands
-DialogueText.COMMANDS = { "wait", "speed", "voice" }
+DialogueText.COMMANDS = { "wait", "speed", "voice", "noskip", "instant", "stopinstant" }
 
 --- Silent characters
 DialogueText.SILENT_CHARACTERS = { " ", "\n" }
@@ -42,7 +44,8 @@ end
 function DialogueText:reset()
   self.dialogue_timer = 0
   self.text_index = 1
-  self.is_skipping = false
+  self.skipping = false
+  self.force_skip = false
   self.wait = 0
   self:parseNodes(self.text_value)
   self:updateDialogue()
@@ -64,7 +67,10 @@ end
 function DialogueText:skip()
   if self:isDone() or not self.can_skip then return end
 
-  self.is_skipping = true
+  if self.state.noskip ~= true then
+    self.force_skip = true
+    self.skipping = true
+  end
 end
 
 --- Wether the dialogue's can be confirmed
@@ -145,6 +151,8 @@ function DialogueText:processNode(node)
         self.state.voice = node.arguments[1]
       end
     end
+  elseif node.command == "noskip" then
+    self.state.noskip = true
   end
 
   node.state = table.merge(table.clone(self.state), node.state or {})
@@ -188,7 +196,7 @@ function DialogueText:update(dt)
 
   if self:isDone() or not self:isVisible() then return end
 
-  if not self.is_skipping then
+  if not self.skipping then
     if self.wait > 0 then
       self.wait = math.max(0, self.wait - dt)
     else
@@ -204,10 +212,17 @@ function DialogueText:update(dt)
 
     local node = self.total_nodes[math.min(self.text_index, #self.total_nodes)]
     while node.type == "command" and self.text_index < #self.total_nodes do
+      if node.command == "instant" then
+        self.skipping = true
+      elseif node.command == "stopinstant" and not self.force_skip then
+        self.skipping = false
+        self.dialogue_timer = self.text_index
+      end
+
       self.state.speed = node.state.speed
       self.wait = node.state.wait or self.wait
 
-      if node.command == "wait" or node.command == "speed" then
+      if (node.command == "wait" or node.command == "speed") and not self.skipping then
         self.dialogue_timer = self.text_index
         break
       else
@@ -219,7 +234,7 @@ function DialogueText:update(dt)
     end
 
     local voice = node.state.voice ~= "none" and nil or (node.state.voice or self.voice)
-    if voice ~= nil and node.character ~= nil and not table.contains(DialogueText.SILENT_CHARACTERS, node.character) and not self.is_skipping then
+    if voice ~= nil and node.character ~= nil and not table.contains(DialogueText.SILENT_CHARACTERS, node.character) and not self.skipping then
       Assets.playSound(voice)
     end
   end
@@ -231,7 +246,7 @@ function DialogueText:update(dt)
   end
 
   if self:isDone() then
-    self.is_skipping = false
+    self.skipping = false
     if type(self.done_callback) == "function" then
       self.done_callback()
     end
@@ -255,6 +270,8 @@ function DialogueText:new(value, done_callback)
   dialogue_text.can_skip = true
   dialogue_text.can_confirm = true
   dialogue_text.wait = 0
+  dialogue_text.skipping = false
+  dialogue_text.force_skip = false
 
   dialogue_text:setText(value)
 
