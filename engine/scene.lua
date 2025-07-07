@@ -117,6 +117,7 @@ function Scene.update(dt)
   if type(Scene.scene.update) == "function" then
     Scene.scene.update(dt)
   end
+
   Scene.updateQuitting(dt)
 end
 

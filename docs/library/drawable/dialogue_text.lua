@@ -10,15 +10,15 @@
 ---
 --- @field protected text_value Dummy.Text.Text
 --- @field protected nodes Dummy.Text.Node[]
+--- @field protected state table<string, any>
 --- @field protected total_nodes Dummy.Text.Node[]
 --- @field protected speed number
---- @field protected time number
---- @field protected wait_time number
 --- @field protected text_index number
 --- @field protected voice string|nil
 --- @field protected done_callback fun()|nil
 --- @field protected can_skip boolean
 --- @field protected can_confirm boolean
+--- @field protected wait number
 DialogueText = {}
 
 --- Gets the class name
@@ -77,9 +77,7 @@ function DialogueText:setVoice(voice) end
 
 --- Applies the node state
 --- @param node Dummy.Text.Node
---- @param state table<string, any>
---- @return table<string, any>
-function DialogueText:applyNodeState(node, state) end
+function DialogueText:processNode(node) end
 
 --- Parses the dialogue text command
 --- @param text string

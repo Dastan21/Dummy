@@ -2,23 +2,19 @@
 ---
 --- @field protected text_value Dummy.Text.Text
 --- @field protected nodes Dummy.Text.Node[]
+--- @field protected state table<string, any>
 --- @field protected total_nodes Dummy.Text.Node[]
 --- @field protected speed number
---- @field protected time number
---- @field protected wait_time number
 --- @field protected text_index number
 --- @field protected voice string|nil
 --- @field protected done_callback fun()|nil
 --- @field protected can_skip boolean
 --- @field protected can_confirm boolean
+--- @field protected wait number
 local DialogueText = Class:extend(Text)
 
 --- Dialogue text commands
-DialogueText.COMMANDS = {
-  "wait",
-  "speed",
-  "voice",
-}
+DialogueText.COMMANDS = { "wait", "speed", "voice" }
 
 --- Silent characters
 DialogueText.SILENT_CHARACTERS = { " ", "\n" }
@@ -44,10 +40,10 @@ end
 
 --- Resets the dialogue's current text
 function DialogueText:reset()
-  self.time = 0
-  self.wait_time = 0
-  self.text_index = 0
+  self.dialogue_timer = 0
+  self.text_index = 1
   self.is_skipping = false
+  self.wait = 0
   self:parseNodes(self.text_value)
   self:updateDialogue()
 end
@@ -113,47 +109,45 @@ function DialogueText:setVoice(voice)
   self.voice = voice
 end
 
-local apply_node_state = Text.applyNodeState
+local process_node = Text.processNode
 --- Applies the node state
 --- @param node Dummy.Text.Node
---- @param state table<string, any>
---- @return table<string, any>
-function DialogueText:applyNodeState(node, state)
-  if node.type ~= "command" then return state end
+function DialogueText:processNode(node)
+  if node.type ~= "command" then return end
 
-  if node.command == "reset" then
-    return {}
-  elseif node.arguments[1] == "default" or node.arguments[1] == "reset" then
-    state[node.command] = nil
-    return state
-  end
+  process_node(self, node)
 
-  state = apply_node_state(self, node, state)
-
+  self.state.wait = nil
   if node.command == "wait" then
     local delay = node.arguments[1] or "1s"
     if delay ~= nil then
       if delay:sub(-1) == "s" then
-        state.wait = tonumber(delay:sub(1, -2))
+        self.state.wait = tonumber(delay:sub(1, -2))
       else
-        state.wait = tonumber(delay) / 30
+        self.state.wait = tonumber(delay) / 30
       end
     end
   elseif node.command == "speed" then
-    state.speed = tonumber(node.arguments[1])
+    if node.arguments[1] == "reset" then
+      self.state.speed = nil
+    else
+      self.state.speed = tonumber(node.arguments[1])
+    end
   elseif node.command == "voice" then
     local voice = node.arguments[1]
     if voice == "none" then
-      state.voice = "none"
+      self.state.voice = "none"
+    elseif voice == "reset" then
+      self.state.voice = nil
     else
       local success = pcall(Assets.playSound, node.arguments[1], false, false, false)
       if success then
-        state.voice = node.arguments[1]
+        self.state.voice = node.arguments[1]
       end
     end
   end
 
-  return state
+  node.state = table.merge(table.clone(self.state), node.state or {})
 end
 
 local parse_command = Text.parseCommand
@@ -181,55 +175,56 @@ local parse_nodes = Text.parseNodes
 --- @param value Dummy.Text.Text
 --- @return Dummy.Text.Node[]
 function DialogueText:parseNodes(value)
-  self.total_nodes = parse_nodes(self, value)
   self.state = {}
+  self.total_nodes = parse_nodes(self, value)
   return {}
 end
 
+local text_update = Text.update
 --- Updates the dialogue
 --- @param dt number
 function DialogueText:update(dt)
+  text_update(self, dt)
+
   if self:isDone() or not self:isVisible() then return end
 
   if not self.is_skipping then
-    if self.state.wait ~= nil and self.state.wait > 0 then
-      self.state.wait = math.max(0, self.state.wait - dt)
+    if self.wait > 0 then
+      self.wait = math.max(0, self.wait - dt)
     else
       local speed = self.state.speed or self.speed
-      self.time = self.time + dt * speed * 30
+      self.dialogue_timer = self.dialogue_timer + dt * speed * 30
     end
   else
-    self.time = #self.total_nodes
+    self.dialogue_timer = #self.total_nodes
   end
 
-  while math.floor(self.time) > self.text_index do
-    if self.text_index <= #self.total_nodes then
-      local node = self.total_nodes[math.min(self.text_index + 1, #self.total_nodes)]
+  while math.floor(self.dialogue_timer) > self.text_index do
+    self.text_index = self.text_index + 1
 
-      if node.type == "command" then
-        self.time = self.time - 1
-        self.text_index = math.floor(self.time)
-      end
+    local node = self.total_nodes[math.min(self.text_index, #self.total_nodes)]
+    while node.type == "command" and self.text_index < #self.total_nodes do
+      self.state.speed = node.state.speed
+      self.wait = node.state.wait or self.wait
 
-      while node.type == "command" and self.text_index < #self.total_nodes do
-        self.state = self:applyNodeState(node, self.state)
-
-        self.time = self.time + 1
+      if node.command == "wait" or node.command == "speed" then
+        self.dialogue_timer = self.text_index
+        break
+      else
+        self.dialogue_timer = self.dialogue_timer + 1
         self.text_index = self.text_index + 1
-
-        node = self.total_nodes[math.min(self.text_index + 1, #self.total_nodes)]
       end
 
-      local voice = self.state.voice ~= "none" and nil or (self.state.voice or self.voice)
-      if voice ~= nil and node.character ~= nil and not table.contains(DialogueText.SILENT_CHARACTERS, node.character) and not self.is_skipping then
-        Assets.playSound(voice)
-      end
+      node = self.total_nodes[self.text_index]
     end
 
-    self.text_index = self.text_index + 1
+    local voice = node.state.voice ~= "none" and nil or (node.state.voice or self.voice)
+    if voice ~= nil and node.character ~= nil and not table.contains(DialogueText.SILENT_CHARACTERS, node.character) and not self.is_skipping then
+      Assets.playSound(voice)
+    end
   end
 
-  self.text_index = math.floor(self.time)
+  self.text_index = math.max(1, math.floor(self.dialogue_timer))
 
   if Input.isPressed(Input.Cancel) then
     self:skip()
@@ -253,12 +248,13 @@ function DialogueText:new(value, done_callback)
   local dialogue_text = Class:new(DialogueText, { value })
 
   dialogue_text.speed = 1
-  dialogue_text.time = 0
-  dialogue_text.text_index = 0
+  dialogue_text.dialogue_timer = 0
+  dialogue_text.text_index = 1
   dialogue_text.voice = "voice_text"
   dialogue_text.done_callback = done_callback
   dialogue_text.can_skip = true
   dialogue_text.can_confirm = true
+  dialogue_text.wait = 0
 
   dialogue_text:setText(value)
 

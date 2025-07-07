@@ -15,6 +15,8 @@
 --- @field protected width number
 --- @field protected height number
 --- @field protected nodes Dummy.Text.Node[]
+--- @field protected timer number
+--- @field protected dt number
 --- @field protected state table<string, any>
 --- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
 --- @field protected custom_commands_called table<Dummy.Text.Node, boolean>
@@ -29,6 +31,7 @@ Text = {}
 --- @field character string|nil
 --- @field command string|nil
 --- @field arguments string[]|nil
+--- @field state table<string, any>|nil
 
 --- Gets the class name
 --- @return string
@@ -101,11 +104,15 @@ function Text:getCharOffset(line) end
 --- @param func fun(node: Dummy.Text.Node)
 function Text:registerCommand(command, func) end
 
+--- Updates the text
+function Text:update(dt) end
+
 --- Draws the text
 function Text:draw() end
 
---- Draws a text node
-function Text:drawNodes() end
+--- Updates text nodes
+--- @param dt number
+function Text:updateNodes(dt) end
 
 --- Parses a text command
 --- @param text string
@@ -114,9 +121,7 @@ function Text:parseCommand(text) end
 
 --- Applies the node state
 --- @param node Dummy.Text.Node
---- @param state table<string, any>
---- @return table<string, any>
-function Text:applyNodeState(node, state) end
+function Text:processNode(node) end
 
 --- Parses the text nodes
 --- @param value Dummy.Text.Text

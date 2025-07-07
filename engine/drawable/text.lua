@@ -7,6 +7,7 @@
 --- @field character string|nil
 --- @field command string|nil
 --- @field arguments string[]|nil
+--- @field state table<string, any>|nil
 
 --- @class Dummy.Text : Dummy.Drawable
 ---
@@ -17,20 +18,14 @@
 --- @field protected width number
 --- @field protected height number
 --- @field protected nodes Dummy.Text.Node[]
+--- @field protected timer number
 --- @field protected state table<string, any>
 --- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
 --- @field protected custom_commands_called table<Dummy.Text.Node, boolean>
 local Text = Class:extend(Drawable)
 
 --- Text commands
-Text.COMMANDS = {
-  "reset",
-  "color",
-  "alpha",
-  "angle",
-  "scale",
-  "font",
-}
+Text.COMMANDS = { "color", "scale", "font", "shake", "twitch", "wave" }
 
 --- Gets the class name
 --- @return string
@@ -47,8 +42,11 @@ end
 --- Sets the text's value
 --- @param value Dummy.Text.Text
 function Text:setText(value)
+  if self.text == value then return end
+
   self.text = value
   self.nodes = self:parseNodes(value)
+  self:updateNodes(0)
 end
 
 --- Gets the text's width
@@ -122,13 +120,12 @@ end
 --- @param line number
 --- @return number
 function Text:getLineWidth(line)
-  local state = {}
   local width = 0
   local current_line = 1
   for _, node in ipairs(self.nodes) do
     if node.type == "character" then
       if current_line == line then
-        local font = state.font or self.font
+        local font = self.state.font or self.font
         width = width + font:getWidth(node.character)
       elseif current_line > line then
         return width
@@ -138,7 +135,7 @@ function Text:getLineWidth(line)
         current_line = current_line + 1
       end
     elseif node.type == "command" then
-      state = self:applyNodeState(node, state)
+      self:processNode(node)
     end
   end
   return width
@@ -163,6 +160,15 @@ function Text:registerCommand(command, func)
   self.custom_commands[command] = func
 end
 
+--- Updates the text
+function Text:update(dt)
+  self.timer = self.timer + dt * 30
+
+  self.state.wave_direction = (self.state.wave_direction or 0) + ((self.state.wave_speed or 0) * dt * 30)
+
+  self:updateNodes(dt)
+end
+
 --- Draws the text
 function Text:draw()
   if not self:isVisible() then return end
@@ -176,38 +182,63 @@ function Text:draw()
       self:getWidth() + 1, self:getHeight() + 1)
   end
 
-  self:drawNodes()
+  love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
+  for _, node in ipairs(self.nodes) do
+    if node.type == "character" and node.state.text ~= nil then
+      local scale_x, scale_y = node.state.scale_x or 1, node.state.scale_y or 1
+      love.graphics.print(node.state.text or node.character, node.state.font or self.font, node.state.x, node.state.y, 0,
+        scale_x, scale_y)
+    end
+  end
 
   self:drawChildren()
 end
 
---- Draws a text node
-function Text:drawNodes()
-  if #self.nodes <= 0 then return end
-
-  love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
-
-  local state = {}
-  local origin_x, origin_y = self:getOrigin()
+--- Updates text nodes
+--- @param dt number
+function Text:updateNodes(dt)
   local line = 1
   local char_x, char_y = self:getCharOffset(line), 0
   local line_height = 0
+  local characters = 0
   for _, node in ipairs(self.nodes) do
     if node.type == "character" then
-      local color = state.color or self.color
-      local alpha = state.alpha or self.alpha
-      local text = { { color[1], color[2], color[3], alpha }, node.character }
-      local angle = state.angle or 0
-      local scale_x = state.scale_x or 1
-      local scale_y = state.scale_y or 1
-      local font = state.font or self.font
+      characters = characters + 1
+
+      local color = node.state.color or self.color
+      local alpha = (color[4] or 1) * self.alpha
+      node.state.text = { { color[1], color[2], color[3], alpha }, node.character }
+
+      local scale_x = node.state.scale_x or 1
+      local scale_y = node.state.scale_y or 1
+      local font = node.state.font or self.font
       local char_height = font:getHeight() * scale_y
       line_height = math.max(line_height, char_height)
       local line_diff = (line_height - char_height) / 2
 
-      local x = char_x - self:getWidth() * origin_x
-      local y = char_y - self:getHeight() * origin_y + line_diff
-      love.graphics.print(text, font, x, y, angle, scale_x, scale_y)
+      if node.state.shake ~= nil and node.state.shake > 0 and dt > 0 then
+        if node.state == nil then node.state = {} end
+        if self.timer - (node.state.last_shake or 0) >= dt * 30 then
+          node.state.last_shake = self.timer
+          node.state.offset_x = math.round(love.math.random() * (2 * node.state.shake) - node.state.shake)
+          node.state.offset_y = math.round(love.math.random() * (2 * node.state.shake) - node.state.shake)
+        end
+      end
+
+      if node.state.wave_distance ~= nil and node.state.wave_distance > 0 and dt > 0 then
+        local direction = (self.state.wave_direction or 0) + (node.state.wave_offset * characters)
+        local speed = node.state.wave_distance
+
+        local xspeed = math.cos(math.rad(-direction)) * speed
+        local yspeed = math.sin(math.rad(-direction)) * speed
+
+        node.state.offset_x = xspeed * 0.7
+        node.state.offset_y = yspeed * 0.7
+      end
+
+      local origin_x, origin_y = self:getOrigin()
+      node.state.x = char_x + (node.state.offset_x or 0) - self:getWidth() * origin_x
+      node.state.y = char_y + line_diff + (node.state.offset_y or 0) - self:getHeight() * origin_y
 
       char_x = char_x + font:getWidth(node.character) * scale_x
       if node.character == "\n" then
@@ -217,8 +248,6 @@ function Text:drawNodes()
         line_height = 0
       end
     elseif node.type == "command" then
-      state = self:applyNodeState(node, state)
-
       if not self.custom_commands_called[node] then
         local func = self.custom_commands[node.command]
         if type(func) == "function" then
@@ -248,36 +277,65 @@ end
 
 --- Applies the node state
 --- @param node Dummy.Text.Node
---- @param state table<string, any>
---- @return table<string, any>
-function Text:applyNodeState(node, state)
-  if node.type ~= "command" then return state end
+function Text:processNode(node)
+  if node.type ~= "command" then return end
 
-  if node.command == "reset" then
-    return {}
-  elseif node.command == "color" then
-    if #node.arguments == 3 then
+  if node.command == "color" then
+    if node.arguments[1] == "reset" then
+      self.state.color = nil
+    elseif #node.arguments == 3 or #node.arguments == 4 then
       local r = tonumber(node.arguments[1])
       local g = tonumber(node.arguments[2])
       local b = tonumber(node.arguments[3])
+      local a = tonumber(node.arguments[4]) or 1
       if r ~= nil and g ~= nil and b ~= nil then
-        state.color = { r, g, b }
+        self.state.color = {
+          math.clamp(r, 0, 1),
+          math.clamp(g, 0, 1),
+          math.clamp(b, 0, 1),
+          math.clamp(a, 0, 1)
+        }
       end
     end
-  elseif node.command == "alpha" then
-    state.alpha = tonumber(node.arguments[1])
-  elseif node.command == "angle" then
-    state.angle = tonumber(node.arguments[1])
   elseif node.command == "scale" then
-    local scale_x = tonumber(node.arguments[1])
-    local scale_y = tonumber(node.arguments[2])
-    state.scale_x = scale_x
-    state.scale_y = Utils.getOrDefault(scale_x, scale_y)
+    if node.arguments[1] == "reset" then
+      self.state.scale_x = nil
+      self.state.scale_y = nil
+    else
+      local scale_x = tonumber(node.arguments[1]) or 1
+      local scale_y = tonumber(node.arguments[2]) or scale_x
+      self.state.scale_x = scale_x
+      self.state.scale_y = scale_y
+    end
   elseif node.command == "font" then
-    state.font = Assets.getFont(node.arguments[1])
+    if node.arguments[1] == "reset" then
+      self.state.font = nil
+    else
+      self.state.font = Assets.getFont(node.arguments[1])
+    end
+  elseif node.command == "shake" then
+    if node.arguments[1] == "reset" then
+      self.state.shake = nil
+    else
+      self.state.shake = tonumber(node.arguments[1]) or 1
+    end
+  elseif node.command == "twitch" then
+    if node.arguments[1] == "reset" then
+      self.state.shake = nil
+    else
+      self.state.shake = 0.501
+    end
+  elseif node.command == "wave" then
+    if node.arguments[1] == "reset" then
+      self.state.wave_distance = 0
+      self.state.wave_offset = 0
+      self.state.wave_speed = 20
+    else
+      self.state.wave_distance = tonumber(node.arguments[1]) or 2
+      self.state.wave_offset = tonumber(node.arguments[2]) or 30
+      self.state.wave_speed = tonumber(node.arguments[3]) or 20
+    end
   end
-
-  return state
 end
 
 --- Parses the text nodes
@@ -286,7 +344,7 @@ end
 function Text:parseNodes(value)
   value = Lang.translate(value)
 
-  local state = {}
+  self.state = {}
   local nodes = {}
   local width = 0
   local line_width, line_height = 0, 0
@@ -294,23 +352,27 @@ function Text:parseNodes(value)
   local line_count = 1
   local length = UTF8.len(value)
   local command = nil
+  local escaping = false
   for i = 1, length do
     local char = UTF8.sub(value, i, i)
-    if char == "[" then
+    if char == "\\" then
+      escaping = true
+    elseif char == "[" and not escaping then
       command = ""
-    elseif char == "]" and command ~= nil then
+    elseif char == "]" and not escaping and command ~= nil then
       local node = self:parseCommand(command)
       if node ~= nil then
-        state = self:applyNodeState(node, state)
+        self:processNode(node)
         table.insert(nodes, node)
       end
       command = nil
     elseif command ~= nil then
       command = command .. char
     else
-      local font = state.font or self.font
-      local scale_x = state.scale_x or 1
-      local scale_y = state.scale_y or 1
+      escaping = false
+      local font = self.state.font or self.font
+      local scale_x = self.state.scale_x or 1
+      local scale_y = self.state.scale_y or 1
       line_width = line_width + font:getWidth(char) * scale_x
       width = math.max(width, line_width)
       line_height = math.max(line_height, font:getHeight() * scale_y)
@@ -322,7 +384,8 @@ function Text:parseNodes(value)
 
       table.insert(nodes, {
         type = "character",
-        character = char
+        character = char,
+        state = table.clone(self.state)
       })
     end
   end
@@ -344,6 +407,7 @@ function Text:new(value)
   text.font = love.graphics.getFont()
   text.max_width = Constants.SCREEN_WIDTH
   text.align = "left"
+  text.timer = 0
   text.custom_commands = {}
   text.custom_commands_called = {}
 
