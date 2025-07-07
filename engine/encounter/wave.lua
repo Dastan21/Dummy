@@ -8,7 +8,7 @@ local Wave = Class()
 
 --- Gets the class name
 --- @return string
-function Wave:getClass()
+function Wave.getClassName()
   return "Dummy.Wave"
 end
 

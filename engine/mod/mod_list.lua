@@ -128,8 +128,8 @@ end
 function ModList.isModValid(success, mod)
   if not success then return false end
   if type(mod) ~= "table" then return false end
-  if type(mod.getClass) ~= "function" then return false end
-  if mod:getClass() ~= "Dummy.Mod" then return false end
+  if type(mod.getClassName) ~= "function" then return false end
+  if mod.getClassName() ~= "Dummy.Mod" then return false end
 
   return true
 end

@@ -5,7 +5,7 @@ local ACT = Class()
 
 --- Gets the class name
 --- @return string
-function ACT:getClass()
+function ACT.getClassName()
   return "Dummy.ACT"
 end
 

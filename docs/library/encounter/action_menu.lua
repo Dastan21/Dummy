@@ -22,7 +22,7 @@ ActionMenu = {}
 
 --- Gets the class name
 --- @return string
-function ActionMenu:getClass() end
+function ActionMenu.getClassName() end
 
 --- Selects an option
 --- @param index_x number horizontal index

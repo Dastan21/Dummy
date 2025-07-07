@@ -27,7 +27,7 @@ Enemy = {}
 
 --- Gets the class name
 --- @return string
-function Enemy:getClass() end
+function Enemy.getClassName() end
 
 --- Gets the enemy's name
 --- @return string

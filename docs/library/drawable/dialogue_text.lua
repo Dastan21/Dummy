@@ -23,7 +23,7 @@ DialogueText = {}
 
 --- Gets the class name
 --- @return string
-function DialogueText:getClass() end
+function DialogueText.getClassName() end
 
 --- Sets the dialogue's text value
 --- @param value Dummy.Text.Text

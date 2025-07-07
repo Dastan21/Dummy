@@ -9,7 +9,7 @@ local Bullet = Class:extend(Sprite)
 
 --- Gets the class name
 --- @return string
-function Bullet:getClass()
+function Bullet.getClassName()
   return "Dummy.Bullet"
 end
 

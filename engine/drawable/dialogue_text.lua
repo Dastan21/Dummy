@@ -21,7 +21,7 @@ DialogueText.SILENT_CHARACTERS = { " ", "\n" }
 
 --- Gets the class name
 --- @return string
-function DialogueText:getClass()
+function DialogueText.getClassName()
   return "Dummy.DialogueText"
 end
 

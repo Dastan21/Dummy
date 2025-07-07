@@ -17,7 +17,7 @@ local Mod = Class()
 
 --- Gets the class name
 --- @return string
-function Mod:getClass()
+function Mod.getClassName()
   return "Dummy.Mod"
 end
 

@@ -58,7 +58,7 @@ Encounter.ACTIONS = {
 
 --- Gets the class name
 --- @return string
-function Encounter.getClass()
+function Encounter.getClassName()
   return "Dummy.Encounter"
 end
 

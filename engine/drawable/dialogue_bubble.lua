@@ -8,7 +8,7 @@ local DialogueBubble = Class:extend(Sprite)
 
 --- Gets the class name
 --- @return string
-function DialogueBubble:getClass()
+function DialogueBubble.getClassName()
   return "Dummy.DialogueBubble"
 end
 

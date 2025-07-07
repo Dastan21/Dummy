@@ -13,7 +13,7 @@ local Sprite = Class:extend(Drawable)
 
 --- Gets the class name
 --- @return string
-function Sprite:getClass()
+function Sprite.getClassName()
   return "Dummy.Sprite"
 end
 

@@ -16,7 +16,7 @@ DialogueBubble = {}
 
 --- Gets the class name
 --- @return string
-function DialogueBubble:getClass() end
+function DialogueBubble.getClassName() end
 
 --- Gets the dialogue bubble's dialogue text
 --- @return Dummy.DialogueText

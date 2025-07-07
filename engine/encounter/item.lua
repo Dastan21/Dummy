@@ -7,7 +7,7 @@ local Item = Class()
 
 --- Gets the class name
 --- @return string
-function Item:getClass()
+function Item.getClassName()
   return "Dummy.Item"
 end
 

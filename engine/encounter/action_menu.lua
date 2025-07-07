@@ -14,7 +14,7 @@ local ActionMenu = Class()
 
 --- Gets the class name
 --- @return string
-function ActionMenu:getClass()
+function ActionMenu.getClassName()
   return "Dummy.ActionMenu"
 end
 

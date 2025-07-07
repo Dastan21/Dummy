@@ -15,7 +15,7 @@ Item = {}
 
 --- Gets the class name
 --- @return string
-function Item:getClass() end
+function Item.getClassName() end
 
 --- Gets the item's name
 --- @return Dummy.Text.Text

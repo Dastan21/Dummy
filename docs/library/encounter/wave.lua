@@ -16,7 +16,7 @@ Wave = {}
 
 --- Gets the class name
 --- @return string
-function Wave:getClass() end
+function Wave.getClassName() end
 
 --- Gets the wave's elapsed time
 --- @return number

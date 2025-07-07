@@ -21,7 +21,7 @@ Sprite = {}
 
 --- Gets the class name
 --- @return string
-function Sprite:getClass() end
+function Sprite.getClassName() end
 
 --- Clears the cache
 function Sprite.clear() end

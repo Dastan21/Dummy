@@ -14,7 +14,7 @@ ItemEquipment = {}
 
 --- Gets the class name
 --- @return string
-function ItemEquipment:getClass() end
+function ItemEquipment.getClassName() end
 
 --- Gets the item's value
 --- @return number

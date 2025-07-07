@@ -17,7 +17,7 @@ Bullet = {}
 
 --- Gets the class name
 --- @return string
-function Bullet:getClass() end
+function Bullet.getClassName() end
 
 --- Gets the bullet's hitbox
 --- @return Dummy.Bullet.Hitbox

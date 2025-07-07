@@ -30,6 +30,12 @@ function Class:new(c, p)
   return o
 end
 
+--- Gets the class's name
+--- @return string
+function Class.getClassName()
+  return "Dummy.Class"
+end
+
 setmetatable(Class, { __call = function(_) return Class:extend() end })
 
 return Class

@@ -6,7 +6,7 @@ local ItemConsumable = Class:extend(Item)
 
 --- Gets the class name
 --- @return string
-function ItemConsumable:getClass()
+function ItemConsumable.getClassName()
   return "Dummy.Item.Consumable"
 end
 

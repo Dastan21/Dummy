@@ -27,7 +27,7 @@ MainMenu = {}
 
 --- Gets the class name
 --- @return string
-function MainMenu:getClass() end
+function MainMenu.getClassName() end
 
 --- Select a menu option
 --- @param index number options index

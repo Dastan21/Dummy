@@ -19,7 +19,7 @@ local MainMenu = Class()
 
 --- Gets the class name
 --- @return string
-function MainMenu:getClass()
+function MainMenu.getClassName()
   return "Dummy.MainMenu"
 end
 

@@ -14,7 +14,7 @@ ItemConsumable = {}
 
 --- Gets the class name
 --- @return string
-function ItemConsumable:getClass() end
+function ItemConsumable.getClassName() end
 
 --- Gets the item's heal amount
 --- @return number

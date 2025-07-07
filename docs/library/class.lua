@@ -24,3 +24,7 @@ function Class:extend(extend) end
 --- @return T
 function Class:new(c, p) end
 
+--- Gets the class's name
+--- @return string
+function Class.getClassName() end
+

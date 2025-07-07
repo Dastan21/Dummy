@@ -6,7 +6,7 @@ local ItemEquipment = Class:extend(Item)
 
 --- Gets the class name
 --- @return string
-function ItemEquipment:getClass()
+function ItemEquipment.getClassName()
   return "Dummy.Item.Equipment"
 end
 

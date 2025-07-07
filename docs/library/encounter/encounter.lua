@@ -54,7 +54,7 @@ Encounter = {}
 
 --- Gets the class name
 --- @return string
-function Encounter.getClass() end
+function Encounter.getClassName() end
 
 --- Gets the encounter's text
 --- @return Dummy.Text.Text

@@ -25,7 +25,7 @@ Mod = {}
 
 --- Gets the class name
 --- @return string
-function Mod:getClass() end
+function Mod.getClassName() end
 
 --- Gets the mod's id
 --- @return string

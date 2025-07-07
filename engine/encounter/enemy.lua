@@ -19,7 +19,7 @@ local Enemy = Class:extend(Sprite)
 
 --- Gets the class name
 --- @return string
-function Enemy:getClass()
+function Enemy.getClassName()
   return "Dummy.Enemy"
 end
 

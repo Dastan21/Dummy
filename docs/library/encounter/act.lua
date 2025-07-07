@@ -13,7 +13,7 @@ ACT = {}
 
 --- Gets the class name
 --- @return string
-function ACT:getClass() end
+function ACT.getClassName() end
 
 --- Gets the ACT's name
 --- @return Dummy.Text.Text
