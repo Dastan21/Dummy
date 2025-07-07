@@ -368,7 +368,9 @@ function Text:parseNodes(value)
     local char = UTF8.sub(value, i, i)
     if char == "\\" then
       escaping = true
-    elseif char == "[" and not escaping then
+    end
+
+    if char == "[" and not escaping then
       command = ""
     elseif char == "]" and not escaping and command ~= nil then
       local node = self:parseCommand(command)
