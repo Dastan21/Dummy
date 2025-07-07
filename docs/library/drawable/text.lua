@@ -16,7 +16,6 @@
 --- @field protected height number
 --- @field protected nodes Dummy.Text.Node[]
 --- @field protected timer number
---- @field protected dt number
 --- @field protected state table<string, any>
 --- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
 --- @field protected custom_commands_called table<Dummy.Text.Node, boolean>

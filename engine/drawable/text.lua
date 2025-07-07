@@ -25,7 +25,7 @@
 local Text = Class:extend(Drawable)
 
 --- Text commands
-Text.COMMANDS = { "color", "scale", "font", "shake", "twitch", "wave" }
+Text.COMMANDS = { "color", "scale", "font", "shake", "twitch", "wave", "spacing", "align" }
 
 --- Gets the class name
 --- @return string
@@ -164,7 +164,11 @@ end
 function Text:update(dt)
   self.timer = self.timer + dt * 30
 
-  self.state.wave_direction = (self.state.wave_direction or 0) + ((self.state.wave_speed or 0) * dt * 30)
+  for _, node in ipairs(self.nodes) do
+    if node.state ~= nil and (node.state.wave_speed or 0) > 0 then
+      node.state.wave_direction = (node.state.wave_direction or 0) + (node.state.wave_speed * dt * 30)
+    end
+  end
 
   self:updateNodes(dt)
 end
@@ -226,7 +230,7 @@ function Text:updateNodes(dt)
       end
 
       if node.state.wave_distance ~= nil and node.state.wave_distance > 0 and dt > 0 then
-        local direction = (self.state.wave_direction or 0) + (node.state.wave_offset * characters)
+        local direction = (node.state.wave_direction or 0) + (node.state.wave_offset * characters)
         local speed = node.state.wave_distance
 
         local xspeed = math.cos(math.rad(-direction)) * speed
@@ -313,6 +317,18 @@ function Text:processNode(node)
     else
       self.state.font = Assets.getFont(node.arguments[1])
     end
+  elseif node.command == "spacing" then
+    if node.arguments[1] == "reset" then
+      self.state.spacing = nil
+    else
+      self.state.spacing = tonumber(node.arguments[1]) or 0
+    end
+  elseif node.command == "align" then
+    if node.arguments[1] == "reset" then
+      self.state.align = nil
+    else
+      self.state.align = node.arguments[1]
+    end
   elseif node.command == "shake" then
     if node.arguments[1] == "reset" then
       self.state.shake = nil
@@ -327,9 +343,9 @@ function Text:processNode(node)
     end
   elseif node.command == "wave" then
     if node.arguments[1] == "reset" then
-      self.state.wave_distance = 0
-      self.state.wave_offset = 0
-      self.state.wave_speed = 20
+      self.state.wave_distance = nil
+      self.state.wave_offset = nil
+      self.state.wave_speed = nil
     else
       self.state.wave_distance = tonumber(node.arguments[1]) or 2
       self.state.wave_offset = tonumber(node.arguments[2]) or 30
