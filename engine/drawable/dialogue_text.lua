@@ -1,7 +1,10 @@
 --- @class Dummy.DialogueText : Dummy.Text
 ---
 --- @field protected text_value Dummy.Text.Text
+--- @field protected font love.Font
+--- @field protected max_width number
 --- @field protected nodes Dummy.Text.Node[]
+--- @field protected dialogue_timer number
 --- @field protected state table<string, any>
 --- @field protected total_nodes Dummy.Text.Node[]
 --- @field protected speed number
@@ -113,6 +116,21 @@ end
 --- @param voice string|nil
 function DialogueText:setVoice(voice)
   self.voice = voice
+end
+
+--- Sets the dialogue text's font
+--- @param font love.Font
+function DialogueText:setFont(font)
+  self.font = font
+  self:parseNodes(self.text_value)
+end
+
+--- Sets the dialogue text's max width
+--- @param max_width number
+function DialogueText:setMaxWidth(max_width)
+  self.max_width = max_width
+  self:parseNodes(self.text_value)
+  self:updateNodes(0)
 end
 
 local process_node = Text.processNode
