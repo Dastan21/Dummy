@@ -27,7 +27,6 @@ end
 
 --- Initializes the dialogue bubble
 function DialogueBubble:init()
-  -- TODO: all bubble types
   if self.type == "right" then
     self:setOrigin(0, 0.5)
     self.dialogue:setPosition(25, 5 - self:getHeight() / 2)
