@@ -25,11 +25,11 @@
 local Text = Class:extend(Drawable)
 
 --- Text commands
-Text.COMMANDS = { "color", "scale", "font", "shake", "twitch", "wave", "spacing", "align" }
+Text.COMMANDS = { "color", "scale", "font", "shake", "twitch", "wave", "spacing" }
 
 --- Gets the class name
 --- @return string
-function Text:getClass()
+function Text.getClassName()
   return "Dummy.Text"
 end
 
@@ -125,8 +125,9 @@ function Text:getLineWidth(line)
   for _, node in ipairs(self.nodes) do
     if node.type == "character" then
       if current_line == line then
-        local font = self.state.font or self.font
-        width = width + font:getWidth(node.character)
+        local font = node.state.font or self.font
+        local scale_x = node.state.scale_x or 1
+        width = width + font:getWidth(node.character) * scale_x + (self.state.spacing or 0)
       elseif current_line > line then
         return width
       end
@@ -145,9 +146,10 @@ end
 --- @param line number
 --- @return number
 function Text:getCharOffset(line)
-  if self.align == "right" then
+  local align = self.state.align or self.align
+  if align == "right" then
     return self:getWidth() - self:getLineWidth(line)
-  elseif self.align == "center" then
+  elseif align == "center" then
     return self:getWidth() / 2 - self:getLineWidth(line) / 2
   end
   return 0
@@ -162,6 +164,8 @@ end
 
 --- Updates the text
 function Text:update(dt)
+  if not self:isVisible() then return end
+
   self.timer = self.timer + dt * 30
 
   for _, node in ipairs(self.nodes) do
@@ -213,6 +217,7 @@ function Text:updateNodes(dt)
       local alpha = (color[4] or 1) * self.alpha
       node.state.text = { { color[1], color[2], color[3], alpha }, node.character }
 
+      local spacing = node.state.spacing or 0
       local scale_x = node.state.scale_x or 1
       local scale_y = node.state.scale_y or 1
       local font = node.state.font or self.font
@@ -231,24 +236,20 @@ function Text:updateNodes(dt)
 
       if node.state.wave_distance ~= nil and node.state.wave_distance > 0 and dt > 0 then
         local direction = (node.state.wave_direction or 0) + (node.state.wave_offset * characters)
-        local speed = node.state.wave_distance
 
-        local xspeed = math.cos(math.rad(-direction)) * speed
-        local yspeed = math.sin(math.rad(-direction)) * speed
-
-        node.state.offset_x = xspeed * 0.7
-        node.state.offset_y = yspeed * 0.7
+        node.state.offset_x = math.cos(math.rad(-direction)) * node.state.wave_distance * 0.7
+        node.state.offset_y = math.sin(math.rad(-direction)) * node.state.wave_distance * 0.7
       end
 
       local origin_x, origin_y = self:getOrigin()
       node.state.x = char_x + (node.state.offset_x or 0) - self:getWidth() * origin_x
       node.state.y = char_y + line_diff + (node.state.offset_y or 0) - self:getHeight() * origin_y
 
-      char_x = char_x + font:getWidth(node.character) * scale_x
+      char_x = char_x + font:getWidth(node.character) * scale_x + spacing
       if node.character == "\n" then
         line = line + 1
         char_x = self:getCharOffset(line)
-        char_y = char_y + char_height
+        char_y = char_y + line_height
         line_height = 0
       end
     elseif node.type == "command" then
@@ -323,12 +324,6 @@ function Text:processNode(node)
     else
       self.state.spacing = tonumber(node.arguments[1]) or 0
     end
-  elseif node.command == "align" then
-    if node.arguments[1] == "reset" then
-      self.state.align = nil
-    else
-      self.state.align = node.arguments[1]
-    end
   elseif node.command == "shake" then
     if node.arguments[1] == "reset" then
       self.state.shake = nil
@@ -389,7 +384,8 @@ function Text:parseNodes(value)
       local font = self.state.font or self.font
       local scale_x = self.state.scale_x or 1
       local scale_y = self.state.scale_y or 1
-      line_width = line_width + font:getWidth(char) * scale_x
+      local spacing = self.state.spacing or 0
+      line_width = line_width + font:getWidth(char) * scale_x + spacing
       width = math.max(width, line_width)
       line_height = math.max(line_height, font:getHeight() * scale_y)
       lines_heights[line_count] = line_height

@@ -34,7 +34,7 @@ Text = {}
 
 --- Gets the class name
 --- @return string
-function Text:getClass() end
+function Text.getClassName() end
 
 --- Gets the text's value
 --- @return Dummy.Text.Text
