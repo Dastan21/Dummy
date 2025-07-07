@@ -101,17 +101,20 @@ end
 --- @param a number alpha
 function Drawable:setColor(r, g, b, a)
   if type(r) == "table" then
-    self.color = r
-  else
-    self.color = {
-      math.clamp(r, 0, 1),
-      math.clamp(g, 0, 1),
-      math.clamp(b, 0, 1)
-    }
+    a = r[4]
+    b = r[3]
+    g = r[2]
+    r = r[1]
   end
 
+  self.color = {
+    math.clamp(r, 0, 1),
+    math.clamp(g, 0, 1),
+    math.clamp(b, 0, 1)
+  }
+
   if a ~= nil then
-    self.alpha = math.clamp(a, 0, 1)
+    self:setAlpha(a)
   end
 end
 
