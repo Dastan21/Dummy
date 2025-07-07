@@ -405,6 +405,7 @@ function Text:parseNodes(value)
   self.width = width
   self.height = math.sum(table.unpack(lines_heights))
   self.custom_commands_called = {}
+  self.state = {}
 
   return nodes
 end
