@@ -83,7 +83,6 @@ function love.load()
   if Constants.DEBUG then love.audio.setVolume(0) end
 
   love.filesystem.createDirectory("mods")
-  love.filesystem.createDirectory("saves")
   love.filesystem.createDirectory("screenshots")
 
   love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
