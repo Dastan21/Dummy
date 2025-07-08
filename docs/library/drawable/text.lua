@@ -41,8 +41,9 @@ function Text.getClassName() end
 function Text:getText() end
 
 --- Sets the text's value
---- @param value Dummy.Text.Text
-function Text:setText(value) end
+--- @param value Dummy.Text.Text text value
+--- @param force? boolean wether to force the text to be updated
+function Text:setText(value, force) end
 
 --- Gets the text's width
 --- @return number

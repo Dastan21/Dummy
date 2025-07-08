@@ -65,7 +65,7 @@ end
 function MainMenu:show()
   for i, option in ipairs(self.options) do
     option.text:setVisible((i - 1) < MAX_DISPLAYED_OPTIONS)
-    option.text:setText(option.text:getText())
+    option.text:setText(option.text:getText(), true)
   end
 
   local has_pagination = #self.options > MAX_DISPLAYED_OPTIONS

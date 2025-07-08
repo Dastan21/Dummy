@@ -40,9 +40,11 @@ function Text:getText()
 end
 
 --- Sets the text's value
---- @param value Dummy.Text.Text
-function Text:setText(value)
-  if self.text == value then return end
+--- @param value Dummy.Text.Text text value
+--- @param force? boolean wether to force the text to be updated
+function Text:setText(value, force)
+  print(self.text == value, force, value)
+  if self.text == value and not force then return end
 
   self.text = value
   self.nodes = self:parseNodes(value)
