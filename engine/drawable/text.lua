@@ -43,7 +43,6 @@ end
 --- @param value Dummy.Text.Text text value
 --- @param force? boolean wether to force the text to be updated
 function Text:setText(value, force)
-  print(self.text == value, force, value)
   if self.text == value and not force then return end
 
   self.text = value
