@@ -8,7 +8,8 @@
 
 --- @class Dummy.Text : Dummy.Drawable
 ---
---- @field protected text Dummy.Text.Text
+--- @field protected text love.Text
+--- @field protected value Dummy.Text.Text
 --- @field protected font love.Font
 --- @field protected max_width number
 --- @field protected align Dummy.Text.Align
@@ -84,6 +85,13 @@ function Text:getAlign() end
 --- Sets the text's align
 --- @param align Dummy.Text.Align
 function Text:setAlign(align) end
+
+--- Gets the formatted text's value
+--- @param value Dummy.Text.Text
+--- @param color love.Color
+--- @param alpha? number
+--- @return [ love.Color, string ]
+function Text.getFormattedValue(value, color, alpha) end
 
 --- Gets the text's nodes
 --- @return Dummy.Text.Node[]

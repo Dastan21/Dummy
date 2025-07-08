@@ -11,7 +11,8 @@
 
 --- @class Dummy.Text : Dummy.Drawable
 ---
---- @field protected text Dummy.Text.Text
+--- @field protected text love.Text
+--- @field protected value Dummy.Text.Text
 --- @field protected font love.Font
 --- @field protected max_width number
 --- @field protected align Dummy.Text.Align
@@ -36,18 +37,32 @@ end
 --- Gets the text's value
 --- @return Dummy.Text.Text
 function Text:getText()
-  return self.text
+  return self.value
 end
 
 --- Sets the text's value
 --- @param value Dummy.Text.Text text value
 --- @param force? boolean wether to force the text to be updated
 function Text:setText(value, force)
-  if self.text == value and not force then return end
+  if self.value == value and not force then return end
 
-  self.text = value
-  self.nodes = self:parseNodes(value)
-  self:updateNodes(0)
+  -- text has no command
+  if Lang.translate(value):find("%b[]") == nil then
+    self.value = value
+    self.nodes = {}
+
+    if self.text == nil then
+      self.text = love.graphics.newText(self.font, "")
+    end
+    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), self.max_width, self.align)
+    self.width = self.text:getWidth()
+    self.height = self.text:getHeight()
+  else
+    self.value = value
+    self.text = nil
+    self.nodes = self:parseNodes(value)
+    self:updateNodes(0)
+  end
 end
 
 --- Gets the text's width
@@ -82,7 +97,14 @@ end
 --- @param font love.Font
 function Text:setFont(font)
   self.font = font
-  self.nodes = self:parseNodes(self.text)
+
+  if self.text ~= nil then
+    self.text:setFont(font)
+    self.width = self.text:getWidth()
+    self.height = self.text:getHeight()
+  else
+    self.nodes = self:parseNodes(self.value)
+  end
 end
 
 --- Gets the text's max width
@@ -95,7 +117,10 @@ end
 --- @param max_width number
 function Text:setMaxWidth(max_width)
   self.max_width = max_width
-  self.nodes = self:parseNodes(self.text)
+
+  if self.text == nil then
+    self.nodes = self:parseNodes(self.value)
+  end
 end
 
 --- Gets the text's align
@@ -108,6 +133,21 @@ end
 --- @param align Dummy.Text.Align
 function Text:setAlign(align)
   self.align = align
+
+  if self.text ~= nil then
+    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), self.max_width, self.align)
+    self.width = self.text:getWidth()
+    self.height = self.text:getHeight()
+  end
+end
+
+--- Gets the formatted text's value
+--- @param value Dummy.Text.Text
+--- @param color love.Color
+--- @param alpha? number
+--- @return [ love.Color, string ]
+function Text.getFormattedValue(value, color, alpha)
+  return { { color[1], color[2], color[3], color[4] or alpha or 1 }, Lang.translate(value) }
 end
 
 --- Gets the text's nodes
@@ -164,7 +204,7 @@ end
 
 --- Updates the text
 function Text:update(dt)
-  if not self:isVisible() then return end
+  if not self:isVisible() or self.text ~= nil then return end
 
   self.timer = self.timer + dt * 30
 
@@ -172,6 +212,10 @@ function Text:update(dt)
     if node.state ~= nil and (node.state.wave_speed or 0) > 0 then
       node.state.wave_direction = (node.state.wave_direction or 0) + (node.state.wave_speed * dt * 30)
     end
+  end
+
+  if dt > 0 then
+    print(love.timer.getDelta(), love.timer.getAverageDelta(), love.timer.getTime())
   end
 
   self:updateNodes(dt)
@@ -183,19 +227,24 @@ function Text:draw()
 
   love.graphics.applyTransform(self:getTransform())
 
+  local origin_x, origin_y = self:getOrigin()
   if Debugger.shouldDisplayHitbox() then
     love.graphics.setColor(0, 0, 1, 1)
-    local origin_x, origin_y = self:getOrigin()
     love.graphics.rectangle("line", -0.5 - self:getWidth() * origin_x, -0.5 - self:getHeight() * origin_y,
       self:getWidth() + 1, self:getHeight() + 1)
   end
 
   love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
-  for _, node in ipairs(self.nodes) do
-    if node.type == "character" and node.state.text ~= nil then
-      local scale_x, scale_y = node.state.scale_x or 1, node.state.scale_y or 1
-      love.graphics.print(node.state.text or node.character, node.state.font or self.font, node.state.x, node.state.y, 0,
-        scale_x, scale_y)
+  if self.text ~= nil then
+    love.graphics.draw(self.text, -self:getWidth() * origin_x, -self:getHeight() * origin_y)
+  else
+    for _, node in ipairs(self.nodes) do
+      if node.type == "character" and node.state.text ~= nil then
+        local scale_x, scale_y = node.state.scale_x or 1, node.state.scale_y or 1
+        love.graphics.print(node.state.text or node.character, node.state.font or self.font, node.state.x, node.state.y,
+          0,
+          scale_x, scale_y)
+      end
     end
   end
 
@@ -215,7 +264,7 @@ function Text:updateNodes(dt)
 
       local color = node.state.color or self.color
       local alpha = (color[4] or 1) * self.alpha
-      node.state.text = { { color[1], color[2], color[3], alpha }, node.character }
+      node.state.text = Text.getFormattedValue(node.character, color, alpha)
 
       local spacing = node.state.spacing or 0
       local scale_x = node.state.scale_x or 1
@@ -292,14 +341,21 @@ function Text:processNode(node)
       local r = tonumber(node.arguments[1])
       local g = tonumber(node.arguments[2])
       local b = tonumber(node.arguments[3])
-      local a = tonumber(node.arguments[4]) or 1
       if r ~= nil and g ~= nil and b ~= nil then
         self.state.color = {
           math.clamp(r, 0, 1),
           math.clamp(g, 0, 1),
-          math.clamp(b, 0, 1),
-          math.clamp(a, 0, 1)
+          math.clamp(b, 0, 1)
         }
+      end
+    end
+  elseif node.command == "alpha" then
+    if node.arguments[1] == "reset" then
+      self.state.alpha = nil
+    else
+      local alpha = tonumber(node.arguments[1])
+      if alpha ~= nil then
+        self.state.alpha = math.clamp(alpha, 0, 1)
       end
     end
   elseif node.command == "scale" then
