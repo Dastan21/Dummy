@@ -214,10 +214,6 @@ function Text:update(dt)
     end
   end
 
-  if dt > 0 then
-    print(love.timer.getDelta(), love.timer.getAverageDelta(), love.timer.getTime())
-  end
-
   self:updateNodes(dt)
 end
 
