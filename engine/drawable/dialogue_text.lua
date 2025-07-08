@@ -131,13 +131,12 @@ function DialogueText:setMaxWidth(max_width)
   self:updateNodes(0)
 end
 
-local process_node = Text.processNode
 --- Applies the node state
 --- @param node Dummy.Text.Node
 function DialogueText:processNode(node)
   if node.type ~= "command" then return end
 
-  process_node(self, node)
+  Text.processNode(self, node)
 
   self.state.wait = nil
   if node.command == "wait" then
@@ -174,12 +173,11 @@ function DialogueText:processNode(node)
   node.state = table.merge(table.clone(self.state), node.state or {})
 end
 
-local parse_command = Text.parseCommand
 --- Parses the dialogue text command
 --- @param text string
 --- @return Dummy.Text.Node|nil
 function DialogueText:parseCommand(text)
-  local node = parse_command(self, text)
+  local node = Text.parseCommand(self, text)
   if node ~= nil then return node end
 
   local split = text:split(":")
@@ -194,21 +192,19 @@ function DialogueText:parseCommand(text)
   }
 end
 
-local parse_nodes = Text.parseNodes
 --- Parses the dialogue text nodes
 --- @param value Dummy.Text.Text
 --- @return Dummy.Text.Node[]
 function DialogueText:parseNodes(value)
   self.state = {}
-  self.total_nodes = parse_nodes(self, value)
+  self.total_nodes = Text.parseNodes(self, value)
   return {}
 end
 
-local text_update = Text.update
 --- Updates the dialogue
 --- @param dt number
 function DialogueText:update(dt)
-  text_update(self, dt)
+  Text.update(self, dt)
 
   if self:isDone() or not self:isVisible() then return end
 

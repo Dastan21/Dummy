@@ -61,7 +61,6 @@ function Text:getHeight()
   return self.height
 end
 
-local set_color = Text.setColor
 --- Sets the text's color
 --- @overload fun(self: Dummy.Text, color: love.Color)
 --- @param r number red
@@ -69,7 +68,7 @@ local set_color = Text.setColor
 --- @param b number blue
 --- @param a number alpha
 function Text:setColor(r, g, b, a)
-  set_color(self, r, g, b, a)
+  Drawable.setColor(self, r, g, b, a)
 end
 
 --- Gets the text's font

@@ -37,11 +37,10 @@ function Bullet:setDamage(damage)
   self.damage = damage
 end
 
-local set_sprite = Bullet.setSprite
 --- Sets the bullet's sprite
 --- @param sprite_name string
 function Bullet:setSprite(sprite_name)
-  set_sprite(self, sprite_name)
+  Sprite.setSprite(self, sprite_name)
   self:setHitboxFromSprite()
 end
 
