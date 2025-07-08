@@ -35,7 +35,8 @@ function ModList.load()
     local mod_dir_info = love.filesystem.getInfo("mods/" .. mod_dir)
     local is_folder = mod_dir_info.type == "directory"
     local is_zip = mod_dir_info.type == "file" and Utils.checkExtension(mod_dir, "zip")
-    if is_folder or is_zip then
+    local ignore = mod_dir:sub(1, 1) == "#"
+    if not ignore and (is_folder or is_zip) then
       if is_zip then
         local mod_name = mod_dir:sub(1, #mod_dir - 4)
         love.filesystem.mount("mods/" .. mod_dir, "mods/" .. mod_name)
