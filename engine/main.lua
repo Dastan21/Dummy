@@ -122,7 +122,7 @@ end
 local function update(dt)
   engine.time = engine.time + (1 / Config["fps"])
 
-  dt = Debugger.update(dt)
+  dt = Debugger.update(dt or love.timer.getDelta())
 
   Input.update()
   Scene.update(dt)

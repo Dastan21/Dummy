@@ -37,17 +37,22 @@ function Sprite.loadSprite(sprite_path)
   local image = cache_image[sprite_full_path]
   if image ~= nil then return image end
 
-  local success, image_data
+  local success
 
   -- try to get image data from cache
-  image_data = cache_image_data[sprite_full_path]
+  local image_data = cache_image_data[sprite_full_path]
   if image_data == nil then
-    success, image_data = pcall(love.image.newImageData, sprite_full_path)
+    if love.filesystem.getInfo(sprite_full_path) ~= nil then
+      success, image_data = pcall(love.image.newImageData, sprite_full_path)
+    end
 
     -- if sprite is not available in the current language, get it from the sprites root folder
     if not success then
       sprite_full_path = "assets/sprites/" .. sprite_path .. ".png"
-      success, image_data = pcall(love.image.newImageData, sprite_full_path)
+      if love.filesystem.getInfo(sprite_full_path) ~= nil then
+        success, image_data = pcall(love.image.newImageData, sprite_full_path)
+      end
+
       assert(success, "Sprite \"" .. sprite_path .. "\" not found : " .. tostring(image_data))
     end
 
