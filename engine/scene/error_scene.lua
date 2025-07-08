@@ -56,7 +56,9 @@ function error.load(err)
 
   local mod = ModList.getCurrentMod()
   if mod ~= nil then
-    error.mod_info = Lang.translate({ "ERROR_MOD_INFO", mod:getName() .. " v" .. mod:getVersion() })
+    local mod_version = mod:getVersion()
+    mod_version = mod_version ~= nil and " v" .. mod_version or ""
+    error.mod_info = Lang.translate({ "ERROR_MOD_INFO", mod:getName() .. mod_version })
     error.mod_info_text = Text:new(error.mod_info)
     error.mod_info_text:setPosition(Constants.SCREEN_WIDTH - MARGIN_INFO, Constants.SCREEN_HEIGHT - 20 - MARGIN_INFO)
     error.mod_info_text:setOrigin(1, 1)
@@ -81,7 +83,7 @@ function error.update(dt)
   end
 
   if Input.isDown("ctrl") and Input.isPressed("c") then
-    love.system.setClipboardText(error.traceback .. "\n\n" .. error.engine_info .. "\n" .. error.mod_info)
+    love.system.setClipboardText(error.traceback .. "\n\n" .. error.mod_info .. "\n" .. error.engine_info)
     error.copied_timer = error.copied_delay
   end
 

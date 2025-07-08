@@ -76,7 +76,7 @@ function Mod:new(data)
 
   mod.name = data.name
   mod.title = Utils.getOrDefault(data.title, data.name)
-  mod.version = Utils.getOrDefault(data.version, "???")
+  mod.version = data.version
   mod.standalone = Utils.getOrDefault(data.standalone, false)
 
   return mod
