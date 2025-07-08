@@ -80,8 +80,15 @@ end
 --- @param dt number
 --- @return number
 function Debugger.update(dt)
+  if Debugger.paused and not (Input.isPressed("kp+") or (Input.isDown("ctrl") and Input.isDown("kp+"))) then
+    dt = 0
+  end
+
   Debugger.fps_text:setText(tostring(love.timer.getFPS()))
-  Debugger.log_text:setText(table.concat(Debugger.logs or {}, "\n"))
+
+  local max_lines = math.ceil((Constants.SCREEN_HEIGHT - Debugger.margin) / Debugger.log_text:getFont():getHeight())
+  local logs = table.slice(Debugger.logs, #Debugger.logs - max_lines, #Debugger.logs)
+  Debugger.log_text:setText(table.concat(logs, "\n"))
 
   if Input.isPressed("f6") then
     Debugger.fps_text:setVisible(not Debugger.fps_text:isVisible())
@@ -109,31 +116,34 @@ function Debugger.update(dt)
     end
   elseif Input.isDown("ctrl") and Input.isPressed("p") then
     Debugger.paused = not Debugger.paused
-  elseif Debugger.paused and (Input.isPressed("kp+") or (Input.isDown("ctrl") and Input.isDown("kp+"))) then
-    return dt
   end
-
-  if Debugger.paused then return 0 end
 
   return dt
 end
 
--- local _print = print
--- function print(...)
---   local t = {}
---   for _, v in pairs({ ... }) do
---     table.insert(t, tostring(v))
---   end
+local _print = print
+---
+---Receives any number of arguments and prints their values to `stdout`, converting each argument to a string following the same rules of [tostring](command:extension.lua.doc?["en-us/54/manual.html/pdf-tostring"]).
+---The function print is not intended for formatted output, but only as a quick way to show a value, for instance for debugging. For complete control over the output, use [string.format](command:extension.lua.doc?["en-us/54/manual.html/pdf-string.format"]) and [io.write](command:extension.lua.doc?["en-us/54/manual.html/pdf-io.write"]).
+---
+---
+---[View documents](command:extension.lua.doc?["en-us/54/manual.html/pdf-print"])
+---
+---@param ... any
+function print(...)
+  local t = {}
+  for _, v in pairs({ ... }) do
+    table.insert(t, tostring(v))
+  end
 
---   if Debugger.logs ~= nil then
---     local _, w = Debugger.log_text:getFont():getWrap(table.concat(t, "	"), (600 / Debugger.scale) - (Debugger.margin * 2))
---     local len = #Debugger.logs
---     for i, s in ipairs(w) do
---       Debugger.logs[len + i] = (i == 1 and "> " or "  ") .. s
---     end
---   end
+  local _, w = Debugger.log_text:getFont():getWrap(table.concat(t, "	"),
+    (Constants.SCREEN_WIDTH / Debugger.scale) - (Debugger.margin * 2))
+  local len = #Debugger.logs
+  for i, s in ipairs(w) do
+    Debugger.logs[len + i] = (i == 1 and "> " or "  ") .. s
+  end
 
---   return _print(...)
--- end
+  return _print(...)
+end
 
 return Debugger
