@@ -8,7 +8,6 @@
 
 --- @class Dummy.Scene.MainMenu : Dummy.Scene.Scene
 ---
---- @field protected mod_list Dummy.ModList
 --- @field protected options Dummy.Menu.Options
 --- @field protected current_menu Dummy.MainMenu
 --- @field protected logo_sprite Dummy.Sprite

@@ -13,9 +13,8 @@ function encounter.load(mod)
   encounter.previous_state = Encounter.getCurrentState()
 
   encounter.mod = mod
-  local mod_list = require "mod.mod_list"
-  mod_list.loadMod(mod)
-  mod_list.setWindowTitleAndIcon(mod:getTitle())
+  ModList.loadMod(mod)
+  ModList.setWindowTitleAndIcon(mod:getTitle())
 
   Encounter.updatePlayerUI()
 end

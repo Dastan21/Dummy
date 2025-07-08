@@ -1,6 +1,5 @@
 --- @class Dummy.Scene.MainMenu : Dummy.Scene.Scene
 ---
---- @field protected mod_list Dummy.ModList
 --- @field protected options Dummy.Menu.Options
 --- @field protected current_menu Dummy.MainMenu
 --- @field protected logo_sprite Dummy.Sprite
@@ -12,12 +11,11 @@ local main_menu = {}
 --- Loads the main menu
 function main_menu.load()
   Fader.reset()
-  main_menu.mod_list = require "mod.mod_list"
-  main_menu.mod_list.load()
+  ModList.load()
 
-  local standalone = main_menu.mod_list.getStandalone()
+  local standalone = ModList.getStandalone()
   if standalone ~= nil then
-    main_menu.mod_list.mountMod(standalone)
+    ModList.mountMod(standalone)
     if type(standalone.preview) == "function" then
       standalone:preview()
     end
@@ -57,13 +55,13 @@ function main_menu.loadMainMenu()
   --- @type Dummy.Menu.Options
   local options = {}
 
-  local standalone = main_menu.mod_list.getStandalone()
+  local standalone = ModList.getStandalone()
   if not standalone then
     table.insert(options, {
       text = Text:new("MAIN_MENU_PLAY"),
       action = function()
         main_menu.loadModListMenu()
-        main_menu.changeMenu(main_menu.mod_list_menu)
+        main_menu.changeMenu(ModList_menu)
       end
     })
 
@@ -74,7 +72,7 @@ function main_menu.loadMainMenu()
       end
     })
 
-    main_menu.mod_list.setWindowTitleAndIcon(Constants.CREDITS.NAME)
+    ModList.setWindowTitleAndIcon(Constants.CREDITS.NAME)
   else
     table.insert(options, {
       text = Text:new("MAIN_MENU_PLAY"),
@@ -83,7 +81,7 @@ function main_menu.loadMainMenu()
       end
     })
 
-    main_menu.mod_list.setWindowTitleAndIcon(standalone:getTitle())
+    ModList.setWindowTitleAndIcon(standalone:getTitle())
   end
 
   table.insert(options, {
@@ -151,13 +149,13 @@ end
 
 --- Loads mod list menu
 function main_menu.loadModListMenu()
-  main_menu.mod_list.load()
+  ModList.load()
 
   --- @type Dummy.Menu.Options
   local options = {}
 
-  if #main_menu.mod_list.getMods() > 0 then
-    for _, mod in ipairs(main_menu.mod_list.getMods()) do
+  if #ModList.getMods() > 0 then
+    for _, mod in ipairs(ModList.getMods()) do
       table.insert(options, {
         text = Text:new(mod:getName()),
         action = function()
@@ -172,10 +170,10 @@ function main_menu.loadModListMenu()
     })
   end
 
-  if main_menu.mod_list_menu ~= nil then
-    main_menu.mod_list_menu:setOptions(options)
+  if ModList_menu ~= nil then
+    ModList_menu:setOptions(options)
   else
-    main_menu.mod_list_menu = MainMenu:new(options, function()
+    ModList_menu = MainMenu:new(options, function()
       main_menu.changeMenu(main_menu.main_menu)
     end)
   end
