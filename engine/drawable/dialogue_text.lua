@@ -68,12 +68,10 @@ end
 
 --- Skips the dialogue's
 function DialogueText:skip()
-  if self:isDone() or not self.can_skip then return end
+  if self:isDone() or not self.can_skip or self.state.noskip == true then return end
 
-  if self.state.noskip ~= true then
-    self.force_skip = true
-    self.skipping = true
-  end
+  self.force_skip = true
+  self.skipping = true
 end
 
 --- Wether the dialogue's can be confirmed
@@ -237,8 +235,9 @@ function DialogueText:update(dt)
         self.dialogue_timer = self.text_index
       end
 
-      self.state.speed = node.state.speed
       self.wait = node.state.wait or self.wait
+      self.state.speed = node.state.speed
+      self.state.noskip = node.state.noskip
 
       if (node.command == "wait" or node.command == "speed") and not self.skipping then
         self.dialogue_timer = self.text_index
