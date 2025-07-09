@@ -283,7 +283,7 @@ function DialogueText:new(value, ...)
   dialogue_text.speed = 1
   dialogue_text.voice = "voice_text"
 
-  dialogue_text:setText(value)
+  dialogue_text:setText(value, ...)
 
   return dialogue_text
 end

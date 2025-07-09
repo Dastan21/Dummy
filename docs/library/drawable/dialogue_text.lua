@@ -17,7 +17,6 @@
 --- @field protected state table<string, any>
 --- @field protected total_nodes Dummy.Text.Node[]
 --- @field protected speed number
---- @field protected is_done boolean
 --- @field protected text_value_index number
 --- @field protected text_index number
 --- @field protected voice string|nil
