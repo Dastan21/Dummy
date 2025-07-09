@@ -65,12 +65,14 @@ function main_menu.loadMainMenu()
       end
     })
 
-    table.insert(options, {
-      text = Text:new("MAIN_MENU_OPEN_MOD_FOLDER"),
-      action = function()
-        love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/mods")
-      end
-    })
+    if love.system.getOS() ~= "Web" then
+      table.insert(options, {
+        text = Text:new("MAIN_MENU_OPEN_MOD_FOLDER"),
+        action = function()
+          love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/mods")
+        end
+      })
+    end
 
     ModList.setWindowTitleAndIcon(Constants.CREDITS.NAME)
   else
