@@ -236,6 +236,7 @@ function Encounter.load()
   Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
   Encounter.dialogue_text:setMaxWidth(Constants.ARENA.TEXTBOX_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
   Encounter.dialogue_text:setCanSkip(true)
+  Encounter.dialogue_text:setVisible(false)
 
   Encounter.bubble_dialogues = {}
 
@@ -1159,7 +1160,6 @@ function Encounter.update(dt)
     Encounter.updateDefending(dt)
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.DONE then
     Scene.change("MAIN_MENU")
-  elseif Encounter.current_state == Constants.ENCOUNTER_STATES.NONE then
   end
 
   if Player.getHP() <= 0 then
