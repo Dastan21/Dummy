@@ -2,6 +2,7 @@
 ---
 --- @field protected options Dummy.Menu.Options
 --- @field protected current_menu Dummy.MainMenu
+--- @field protected mod_list_menu Dummy.MainMenu
 --- @field protected logo_sprite Dummy.Sprite
 --- @field protected credits_text Dummy.Text
 --- @field protected background_sprite Dummy.Sprite
@@ -61,7 +62,7 @@ function main_menu.loadMainMenu()
       text = Text:new("MAIN_MENU_PLAY"),
       action = function()
         main_menu.loadModListMenu()
-        main_menu.changeMenu(ModList_menu)
+        main_menu.changeMenu(main_menu.mod_list_menu)
       end
     })
 
@@ -174,10 +175,11 @@ function main_menu.loadModListMenu()
     })
   end
 
-  if ModList_menu ~= nil then
-    ModList_menu:setOptions(options)
+  if main_menu.mod_list_menu ~= nil then
+    main_menu.mod_list_menu:setOptions(options)
+    main_menu.mod_list_menu:select(1, true)
   else
-    ModList_menu = MainMenu:new(options, function()
+    main_menu.mod_list_menu = MainMenu:new(options, function()
       main_menu.changeMenu(main_menu.main_menu)
     end)
   end

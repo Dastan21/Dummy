@@ -10,6 +10,7 @@
 ---
 --- @field protected options Dummy.Menu.Options
 --- @field protected current_menu Dummy.MainMenu
+--- @field protected mod_list_menu Dummy.MainMenu
 --- @field protected logo_sprite Dummy.Sprite
 --- @field protected credits_text Dummy.Text
 --- @field protected background_sprite Dummy.Sprite
