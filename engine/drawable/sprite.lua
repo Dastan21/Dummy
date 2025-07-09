@@ -300,7 +300,7 @@ function Sprite:vaporize(type, size)
           particle["vel_x"] = (love.math.random() * 4 - 2) * 30
           particle["acc_y"] = -(love.math.random() * 0.5 + 0.2) * 30 * 5
           particle["vel_y"] = particle["acc_y"]
-          particle["alpha"] = 1
+          particle["alpha"] = 1.2
           particle["width"] = size
           particles[particle] = true
         end
