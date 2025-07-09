@@ -171,6 +171,8 @@ end
 function love.quit()
   saveConfig()
   Debugger.saveLogs()
+
+  return love.system.getOS() == "Web"
 end
 
 local function error_handler(err)

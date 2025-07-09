@@ -91,12 +91,14 @@ function main_menu.loadMainMenu()
     end
   })
 
-  table.insert(options, {
-    text = Text:new("MAIN_MENU_QUIT"),
-    action = function()
-      love.event.quit()
-    end
-  })
+  if love.system.getOS() ~= "Web" then
+    table.insert(options, {
+      text = Text:new("MAIN_MENU_QUIT"),
+      action = function()
+        love.event.quit()
+      end
+    })
+  end
 
   main_menu.main_menu = MainMenu:new(options)
 end
