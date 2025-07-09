@@ -46,6 +46,9 @@ function Text:getText() end
 --- @param force? boolean wether to force the text to be updated
 function Text:setText(value, force) end
 
+--- Updates the text
+function Text:updateText() end
+
 --- Gets the text's width
 --- @return number
 function Text:getWidth() end

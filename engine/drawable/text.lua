@@ -54,7 +54,7 @@ function Text:setText(value, force)
     if self.text == nil then
       self.text = love.graphics.newText(self.font, "")
     end
-    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), self.max_width, self.align)
+    self:updateText()
     self.width = self.text:getWidth()
     self.height = self.text:getHeight()
   else
@@ -62,6 +62,13 @@ function Text:setText(value, force)
     self.text = nil
     self.nodes = self:parseNodes(value)
     self:updateNodes(0)
+  end
+end
+
+--- Updates the text
+function Text:updateText()
+  if self.text ~= nil then
+    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), self.max_width, self.align)
   end
 end
 
@@ -85,6 +92,10 @@ end
 --- @param a number alpha
 function Text:setColor(r, g, b, a)
   Drawable.setColor(self, r, g, b, a)
+
+  if self.text ~= nil then
+    self:updateText()
+  end
 end
 
 --- Gets the text's font
@@ -135,7 +146,7 @@ function Text:setAlign(align)
   self.align = align
 
   if self.text ~= nil then
-    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), self.max_width, self.align)
+    self:updateText()
     self.width = self.text:getWidth()
     self.height = self.text:getHeight()
   end

@@ -196,6 +196,7 @@ end
 --- @param value Dummy.Text.Text
 --- @return Dummy.Text.Node[]
 function DialogueText:parseNodes(value)
+  self.text = nil
   self.state = {}
   self.total_nodes = Text.parseNodes(self, value)
   return {}
