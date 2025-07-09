@@ -136,11 +136,13 @@ function print(...)
     table.insert(t, tostring(v))
   end
 
-  local _, w = Debugger.log_text:getFont():getWrap(table.concat(t, "	"),
-    (Constants.SCREEN_WIDTH / Debugger.scale) - (Debugger.margin * 2))
-  local len = #Debugger.logs
-  for i, s in ipairs(w) do
-    Debugger.logs[len + i] = (i == 1 and "> " or "  ") .. s
+  if Debugger.log_text ~= nil then
+    local _, w = Debugger.log_text:getFont():getWrap(table.concat(t, "	"),
+      (Constants.SCREEN_WIDTH / Debugger.scale) - (Debugger.margin * 2))
+    local len = #Debugger.logs
+    for i, s in ipairs(w) do
+      Debugger.logs[len + i] = (i == 1 and "> " or "  ") .. s
+    end
   end
 
   return _print(...)
