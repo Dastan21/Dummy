@@ -1,5 +1,6 @@
 --- @class Dummy.DialogueText : Dummy.Text
 ---
+--- @field protected text_values Dummy.Text.Text[]
 --- @field protected text_value Dummy.Text.Text
 --- @field protected font love.Font
 --- @field protected max_width number
@@ -8,18 +9,18 @@
 --- @field protected state table<string, any>
 --- @field protected total_nodes Dummy.Text.Node[]
 --- @field protected speed number
+--- @field protected text_value_index number
 --- @field protected text_index number
 --- @field protected voice string|nil
---- @field protected done_callback fun()|nil
---- @field protected can_skip boolean
---- @field protected can_confirm boolean
 --- @field protected wait number
 --- @field protected skipping boolean
 --- @field protected force_skip boolean
+--- @field protected no_skip boolean
+--- @field protected auto_next boolean
 local DialogueText = Class:extend(Text)
 
 --- Dialogue text commands
-DialogueText.COMMANDS = { "wait", "speed", "voice", "noskip", "instant", "stopinstant" }
+DialogueText.COMMANDS = { "wait", "speed", "voice", "noskip", "instant", "stopinstant", "next" }
 
 --- Silent characters
 DialogueText.SILENT_CHARACTERS = { " ", "\n" }
@@ -32,8 +33,12 @@ end
 
 --- Sets the dialogue's text value
 --- @param value Dummy.Text.Text
-function DialogueText:setText(value)
-  self.text_value = value
+--- @param ... Dummy.Text.Text
+function DialogueText:setText(value, ...)
+  self.text_values = { value, ... }
+  self.text_value_index = 1
+  self.text_value = self.text_values[1] or ""
+
   self:reset()
 end
 
@@ -49,47 +54,33 @@ function DialogueText:reset()
   self.text_index = 1
   self.skipping = false
   self.force_skip = false
+  self.no_skip = false
+  self.auto_next = false
   self.wait = 0
+
   self:parseNodes(self.text_value)
   self:updateDialogue()
 end
 
---- Wether the dialogue's can be skipped
---- @return boolean
-function DialogueText:canSkip()
-  return self.can_skip
-end
-
---- Sets wether the dialogue's can be skipped
---- @param can_skip boolean
-function DialogueText:setCanSkip(can_skip)
-  self.can_skip = can_skip
-end
-
 --- Skips the dialogue's
 function DialogueText:skip()
-  if self:isDone() or not self.can_skip or self.state.noskip == true then return end
+  if self:isCurrentDone() or self.no_skip == true then return end
 
   self.force_skip = true
   self.skipping = true
 end
 
---- Wether the dialogue's can be confirmed
---- @return boolean
-function DialogueText:canConfirm()
-  return self.can_confirm
-end
-
---- Sets wether the dialogue's can be confirmed
---- @param can_confirm boolean
-function DialogueText:setCanConfirm(can_confirm)
-  self.can_confirm = can_confirm
-end
-
---- Wether the dialogue's is done
+--- Wether the dialogue is done
 --- @return boolean
 function DialogueText:isDone()
-  return not self:isVisible() or self.text_index >= #self.total_nodes
+  return not self:isVisible() or (self.text_value_index >= #self.text_values and self.text_index >= #self.total_nodes)
+end
+
+--- Wether the dialogue's current text is done
+--- @return boolean
+--- @private
+function DialogueText:isCurrentDone()
+  return not self:isVisible() or self.text_index >= #self.total_nodes and self.wait <= 0
 end
 
 --- Gets the dialogue's speed
@@ -167,7 +158,9 @@ function DialogueText:processNode(node)
       end
     end
   elseif node.command == "noskip" then
-    self.state.noskip = true
+    self.no_skip = true
+  elseif node.command == "next" then
+    self.auto_next = true
   end
 
   node.state = table.merge(table.clone(self.state), node.state or {})
@@ -207,24 +200,33 @@ end
 function DialogueText:update(dt)
   Text.update(self, dt)
 
-  if self:isDone() or not self:isVisible() then return end
+  if self:isDone() then return end
 
   if not self.skipping then
     if self.wait > 0 then
       self.wait = math.max(0, self.wait - dt)
     else
       local speed = self.state.speed or self.speed
-      self.dialogue_timer = self.dialogue_timer + dt * speed * 30
+      self.dialogue_timer = math.min(#self.total_nodes, self.dialogue_timer + dt * speed * 30)
     end
   else
     self.dialogue_timer = #self.total_nodes
+  end
+
+  if self:isCurrentDone() then
+    if Input.isPressed(Input.Confirm) or self.auto_next then
+      self.text_value_index = self.text_value_index + 1
+      self.text_value = self.text_values[self.text_value_index] or ""
+      self:reset()
+    end
+    return
   end
 
   while math.floor(self.dialogue_timer) > self.text_index do
     self.text_index = self.text_index + 1
 
     local node = self.total_nodes[math.min(self.text_index, #self.total_nodes)]
-    while node.type == "command" and self.text_index < #self.total_nodes do
+    while node.type == "command" and self.text_index <= #self.total_nodes do
       if node.command == "instant" then
         self.skipping = true
       elseif node.command == "stopinstant" and not self.force_skip then
@@ -234,7 +236,6 @@ function DialogueText:update(dt)
 
       self.wait = node.state.wait or self.wait
       self.state.speed = node.state.speed
-      self.state.noskip = node.state.noskip
 
       if (node.command == "wait" or node.command == "speed") and not self.skipping then
         self.dialogue_timer = self.text_index
@@ -261,31 +262,26 @@ function DialogueText:update(dt)
 
   if self:isDone() then
     self.skipping = false
-    if type(self.done_callback) == "function" then
-      self.done_callback()
+    if type(self.onDone) == "function" then
+      self:onDone()
     end
   end
 
   self:updateDialogue()
 end
 
+--- Called when the dialogue is done
+function DialogueText:onDone() end
+
 --- Creates a dialogue text
 --- @param value Dummy.Text.Text text value
---- @param done_callback? fun() called when the dialogue is done
+--- @param ... Dummy.Text.Text more text value
 --- @return Dummy.DialogueText
-function DialogueText:new(value, done_callback)
+function DialogueText:new(value, ...)
   local dialogue_text = Class:new(DialogueText, { value })
 
   dialogue_text.speed = 1
-  dialogue_text.dialogue_timer = 0
-  dialogue_text.text_index = 1
   dialogue_text.voice = "voice_text"
-  dialogue_text.done_callback = done_callback
-  dialogue_text.can_skip = true
-  dialogue_text.can_confirm = true
-  dialogue_text.wait = 0
-  dialogue_text.skipping = false
-  dialogue_text.force_skip = false
 
   dialogue_text:setText(value)
 

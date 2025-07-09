@@ -8,7 +8,7 @@
 
 --- @class Dummy.Encounter
 ---
---- @field protected text Dummy.Text.Text
+--- @field protected text Dummy.Text.Text[]
 --- @field protected can_flee boolean
 --- @field protected music love.Source
 --- @field protected enemies Dummy.Enemy[]
@@ -57,12 +57,13 @@ Encounter = {}
 function Encounter.getClassName() end
 
 --- Gets the encounter's text
---- @return Dummy.Text.Text
+--- @return Dummy.Text.Text[]
 function Encounter.getText() end
 
 --- Sets the encounter's text
 --- @param text Dummy.Text.Text
-function Encounter.setText(text) end
+--- @param ... Dummy.Text.Text
+function Encounter.setText(text, ...) end
 
 --- Gets the encounter's enemies
 --- @return Dummy.Enemy[]
@@ -98,15 +99,17 @@ function Encounter.setMusic(music) end
 function Encounter.getDialogueText() end
 
 --- Plays a dialogue text
---- @param text Dummy.Text.Text|Dummy.Text.Text[]
+--- @param text Dummy.Text.Text
+--- @param ... Dummy.Text.Text
 --- @return Dummy.DialogueText
-function Encounter.playDialogueText(text) end
+function Encounter.playDialogueText(text, ...) end
 
 --- Plays a dialogue bubble
---- @param text Dummy.Text.Text|Dummy.Text.Text[]
---- @param bubble_type? Dummy.DialogueBubble.Type
+--- @param bubble_type Dummy.DialogueBubble.Type
+--- @param text Dummy.Text.Text
+--- @param ... Dummy.Text.Text
 --- @return Dummy.DialogueBubble
-function Encounter.playDialogueBubble(text, bubble_type) end
+function Encounter.playDialogueBubble(bubble_type, text, ...) end
 
 --- Wether all the enemies are spared
 --- @return boolean

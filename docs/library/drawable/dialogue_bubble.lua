@@ -30,9 +30,9 @@ function DialogueBubble:setAlpha(alpha) end
 function DialogueBubble:init() end
 
 --- Creates a dialogue text
+--- @param type Dummy.DialogueBubble.Type bubble type
 --- @param value Dummy.Text.Text text value
---- @param type? Dummy.DialogueBubble.Type bubble type
---- @param done_callback? fun() called when the dialogue is done
+--- @param ... Dummy.Text.Text more text value
 --- @return Dummy.DialogueBubble
-function DialogueBubble:new(value, type, done_callback) end
+function DialogueBubble:new(type, value, ...) end
 

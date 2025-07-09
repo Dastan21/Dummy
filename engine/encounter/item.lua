@@ -39,8 +39,6 @@ end
 function Item:use()
   if self.text ~= nil then
     Encounter.playDialogueText(self.text)
-    local dialogue = Encounter.getDialogueText()
-    dialogue:setCanSkip(true)
   end
 
   self:onUse()

@@ -1,6 +1,6 @@
 --- @class Dummy.Encounter
 ---
---- @field protected text Dummy.Text.Text
+--- @field protected text Dummy.Text.Text[]
 --- @field protected can_flee boolean
 --- @field protected music love.Source
 --- @field protected enemies Dummy.Enemy[]
@@ -63,16 +63,17 @@ function Encounter.getClassName()
 end
 
 --- Gets the encounter's text
---- @return Dummy.Text.Text
+--- @return Dummy.Text.Text[]
 function Encounter.getText()
-  return Encounter.text or ""
+  return Encounter.text or {}
 end
 
 --- Sets the encounter's text
 --- @param text Dummy.Text.Text
-function Encounter.setText(text)
-  Encounter.text = text
-  Encounter.dialogue_text:setText(text)
+--- @param ... Dummy.Text.Text
+function Encounter.setText(text, ...)
+  Encounter.text = { text, ... }
+  Encounter.dialogue_text:setText(text, ...)
 end
 
 --- Gets the encounter's enemies
@@ -139,22 +140,23 @@ function Encounter.getDialogueText()
 end
 
 --- Plays a dialogue text
---- @param text Dummy.Text.Text|Dummy.Text.Text[]
+--- @param text Dummy.Text.Text
+--- @param ... Dummy.Text.Text
 --- @return Dummy.DialogueText
-function Encounter.playDialogueText(text)
-  Encounter.dialogue_text:setText(text)
+function Encounter.playDialogueText(text, ...)
+  Encounter.dialogue_text:setText(text, ...)
   Encounter.dialogue_text:setVisible(true)
-  Encounter.dialogue_text:setCanSkip(false)
   Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
   return Encounter.dialogue_text
 end
 
 --- Plays a dialogue bubble
---- @param text Dummy.Text.Text|Dummy.Text.Text[]
---- @param bubble_type? Dummy.DialogueBubble.Type
+--- @param bubble_type Dummy.DialogueBubble.Type
+--- @param text Dummy.Text.Text
+--- @param ... Dummy.Text.Text
 --- @return Dummy.DialogueBubble
-function Encounter.playDialogueBubble(text, bubble_type)
-  local dialogue = DialogueBubble:new(text, bubble_type)
+function Encounter.playDialogueBubble(bubble_type, text, ...)
+  local dialogue = DialogueBubble:new(bubble_type, text, ...)
   table.insert(Encounter.bubble_dialogues, dialogue)
   return dialogue
 end
@@ -230,7 +232,6 @@ function Encounter.win(exp, gold)
   end
   Encounter.has_won = true
   Encounter.playDialogueText(win_text)
-  Encounter.dialogue_text:setCanSkip(false)
 end
 
 --- Gets the selected enemy
@@ -254,14 +255,13 @@ function Encounter.load()
   Encounter.loadActions()
 
   -- textbox dialogue
-  Encounter.dialogue_text = DialogueText:new(Encounter.getText())
+  Encounter.dialogue_text = DialogueText:new(table.unpack(Encounter.getText()))
   Encounter.dialogue_text:setPosition(52, 270)
   Encounter.dialogue_text:setOrigin(0, 0)
   Encounter.dialogue_text:setFont(Assets.getFont("main_text"))
   Encounter.dialogue_text:setScale(2)
   Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
   Encounter.dialogue_text:setMaxWidth(Constants.ARENA.TEXTBOX_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
-  Encounter.dialogue_text:setCanSkip(true)
 
   Encounter.bubble_dialogues = {}
 
@@ -450,7 +450,6 @@ function Encounter.loadActMenus()
         text = Text:new("ENCOUNTER_MENU_ACT_CHECK"),
         action = function()
           Encounter.dialogue_text:setText(enemy:getCheckText())
-          Encounter.dialogue_text:setCanSkip(true)
           Encounter.setState(Constants.ENCOUNTER_STATES.TEXT_DIALOGUE)
         end
       })
@@ -588,7 +587,6 @@ function Encounter.loadMercyMenu()
         end
 
         Encounter.dialogue_text:setText(flee_text)
-        Encounter.dialogue_text:setCanSkip(true)
         Encounter.dialogue_text:setVisible(true)
         Encounter.dialogue_text:skip()
       end,
@@ -627,8 +625,7 @@ function Encounter.startActionSelect()
 
     Encounter.leaveMenu()
 
-    Encounter.dialogue_text:setText(Encounter.getText())
-    Encounter.dialogue_text:setCanSkip(true)
+    Encounter.dialogue_text:setText(table.unpack(Encounter.getText()))
     Encounter.dialogue_text:setVisible(true)
   end)
 end

@@ -35,8 +35,6 @@ function ItemConsumable:use()
   end
 
   Encounter.playDialogueText(dialogue_text)
-  local dialogue = Encounter.getDialogueText()
-  dialogue:setCanSkip(true)
   Player.removeItem(self)
   Assets.playSound("swallow")
 

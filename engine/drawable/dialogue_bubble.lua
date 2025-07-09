@@ -86,22 +86,20 @@ function DialogueBubble:init()
 end
 
 --- Creates a dialogue text
+--- @param type Dummy.DialogueBubble.Type bubble type
 --- @param value Dummy.Text.Text text value
---- @param type? Dummy.DialogueBubble.Type bubble type
---- @param done_callback? fun() called when the dialogue is done
+--- @param ... Dummy.Text.Text more text value
 --- @return Dummy.DialogueBubble
-function DialogueBubble:new(value, type, done_callback)
+function DialogueBubble:new(type, value, ...)
   type = Utils.getOrDefault(type, "right")
 
   local dialogue_bubble = Class:new(DialogueBubble, { "bubble_" .. type })
 
   dialogue_bubble.type = type
-  dialogue_bubble.dialogue = DialogueText:new(value, done_callback)
+  dialogue_bubble.dialogue = DialogueText:new(value, ...)
   dialogue_bubble.dialogue:setOrigin(0, 0)
   dialogue_bubble.dialogue:setColor(type ~= "shock" and { 0, 0, 0 } or { 1, 1, 1 })
   dialogue_bubble.dialogue:setVoice("voice_bubble")
-  dialogue_bubble.dialogue:setCanSkip(false)
-  dialogue_bubble.dialogue:setCanConfirm(true)
   dialogue_bubble.dialogue:setFont(Assets.getFont("plain"))
   dialogue_bubble.dialogue:setParent(dialogue_bubble)
 

@@ -8,6 +8,7 @@
 
 --- @class Dummy.DialogueText : Dummy.Text
 ---
+--- @field protected text_values Dummy.Text.Text[]
 --- @field protected text_value Dummy.Text.Text
 --- @field protected font love.Font
 --- @field protected max_width number
@@ -16,14 +17,15 @@
 --- @field protected state table<string, any>
 --- @field protected total_nodes Dummy.Text.Node[]
 --- @field protected speed number
+--- @field protected is_done boolean
+--- @field protected text_value_index number
 --- @field protected text_index number
 --- @field protected voice string|nil
---- @field protected done_callback fun()|nil
---- @field protected can_skip boolean
---- @field protected can_confirm boolean
 --- @field protected wait number
 --- @field protected skipping boolean
 --- @field protected force_skip boolean
+--- @field protected no_skip boolean
+--- @field protected auto_next boolean
 DialogueText = {}
 
 --- Gets the class name
@@ -32,7 +34,8 @@ function DialogueText.getClassName() end
 
 --- Sets the dialogue's text value
 --- @param value Dummy.Text.Text
-function DialogueText:setText(value) end
+--- @param ... Dummy.Text.Text
+function DialogueText:setText(value, ...) end
 
 --- Updates the dialogue's text value
 --- @protected
@@ -41,28 +44,17 @@ function DialogueText:updateDialogue() end
 --- Resets the dialogue's current text
 function DialogueText:reset() end
 
---- Wether the dialogue's can be skipped
---- @return boolean
-function DialogueText:canSkip() end
-
---- Sets wether the dialogue's can be skipped
---- @param can_skip boolean
-function DialogueText:setCanSkip(can_skip) end
-
 --- Skips the dialogue's
 function DialogueText:skip() end
 
---- Wether the dialogue's can be confirmed
---- @return boolean
-function DialogueText:canConfirm() end
-
---- Sets wether the dialogue's can be confirmed
---- @param can_confirm boolean
-function DialogueText:setCanConfirm(can_confirm) end
-
---- Wether the dialogue's is done
+--- Wether the dialogue is done
 --- @return boolean
 function DialogueText:isDone() end
+
+--- Wether the dialogue's current text is done
+--- @return boolean
+--- @private
+function DialogueText:isCurrentDone() end
 
 --- Gets the dialogue's speed
 --- @return number
@@ -106,9 +98,12 @@ function DialogueText:parseNodes(value) end
 --- @param dt number
 function DialogueText:update(dt) end
 
+--- Called when the dialogue is done
+function DialogueText:onDone() end
+
 --- Creates a dialogue text
 --- @param value Dummy.Text.Text text value
---- @param done_callback? fun() called when the dialogue is done
+--- @param ... Dummy.Text.Text more text value
 --- @return Dummy.DialogueText
-function DialogueText:new(value, done_callback) end
+function DialogueText:new(value, ...) end
 
