@@ -59,6 +59,14 @@ function Assets.playMusic(music_name, play, loop, replace) end
 --- @return love.Source
 function Assets.playSound(sound_name, play, loop, replace) end
 
+--- Gets the current music
+--- @return love.Source|nil
+function Assets.getCurrentMusic() end
+
+--- Gets the current sound
+--- @return love.Source|nil
+function Assets.getCurrentSound() end
+
 --- Clears the cache
 function Assets.clear() end
 

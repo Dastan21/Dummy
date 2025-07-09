@@ -174,6 +174,12 @@ function Enemy:isSpared()
   return self.is_spared
 end
 
+--- Sets wether the enemy has been spared
+--- @param spared boolean
+function Enemy:setSpared(spared)
+  self.is_spared = spared
+end
+
 --- Spares the enemy
 function Enemy:spare()
   if self:isSpared() then return end

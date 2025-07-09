@@ -65,7 +65,7 @@ end
 --- Gets the encounter's text
 --- @return Dummy.Text.Text
 function Encounter.getText()
-  return Encounter.text
+  return Encounter.text or ""
 end
 
 --- Sets the encounter's text
@@ -186,6 +186,8 @@ end
 --- Wether all the enemies are spared or killed
 --- @return boolean
 function Encounter.allSparedOrKilled()
+  if Encounter.has_won then return true end
+
   for _, enemy in ipairs(Encounter.enemies) do
     if not enemy:isSpared() and not enemy:isKilled() then
       return false
@@ -198,19 +200,35 @@ end
 --- Checks if the encounter is done
 function Encounter.checkEncounterEnd()
   if Encounter.allSparedOrKilled() then
-    local win_text = Lang.translate("ENCOUNTER_WIN_REWARD", Encounter.exp_reward, Encounter.gold_reward)
-    local level_old = Player.getLV()
-    Player.setEXP(Player.getEXP() + Encounter.exp_reward)
-    Player.setGold(Player.getGold() + Encounter.gold_reward)
-    local level = Player.getLV()
-    if level ~= level_old then
-      win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
-    end
-    Encounter.playDialogueText(win_text)
-    Encounter.dialogue_text:setCanSkip(false)
+    Encounter.win()
   else
     Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
   end
+end
+
+--- Wins the encounter
+--- @param exp? number EXP reward
+--- @param gold? number GOLD reward
+function Encounter.win(exp, gold)
+  Encounter.exp_reward = Utils.getOrDefault(exp, Encounter.exp_reward)
+  Encounter.gold_reward = Utils.getOrDefault(gold, Encounter.gold_reward)
+
+  local current_music = Assets.getCurrentMusic()
+  if current_music ~= nil then
+    current_music:stop()
+  end
+
+  local win_text = Lang.translate("ENCOUNTER_WIN_REWARD", Encounter.exp_reward, Encounter.gold_reward)
+  local level_old = Player.getLV()
+  Player.setEXP(Player.getEXP() + Encounter.exp_reward)
+  Player.setGold(Player.getGold() + Encounter.gold_reward)
+  local level = Player.getLV()
+  if level ~= level_old then
+    win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
+  end
+  Encounter.has_won = true
+  Encounter.playDialogueText(win_text)
+  Encounter.dialogue_text:setCanSkip(false)
 end
 
 --- Gets the selected enemy
@@ -330,6 +348,7 @@ function Encounter.load()
 
   Encounter.exp_reward = 0
   Encounter.gold_reward = 0
+  Encounter.has_won = false
 end
 
 --- Gets the encounter's fight enemy menu
@@ -789,12 +808,7 @@ function Encounter.startEnemyDialogue()
 
   Encounter.unselectAction()
   Encounter.leaveMenu()
-
-  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, false, function()
-    if #Encounter.bubble_dialogues <= 0 then
-      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
-    end
-  end)
+  Player.hide()
 
   for _, enemy in ipairs(Encounter.enemies) do
     if not enemy:isKilled() and not enemy:isSpared() then
@@ -804,9 +818,21 @@ function Encounter.startEnemyDialogue()
     end
   end
 
-  local x, y = Arena:getPosition()
-  Player.setPosition(x, y - 65)
-  Player.show()
+  if #Encounter.waves > 0 then
+    Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, false, function()
+      if #Encounter.bubble_dialogues <= 0 then
+        Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+      end
+    end)
+
+    local x, y = Arena:getPosition()
+    Player.setPosition(x, y - 65)
+    Player.show()
+  else
+    if #Encounter.bubble_dialogues <= 0 then
+      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+    end
+  end
 end
 
 --- Updates enemy dialogue
@@ -1075,12 +1101,14 @@ end
 function Encounter.startDefending()
   Encounter.unselectAction()
 
-  -- default wave arena size
-  Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT)
+  if #Encounter.waves > 0 then
+    -- default wave arena size
+    Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT)
 
-  for _, wave in ipairs(Encounter.waves) do
-    --- @diagnostic disable-next-line: invisible
-    wave:__start()
+    for _, wave in ipairs(Encounter.waves) do
+      --- @diagnostic disable-next-line: invisible
+      wave:__start()
+    end
   end
 end
 

@@ -123,6 +123,11 @@ function Encounter.allSparedOrKilled() end
 --- Checks if the encounter is done
 function Encounter.checkEncounterEnd() end
 
+--- Wins the encounter
+--- @param exp? number EXP reward
+--- @param gold? number GOLD reward
+function Encounter.win(exp, gold) end
+
 --- Gets the selected enemy
 --- @return Dummy.Enemy|nil
 function Encounter.getSelectedEnemy() end

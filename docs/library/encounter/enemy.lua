@@ -122,6 +122,10 @@ function Enemy:setCanBeSpared(can_be_spared) end
 --- @return boolean
 function Enemy:isSpared() end
 
+--- Sets wether the enemy has been spared
+--- @param spared boolean
+function Enemy:setSpared(spared) end
+
 --- Spares the enemy
 function Enemy:spare() end
 
