@@ -213,6 +213,12 @@ function Encounter.checkEncounterEnd()
   end
 end
 
+--- Gets the selected enemy
+--- @return Dummy.Enemy|nil
+function Encounter.getSelectedEnemy()
+  return Encounter.enemies[Encounter.enemy_selected_index]
+end
+
 --- Loads the encounter
 function Encounter.load()
   -- background

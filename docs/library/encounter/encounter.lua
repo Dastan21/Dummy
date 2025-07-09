@@ -123,6 +123,10 @@ function Encounter.allSparedOrKilled() end
 --- Checks if the encounter is done
 function Encounter.checkEncounterEnd() end
 
+--- Gets the selected enemy
+--- @return Dummy.Enemy|nil
+function Encounter.getSelectedEnemy() end
+
 --- Loads the encounter
 function Encounter.load() end
 
