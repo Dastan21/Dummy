@@ -24,12 +24,35 @@ function encounter.update(dt)
     encounter.mod:update(dt)
   end
 
-  if Encounter.getCurrentState() ~= encounter.previous_state then
+  local current_state = Encounter.getCurrentState()
+  if current_state ~= encounter.previous_state then
     if type(encounter.mod.onStateChange) == "function" then
-      encounter.mod:onStateChange(Encounter.getCurrentState(), encounter.previous_state)
+      encounter.mod:onStateChange(current_state, encounter.previous_state)
     end
 
-    encounter.previous_state = Encounter.getCurrentState()
+    if encounter.previous_state == Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU and current_state == Constants.ENCOUNTER_STATES.ATTACKING then
+      if type(encounter.mod.onEnemyAttackSelected) == "function" then
+        encounter.mod:onEnemyAttackSelected(Encounter.getSelectedEnemy())
+      end
+    elseif encounter.previous_state == Constants.ENCOUNTER_STATES.ACT_MENU and current_state == Constants.ENCOUNTER_STATES.ACT_MENU then
+      if type(encounter.mod.onEnemyActSelected) == "function" then
+        encounter.mod:onEnemyActSelected(Encounter.getSelectedEnemy())
+      end
+    elseif encounter.previous_state == Constants.ENCOUNTER_STATES.TEXT_DIALOGUE and current_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE then
+      if type(encounter.mod.onEncounterTextEnd) == "function" then
+        encounter.mod:onEncounterTextEnd()
+      end
+    elseif encounter.previous_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE and (current_state == Constants.ENCOUNTER_STATES.ACTION_SELECT or current_state == Constants.ENCOUNTER_STATES.DEFENDING) then
+      if type(encounter.mod.onEnemyDialoguesEnd) == "function" then
+        encounter.mod:onEnemyDialoguesEnd()
+      end
+    elseif encounter.previous_state == Constants.ENCOUNTER_STATES.DEFENDING and current_state == Constants.ENCOUNTER_STATES.ACTION_SELECT then
+      if type(encounter.mod.onDefendingEnd) == "function" then
+        encounter.mod:onDefendingEnd()
+      end
+    end
+
+    encounter.previous_state = current_state
   end
 
   if Scene.getSceneName() ~= "ENCOUNTER" then return end

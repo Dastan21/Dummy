@@ -62,6 +62,23 @@ function Mod:update(dt) end
 --- @param previous_state string
 function Mod:onStateChange(current_state, previous_state) end
 
+--- Called when an enemy is selected for attack
+--- @param enemy Dummy.Enemy|nil
+function Mod:onEnemyAttackSelected(enemy) end
+
+--- Called when an enemy is selected for ACT
+--- @param enemy Dummy.Enemy|nil
+function Mod:onEnemyActSelected(enemy) end
+
+--- Called when the encounter text is done
+function Mod:onEncounterTextEnd() end
+
+--- Called when all enemy dialogues are done
+function Mod:onEnemyDialoguesEnd() end
+
+--- Called when the defending phase is done
+function Mod:onDefendingEnd() end
+
 --- Creates a mod
 --- @param data Dummy.Mod.Data
 --- @return Dummy.Mod
