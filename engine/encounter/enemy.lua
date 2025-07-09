@@ -135,7 +135,7 @@ function Enemy:getCheckText()
   local check = "* " .. self:getName():upper() .. " - "
   check = check .. Lang.translate("ENCOUNTER_STAT_AT") .. " " .. self:getAT() .. " "
   check = check .. Lang.translate("ENCOUNTER_STAT_DF") .. " " .. self:getDF()
-  check = check .. "\n" .. Lang.translate(self:getCheck())
+  check = check .. "[wait:10]\n" .. Lang.translate(self:getCheck())
   return check
 end
 
