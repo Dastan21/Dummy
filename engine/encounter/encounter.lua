@@ -199,7 +199,9 @@ end
 
 --- Checks if the encounter is done
 function Encounter.checkEncounterEnd()
-  if Encounter.allSparedOrKilled() then
+  if Encounter.has_won then
+    Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
+  elseif Encounter.allSparedOrKilled() then
     Encounter.win()
   else
     Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
@@ -794,11 +796,7 @@ end
 --- Updates text dialogue
 function Encounter.updateTextDialogue()
   if Input.isPressed(Input.Confirm) and Encounter.dialogue_text:isDone() then
-    if Encounter.allSparedOrKilled() then
-      Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
-    else
-      Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
-    end
+    Encounter.checkEncounterEnd()
   end
 end
 
