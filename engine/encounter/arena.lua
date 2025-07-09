@@ -113,6 +113,13 @@ end
 --- @param instant? boolean resizes the arena instantly (Defaults to `false`)
 --- @param resize_callback? fun() called when the resize is done
 function Arena.resize(width, height, instant, resize_callback)
+  if Arena.target_width == width and Arena.target_height == height then
+    if type(resize_callback) == "function" then
+      resize_callback()
+    end
+    return
+  end
+
   if Utils.getOrDefault(instant, false) then
     Arena.width = width
     Arena.height = height
@@ -137,6 +144,14 @@ end
 function Arena.move(x, y, instant, move_callback)
   local abs_x = Arena.x + x
   local abs_y = Arena.y + y
+
+  if Arena.target_x == abs_x and Arena.target_y == abs_y then
+    if type(move_callback) == "function" then
+      move_callback()
+    end
+    return
+  end
+
   if Utils.getOrDefault(instant, false) then
     Arena.x = abs_x
     Arena.y = abs_y
