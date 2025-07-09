@@ -235,15 +235,15 @@ function Text:draw()
   love.graphics.applyTransform(self:getTransform())
 
   local origin_x, origin_y = self:getOrigin()
-  if Debugger.shouldDisplayHitbox() then
+  local width, height = self:getWidth(), self:getHeight()
+  if Debugger.shouldDisplayHitbox() and (width > 0 or height > 0) then
     love.graphics.setColor(0, 0, 1, 1)
-    love.graphics.rectangle("line", -0.5 - self:getWidth() * origin_x, -0.5 - self:getHeight() * origin_y,
-      self:getWidth() + 1, self:getHeight() + 1)
+    love.graphics.rectangle("line", -0.5 - width * origin_x, -0.5 - height * origin_y, width + 1, height + 1)
   end
 
   love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
   if self.text ~= nil then
-    love.graphics.draw(self.text, -self:getWidth() * origin_x, -self:getHeight() * origin_y)
+    love.graphics.draw(self.text, -width * origin_x, -height * origin_y)
   else
     for _, node in ipairs(self.nodes) do
       if node.type == "character" and node.state.text ~= nil then

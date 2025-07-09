@@ -81,8 +81,6 @@ function Bullet:new()
   debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
   function debug_hitbox_drawable:draw()
     if Debugger.shouldDisplayHitbox() and bullet:isVisible() then
-      love.graphics.setColor(0, 1, 0, 1)
-
       local x, y = bullet:getPosition()
       local origin_x, origin_y = bullet:getOrigin()
       local scale_x, scale_y = bullet:getScale()
@@ -90,6 +88,9 @@ function Bullet:new()
       local hitbox = bullet:getHitbox()
       local width, height = hitbox[3], hitbox[4]
 
+      if width < 0 or height < 0 then return end
+
+      love.graphics.setColor(0, 1, 0, 1)
       if angle % (2 * math.pi) == 0 then
         local hitbox_x = x - width * origin_x * scale_x
         local hitbox_y = y - height * origin_y * scale_y
