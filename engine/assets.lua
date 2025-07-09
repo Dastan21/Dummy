@@ -76,6 +76,7 @@ local audio_cache = {}
 --- @param play boolean
 --- @param loop boolean
 --- @return love.Source
+--- @protected
 function Assets.playAudio(folder, audio_name, type, play, loop)
   local filename = Assets.checkFilenameExt(folder .. audio_name, { "mp3", "wav", "ogg" })
 

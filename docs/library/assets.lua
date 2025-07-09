@@ -40,6 +40,7 @@ function Assets.checkFilenameExt(name, exts) end
 --- @param play boolean
 --- @param loop boolean
 --- @return love.Source
+--- @protected
 function Assets.playAudio(folder, audio_name, type, play, loop) end
 
 --- Plays a music
