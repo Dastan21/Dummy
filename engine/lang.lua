@@ -48,10 +48,6 @@ end
 function Lang.translate(key, ...)
   local data = { ... }
 
-  if type(key) == "function" then
-    key = key()
-  end
-
   if type(key) == "table" then
     for i, v in pairs(key) do
       if i > 1 then

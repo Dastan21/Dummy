@@ -1,4 +1,4 @@
---- @alias Dummy.Text.Text string|table|fun(): string|table
+--- @alias Dummy.Text.Text string|table
 --- @alias Dummy.Text.Align "left" | "center" | "right"
 
 --- @class Dummy.Text.Node

@@ -22,7 +22,7 @@
 --- @field protected custom_commands_called table<Dummy.Text.Node, boolean>
 Text = {}
 
---- @alias Dummy.Text.Text string|table|fun(): string|table
+--- @alias Dummy.Text.Text string|table
 --- @alias Dummy.Text.Align "left" | "center" | "right"
 
 --- @class Dummy.Text.Node

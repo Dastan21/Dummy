@@ -110,9 +110,10 @@ end
 function main_menu.loadSettingsMenu()
   main_menu.settings_menu = MainMenu:new({
     {
-      text = Text:new(function() return { "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() } end),
-      action = function()
+      text = Text:new({ "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() }),
+      action = function(option)
         main_menu.switchLanguage()
+        option.text:setText({ "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() })
       end,
     },
     {
