@@ -242,7 +242,6 @@ function Encounter.load()
   Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
   Encounter.dialogue_text:setMaxWidth(Constants.ARENA.TEXTBOX_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
   Encounter.dialogue_text:setCanSkip(true)
-  Encounter.dialogue_text:setVisible(false)
 
   Encounter.bubble_dialogues = {}
 
