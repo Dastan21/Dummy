@@ -68,6 +68,7 @@ function DialogueText:skip()
 
   self.force_skip = true
   self.skipping = true
+  self.wait = 0
 end
 
 --- Wether the dialogue is done
@@ -214,7 +215,7 @@ function DialogueText:update(dt)
   end
 
   if self:isCurrentDone() then
-    if Input.isPressed(Input.Confirm) or self.auto_next then
+    if Input.isPressed(Input.Confirm) or (self.auto_next and not self.skipping) then
       self.text_value_index = self.text_value_index + 1
       self.text_value = self.text_values[self.text_value_index] or ""
       self:reset()
@@ -234,8 +235,10 @@ function DialogueText:update(dt)
         self.dialogue_timer = self.text_index
       end
 
-      self.wait = node.state.wait or self.wait
-      self.state.speed = node.state.speed
+      if not self.skipping then
+        self.wait = node.state.wait or self.wait
+        self.state.speed = node.state.speed
+      end
 
       if (node.command == "wait" or node.command == "speed") and not self.skipping then
         self.dialogue_timer = self.text_index
@@ -245,7 +248,7 @@ function DialogueText:update(dt)
         self.text_index = self.text_index + 1
       end
 
-      node = self.total_nodes[self.text_index]
+      node = self.total_nodes[math.min(self.text_index, #self.total_nodes)]
     end
 
     local voice = node.state.voice ~= "none" and nil or (node.state.voice or self.voice)
