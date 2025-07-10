@@ -261,7 +261,6 @@ function Encounter.load()
   Encounter.dialogue_text:setFont(Assets.getFont("main_text"))
   Encounter.dialogue_text:setScale(2)
   Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
-  Encounter.dialogue_text:setMaxWidth(Constants.ARENA.TEXTBOX_WIDTH - Constants.ARENA.BORDER_WIDTH * 2)
 
   Encounter.bubble_dialogues = {}
 

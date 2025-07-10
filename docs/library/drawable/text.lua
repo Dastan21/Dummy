@@ -11,7 +11,6 @@
 --- @field protected text love.Text
 --- @field protected value Dummy.Text.Text
 --- @field protected font love.Font
---- @field protected max_width number
 --- @field protected align Dummy.Text.Align
 --- @field protected width number
 --- @field protected height number
@@ -72,14 +71,6 @@ function Text:getFont() end
 --- Sets the text's font
 --- @param font love.Font
 function Text:setFont(font) end
-
---- Gets the text's max width
---- @return number
-function Text:getMaxWidth() end
-
---- Sets the text's max width
---- @param max_width number
-function Text:setMaxWidth(max_width) end
 
 --- Gets the text's align
 --- @return Dummy.Text.Align

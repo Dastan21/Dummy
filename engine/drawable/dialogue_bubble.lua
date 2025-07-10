@@ -30,58 +30,44 @@ function DialogueBubble:init()
   if self.type == "right" then
     self:setOrigin(0, 0.5)
     self.dialogue:setPosition(25, 5 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(84)
   elseif self.type == "right_large" then
     self:setOrigin(0, 0.5)
     self.dialogue:setPosition(25, 5 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(104)
   elseif self.type == "right_short" then
     self:setOrigin(0, 0.5)
     self.dialogue:setPosition(25, 5 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(84)
   elseif self.type == "right_thin" then
     self:setOrigin(0, 0.5)
     self.dialogue:setPosition(19, 10 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(84)
   elseif self.type == "right_wide" then
     self:setOrigin(0, 0.5)
     self.dialogue:setPosition(38, 10 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(164)
   elseif self.type == "right_wide_short" then
     self:setOrigin(0, 0.5)
     self.dialogue:setPosition(35, 10 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(204)
   elseif self.type == "left" then
     self:setOrigin(1, 0.5)
     self.dialogue:setPosition(25 - self:getWidth(), 5 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(84)
   elseif self.type == "left_short" then
     self:setOrigin(1, 0.5)
     self.dialogue:setPosition(25 - self:getWidth(), 5 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(84)
   elseif self.type == "left_wide_short" then
     self:setOrigin(1, 0.5)
     self.dialogue:setPosition(35 - self:getWidth(), 10 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(204)
   elseif self.type == "top" then
     self:setOrigin(0.5, 1)
     self.dialogue:setPosition(25 - self:getWidth() / 2, 5 - self:getHeight())
-    self.dialogue:setMaxWidth(164)
   elseif self.type == "bottom" then
     self:setOrigin(0.5, 0)
     self.dialogue:setPosition(25 - self:getWidth() / 2, 20)
-    self.dialogue:setMaxWidth(164)
   elseif self.type == "tiny" then
     self:setOrigin(0.5, 0)
     self.dialogue:setPosition(25 - self:getWidth() / 2, 5)
-    self.dialogue:setMaxWidth(76)
   elseif self.type == "tiny_top" then
     self:setOrigin(0.5, 1)
     self.dialogue:setPosition(32 - self:getWidth() / 2, 4 - self:getHeight())
-    self.dialogue:setMaxWidth(64)
   elseif self.type == "shock" then
     self.dialogue:setPosition(45 - self:getWidth() / 2, 39 - self:getHeight() / 2)
-    self.dialogue:setMaxWidth(174)
   end
 end
 

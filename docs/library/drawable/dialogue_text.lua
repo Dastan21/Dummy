@@ -11,7 +11,6 @@
 --- @field protected text_values Dummy.Text.Text[]
 --- @field protected text_value Dummy.Text.Text
 --- @field protected font love.Font
---- @field protected max_width number
 --- @field protected nodes Dummy.Text.Node[]
 --- @field protected dialogue_timer number
 --- @field protected state table<string, any>
@@ -74,10 +73,6 @@ function DialogueText:setVoice(voice) end
 --- Sets the dialogue text's font
 --- @param font love.Font
 function DialogueText:setFont(font) end
-
---- Sets the dialogue text's max width
---- @param max_width number
-function DialogueText:setMaxWidth(max_width) end
 
 --- Applies the node state
 --- @param node Dummy.Text.Node

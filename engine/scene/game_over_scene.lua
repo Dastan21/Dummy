@@ -65,7 +65,6 @@ function game_over.load(x, y)
   game_over.dialogue_text:setScale(2)
   game_over.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
   game_over.dialogue_text:setVoice("voice_asgore")
-  game_over.dialogue_text:setMaxWidth(400)
   game_over.dialogue_text:setVisible(false)
   game_over.dialogue_index = 1
 

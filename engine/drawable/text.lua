@@ -14,7 +14,6 @@
 --- @field protected text love.Text
 --- @field protected value Dummy.Text.Text
 --- @field protected font love.Font
---- @field protected max_width number
 --- @field protected align Dummy.Text.Align
 --- @field protected width number
 --- @field protected height number
@@ -68,7 +67,7 @@ end
 --- Updates the text
 function Text:updateText()
   if self.text ~= nil then
-    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), self.max_width, self.align)
+    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), Constants.SCREEN_WIDTH, self.align)
   end
 end
 
@@ -114,22 +113,6 @@ function Text:setFont(font)
     self.width = self.text:getWidth()
     self.height = self.text:getHeight()
   else
-    self.nodes = self:parseNodes(self.value)
-  end
-end
-
---- Gets the text's max width
---- @return number
-function Text:getMaxWidth()
-  return self.max_width
-end
-
---- Sets the text's max width
---- @param max_width number
-function Text:setMaxWidth(max_width)
-  self.max_width = max_width
-
-  if self.text == nil then
     self.nodes = self:parseNodes(self.value)
   end
 end
@@ -243,7 +226,13 @@ function Text:draw()
 
   love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
   if self.text ~= nil then
-    love.graphics.draw(self.text, -width * origin_x, -height * origin_y)
+    local align_offset = 0
+    if self.align == "right" then
+      align_offset = Constants.SCREEN_WIDTH - self.text:getWidth()
+    elseif self.align == "center" then
+      align_offset = Constants.SCREEN_WIDTH / 2 - self.text:getWidth() / 2
+    end
+    love.graphics.draw(self.text, -width * origin_x - align_offset, -height * origin_y)
   else
     for _, node in ipairs(self.nodes) do
       if node.type == "character" and node.state.text ~= nil then
@@ -483,7 +472,6 @@ function Text:new(value)
 
   text.color = { 1, 1, 1 }
   text.font = love.graphics.getFont()
-  text.max_width = Constants.SCREEN_WIDTH
   text.align = "left"
   text.timer = 0
   text.custom_commands = {}
