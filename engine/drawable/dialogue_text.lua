@@ -51,7 +51,7 @@ end
 --- Resets the dialogue's current text
 function DialogueText:reset()
   self.dialogue_timer = 0
-  self.text_index = 1
+  self.text_index = 0
   self.skipping = false
   self.force_skip = false
   self.no_skip = false
@@ -69,6 +69,9 @@ function DialogueText:skip()
   self.force_skip = true
   self.skipping = true
   self.wait = 0
+  self.text_index = #self.total_nodes
+  self:updateDialogue()
+  self:update(0)
 end
 
 --- Wether the dialogue is done
@@ -201,7 +204,7 @@ end
 function DialogueText:update(dt)
   Text.update(self, dt)
 
-  if self:isDone() then return end
+  if not self:isVisible() or self:isDone() then return end
 
   if not self.skipping then
     if self.wait > 0 then
@@ -251,8 +254,8 @@ function DialogueText:update(dt)
       node = self.total_nodes[math.min(self.text_index, #self.total_nodes)]
     end
 
-    local voice = node.state.voice ~= "none" and nil or (node.state.voice or self.voice)
-    if voice ~= nil and node.character ~= nil and not table.contains(DialogueText.SILENT_CHARACTERS, node.character) and not self.skipping then
+    local voice = node.state.voice or self.voice
+    if voice ~= nil and node.state.voice ~= "none" and node.character ~= nil and not table.contains(DialogueText.SILENT_CHARACTERS, node.character) and not self.skipping then
       Assets.playSound(voice)
     end
   end
