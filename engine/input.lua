@@ -86,10 +86,10 @@ function Input.load()
   Input.keys_pressed = {}
   Input.keys_released = {}
 
-  Input.Up = { "w", "up", "joystick:dpup", "joystick:lsup" }
-  Input.Down = { "s", "down", "joystick:dpdown", "joystick:lsdown" }
-  Input.Left = { "a", "left", "joystick:dpleft", "joystick:lsleft" }
-  Input.Right = { "d", "right", "joystick:dpright", "joystick:lsright" }
+  Input.Up = { "w", "up", "gamepad:dpup", "joystick:lsup" }
+  Input.Down = { "s", "down", "gamepad:dpdown", "joystick:lsdown" }
+  Input.Left = { "a", "left", "gamepad:dpleft", "joystick:lsleft" }
+  Input.Right = { "d", "right", "gamepad:dpright", "joystick:lsright" }
   Input.Confirm = { "z", "return", "kpenter", "gamepad:a" }
   Input.Cancel = { "x", "rshift", "lshift", "gamepad:b" }
 end
