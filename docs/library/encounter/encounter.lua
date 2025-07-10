@@ -173,6 +173,9 @@ function Encounter.getMercyMenu() end
 --- Loads mercy menu
 function Encounter.loadMercyMenu() end
 
+--- Flees the encounter
+function Encounter.flee() end
+
 --- Gets the current encounter state
 --- @return string
 function Encounter.getCurrentState() end

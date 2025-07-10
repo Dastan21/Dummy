@@ -556,40 +556,7 @@ function Encounter.loadMercyMenu()
   if Encounter.canFlee() ~= false then
     table.insert(options, {
       text = Text:new("ENCOUNTER_MENU_MERCY_FLEE"),
-      action = function()
-        Player.flee()
-
-        Timer.after(1, function()
-          Fader.fadeIn(1 / 2.4, function()
-            Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
-          end)
-        end)
-
-        Encounter.mercy_menu:setActive(false)
-        Encounter.unselectAction()
-        Encounter.leaveMenu()
-
-        --- @type Dummy.Text.Text
-        local flee_text = ""
-        if Encounter.exp_reward > 0 or Encounter.gold_reward > 0 then
-          flee_text = { "ENCOUNTER_FLEE_REWARD", Encounter.exp_reward, Encounter.gold_reward }
-        else
-          local flee_value = love.math.random(20)
-          if flee_value <= 1 then
-            flee_text = "ENCOUNTER_FLEE_1"
-          elseif flee_value == 2 then
-            flee_text = "ENCOUNTER_FLEE_2"
-          elseif flee_value == 3 then
-            flee_text = "ENCOUNTER_FLEE_3"
-          else
-            flee_text = "ENCOUNTER_FLEE_4"
-          end
-        end
-
-        Encounter.dialogue_text:setText(flee_text)
-        Encounter.dialogue_text:setVisible(true)
-        Encounter.dialogue_text:skip()
-      end,
+      action = Encounter.flee,
       silent = true
     })
   end
@@ -597,6 +564,44 @@ function Encounter.loadMercyMenu()
   Encounter.mercy_menu = ActionMenu:new(options, "vertical", false, function()
     Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
+end
+
+--- Flees the encounter
+function Encounter.flee()
+  if Encounter.canFlee() == false then return end
+
+  Player.flee()
+
+  Timer.after(1, function()
+    Fader.fadeIn(1 / 2.4, function()
+      Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
+    end)
+  end)
+
+  Encounter.mercy_menu:setActive(false)
+  Encounter.unselectAction()
+  Encounter.leaveMenu()
+
+  --- @type Dummy.Text.Text
+  local flee_text = ""
+  if Encounter.exp_reward > 0 or Encounter.gold_reward > 0 then
+    flee_text = { "ENCOUNTER_FLEE_REWARD", Encounter.exp_reward, Encounter.gold_reward }
+  else
+    local flee_value = love.math.random(20)
+    if flee_value <= 1 then
+      flee_text = "ENCOUNTER_FLEE_1"
+    elseif flee_value == 2 then
+      flee_text = "ENCOUNTER_FLEE_2"
+    elseif flee_value == 3 then
+      flee_text = "ENCOUNTER_FLEE_3"
+    else
+      flee_text = "ENCOUNTER_FLEE_4"
+    end
+  end
+
+  Encounter.dialogue_text:setText(flee_text)
+  Encounter.dialogue_text:setVisible(true)
+  Encounter.dialogue_text:skip()
 end
 
 --- Gets the current encounter state

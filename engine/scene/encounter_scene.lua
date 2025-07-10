@@ -26,10 +26,6 @@ function encounter.update(dt)
 
   local current_state = Encounter.getCurrentState()
   if current_state ~= encounter.previous_state then
-    if type(encounter.mod.onStateChange) == "function" then
-      encounter.mod:onStateChange(current_state, encounter.previous_state)
-    end
-
     if encounter.previous_state == Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU and current_state == Constants.ENCOUNTER_STATES.ATTACKING then
       if type(encounter.mod.onEnemyAttackSelected) == "function" then
         encounter.mod:onEnemyAttackSelected(Encounter.getSelectedEnemy())
@@ -50,6 +46,14 @@ function encounter.update(dt)
       if type(encounter.mod.onDefendingEnd) == "function" then
         encounter.mod:onDefendingEnd()
       end
+    elseif current_state == Constants.ENCOUNTER_STATES.DONE and Player.isFleeing() then
+      if type(encounter.mod.onEscaped) == "function" then
+        encounter.mod:onEscaped()
+      end
+    end
+
+    if type(encounter.mod.onStateChange) == "function" then
+      encounter.mod:onStateChange(current_state, encounter.previous_state)
     end
 
     encounter.previous_state = current_state

@@ -496,7 +496,7 @@ function Player.flee()
   Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
   Player.soul_sprite:play()
 
-  Timer.during(2, function(dt)
+  Timer.during(1, function(dt)
     local x, y = Player.soul_sprite:getPosition()
     Player.soul_sprite:setPosition(x - Player.flee_speed * dt * 30, y)
   end)
