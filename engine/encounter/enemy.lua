@@ -289,6 +289,9 @@ function Enemy:setHurtSound(hurt_sound)
   end
 end
 
+--- Called when the enemy should dialogue
+function Enemy:onDialogue() end
+
 --- Called when trying to spare an enemy
 --- @param spared boolean wether the enemy has been spared
 function Enemy:onSpared(spared) end
@@ -305,13 +308,10 @@ function Enemy:onDamage(damage) end
 --- Called after when the enemy is damaged
 function Enemy:onAfterDamage() end
 
---- Called when the enemy should dialogue
-function Enemy:onDialogue() end
-
 --- Called when the enemy is killed
 function Enemy:onKilled() end
 
---- Updates the enemy
+--- Called on every game update
 --- @param dt number
 function Enemy:update(dt) end
 

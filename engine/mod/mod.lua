@@ -57,7 +57,7 @@ function Mod:load() end
 --- Called when the main menu is loaded, for standalone mods only
 function Mod:preview() end
 
---- Called when on every update
+--- Called when on every game update
 --- @param dt number
 function Mod:update(dt) end
 
