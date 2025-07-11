@@ -110,6 +110,13 @@ function ModList.unloadMod(mod)
   love.filesystem.unmount("mods/" .. mod:getId() .. "/scripts")
   love.filesystem.unmount("mods/" .. mod:getId() .. "/assets")
   love.filesystem.unmount("mods/" .. mod:getId() .. ".zip")
+
+  -- uncache mod scripts modules
+  for modname in pairs(package.loaded) do
+    if modname:sub(1, 8) == "scripts." then
+      package.loaded[modname] = nil
+    end
+  end
 end
 
 --- Unloads all mods
