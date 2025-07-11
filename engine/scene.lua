@@ -37,6 +37,8 @@ function Scene.change(scene_name, ...)
 
   if Scene.scene_name == scene_name then return end
 
+  Fader.reset()
+  Shaker.reset()
   Scene.clean()
   Scene.scene = Scene.scenes[scene_name]
   Scene.scene_name = scene_name
@@ -90,9 +92,6 @@ end
 
 --- Reloads the current scene
 function Scene.reload()
-  Debugger.resume()
-  Fader.reset()
-  Shaker.reset()
   local scene_name = Scene.scene_name
   Scene.scene_name = nil
   Scene.change(scene_name, table.unpack(Scene.scene_data))
@@ -100,9 +99,6 @@ end
 
 --- Fully reloads the engine
 function Scene.fullReload()
-  Debugger.resume()
-  Fader.reset()
-  Shaker.reset()
   Scene.change("MAIN_MENU")
 end
 
