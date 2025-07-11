@@ -1,0 +1,17 @@
+DUMMY_MOD_ENCOUNTER_TEXT_1=* You encountered the Dummy.
+DUMMY_MOD_ENCOUNTER_TEXT_2=* Dummy looks like it's\n  going to fall over.
+DUMMY_MOD_ENCOUNTER_TEXT_3=* Dummy stands around\n  absentmindedly.
+DUMMY_MOD_ENCOUNTER_CHECK_TEXT=* A cotton heart and a button eye[wait:5]\n* You are the apple of my eye
+
+DUMMY_MOD_ENCOUNTER_ACT_TALK=Talk
+DUMMY_MOD_ENCOUNTER_TALK_TEXT_1=* You talk to the DUMMY.\n[wait:10]* ...
+DUMMY_MOD_ENCOUNTER_TALK_TEXT_2=* It doesn't seem much for\n  conversation.
+DUMMY_MOD_ENCOUNTER_TALK_TEXT_3=* TORIEL seems happy with you.
+
+DUMMY_MOD_ENCOUNTER_TIRE=* Dummy tires of your\n  aimless shenanigans.
+DUMMY_MOD_ENCOUNTER_BUBBLE=[wave].[wait:5].[wait:5].[wait:5].[wait:5].
+
+DUMMY_MOD_MONSTER_CANDY_NAME=Monster Candy
+DUMMY_MOD_MONSTER_CANDY_SHORTNAME=MnstrCndy
+DUMMY_MOD_TOY_KNIFE_NAME=Toy Knife
+DUMMY_MOD_TOY_KNIFE_SHORTNAME=Toy Knife

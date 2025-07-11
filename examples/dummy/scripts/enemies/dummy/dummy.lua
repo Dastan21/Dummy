@@ -1,0 +1,58 @@
+--- @class DummyMonster : Dummy.Enemy
+local Dummy = Class:extend(Enemy)
+
+--- Initializes the Dummy
+function Dummy:new()
+  -- create the base enemy
+  local enemy = Class:new(Dummy, { "Dummy", "dummy" })
+
+  -- set HP after max HP to heal
+  enemy:setMaxHP(15)
+  enemy:setHP(15)
+  -- check text below the stats text
+  enemy:setCheck("DUMMY_MOD_ENCOUNTER_CHECK_TEXT")
+  -- position of the Dummy, strike animation and damage bar are positioned relative to this
+  enemy:setPosition(260, 240)
+
+  -- add ACTs
+  local talk = require("scripts.enemies.dummy.talk")
+  enemy:addACT(talk)
+
+  -- return the newly created enemy
+  return enemy
+end
+
+--- Called when the enemy should dialogue
+function Dummy:onDialogue()
+  -- play the dialogue bubble
+  local dialogue = Encounter.playDialogueBubble("right", "DUMMY_MOD_ENCOUNTER_BUBBLE")
+  -- position it to the right of the Dummy
+  local x, y = self:getPosition()
+  local dialogue_x = x + self:getWidth() / 2
+  local dialogue_y = y - self:getHeight() / 2
+  dialogue:setPosition(dialogue_x, dialogue_y)
+end
+
+--- Called when trying to spare an enemy
+function Dummy:onSpared(spared) end
+
+--- Called before the enemy is damaged
+function Dummy:onBeforeDamage(damage) end
+
+--- Called when the enemy is damaged
+function Dummy:onDamage(damage)
+  self:setSprite("dummy_hurt")
+end
+
+--- Called after when the enemy is damaged
+function Dummy:onAfterDamage()
+  self:setSprite("dummy")
+end
+
+--- Called when the enemy is killed
+function Dummy:onKilled() end
+
+--- Called on every game update
+function Dummy:update(dt) end
+
+return Dummy
