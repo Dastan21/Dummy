@@ -530,12 +530,7 @@ end
 --- Removes an item from the player
 --- @param item Dummy.Item
 function Player.removeItem(item)
-  for i, it in ipairs(Player.items) do
-    if it == item then
-      table.remove(Player.items, i)
-      break
-    end
-  end
+  table.removeByValue(Player.items, item)
 end
 
 --- Updates the player

@@ -34,6 +34,13 @@ function table.slice(t, f, l, s) end
 --- @return boolean
 function table.contains(t, value) end
 
+--- Removes from `list` the element with value `value`, returning the value of the removed element.
+--- @generic T
+--- @param list table
+--- @param value T
+---@return T|nil
+function table.removeByValue(list, value) end
+
 --- @param self string
 --- @return string
 function string:trim() end

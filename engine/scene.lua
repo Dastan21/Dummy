@@ -180,12 +180,7 @@ function Scene.removeDrawable(drawable)
     end
   end
 
-  for i, d in ipairs(Scene.drawables) do
-    if d == drawable then
-      table.remove(Scene.drawables, i)
-      break
-    end
-  end
+  table.removeByValue(Scene.drawables, drawable)
 
   Scene.sortDrawables()
 end

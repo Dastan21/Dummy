@@ -233,12 +233,7 @@ end
 --- Removes a child from the drawable
 --- @param child Dummy.Drawable
 function Drawable:removeChild(child)
-  for i, c in ipairs(self.children) do
-    if c == child then
-      table.remove(self.children, i)
-      break
-    end
-  end
+  table.removeByValue(self.children, child)
 
   self:sortChildren()
 end

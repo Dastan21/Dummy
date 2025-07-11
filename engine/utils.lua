@@ -166,6 +166,20 @@ function table.contains(t, value)
   return false
 end
 
+--- Removes from `list` the element with value `value`, returning the value of the removed element.
+--- @generic T
+--- @param list table
+--- @param value T
+---@return T|nil
+function table.removeByValue(list, value)
+  if type(list) ~= "table" then return end
+  for i, v in ipairs(list) do
+    if v == value then
+      return table.remove(list, i)
+    end
+  end
+end
+
 -- string --
 
 --- @param self string
