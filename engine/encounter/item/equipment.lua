@@ -24,7 +24,7 @@ end
 
 --- Uses the equipment item
 function ItemEquipment:use()
-  Encounter.playDialogueText({ "ENCOUNTER_ITEM_EQUIPMENT_USE", self.name })
+  Encounter.playDialogueText({ "ENCOUNTER_ITEM_EQUIPMENT_USE", Lang.translate(self.name) })
   Player.removeItem(self)
   Assets.playSound("item")
 

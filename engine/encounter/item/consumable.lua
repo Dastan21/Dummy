@@ -31,7 +31,7 @@ function ItemConsumable:use()
 
   local dialogue_text = heal_text
   if self.text ~= nil then
-    dialogue_text = Lang.translate(self.text, self.name) .. "\n" .. heal_text
+    dialogue_text = Lang.translate(self.text, Lang.translate(self.name)) .. "\n" .. heal_text
   end
 
   Encounter.playDialogueText(dialogue_text)
