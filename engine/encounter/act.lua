@@ -1,6 +1,7 @@
 --- @class Dummy.ACT : Dummy.Class
 ---
 --- @field protected name Dummy.Text.Text
+--- @field protected enemy Dummy.Enemy
 local ACT = Class()
 
 --- Gets the class name
@@ -13,6 +14,12 @@ end
 --- @return Dummy.Text.Text
 function ACT:getName()
   return self.name
+end
+
+--- Gets the enemy the ACT is from
+--- @return Dummy.Enemy
+function ACT:getEnemy()
+  return self.enemy
 end
 
 --- Does the ACT

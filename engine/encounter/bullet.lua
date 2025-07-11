@@ -5,6 +5,7 @@
 --- @field protected damage number
 --- @field protected hitbox Dummy.Bullet.Hitbox
 --- @field protected removed boolean
+--- @field protected wave Dummy.Wave
 local Bullet = Class:extend(Sprite)
 
 --- Gets the class name
@@ -52,6 +53,12 @@ function Bullet:setHitboxFromSprite()
 
   local width, height = sprite:getWidth(), sprite:getHeight()
   self:setHitbox({ 0, 0, width, height })
+end
+
+--- Gets the wave the bullet is from
+--- @return Dummy.Wave
+function Bullet:getWave()
+  return self.wave
 end
 
 --- Removes the bullet

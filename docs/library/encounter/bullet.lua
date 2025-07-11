@@ -11,6 +11,7 @@
 --- @field protected damage number
 --- @field protected hitbox Dummy.Bullet.Hitbox
 --- @field protected removed boolean
+--- @field protected wave Dummy.Wave
 Bullet = {}
 
 --- @alias Dummy.Bullet.Hitbox [ number, number, number, number ]
@@ -42,6 +43,10 @@ function Bullet:setSprite(sprite_name) end
 --- Sets the bullet's hitbox from the sprite
 --- @protected
 function Bullet:setHitboxFromSprite() end
+
+--- Gets the wave the bullet is from
+--- @return Dummy.Wave
+function Bullet:getWave() end
 
 --- Removes the bullet
 function Bullet:remove() end
