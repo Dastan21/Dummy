@@ -100,6 +100,9 @@ end
 
 --- Fully reloads the engine
 function Scene.fullReload()
+  Debugger.resume()
+  Fader.reset()
+  Shaker.reset()
   Scene.change("MAIN_MENU")
 end
 

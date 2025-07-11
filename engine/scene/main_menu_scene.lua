@@ -11,7 +11,6 @@ local main_menu = {}
 
 --- Loads the main menu
 function main_menu.load()
-  Fader.reset()
   ModList.load()
 
   local standalone = ModList.getStandalone()

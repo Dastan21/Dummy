@@ -244,8 +244,6 @@ function Player.hurt(amount, silent)
       end
 
       return hshake, vshake
-    end, function()
-      Shaker.reset()
     end)
   end
 end
