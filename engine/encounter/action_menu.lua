@@ -86,12 +86,11 @@ function ActionMenu:fillIndexes()
 
         -- fill horizontal indexes
         local idx_x = index_x
-        if self.pagination and self.direction == "vertical" then idx_x = index_y end
         if self.indexes_x[idx_x] == nil then self.indexes_x[idx_x] = {} end
         table.insert(self.indexes_x[idx_x], option_index)
         -- fill vertical indexes
         local idx_y = index_y
-        if self.pagination and self.direction == "vertical" then idx_y = index_x end
+        if self.pagination and self.direction == "vertical" then idx_y = index_y % (max_y + 1) + 1 end
         if self.indexes_y[idx_y] == nil then self.indexes_y[idx_y] = {} end
         table.insert(self.indexes_y[idx_y], option_index)
       end
@@ -105,21 +104,22 @@ end
 function ActionMenu:show()
   self:fillIndexes()
 
+  local max_by_page = self:getMaxX() * self:getMaxY()
   for i, option in ipairs(self.options) do
-    -- show corresponding options
-    local visible = not option.disabled
-    if self.pagination and i > self:getMaxX() * self:getMaxY() then
-      visible = false
-    end
-    option.text:setVisible(visible)
+    local page = math.ceil(self:getSelectedOptionIndex() / max_by_page)
+    option.text:setVisible(not option.disabled and i <= page * max_by_page)
 
-    if visible and type(option.draw) == "function" then
+    if type(option.draw) == "function" then
       option.drawable = Drawable:new()
       option.drawable:setLayer(Constants.LAYERS.UI)
+      local menu = self
       function option.drawable:draw()
-        if option.text:isVisible() and type(option.draw) == "function" then
-          option.draw(option)
-        end
+        if not option.text:isVisible() then return end
+
+        local page = math.ceil(menu:getSelectedOptionIndex() / max_by_page)
+        if i > page * max_by_page then return end
+
+        option.draw(option)
       end
     end
   end
@@ -226,7 +226,7 @@ end
 --- @protected
 function ActionMenu:getMaxX()
   if self.direction == "vertical" then
-    return math.min(math.ceil(#self.options / (self.pagination and 2 or 3)), 2)
+    return 1
   end
 
   return math.min(#self.options, 2)

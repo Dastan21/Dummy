@@ -390,7 +390,7 @@ function Encounter.loadFightEnemyMenu()
     }
   end
 
-  Encounter.fight_enemy_menu = ActionMenu:new(options, "vertical", false, function(i)
+  Encounter.fight_enemy_menu = ActionMenu:new(options, "vertical", #options > 3, function(i)
     Encounter.enemy_selected_index = i
     Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
@@ -425,7 +425,7 @@ function Encounter.loadActEnemyMenu()
     }
   end
 
-  Encounter.act_enemy_menu = ActionMenu:new(options, "vertical", false, function(i)
+  Encounter.act_enemy_menu = ActionMenu:new(options, "vertical", #options > 3, function(i)
     Encounter.enemy_selected_index = i
     Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
   end)
