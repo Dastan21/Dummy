@@ -14,7 +14,7 @@ local mod = Mod:new({
 function mod:load()
   -- log in the debug console (F8)
   -- logs are saved in "logs.txt" in the save directory
-  print("Dummy mod loaded!")
+  print("Dummy encounter loaded!")
 
   -- fancy opening transition
   Fader.fadeOut(0.5)
