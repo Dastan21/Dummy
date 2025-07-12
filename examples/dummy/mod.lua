@@ -5,10 +5,10 @@
 --- @field done boolean
 --- @field dummy DummyMonster
 local mod = Mod:new({
-  name = "Dummy",     -- displayed name
-  title = "DUMMY",    -- window title
-  version = "1.0.0",  -- mod version
-  standalone = false, -- wether to auto-load this mod when starting the engine
+  name = "Dummy",                    -- displayed name
+  title = "DUMMY - Dummy encounter", -- window title
+  version = "1.0.0",                 -- mod version
+  standalone = false,                -- wether to auto-load this mod when starting the engine
 })
 
 function mod:load()
