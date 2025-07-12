@@ -13,7 +13,7 @@ local mod = Mod:new({
 
 function mod:load()
   -- log in the debug console (F8)
-  -- logs are saved in ".../AppData/Roaming/dummy/logs.txt"
+  -- logs are saved in "logs.txt" in the save directory
   print("Dummy mod loaded!")
 
   -- fancy opening transition
