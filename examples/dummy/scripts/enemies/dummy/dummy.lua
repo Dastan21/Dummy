@@ -15,7 +15,7 @@ function Dummy:new()
   enemy:setPosition(260, 240)
 
   -- add ACTs
-  local talk = require("scripts.enemies.dummy.talk")
+  local talk = require("scripts.enemies.dummy.acts.talk")
   enemy:addACT(talk)
 
   -- return the newly created enemy

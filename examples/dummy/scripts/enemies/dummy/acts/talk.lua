@@ -1,5 +1,5 @@
 -- talk act
-local act = ACT:new("DUMMY_MOD_ENCOUNTER_ACT_TALK")
+local act = ACT:new("DUMMY_MOD_ENCOUNTER_TALK_ACT")
 
 --- Called when the ACT is used
 function act:onUse()

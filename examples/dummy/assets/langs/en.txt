@@ -3,9 +3,10 @@ DUMMY_MOD_ENCOUNTER_TITLE=DUMMY - Dummy Encounter
 DUMMY_MOD_ENCOUNTER_TEXT_1=* You encountered the Dummy.
 DUMMY_MOD_ENCOUNTER_TEXT_2=* Dummy looks like it's\n  going to fall over.
 DUMMY_MOD_ENCOUNTER_TEXT_3=* Dummy stands around\n  absentmindedly.
+
 DUMMY_MOD_ENCOUNTER_CHECK_TEXT=* A cotton heart and a button eye[wait:5]\n* You are the apple of my eye
 
-DUMMY_MOD_ENCOUNTER_ACT_TALK=Talk
+DUMMY_MOD_ENCOUNTER_TALK_ACT=Talk
 DUMMY_MOD_ENCOUNTER_TALK_TEXT_1=* You talk to the DUMMY.\n[wait:10]* ...
 DUMMY_MOD_ENCOUNTER_TALK_TEXT_2=* It doesn't seem much for\n  conversation.
 DUMMY_MOD_ENCOUNTER_TALK_TEXT_3=* TORIEL seems happy with you.
