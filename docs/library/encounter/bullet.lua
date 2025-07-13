@@ -37,8 +37,9 @@ function Bullet:getDamage() end
 function Bullet:setDamage(damage) end
 
 --- Sets the bullet's sprite
---- @param sprite_name string
-function Bullet:setSprite(sprite_name) end
+--- @overload fun(self: Dummy.Sprite, sprite_name: string|love.Image): Dummy.Sprite
+--- @param sprites_names string[]|love.Image[]
+function Bullet:setSprite(sprites_names) end
 
 --- Sets the bullet's hitbox from the sprite
 --- @protected
@@ -47,9 +48,6 @@ function Bullet:setHitboxFromSprite() end
 --- Gets the wave the bullet is from
 --- @return Dummy.Wave
 function Bullet:getWave() end
-
---- Removes the bullet
-function Bullet:remove() end
 
 --- Updates the bullet
 --- @param dt number

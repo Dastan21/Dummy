@@ -39,9 +39,10 @@ function Bullet:setDamage(damage)
 end
 
 --- Sets the bullet's sprite
---- @param sprite_name string
-function Bullet:setSprite(sprite_name)
-  Sprite.setSprite(self, sprite_name)
+--- @overload fun(self: Dummy.Sprite, sprite_name: string|love.Image): Dummy.Sprite
+--- @param sprites_names string[]|love.Image[]
+function Bullet:setSprite(sprites_names)
+  Sprite.setSprite(self, sprites_names)
   self:setHitboxFromSprite()
 end
 
@@ -61,13 +62,6 @@ function Bullet:getWave()
   return self.wave
 end
 
---- Removes the bullet
-function Bullet:remove()
-  self.removed = true
-  self:setVisible(false)
-  Scene.removeDrawable(self)
-end
-
 --- Updates the bullet
 --- @param dt number
 function Bullet:update(dt) end
@@ -79,7 +73,6 @@ function Bullet:new()
 
   bullet.damage = 4
   bullet.hitbox = { 0, 0, 0, 0 }
-  bullet.removed = false
 
   bullet:setLayer(Constants.LAYERS.BULLET)
   bullet:setHitboxFromSprite()
