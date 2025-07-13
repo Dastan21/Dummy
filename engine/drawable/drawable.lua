@@ -181,7 +181,14 @@ function Drawable:remove()
     self.parent:removeChild(self)
   end
   Scene.removeDrawable(self)
+
+  if self.onRemoved ~= nil then
+    self:onRemoved()
+  end
 end
+
+--- Called when the drawable is removed
+function Drawable:onRemoved() end
 
 --- Gets the drawable's parent
 --- @return Dummy.Drawable|nil

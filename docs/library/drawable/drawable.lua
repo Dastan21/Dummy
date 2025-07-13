@@ -123,6 +123,9 @@ function Drawable:setPersistent(persistent) end
 --- Removes the drawable from the current scene
 function Drawable:remove() end
 
+--- Called when the drawable is removed
+function Drawable:onRemoved() end
+
 --- Gets the drawable's parent
 --- @return Dummy.Drawable|nil
 function Drawable:getParent() end
