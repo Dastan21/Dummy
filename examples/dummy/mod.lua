@@ -1,7 +1,7 @@
 --- @class DummyMod : Dummy.Mod
 ---
 --- @field turn number
---- @field fire_turn number
+--- @field tire_turn number
 --- @field done boolean
 --- @field dummy DummyMonster
 local mod = Mod:new({
