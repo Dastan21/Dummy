@@ -144,10 +144,10 @@ function ModList.isModValid(success, mod)
 end
 
 --- Sets the window title and icon
---- @param title string|nil
+--- @param title Dummy.Text.Text|nil
 function ModList.setWindowTitleAndIcon(title)
   if title ~= nil then
-    love.window.setTitle(title)
+    love.window.setTitle(Lang.translate(title))
   end
 
   love.window.setIcon(love.image.newImageData("assets/icon.png"))

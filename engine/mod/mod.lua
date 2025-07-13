@@ -1,7 +1,7 @@
 --- @class Dummy.Mod.Data
 ---
 --- @field name string
---- @field title string|nil
+--- @field title Dummy.Text.Text|nil
 --- @field version string|nil
 --- @field standalone boolean|nil
 
@@ -11,7 +11,7 @@
 --- @field protected id string
 --- @field protected name string
 --- @field protected version string
---- @field protected title string|nil
+--- @field protected title Dummy.Text.Text|nil
 --- @field protected standalone boolean
 local Mod = Class()
 
@@ -40,7 +40,7 @@ function Mod:getVersion()
 end
 
 --- Gets the mod's title
---- @return string|nil
+--- @return Dummy.Text.Text|nil
 function Mod:getTitle()
   return self.title
 end

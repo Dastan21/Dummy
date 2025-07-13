@@ -11,14 +11,14 @@
 --- @field protected id string
 --- @field protected name string
 --- @field protected version string
---- @field protected title string|nil
+--- @field protected title Dummy.Text.Text|nil
 --- @field protected standalone boolean
 Mod = {}
 
 --- @class Dummy.Mod.Data
 ---
 --- @field name string
---- @field title string|nil
+--- @field title Dummy.Text.Text|nil
 --- @field version string|nil
 --- @field standalone boolean|nil
 
@@ -40,7 +40,7 @@ function Mod:getName() end
 function Mod:getVersion() end
 
 --- Gets the mod's title
---- @return string|nil
+--- @return Dummy.Text.Text|nil
 function Mod:getTitle() end
 
 --- Gets the mod's title
