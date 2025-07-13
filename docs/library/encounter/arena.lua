@@ -63,3 +63,9 @@ function Arena.getWidth() end
 --- @return number
 function Arena.getHeight() end
 
+--- Wether the point is in the arena bounds
+--- @param x number
+--- @param y number
+--- @return boolean
+function Arena.isInBounds(x, y) end
+
