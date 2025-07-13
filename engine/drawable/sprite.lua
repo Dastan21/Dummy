@@ -333,7 +333,7 @@ function Sprite:vaporize(type, size)
       end
     end
   end, function()
-    Scene.removeDrawable(vaporize_drawable)
+    vaporize_drawable:remove()
     self:remove()
   end)
 end
