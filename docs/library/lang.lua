@@ -35,8 +35,12 @@ function Lang.switchLanguage() end
 --- @return string
 function Lang.translate(key, ...) end
 
+--- Clears the mods translations
+function Lang.clearModsTranslations() end
+
 --- Loads languages from the lang folder
-function Lang.loadLanguages() end
+--- @param mod_id? string
+function Lang.loadLanguages(mod_id) end
 
 --- Loads languages
 function Lang.load() end

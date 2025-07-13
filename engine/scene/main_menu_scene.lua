@@ -16,6 +16,7 @@ function main_menu.load()
   local standalone = ModList.getStandalone()
   if standalone ~= nil then
     ModList.mountMod(standalone)
+    Lang.loadLanguages(standalone:getId())
     if type(standalone.preview) == "function" then
       standalone:preview()
     end

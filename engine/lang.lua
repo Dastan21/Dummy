@@ -59,7 +59,10 @@ function Lang.translate(key, ...)
 
   key = tostring(key)
 
-  local txt = (Lang.translations[Lang.language_code] and Lang.translations[Lang.language_code][key]) or key or ""
+  local txt = (Lang.mods_translations[Lang.language_code] and Lang.mods_translations[Lang.language_code][key]) or nil
+  if txt == nil then
+    txt = (Lang.translations[Lang.language_code] and Lang.translations[Lang.language_code][key]) or key or ""
+  end
   local i = 1
 
   return (txt:gsub("\\n", "\n"):gsub("{}", function()
@@ -69,8 +72,14 @@ function Lang.translate(key, ...)
   end))
 end
 
+--- Clears the mods translations
+function Lang.clearModsTranslations()
+  Lang.mods_translations = {}
+end
+
 --- Loads languages from the lang folder
-function Lang.loadLanguages()
+--- @param mod_id? string
+function Lang.loadLanguages(mod_id)
   for _, filename in pairs(love.filesystem.getDirectoryItems("assets/langs")) do
     if Utils.checkExtension(filename, "txt") then
       local code = filename:sub(1, #filename - 4)
@@ -78,11 +87,18 @@ function Lang.loadLanguages()
         Lang.translations[code] = {}
         table.insert(Lang.languages, code)
       end
+      if Lang.mods_translations[code] == nil then
+        Lang.mods_translations[code] = {}
+      end
       for txt in love.filesystem.lines("assets/langs/" .. filename) do
         if txt ~= "" and txt:sub(1, 1) ~= "#" then -- for comments
           local t = {}
           for str in string.gmatch(txt, "([^=]+)") do table.insert(t, str) end
-          Lang.translations[code][t[1]] = t[2]
+          if mod_id ~= nil then
+            Lang.mods_translations[code][t[1]] = t[2]
+          else
+            Lang.translations[code][t[1]] = t[2]
+          end
         end
       end
     end
@@ -93,8 +109,9 @@ end
 
 --- Loads languages
 function Lang.load()
-  Lang.translations  = {}
-  Lang.languages     = {}
+  Lang.translations = {}
+  Lang.mods_translations = {}
+  Lang.languages = {}
   Lang.language_code = ""
   Lang.language_name = ""
 
