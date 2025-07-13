@@ -141,19 +141,20 @@ function Sprite:play()
   if self.frames == nil then return end
 
   self:stop()
+  local stopped = false
 
   self.timer = Timer.every(self.speed, function()
-    if self:isVisible() then
-      if not self.loop and self.frame_index >= #self.frames then
-        if self.keep_last_frame then
-          self:setFrame(self.frame_index)
-        else
-          self:stop()
-          self.frame_index = 0
-        end
+    if not self:isVisible() or stopped then return end
+    if not self.loop and self.frame_index >= #self.frames then
+      if self.keep_last_frame then
+        self:setFrame(self.frame_index)
       else
-        self.frame_index = (self.frame_index % #self.frames) + 1
+        stopped = true
+        self:stop()
+        self.frame_index = 0
       end
+    else
+      self.frame_index = (self.frame_index % #self.frames) + 1
     end
   end)
 end
