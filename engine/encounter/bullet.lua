@@ -6,6 +6,7 @@
 --- @field protected hitbox Dummy.Bullet.Hitbox
 --- @field protected removed boolean
 --- @field protected wave Dummy.Wave
+--- @field protected debug_hitbox_drawable Dummy.Drawable
 local Bullet = Class:extend(Sprite)
 
 --- Gets the class name
@@ -56,6 +57,12 @@ function Bullet:setHitboxFromSprite()
   self:setHitbox({ 0, 0, width, height })
 end
 
+--- Removes the drawable from the current scene
+function Bullet:remove()
+  self.debug_hitbox_drawable:remove()
+  Drawable.remove(self)
+end
+
 --- Gets the wave the bullet is from
 --- @return Dummy.Wave
 function Bullet:getWave()
@@ -77,9 +84,9 @@ function Bullet:new()
   bullet:setLayer(Constants.LAYERS.BULLET)
   bullet:setHitboxFromSprite()
 
-  local debug_hitbox_drawable = Drawable:new()
-  debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
-  function debug_hitbox_drawable:draw()
+  bullet.debug_hitbox_drawable = Drawable:new()
+  bullet.debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
+  function bullet.debug_hitbox_drawable:draw()
     if Debugger.shouldDisplayHitbox() and bullet:isVisible() then
       local x, y = bullet:getPosition()
       local origin_x, origin_y = bullet:getOrigin()
