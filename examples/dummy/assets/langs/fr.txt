@@ -1,4 +1,6 @@
-DUMMY_MOD_ENCOUNTER_TITLE=DUMMY - Rencontre Mannequin
+DUMMY_MOD_ENCOUNTER_TITLE=DUMMY - Rencontre avec Mannequin
+
+DUMMY_MOD_ENCOUNTER_DUMMY_NAME=Mannequin
 
 DUMMY_MOD_ENCOUNTER_TEXT_1=* Vous rencontrez le Mannequin.
 DUMMY_MOD_ENCOUNTER_TEXT_2=* Le Mannequin semble sur\n  le point de tomber.

@@ -33,10 +33,6 @@ function mod:load()
   self.dummy = Dummy:new()
   Encounter.addEnemy(self.dummy)
 
-  -- add items
-  Player.addItem(ItemConsumable:new("DUMMY_MOD_MONSTER_CANDY_NAME", "DUMMY_MOD_MONSTER_CANDY_SHORTNAME", 50, "food"))
-  Player.addItem(ItemEquipment:new("DUMMY_MOD_TOY_KNIFE_NAME", "DUMMY_MOD_TOY_KNIFE_SHORTNAME", 3, "weapon"))
-
   -- initialize additional variables
   self.turn = 0
   self.tire_turn = 6

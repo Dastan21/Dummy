@@ -1,5 +1,7 @@
 DUMMY_MOD_ENCOUNTER_TITLE=DUMMY - Dummy Encounter
 
+DUMMY_MOD_ENCOUNTER_DUMMY_NAME=Mannequin
+
 DUMMY_MOD_ENCOUNTER_TEXT_1=* You encountered the Dummy.
 DUMMY_MOD_ENCOUNTER_TEXT_2=* Dummy looks like it's\n  going to fall over.
 DUMMY_MOD_ENCOUNTER_TEXT_3=* Dummy stands around\n  absentmindedly.

@@ -4,7 +4,7 @@ local Dummy = Class:extend(Enemy)
 --- Initializes the Dummy
 function Dummy:new()
   -- create the base enemy
-  self = Class:new(Dummy, { "Dummy", "dummy" })
+  self = Class:new(Dummy, { "DUMMY_MOD_ENCOUNTER_DUMMY_NAME", "dummy" })
 
   -- set HP after max HP to heal
   self:setMaxHP(15)
