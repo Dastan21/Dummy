@@ -114,7 +114,6 @@ end
 --- [INTERNAL] Ends the wave
 --- @private
 function Wave:__end()
-  print("wave end")
   for bullet in pairs(self.bullets) do
     bullet:remove()
   end
