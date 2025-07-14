@@ -23,6 +23,7 @@
 --- @field protected visible boolean
 --- @field protected sprite love.Image|love.Text
 --- @field protected persistent boolean
+--- @field protected removed boolean
 Drawable = {}
 
 --- @alias love.Color [ number, number, number ]

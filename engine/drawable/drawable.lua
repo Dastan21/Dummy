@@ -17,6 +17,7 @@
 --- @field protected visible boolean
 --- @field protected sprite love.Image|love.Text
 --- @field protected persistent boolean
+--- @field protected removed boolean
 local Drawable = Class()
 
 --- Gets the class's name
@@ -177,6 +178,9 @@ end
 
 --- Removes the drawable from the current scene
 function Drawable:remove()
+  if self.removed then return end
+  self.removed = true
+
   if self.parent ~= nil then
     self.parent:removeChild(self)
   end
@@ -294,6 +298,7 @@ function Drawable:new()
   drawable.visible = true
   drawable.persistent = false
   drawable.sprite = nil
+  drawable.removed = false
 
   Scene.addDrawable(drawable)
 
