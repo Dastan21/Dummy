@@ -15,8 +15,3 @@ DUMMY_MOD_ENCOUNTER_TALK_TEXT_3=* TORIEL seems happy with you.
 
 DUMMY_MOD_ENCOUNTER_TIRE=* Dummy tires of your\n  aimless shenanigans.
 DUMMY_MOD_ENCOUNTER_BUBBLE=[wave].[wait:5].[wait:5].[wait:5].[wait:5].
-
-DUMMY_MOD_MONSTER_CANDY_NAME=Monster Candy
-DUMMY_MOD_MONSTER_CANDY_SHORTNAME=MnstrCndy
-DUMMY_MOD_TOY_KNIFE_NAME=Toy Knife
-DUMMY_MOD_TOY_KNIFE_SHORTNAME=Toy Knife
