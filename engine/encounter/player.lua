@@ -214,7 +214,7 @@ end
 --- @param amount number
 --- @param silent? boolean wether to play then sound, animation and shake (Defaults to `false`)
 function Player.hurt(amount, silent)
-  local damage = math.max(0, math.round(amount - ((Player.df + Player.weapon:getValue()) / 5)))
+  local damage = math.max(0, math.round(amount - ((Player.df + Player.armor:getValue()) / 5)))
   Player.setHP(Player.hp - damage)
 
   if not silent then
