@@ -266,7 +266,7 @@ function Sprite:vaporize(type, size)
 
   local vaporize_drawable = Drawable:new()
   vaporize_drawable:setPosition(sprite_x, sprite_y)
-  function vaporize_drawable:draw()
+  function vaporize_drawable.draw()
     local origin_x, origin_y = sprite:getOrigin()
     local width, height = sprite:getWidth(), sprite:getHeight()
     local image = sprite:getSprite()
@@ -369,26 +369,26 @@ end
 --- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
 --- @return Dummy.Sprite
 function Sprite:new(sprites_names, speed, loop, play, keep_last_frame)
-  local sprite = Class:new(Sprite)
+  self = Class:new(Sprite)
 
-  sprite.speed = Utils.getOrDefault(speed, 1 / 30)
-  sprite.loop = Utils.getOrDefault(loop, true)
-  sprite.keep_last_frame = Utils.getOrDefault(keep_last_frame, true)
-  sprite.frames = {}
-  sprite.frame_index = 1
-  sprite.vaporize_type = nil
-  sprite.vaporize_size = 2
+  self.speed = Utils.getOrDefault(speed, 1 / 30)
+  self.loop = Utils.getOrDefault(loop, true)
+  self.keep_last_frame = Utils.getOrDefault(keep_last_frame, true)
+  self.frames = {}
+  self.frame_index = 1
+  self.vaporize_type = nil
+  self.vaporize_size = 2
 
 
   if sprites_names ~= nil then
-    sprite:setSprite(sprites_names)
+    self:setSprite(sprites_names)
   end
 
   if Utils.getOrDefault(play, true) then
-    sprite:play()
+    self:play()
   end
 
-  return sprite
+  return self
 end
 
 return Sprite

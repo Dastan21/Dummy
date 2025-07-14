@@ -79,19 +79,18 @@ end
 function DialogueBubble:new(type, value, ...)
   type = Utils.getOrDefault(type, "right")
 
-  local dialogue_bubble = Class:new(DialogueBubble, { "bubble_" .. type })
+  self = Class:new(DialogueBubble, { "bubble_" .. type })
+  self.type = type
+  self.dialogue = DialogueText:new(value, ...)
+  self.dialogue:setOrigin(0, 0)
+  self.dialogue:setColor(type ~= "shock" and { 0, 0, 0 } or { 1, 1, 1 })
+  self.dialogue:setVoice("voice_bubble")
+  self.dialogue:setFont(Assets.getFont("plain"))
+  self.dialogue:setParent(self)
 
-  dialogue_bubble.type = type
-  dialogue_bubble.dialogue = DialogueText:new(value, ...)
-  dialogue_bubble.dialogue:setOrigin(0, 0)
-  dialogue_bubble.dialogue:setColor(type ~= "shock" and { 0, 0, 0 } or { 1, 1, 1 })
-  dialogue_bubble.dialogue:setVoice("voice_bubble")
-  dialogue_bubble.dialogue:setFont(Assets.getFont("plain"))
-  dialogue_bubble.dialogue:setParent(dialogue_bubble)
+  self:init()
 
-  dialogue_bubble:init()
-
-  return dialogue_bubble
+  return self
 end
 
 return DialogueBubble

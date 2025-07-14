@@ -137,15 +137,14 @@ function Wave:onEnd() end
 --- @param duration? number wave duration, in seconds (Defaults to `8`)
 --- @return Dummy.Wave
 function Wave:new(duration)
-  local wave = Class:new(Wave)
+  self = Class:new(Wave)
+  self.duration = Utils.getOrDefault(duration, 8)
+  self.time = 0
+  self.is_done = false
+  self.arena_width = Constants.ARENA.DEFAULT_WIDTH
+  self.arena_height = Constants.ARENA.DEFAULT_HEIGHT
 
-  wave.duration = Utils.getOrDefault(duration, 8)
-  wave.time = 0
-  wave.is_done = false
-  wave.arena_width = Constants.ARENA.DEFAULT_WIDTH
-  wave.arena_height = Constants.ARENA.DEFAULT_HEIGHT
-
-  return wave
+  return self
 end
 
 return Wave

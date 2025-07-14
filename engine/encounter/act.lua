@@ -34,11 +34,10 @@ function ACT:onUse() end
 --- @param name Dummy.Text.Text
 --- @return Dummy.ACT
 function ACT:new(name)
-  local act = Class:new(ACT)
+  self = Class:new(ACT)
+  self.name = name
 
-  act.name = name
-
-  return act
+  return self
 end
 
 return ACT

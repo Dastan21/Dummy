@@ -468,18 +468,17 @@ end
 --- @param value Dummy.Text.Text
 --- @return Dummy.Text
 function Text:new(value)
-  local text = Class:new(Text)
+  self = Class:new(Text)
+  self.color = { 1, 1, 1 }
+  self.font = love.graphics.getFont()
+  self.align = "left"
+  self.timer = 0
+  self.custom_commands = {}
+  self.custom_commands_called = {}
 
-  text.color = { 1, 1, 1 }
-  text.font = love.graphics.getFont()
-  text.align = "left"
-  text.timer = 0
-  text.custom_commands = {}
-  text.custom_commands_called = {}
+  self:setText(value)
 
-  text:setText(value)
-
-  return text
+  return self
 end
 
 return Text

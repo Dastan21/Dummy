@@ -76,26 +76,25 @@ function Bullet:update(dt) end
 --- Creates a bullet
 --- @return Dummy.Bullet
 function Bullet:new()
-  local bullet = Class:new(Bullet, { "bullet" })
+  self = Class:new(Bullet, { "bullet" })
+  self.damage = 4
+  self.hitbox = { 0, 0, 0, 0 }
 
-  bullet.damage = 4
-  bullet.hitbox = { 0, 0, 0, 0 }
+  self:setLayer(Constants.LAYERS.BULLET)
+  self:setHitboxFromSprite()
 
-  bullet:setLayer(Constants.LAYERS.BULLET)
-  bullet:setHitboxFromSprite()
-
-  bullet.debug_hitbox_drawable = Drawable:new()
-  bullet.debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
-  function bullet.debug_hitbox_drawable:draw()
-    if Debugger.shouldDisplayHitbox() and bullet:isVisible() then
-      local hitbox = bullet:getHitbox()
+  self.debug_hitbox_drawable = Drawable:new()
+  self.debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
+  function self.debug_hitbox_drawable.draw()
+    if Debugger.shouldDisplayHitbox() and self:isVisible() then
+      local hitbox = self:getHitbox()
       if hitbox[3] < 0 and hitbox[4] < 0 then return end
 
-      local x, y = bullet:getPosition()
-      local width, height = bullet:getWidth(), bullet:getHeight()
-      local origin_x, origin_y = bullet:getOrigin()
-      local scale_x, scale_y = bullet:getScale()
-      local angle = math.rad(bullet:getAngle())
+      local x, y = self:getPosition()
+      local width, height = self:getWidth(), self:getHeight()
+      local origin_x, origin_y = self:getOrigin()
+      local scale_x, scale_y = self:getScale()
+      local angle = math.rad(self:getAngle())
       local hitbox_x = x - width * origin_x * scale_x + hitbox[1] * scale_x + 0.5
       local hitbox_y = y - height * origin_y * scale_y + hitbox[2] * scale_y + 0.5
       local hitbox_width = hitbox[3] * scale_x - 1
@@ -111,7 +110,7 @@ function Bullet:new()
     end
   end
 
-  return bullet
+  return self
 end
 
 return Bullet

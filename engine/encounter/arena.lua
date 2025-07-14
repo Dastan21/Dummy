@@ -32,7 +32,7 @@ function Arena.load()
   --- arena background
   local arena_background_drawable = Drawable:new()
   arena_background_drawable:setLayer(Constants.LAYERS.ARENA)
-  function arena_background_drawable:draw()
+  function arena_background_drawable.draw()
     local arena_x = Arena.x - (Arena.width / 2)
     local arena_y = Arena.y - Arena.height
 
@@ -43,7 +43,7 @@ function Arena.load()
   --- arena border
   local arena_border_drawable = Drawable:new()
   arena_border_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
-  function arena_border_drawable:draw()
+  function arena_border_drawable.draw()
     local b = Constants.ARENA.BORDER_WIDTH
     local x = Arena.x - (Arena.width / 2)
     local y = Arena.y - Arena.height

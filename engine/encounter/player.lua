@@ -82,7 +82,7 @@ function Player.load()
 
   local debug_hitbox_drawable = Drawable:new()
   debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_SOUL)
-  function debug_hitbox_drawable:draw()
+  function debug_hitbox_drawable.draw()
     local width, height = Player.hitbox[3], Player.hitbox[4]
     if not Player.isHidden() and Debugger.shouldDisplayHitbox() and (width > 0 or height > 0) then
       local x, y = Player.getPosition()

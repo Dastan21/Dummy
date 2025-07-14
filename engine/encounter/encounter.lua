@@ -320,7 +320,7 @@ function Encounter.load()
   -- player hp bar
   local player_hp_bar_drawable = Drawable:new()
   player_hp_bar_drawable:setLayer(Constants.LAYERS.UI)
-  function player_hp_bar_drawable:draw()
+  function player_hp_bar_drawable.draw()
     local max_hp_bar_width = math.clamp(5 * Player.getLV() + 20, 25, 120)
     local hp_bar_width = max_hp_bar_width * Player.getHP() / Player.getMaxHP()
 
@@ -975,7 +975,7 @@ function Encounter.startAttacking()
         end
 
         Encounter.enemy_hp_draw:setVisible(true)
-        function Encounter.enemy_hp_draw:draw()
+        function Encounter.enemy_hp_draw.draw()
           love.graphics.setColor(0, 0, 0, 1)
           love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, width + 2, 15)
           love.graphics.setColor(0.25, 0.25, 0.25, 1)

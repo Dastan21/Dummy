@@ -112,11 +112,10 @@ function ActionMenu:show()
     if type(option.draw) == "function" then
       option.drawable = Drawable:new()
       option.drawable:setLayer(Constants.LAYERS.UI)
-      local menu = self
-      function option.drawable:draw()
+      function option.drawable.draw()
         if not option.text:isVisible() then return end
 
-        local page = math.ceil(menu:getSelectedOptionIndex() / max_by_page)
+        page = math.ceil(self:getSelectedOptionIndex() / max_by_page)
         if i > page * max_by_page then return end
 
         option.draw(option)
@@ -323,21 +322,20 @@ end
 --- @param onBack? fun(i: number)
 --- @return Dummy.Encounter.ActionMenu
 function ActionMenu:new(options, direction, pagination, onBack)
-  local action_menu = Class:new(ActionMenu)
+  self = Class:new(ActionMenu)
+  self.options = Utils.getOrDefault(options, {})
+  self.indexes_x = {}
+  self.indexes_y = {}
+  self.index_x = 0
+  self.index_y = 0
+  self.direction = Utils.getOrDefault(direction, "horizontal")
+  self.pagination = Utils.getOrDefault(pagination, false)
+  self.onBack = onBack
+  self.active = true
 
-  action_menu.options = Utils.getOrDefault(options, {})
-  action_menu.indexes_x = {}
-  action_menu.indexes_y = {}
-  action_menu.index_x = 0
-  action_menu.index_y = 0
-  action_menu.direction = Utils.getOrDefault(direction, "horizontal")
-  action_menu.pagination = Utils.getOrDefault(pagination, false)
-  action_menu.onBack = onBack
-  action_menu.active = true
+  self:init()
 
-  action_menu:init()
-
-  return action_menu
+  return self
 end
 
 return ActionMenu

@@ -92,14 +92,13 @@ function Mod:onEscaped() end
 function Mod:new(data)
   assert(data.name ~= nil, "Mod has no name")
 
-  local mod = Class:new(Mod)
+  self = Class:new(Mod)
+  self.name = data.name
+  self.title = Utils.getOrDefault(data.title, data.name)
+  self.version = data.version
+  self.standalone = Utils.getOrDefault(data.standalone, false)
 
-  mod.name = data.name
-  mod.title = Utils.getOrDefault(data.title, data.name)
-  mod.version = data.version
-  mod.standalone = Utils.getOrDefault(data.standalone, false)
-
-  return mod
+  return self
 end
 
 return Mod

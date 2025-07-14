@@ -281,28 +281,27 @@ end
 --- Creates a drawable
 --- @return Dummy.Drawable
 function Drawable:new()
-  local drawable = Class:new(Drawable)
+  self = Class:new(Drawable)
+  self.parent = nil
+  self.children = {}
+  self.x = 0
+  self.y = 0
+  self.angle = 0
+  self.scale_x = 1
+  self.scale_y = 1
+  self.origin_x = 0.5
+  self.origin_y = 0.5
+  self.color = { 1, 1, 1 }
+  self.alpha = 1
+  self.layer = Constants.LAYERS.UI
+  self.visible = true
+  self.persistent = false
+  self.sprite = nil
+  self.removed = false
 
-  drawable.parent = nil
-  drawable.children = {}
-  drawable.x = 0
-  drawable.y = 0
-  drawable.angle = 0
-  drawable.scale_x = 1
-  drawable.scale_y = 1
-  drawable.origin_x = 0.5
-  drawable.origin_y = 0.5
-  drawable.color = { 1, 1, 1 }
-  drawable.alpha = 1
-  drawable.layer = Constants.LAYERS.UI
-  drawable.visible = true
-  drawable.persistent = false
-  drawable.sprite = nil
-  drawable.removed = false
+  Scene.addDrawable(self)
 
-  Scene.addDrawable(drawable)
-
-  return drawable
+  return self
 end
 
 return Drawable

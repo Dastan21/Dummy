@@ -323,24 +323,23 @@ function Enemy:new(name, sprite)
   assert(name ~= nil, "Enemy name is nil")
   assert(sprite ~= nil, "Enemy \"" .. name .. "\" sprite is nil")
 
-  local enemy = Class:new(Enemy, { sprite })
+  self = Class:new(Enemy, { sprite })
+  self.name = name
+  self.hp = 20
+  self.max_hp = 20
+  self.at = 0
+  self.df = 0
+  self.exp = 0
+  self.gold = 0
+  self.check = ""
+  self.acts = {}
+  self.can_be_spared = false
 
-  enemy.name = name
-  enemy.hp = 20
-  enemy.max_hp = 20
-  enemy.at = 0
-  enemy.df = 0
-  enemy.exp = 0
-  enemy.gold = 0
-  enemy.check = ""
-  enemy.acts = {}
-  enemy.can_be_spared = false
+  self:setOrigin(0.5, 1)
+  self:setLayer(Constants.LAYERS.BELOW_UI)
+  self:setPosition(320, 240)
 
-  enemy:setOrigin(0.5, 1)
-  enemy:setLayer(Constants.LAYERS.BELOW_UI)
-  enemy:setPosition(320, 240)
-
-  return enemy
+  return self
 end
 
 return Enemy

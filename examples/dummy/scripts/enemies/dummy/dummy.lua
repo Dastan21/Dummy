@@ -4,22 +4,22 @@ local Dummy = Class:extend(Enemy)
 --- Initializes the Dummy
 function Dummy:new()
   -- create the base enemy
-  local enemy = Class:new(Dummy, { "Dummy", "dummy" })
+  self = Class:new(Dummy, { "Dummy", "dummy" })
 
   -- set HP after max HP to heal
-  enemy:setMaxHP(15)
-  enemy:setHP(15)
+  self:setMaxHP(15)
+  self:setHP(15)
   -- check text below the stats text
-  enemy:setCheck("DUMMY_MOD_ENCOUNTER_CHECK_TEXT")
+  self:setCheck("DUMMY_MOD_ENCOUNTER_CHECK_TEXT")
   -- position of the Dummy, strike animation and damage bar are positioned relative to this
-  enemy:setPosition(260, 240)
+  self:setPosition(260, 240)
 
   -- add ACTs
   local talk = require("scripts.enemies.dummy.acts.talk")
-  enemy:addACT(talk)
+  self:addACT(talk)
 
   -- return the newly created enemy
-  return enemy
+  return self
 end
 
 --- Called when the enemy should dialogue

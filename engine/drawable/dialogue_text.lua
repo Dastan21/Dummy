@@ -275,14 +275,13 @@ function DialogueText:onDone() end
 --- @param ... Dummy.Text.Text more text value
 --- @return Dummy.DialogueText
 function DialogueText:new(value, ...)
-  local dialogue_text = Class:new(DialogueText, { value })
+  self = Class:new(DialogueText, { value })
+  self.speed = 1
+  self.voice = "voice_text"
 
-  dialogue_text.speed = 1
-  dialogue_text.voice = "voice_text"
+  self:setText(value, ...)
 
-  dialogue_text:setText(value, ...)
-
-  return dialogue_text
+  return self
 end
 
 return DialogueText
