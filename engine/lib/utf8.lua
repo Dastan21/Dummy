@@ -76,6 +76,8 @@ local rep     = string.rep
 local sub     = string.sub
 local upper   = string.upper
 
+local utf8data = require "lib.utf8data"
+
 -- returns the number of bytes used by the UTF-8 character at byte i in s
 -- also doubles as a UTF-8 character validator
 local function utf8charbytes (s, i)
@@ -238,7 +240,6 @@ local function utf8sub (s, i, j)
 	return sub(s, startByte, endByte)
 end
 
---[[
 -- replace UTF-8 characters based on a mapping table
 local function utf8replace (s, mapping)
 	-- argument checking
@@ -269,14 +270,13 @@ end
 
 -- identical to string.upper except it knows about unicode simple case conversions
 local function utf8upper (s)
-	return utf8replace(s, utf8_lc_uc)
+	return utf8replace(s, utf8data.utf8_lc_uc)
 end
 
 -- identical to string.lower except it knows about unicode simple case conversions
 local function utf8lower (s)
-	return utf8replace(s, utf8_uc_lc)
+	return utf8replace(s, utf8data.utf8_uc_lc)
 end
-]]
 
 -- identical to string.reverse except that it supports UTF-8
 local function utf8reverse (s)
@@ -1070,10 +1070,10 @@ function M.format(s)
 	return format(s)
 end
 function M.lower(s)
-	return lower(s)
+	return utf8lower(s)
 end
 function M.upper(s)
-	return upper(s)
+	return utf8upper(s)
 end
 function M.rep()
 	return rep(s)

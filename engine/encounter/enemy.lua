@@ -132,7 +132,7 @@ end
 --- Gets the computed enemy's check text
 --- @return string
 function Enemy:getCheckText()
-  local check = "* " .. Lang.translate(self:getName()):upper() .. " - "
+  local check = "* " .. UTF8.upper(Lang.translate(self:getName())) .. " - "
   check = check .. Lang.translate("ENCOUNTER_STAT_AT") .. " " .. self:getAT() .. " "
   check = check .. Lang.translate("ENCOUNTER_STAT_DF") .. " " .. self:getDF()
   check = check .. "[wait:5]\n" .. Lang.translate(self:getCheck())
