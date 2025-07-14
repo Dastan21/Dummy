@@ -132,7 +132,9 @@ function Arena.resize(width, height, instant, resize_callback)
   else
     Arena.target_width = width
     Arena.target_height = height
-    Arena.resize_callback = resize_callback
+    if resize_callback ~= nil then
+      Arena.resize_callback = resize_callback
+    end
   end
 end
 
@@ -164,7 +166,9 @@ function Arena.move(x, y, instant, move_callback)
   else
     Arena.target_x = abs_x
     Arena.target_y = abs_y
-    Arena.move_callback = move_callback
+    if move_callback ~= nil then
+      Arena.move_callback = move_callback
+    end
   end
 end
 

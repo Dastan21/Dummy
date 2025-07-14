@@ -827,6 +827,11 @@ function Encounter.startEnemyDialogue()
     local x, y = Arena:getPosition()
     Player.setPosition(x, y - 65)
     Player.show()
+
+    for _, wave in ipairs(Encounter.waves) do
+      --- @diagnostic disable-next-line: invisible
+      wave:__prepare()
+    end
   else
     if #Encounter.bubble_dialogues <= 0 then
       Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
@@ -1099,14 +1104,11 @@ end
 --- Starts defending
 function Encounter.startDefending()
   Encounter.unselectAction()
+  if #Encounter.waves <= 0 then return end
 
-  if #Encounter.waves > 0 then
-    -- default wave arena size
-    Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT)
-
-    for _, wave in ipairs(Encounter.waves) do
-      --- @diagnostic disable-next-line: invisible
-      wave:__start()
+  for _, wave in ipairs(Encounter.waves) do
+    if type(wave.onStart) == "function" then
+      wave:onStart()
     end
   end
 end

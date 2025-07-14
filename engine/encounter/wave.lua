@@ -63,14 +63,16 @@ function Wave:getBullets()
   return bullets
 end
 
---- [INTERNAL] Starts the wave
+--- [INTERNAL] Prepares the wave
 --- @private
-function Wave:__start()
+function Wave:__prepare()
   self.bullets = {}
   self.time = 0
   self.is_done = false
 
-  self:onStart()
+  if type(self.onPrepare) == "function" then
+    self:onPrepare()
+  end
 end
 
 --- [INTERNAL] Updates the wave
@@ -111,6 +113,9 @@ function Wave:__end()
 
   self:onEnd()
 end
+
+--- Called before the wave starts
+function Wave:onPrepare() end
 
 --- Called when the wave starts
 function Wave:onStart() end

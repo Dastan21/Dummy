@@ -45,9 +45,9 @@ function Wave:spawnBullet(bullet) end
 --- @return Dummy.Bullet[]
 function Wave:getBullets() end
 
---- [INTERNAL] Starts the wave
+--- [INTERNAL] Prepares the wave
 --- @private
-function Wave:__start() end
+function Wave:__prepare() end
 
 --- [INTERNAL] Updates the wave
 --- @private
@@ -56,6 +56,9 @@ function Wave:__update(dt) end
 --- [INTERNAL] Ends the wave
 --- @private
 function Wave:__end() end
+
+--- Called before the wave starts
+function Wave:onPrepare() end
 
 --- Called when the wave starts
 function Wave:onStart() end
