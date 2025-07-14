@@ -294,6 +294,7 @@ function Encounter.load()
   Encounter.strike_sprite:setOrigin(0.5, 0.5)
   Encounter.strike_sprite:setScale(1.5)
   Encounter.strike_sprite:setVisible(false)
+  Encounter.strike_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
 
   -- player name
   Encounter.player_name_text = Text:new(Player.getName())
@@ -333,6 +334,7 @@ function Encounter.load()
   Encounter.enemy_hp_draw = Drawable:new()
   Encounter.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_BULLET)
   Encounter.enemy_hp_draw:setVisible(false)
+  Encounter.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_UI)
 
   Encounter.enemy_hp_text = Text:new("")
   Encounter.enemy_hp_text:setColor(1, 0, 0)
@@ -340,6 +342,7 @@ function Encounter.load()
   Encounter.enemy_hp_text:setFont(Assets.getFont("damage"))
   Encounter.enemy_hp_text:setScale(1)
   Encounter.enemy_hp_text:setVisible(false)
+  Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
   Encounter.can_flee = true
   Encounter.setMusic("battle")
