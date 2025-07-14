@@ -1,6 +1,6 @@
 --- @class Dummy.Enemy : Dummy.Sprite
 ---
---- @field protected name string
+--- @field protected name Dummy.Text.Text
 --- @field protected hp number
 --- @field protected max_hp number
 --- @field protected at number
@@ -24,7 +24,7 @@ function Enemy.getClassName()
 end
 
 --- Gets the enemy's name
---- @return string
+--- @return Dummy.Text.Text
 function Enemy:getName()
   return self.name
 end
@@ -132,7 +132,7 @@ end
 --- Gets the computed enemy's check text
 --- @return string
 function Enemy:getCheckText()
-  local check = "* " .. self:getName():upper() .. " - "
+  local check = "* " .. Lang.translate(self:getName()):upper() .. " - "
   check = check .. Lang.translate("ENCOUNTER_STAT_AT") .. " " .. self:getAT() .. " "
   check = check .. Lang.translate("ENCOUNTER_STAT_DF") .. " " .. self:getDF()
   check = check .. "[wait:5]\n" .. Lang.translate(self:getCheck())
@@ -316,7 +316,7 @@ function Enemy:onKilled() end
 function Enemy:update(dt) end
 
 --- Creates an enemy
---- @param name string
+--- @param name Dummy.Text.Text
 --- @param sprite string
 --- @return Dummy.Enemy
 function Enemy:new(name, sprite)

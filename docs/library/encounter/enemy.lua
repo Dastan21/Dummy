@@ -8,7 +8,7 @@
 
 --- @class Dummy.Enemy : Dummy.Sprite
 ---
---- @field protected name string
+--- @field protected name Dummy.Text.Text
 --- @field protected hp number
 --- @field protected max_hp number
 --- @field protected at number
@@ -30,7 +30,7 @@ Enemy = {}
 function Enemy.getClassName() end
 
 --- Gets the enemy's name
---- @return string
+--- @return Dummy.Text.Text
 function Enemy:getName() end
 
 --- Sets the enemy's name
@@ -168,7 +168,7 @@ function Enemy:onKilled() end
 function Enemy:update(dt) end
 
 --- Creates an enemy
---- @param name string
+--- @param name Dummy.Text.Text
 --- @param sprite string
 --- @return Dummy.Enemy
 function Enemy:new(name, sprite) end

@@ -369,7 +369,7 @@ function Encounter.loadFightEnemyMenu()
   local options = {}
 
   for i, enemy in ipairs(Encounter.enemies) do
-    local text = Text:new("* " .. enemy:getName())
+    local text = Text:new("* " .. Lang.translate(enemy:getName()))
     if enemy:getCanBeSpared() then
       text:setColor(1, 1, 0)
     else
@@ -413,7 +413,7 @@ function Encounter.loadActEnemyMenu()
   local options = {}
 
   for i, enemy in ipairs(Encounter.enemies) do
-    local text = Text:new("* " .. enemy:getName())
+    local text = Text:new("* " .. Lang.translate(enemy:getName()))
     if enemy:getCanBeSpared() then
       text:setColor(1, 1, 0)
     else
