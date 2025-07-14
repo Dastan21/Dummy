@@ -12,6 +12,8 @@
 --- @field protected time number
 --- @field protected is_done boolean
 --- @field protected bullets table<Dummy.Bullet, boolean>
+--- @field protected arena_width number
+--- @field protected arena_height number
 Wave = {}
 
 --- Gets the class name
@@ -45,9 +47,18 @@ function Wave:spawnBullet(bullet) end
 --- @return Dummy.Bullet[]
 function Wave:getBullets() end
 
---- [INTERNAL] Prepares the wave
+--- Sets the wave's arena size
+--- @param width number
+--- @param height number
+function Wave:setArenaSize(width, height) end
+
+--- Gets the wave's arena size
+--- @return number, number
+function Wave:getArenaSize() end
+
+--- [INTERNAL] Starts the wave
 --- @private
-function Wave:__prepare() end
+function Wave:__start() end
 
 --- [INTERNAL] Updates the wave
 --- @private
@@ -56,9 +67,6 @@ function Wave:__update(dt) end
 --- [INTERNAL] Ends the wave
 --- @private
 function Wave:__end() end
-
---- Called before the wave starts
-function Wave:onPrepare() end
 
 --- Called when the wave starts
 function Wave:onStart() end

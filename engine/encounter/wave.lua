@@ -4,6 +4,8 @@
 --- @field protected time number
 --- @field protected is_done boolean
 --- @field protected bullets table<Dummy.Bullet, boolean>
+--- @field protected arena_width number
+--- @field protected arena_height number
 local Wave = Class()
 
 --- Gets the class name
@@ -39,10 +41,7 @@ end
 --- Ends the wave
 function Wave:done()
   self.is_done = true
-
-  if (type(self.onEnd) == "function") then
-    self:__end()
-  end
+  self:__end()
 end
 
 --- Spawns a bullet
@@ -63,15 +62,29 @@ function Wave:getBullets()
   return bullets
 end
 
---- [INTERNAL] Prepares the wave
+--- Sets the wave's arena size
+--- @param width number
+--- @param height number
+function Wave:setArenaSize(width, height)
+  self.arena_width = width
+  self.arena_height = height
+end
+
+--- Gets the wave's arena size
+--- @return number, number
+function Wave:getArenaSize()
+  return self.arena_width, self.arena_height
+end
+
+--- [INTERNAL] Starts the wave
 --- @private
-function Wave:__prepare()
+function Wave:__start()
   self.bullets = {}
   self.time = 0
   self.is_done = false
 
-  if type(self.onPrepare) == "function" then
-    self:onPrepare()
+  if type(self.onStart) == "function" then
+    self:onStart()
   end
 end
 
@@ -82,13 +95,7 @@ function Wave:__update(dt)
 
   self.time = self.time + dt
   if self.time >= self.duration then
-    if not self.is_done then
-      self.is_done = true
-
-      if (type(self.onEnd) == "function") then
-        self:__end()
-      end
-    end
+    self:done()
     return
   end
 
@@ -107,15 +114,15 @@ end
 --- [INTERNAL] Ends the wave
 --- @private
 function Wave:__end()
+  print("wave end")
   for bullet in pairs(self.bullets) do
     bullet:remove()
   end
 
-  self:onEnd()
+  if type(self.onEnd) == "function" then
+    self:onEnd()
+  end
 end
-
---- Called before the wave starts
-function Wave:onPrepare() end
 
 --- Called when the wave starts
 function Wave:onStart() end
@@ -136,6 +143,8 @@ function Wave:new(duration)
   wave.duration = Utils.getOrDefault(duration, 8)
   wave.time = 0
   wave.is_done = false
+  wave.arena_width = Constants.ARENA.DEFAULT_WIDTH
+  wave.arena_height = Constants.ARENA.DEFAULT_HEIGHT
 
   return wave
 end

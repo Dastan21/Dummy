@@ -19,6 +19,7 @@
 --- @field protected bg_sprite Dummy.Sprite
 --- @field protected dialogue_text Dummy.DialogueText
 --- @field protected bubble_dialogues Dummy.DialogueBubble[]
+--- @field protected can_skip_bubble_dialogues boolean
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text

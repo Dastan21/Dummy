@@ -11,6 +11,7 @@
 --- @field protected bg_sprite Dummy.Sprite
 --- @field protected dialogue_text Dummy.DialogueText
 --- @field protected bubble_dialogues Dummy.DialogueBubble[]
+--- @field protected can_skip_bubble_dialogues boolean
 --- @field protected target_sprite Dummy.Sprite
 --- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
@@ -263,6 +264,7 @@ function Encounter.load()
   Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
 
   Encounter.bubble_dialogues = {}
+  Encounter.can_skip_bubble_dialogues = false
 
   -- attack target
   Encounter.target_sprite = Sprite:new("target")
@@ -818,7 +820,13 @@ function Encounter.startEnemyDialogue()
   end
 
   if #Encounter.waves > 0 then
-    Arena.resize(Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT, false, function()
+    local arena_width, arena_height = Constants.ARENA.DEFAULT_WIDTH, Constants.ARENA.DEFAULT_HEIGHT
+    for _, wave in ipairs(Encounter.waves) do
+      arena_width, arena_height = wave:getArenaSize()
+    end
+
+    Arena.resize(arena_width, arena_height, false, function()
+      Encounter.can_skip_bubble_dialogues = true
       if #Encounter.bubble_dialogues <= 0 then
         Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
       end
@@ -827,12 +835,8 @@ function Encounter.startEnemyDialogue()
     local x, y = Arena:getPosition()
     Player.setPosition(x, y - 65)
     Player.show()
-
-    for _, wave in ipairs(Encounter.waves) do
-      --- @diagnostic disable-next-line: invisible
-      wave:__prepare()
-    end
   else
+    Encounter.can_skip_bubble_dialogues = true
     if #Encounter.bubble_dialogues <= 0 then
       Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
     end
@@ -841,7 +845,7 @@ end
 
 --- Updates enemy dialogue
 function Encounter.updateEnemyDialogue()
-  if #Encounter.bubble_dialogues <= 0 then return end
+  if #Encounter.bubble_dialogues <= 0 or not Encounter.can_skip_bubble_dialogues then return end
 
   local all_done = true
   for _, dialogue in ipairs(Encounter.bubble_dialogues) do
@@ -1108,7 +1112,8 @@ function Encounter.startDefending()
 
   for _, wave in ipairs(Encounter.waves) do
     if type(wave.onStart) == "function" then
-      wave:onStart()
+      --- @diagnostic disable-next-line: invisible
+      wave:__start()
     end
   end
 end
