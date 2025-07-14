@@ -149,7 +149,7 @@ end
 --- Wether the drawable is visible
 --- @return boolean
 function Drawable:isVisible()
-  return self.visible
+  return self.visible and not self.removed
 end
 
 --- Sets wether the drawable is visible

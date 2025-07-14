@@ -411,6 +411,8 @@ end
 --- Wether the player's hitbox collides bullet's hitbox
 --- @param bullet Dummy.Bullet
 function Player.isColliding(bullet)
+  if not bullet:isVisible() then return end
+
   local player_x, player_y = Player.getPosition()
   local player_scale_x, player_scale_y = Player.getScale()
   local player_hitbox_x = player_x - Player.hitbox[1] * player_scale_x
