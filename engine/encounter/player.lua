@@ -417,19 +417,6 @@ function Player.isColliding(bullet)
   local player_hitbox_y = player_y - Player.hitbox[2] * player_scale_y
   local player_hitbox_width = Player.hitbox[3] * player_scale_x
   local player_hitbox_height = Player.hitbox[4] * player_scale_y
-  local bullet_x, bullet_y = bullet:getPosition()
-  local bullet_scale_x, bullet_scale_y = bullet:getScale()
-  local bullet_origin_x, bullet_origin_y = bullet:getOrigin()
-  local bullet_angle = math.rad(bullet:getAngle())
-  local bullet_hitbox = bullet:getHitbox()
-  local bullet_polygon_points = Utils.getPolygonPoints(bullet_x, bullet_y, bullet_hitbox[3], bullet_hitbox[4],
-    bullet_scale_x, bullet_scale_y, bullet_origin_x, bullet_origin_y, bullet_angle)
-
-  local bullet_hitbox_points = {}
-  bullet_hitbox_points[1] = { bullet_polygon_points[1], bullet_polygon_points[2] }
-  bullet_hitbox_points[2] = { bullet_polygon_points[3], bullet_polygon_points[4] }
-  bullet_hitbox_points[3] = { bullet_polygon_points[5], bullet_polygon_points[6] }
-  bullet_hitbox_points[4] = { bullet_polygon_points[7], bullet_polygon_points[8] }
 
   local function pointInPlayerHitbox(x, y)
     return x >= player_hitbox_x and x <= player_hitbox_x + player_hitbox_width and y >= player_hitbox_y and
@@ -471,6 +458,25 @@ function Player.isColliding(bullet)
     end
     return false
   end
+
+  local bullet_x, bullet_y = bullet:getPosition()
+  local bullet_width, bullet_height = bullet:getWidth(), bullet:getHeight()
+  local bullet_origin_x, bullet_origin_y = bullet:getOrigin()
+  local bullet_scale_x, bullet_scale_y = bullet:getScale()
+  local bullet_hitbox = bullet:getHitbox()
+  local bullet_angle = math.rad(bullet:getAngle())
+  local hitbox_x = bullet_x - bullet_width * bullet_origin_x * bullet_scale_x + bullet_hitbox[1] * bullet_scale_x + 0.5
+  local hitbox_y = bullet_y - bullet_height * bullet_origin_y * bullet_scale_y + bullet_hitbox[2] * bullet_scale_y + 0.5
+  local hitbox_width = bullet_hitbox[3] * bullet_scale_x - 1
+  local hitbox_height = bullet_hitbox[4] * bullet_scale_y - 1
+  local bullet_polygon_points = Utils.getPolygonPoints(hitbox_x, hitbox_y, hitbox_width, hitbox_height, 1, 1, 0, 0,
+    bullet_angle)
+
+  local bullet_hitbox_points = {}
+  bullet_hitbox_points[1] = { bullet_polygon_points[1], bullet_polygon_points[2] }
+  bullet_hitbox_points[2] = { bullet_polygon_points[3], bullet_polygon_points[4] }
+  bullet_hitbox_points[3] = { bullet_polygon_points[5], bullet_polygon_points[6] }
+  bullet_hitbox_points[4] = { bullet_polygon_points[7], bullet_polygon_points[8] }
 
   if checkPointsInPlayerHitbox(bullet_hitbox_points) then
     return true

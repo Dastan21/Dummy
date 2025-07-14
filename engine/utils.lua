@@ -310,10 +310,11 @@ function Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x,
     table.insert(points, math.sin(angle) * (point_x - x) + math.cos(angle) * (point_y - y) + y)
   end
 
-  addPoint(x - origin_x * width * scale_x, y - origin_y * height * scale_y)
-  addPoint(x - origin_x * width * scale_x, y + origin_y * height * scale_y)
-  addPoint(x + origin_x * width * scale_x, y + origin_y * height * scale_y)
-  addPoint(x + origin_x * width * scale_x, y - origin_y * height * scale_y)
+  local point_x, point_y = x - origin_x * width * scale_x, y - origin_y * height * scale_y
+  addPoint(point_x, point_y)
+  addPoint(point_x + width * scale_x, point_y)
+  addPoint(point_x + width * scale_x, point_y + height * scale_y)
+  addPoint(point_x, point_y + height * scale_y)
 
   return points
 end

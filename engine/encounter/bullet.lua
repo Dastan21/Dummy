@@ -88,23 +88,24 @@ function Bullet:new()
   bullet.debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
   function bullet.debug_hitbox_drawable:draw()
     if Debugger.shouldDisplayHitbox() and bullet:isVisible() then
+      local hitbox = bullet:getHitbox()
+      if hitbox[3] < 0 and hitbox[4] < 0 then return end
+
       local x, y = bullet:getPosition()
+      local width, height = bullet:getWidth(), bullet:getHeight()
       local origin_x, origin_y = bullet:getOrigin()
       local scale_x, scale_y = bullet:getScale()
       local angle = math.rad(bullet:getAngle())
-      local hitbox = bullet:getHitbox()
-      local width, height = hitbox[3], hitbox[4]
-
-      if width < 0 or height < 0 then return end
+      local hitbox_x = x - width * origin_x * scale_x + hitbox[1] * scale_x + 0.5
+      local hitbox_y = y - height * origin_y * scale_y + hitbox[2] * scale_y + 0.5
+      local hitbox_width = hitbox[3] * scale_x - 1
+      local hitbox_height = hitbox[4] * scale_y - 1
 
       love.graphics.setColor(0, 1, 0, 1)
       if angle % (2 * math.pi) == 0 then
-        local hitbox_x = x - width * origin_x * scale_x
-        local hitbox_y = y - height * origin_y * scale_y
-        love.graphics.rectangle("line", hitbox_x + 0.5, hitbox_y + 0.5, width * scale_x - 1, height * scale_y - 1)
+        love.graphics.rectangle("line", hitbox_x, hitbox_y, hitbox_width, hitbox_height)
       else
-        local points = Utils.getPolygonPoints(x + 0.5, y + 0.5, width - 1, height - 1, scale_x, scale_y, origin_x,
-          origin_y, angle)
+        local points = Utils.getPolygonPoints(hitbox_x, hitbox_y, hitbox_width, hitbox_height, 1, 1, 0, 0, angle)
         love.graphics.polygon("line", table.unpack(points))
       end
     end
