@@ -1,0 +1,30 @@
+FROGGIT_MOD_ENCOUNTER_TITLE=DUMMY - Froggit Encounter
+
+FROGGIT_MOD_ENCOUNTER_FROGGIT_NAME=Froggit
+
+FROGGIT_MOD_ENCOUNTER_TEXT_1=* Froggit hopped close!
+FROGGIT_MOD_ENCOUNTER_TEXT_2=* Froggit doesn't seem to\n  know why it's here.
+FROGGIT_MOD_ENCOUNTER_TEXT_3=* Froggit hops to and fro.
+FROGGIT_MOD_ENCOUNTER_TEXT_4=* The battlefield is filled\n  with the smell of mustard\n  seed.
+FROGGIT_MOD_ENCOUNTER_TEXT_5=* You are intimidated by\n  Froggit's raw strength.[wait:20]\n* Only kidding.
+FROGGIT_MOD_ENCOUNTER_TEXT_MERCY=* Froggit seems reluctant\n  to fight you.
+FROGGIT_MOD_ENCOUNTER_TEXT_LOW_LIFE=* Froggit is trying to\n  run away.
+
+FROGGIT_MOD_ENCOUNTER_BUBBLE_1=[noskip]Ribbit,\nribbit.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_2=[noskip]Croak,\ncroak.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_3=[noskip]Hop,\nhop.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_4=[noskip]Meow.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_COMPLIMENT=[noskip](Blushes\ndeeply.)\nRibbit..
+FROGGIT_MOD_ENCOUNTER_BUBBLE_THREAT=[noskip]Shiver,\nshiver.
+
+FROGGIT_MOD_ENCOUNTER_CHECK_TEXT=* Life is difficult for\n  this enemy.
+
+FROGGIT_MOD_ENCOUNTER_COMPLIMENT_ACT=Compliment
+FROGGIT_MOD_ENCOUNTER_THREAT_ACT=Threat
+FROGGIT_MOD_ENCOUNTER_COMPLIMENT_TEXT=* Froggit didn't understand\n  what you said,[wait:5] but was\n  flattered anyway.
+FROGGIT_MOD_ENCOUNTER_THREAT_TEXT=* Froggit didn't understand\n  what you said,[wait:5] but was\n  scared anyway.
+
+FROGGIT_MOD_MONSTER_CANDY_NAME=Monster Candy
+FROGGIT_MOD_MONSTER_CANDY_SHORTNAME=MnstrCndy
+FROGGIT_MOD_TOY_KNIFE_NAME=Toy Knife
+FROGGIT_MOD_TOY_KNIFE_SHORTNAME=Toy Knife

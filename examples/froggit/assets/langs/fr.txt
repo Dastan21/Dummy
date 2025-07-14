@@ -1,0 +1,30 @@
+FROGGIT_MOD_ENCOUNTER_TITLE=DUMMY - Rencontre avec Croâpaud
+
+FROGGIT_MOD_ENCOUNTER_FROGGIT_NAME=Croâpaud
+
+FROGGIT_MOD_ENCOUNTER_TEXT_1=* Croâpaud sautille vers vous !
+FROGGIT_MOD_ENCOUNTER_TEXT_2=* Croâpaud ne semble pas\n  savoir ce qu'il fait là.
+FROGGIT_MOD_ENCOUNTER_TEXT_3=* Croâpaud sautille d'avant\n  en arrière.
+FROGGIT_MOD_ENCOUNTER_TEXT_4=* L'odeur de graines de moutarde\n  imprègne le champ de bataille.
+FROGGIT_MOD_ENCOUNTER_TEXT_5=* La force pure de Croâpaud vous\n  intimide.[wait:20]\n* ... Ou pas.
+FROGGIT_MOD_ENCOUNTER_TEXT_MERCY=* Croâpaud semble réticent\n  à l'idée de vous combattre.
+FROGGIT_MOD_ENCOUNTER_TEXT_LOW_LIFE=* Croâpaud essaye\n  de s'enfuir.
+
+FROGGIT_MOD_ENCOUNTER_BUBBLE_1=[noskip]Croâ,\ncroâ.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_2=[noskip]Croasse-\nment.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_3=[noskip]Saut-\nille.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_4=[noskip]Miaou.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_COMPLIMENT=[noskip](Rougit\nforte-\nment.)\nCroâ..
+FROGGIT_MOD_ENCOUNTER_BUBBLE_THREAT=[noskip]Tremble,\ntremble.
+
+FROGGIT_MOD_ENCOUNTER_CHECK_TEXT=* La vie est dure pour\n  cet ennemi.
+
+FROGGIT_MOD_ENCOUNTER_COMPLIMENT_ACT=Complimenter
+FROGGIT_MOD_ENCOUNTER_THREAT_ACT=Menacer
+FROGGIT_MOD_ENCOUNTER_COMPLIMENT_TEXT=* Croâpaud n'a pas compris ce\n  que vous avez dit,[wait:5] mais\n  est quand même flatté.
+FROGGIT_MOD_ENCOUNTER_THREAT_TEXT=* Croâpaud n'a pas compris ce\n  que vous avez dit,[wait:5] mais\n  est quand même apeuré.
+
+FROGGIT_MOD_MONSTER_CANDY_NAME=Bonbon Monstre
+FROGGIT_MOD_MONSTER_CANDY_SHORTNAME=BnBnM
+FROGGIT_MOD_TOY_KNIFE_NAME=Cout.Pla.
+FROGGIT_MOD_TOY_KNIFE_SHORTNAME=Cout.Pla.
