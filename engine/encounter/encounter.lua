@@ -805,6 +805,7 @@ end
 
 --- Starts enemy dialogue
 function Encounter.startEnemyDialogue()
+  Encounter.can_skip_bubble_dialogues = false
   Encounter.dialogue_text:setVisible(false)
 
   Encounter.unselectAction()
