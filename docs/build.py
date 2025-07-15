@@ -13,7 +13,6 @@ ignore = [
   os.path.join("scene", "error.lua"),
   os.path.join("scene", "game_over.lua"),
   os.path.join("scene", "main_menu.lua"),
-  os.path.join("mod", "mod_list.lua"),
 ]
 
 copy = [
