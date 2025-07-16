@@ -84,6 +84,8 @@ end
 --- Loads a mod
 --- @param mod Dummy.Mod
 function ModList.loadMod(mod)
+  if mod == nil then return end
+
   ModList.unloadMod(mod)
 
   if type(mod.load) == "function" then
@@ -98,6 +100,8 @@ end
 --- Mounts a mod
 --- @param mod Dummy.Mod
 function ModList.mountMod(mod)
+  if mod == nil then return end
+
   ModList.unloadMod(mod)
 
   love.filesystem.mount("mods/" .. mod:getId() .. "/assets", "assets")
@@ -107,6 +111,8 @@ end
 --- Unloads a mod
 --- @param mod Dummy.Mod
 function ModList.unloadMod(mod)
+  if mod == nil then return end
+
   love.filesystem.unmount("mods/" .. mod:getId() .. "/scripts")
   love.filesystem.unmount("mods/" .. mod:getId() .. "/assets")
   love.filesystem.unmount("mods/" .. mod:getId() .. ".zip")
@@ -130,6 +136,8 @@ function ModList.unloadMods()
   for _, mod in ipairs(ModList.mods) do
     ModList.unloadMod(mod)
   end
+
+  ModList.unloadMod(ModList.standalone)
 end
 
 --- Wether a mod is valid
