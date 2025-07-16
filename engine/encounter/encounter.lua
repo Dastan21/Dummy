@@ -624,13 +624,13 @@ end
 
 --- Starts action select
 function Encounter.startActionSelect()
-  Player.hide()
+  Player.getSoul():setVisible(false)
 
   Arena.reset(function()
     Encounter.action.index = math.abs(Encounter.action.index)
     Encounter.updateActions()
 
-    Player.show()
+    Player.getSoul():setVisible(true)
 
     Encounter.leaveMenu()
 
@@ -641,7 +641,7 @@ end
 
 --- Updates action select
 function Encounter.updateActionSelect()
-  if Player.isHidden() then return end
+  if not Player.getSoul():isVisible() then return end
 
   if Input.isPressed(Input.Left) then
     if Encounter.action.index <= Encounter.ACTIONS.FIGHT then
@@ -795,7 +795,7 @@ function Encounter.startTextDialogue()
   Encounter.dialogue_text:setVisible(true)
 
   Encounter.unselectAction()
-  Player.hide()
+  Player.getSoul():setVisible(false)
   Encounter.leaveMenu()
 end
 
@@ -813,7 +813,7 @@ function Encounter.startEnemyDialogue()
 
   Encounter.unselectAction()
   Encounter.leaveMenu()
-  Player.hide()
+  Player.getSoul():setVisible(false)
 
   for _, enemy in ipairs(Encounter.enemies) do
     if not enemy:isKilled() and not enemy:isSpared() then
@@ -838,7 +838,7 @@ function Encounter.startEnemyDialogue()
 
     local x, y = Arena:getPosition()
     Player.setPosition(x, y - 65)
-    Player.show()
+    Player.getSoul():setVisible(true)
   else
     Encounter.can_skip_bubble_dialogues = true
     if #Encounter.bubble_dialogues <= 0 then
@@ -885,7 +885,7 @@ end
 function Encounter.startAttacking()
   Encounter.leaveMenu()
   Encounter.unselectAction()
-  Player.hide()
+  Player.getSoul():setVisible(false)
 
   Encounter.target_sprite:setVisible(true)
   Encounter.target_sprite:setAlpha(1)
@@ -1067,7 +1067,7 @@ function Encounter.startAttacking()
       local target_bar_x = Encounter.target_bar_sprite:getPosition()
       local bonus_factor = math.abs(target_x - target_bar_x)
       local stretch = (target_width - bonus_factor) / target_width
-      damage = math.max(0, Player:getAT() - enemy:getDF() + (love.math.random() * 2))
+      damage = math.max(0, Player.getAT() - enemy:getDF() + (love.math.random() * 2))
       if bonus_factor <= 12 then
         damage = math.round(damage * 2.2)
       else

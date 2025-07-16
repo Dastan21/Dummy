@@ -6,7 +6,6 @@
 --- @field protected hitbox Dummy.Bullet.Hitbox
 --- @field protected removed boolean
 --- @field protected wave Dummy.Wave
---- @field protected debug_hitbox_drawable Dummy.Drawable
 local Bullet = Class:extend(Sprite)
 
 --- Gets the class name
@@ -57,12 +56,6 @@ function Bullet:setHitboxFromSprite()
   self:setHitbox({ 0, 0, width, height })
 end
 
---- Removes the drawable from the current scene
-function Bullet:remove()
-  self.debug_hitbox_drawable:remove()
-  Drawable.remove(self)
-end
-
 --- Gets the wave the bullet is from
 --- @return Dummy.Wave
 function Bullet:getWave()
@@ -73,6 +66,31 @@ end
 --- @param dt number
 function Bullet:update(dt) end
 
+--- Draws for debugging
+function Bullet:drawDebug()
+  if not Debugger.shouldDisplayHitbox() then return end
+
+  local width, height = self:getWidth(), self:getHeight()
+  if width == 0 and height == 0 then return end
+
+  Sprite.drawDebug(self)
+
+  love.graphics.push()
+  love.graphics.origin()
+  local absolute_transform = self:getAbsoluteTransform()
+  local origin_x, origin_y = self:getOrigin()
+  local hitbox = self:getHitbox()
+  local x, y = -width * origin_x + hitbox[1], -height * origin_y + hitbox[2]
+  local x1, y1 = absolute_transform:transformPoint(x, y)
+  local x2, y2 = absolute_transform:transformPoint(x + hitbox[3], y)
+  local x3, y3 = absolute_transform:transformPoint(x + hitbox[3], y + hitbox[4])
+  local x4, y4 = absolute_transform:transformPoint(x, y + hitbox[4])
+  love.graphics.setColor(0, 1, 0, 1)
+  love.graphics.setLineStyle("rough")
+  love.graphics.polygon("line", x1 + 0.5, y1 + 0.5, x2 - 0.5, y2 + 0.5, x3 - 0.5, y3 - 0.5, x4 + 0.5, y4 - 0.5)
+  love.graphics.pop()
+end
+
 --- Creates a bullet
 --- @return Dummy.Bullet
 function Bullet:new()
@@ -82,33 +100,6 @@ function Bullet:new()
 
   self:setLayer(Constants.LAYERS.BULLET)
   self:setHitboxFromSprite()
-
-  self.debug_hitbox_drawable = Drawable:new()
-  self.debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
-  function self.debug_hitbox_drawable.draw()
-    if Debugger.shouldDisplayHitbox() and self:isVisible() then
-      local hitbox = self:getHitbox()
-      if hitbox[3] < 0 and hitbox[4] < 0 then return end
-
-      local x, y = self:getPosition()
-      local width, height = self:getWidth(), self:getHeight()
-      local origin_x, origin_y = self:getOrigin()
-      local scale_x, scale_y = self:getScale()
-      local angle = math.rad(self:getAngle())
-      local hitbox_x = x - width * origin_x * scale_x + hitbox[1] * scale_x + 0.5
-      local hitbox_y = y - height * origin_y * scale_y + hitbox[2] * scale_y + 0.5
-      local hitbox_width = hitbox[3] * scale_x - 1
-      local hitbox_height = hitbox[4] * scale_y - 1
-
-      love.graphics.setColor(0, 1, 0, 1)
-      if angle % (2 * math.pi) == 0 then
-        love.graphics.rectangle("line", hitbox_x, hitbox_y, hitbox_width, hitbox_height)
-      else
-        local points = Utils.getPolygonPoints(hitbox_x, hitbox_y, hitbox_width, hitbox_height, 1, 1, 0, 0, angle)
-        love.graphics.polygon("line", table.unpack(points))
-      end
-    end
-  end
 
   return self
 end

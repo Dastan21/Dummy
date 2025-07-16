@@ -112,6 +112,9 @@ function Text:update(dt) end
 --- Draws the text
 function Text:draw() end
 
+--- Draws for debugging
+function Text:drawDebug() end
+
 --- Updates text nodes
 --- @param dt number
 function Text:updateNodes(dt) end

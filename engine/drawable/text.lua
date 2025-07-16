@@ -216,14 +216,6 @@ function Text:draw()
   if not self:isVisible() then return end
 
   love.graphics.applyTransform(self:getTransform())
-
-  local origin_x, origin_y = self:getOrigin()
-  local width, height = self:getWidth(), self:getHeight()
-  if Debugger.shouldDisplayHitbox() and (width > 0 or height > 0) then
-    love.graphics.setColor(0, 0, 1, 1)
-    love.graphics.rectangle("line", -0.5 - width * origin_x, -0.5 - height * origin_y, width + 1, height + 1)
-  end
-
   love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
   if self.text ~= nil then
     local align_offset = 0
@@ -232,6 +224,8 @@ function Text:draw()
     elseif self.align == "center" then
       align_offset = Constants.SCREEN_WIDTH / 2 - self.text:getWidth() / 2
     end
+    local origin_x, origin_y = self:getOrigin()
+    local width, height = self:getWidth(), self:getHeight()
     love.graphics.draw(self.text, -width * origin_x - align_offset, -height * origin_y)
   else
     for _, node in ipairs(self.nodes) do
@@ -244,7 +238,30 @@ function Text:draw()
     end
   end
 
+  self:drawDebug()
   self:drawChildren()
+end
+
+--- Draws for debugging
+function Text:drawDebug()
+  if not Debugger.shouldDisplayHitbox() then return end
+
+  local width, height = self:getWidth(), self:getHeight()
+  if width == 0 and height == 0 then return end
+
+  love.graphics.push()
+  love.graphics.origin()
+  local absolute_transform = self:getAbsoluteTransform()
+  local origin_x, origin_y = self:getOrigin()
+  local x, y = -width * origin_x, -height * origin_y
+  local x1, y1 = absolute_transform:transformPoint(x, y)
+  local x2, y2 = absolute_transform:transformPoint(x + width, y)
+  local x3, y3 = absolute_transform:transformPoint(x + width, y + height)
+  local x4, y4 = absolute_transform:transformPoint(x, y + height)
+  love.graphics.setColor(0, 0, 1, 1)
+  love.graphics.setLineStyle("rough")
+  love.graphics.polygon("line", x1 + 0.5, y1 + 0.5, x2 - 0.5, y2 + 0.5, x3 - 0.5, y3 - 0.5, x4 + 0.5, y4 - 0.5)
+  love.graphics.pop()
 end
 
 --- Updates text nodes

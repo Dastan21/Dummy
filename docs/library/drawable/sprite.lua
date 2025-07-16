@@ -110,6 +110,9 @@ function Sprite:vaporize(type, size) end
 --- Draws the sprite
 function Sprite:draw() end
 
+--- Draws for debugging
+function Sprite:drawDebug() end
+
 --- Creates a sprite
 --- @overload fun(self: Dummy.Sprite, sprite_name?: string|love.Image): Dummy.Sprite
 --- @param sprites_names string[]|love.Image[]

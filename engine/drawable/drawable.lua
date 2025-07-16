@@ -40,13 +40,13 @@ function Drawable:setPosition(x, y)
   self.y = y
 end
 
---- Gets the drawable's angle, in degree
+--- Gets the drawable's angle, in degrees
 --- @return number
 function Drawable:getAngle()
   return math.deg(self.angle)
 end
 
---- Sets the drawable's angle, in degree
+--- Sets the drawable's angle, in degrees
 --- @param angle number
 function Drawable:setAngle(angle)
   self.angle = math.rad(angle)
@@ -71,6 +71,24 @@ end
 --- @return love.Transform
 function Drawable:getTransform()
   return love.math.newTransform(self.x, self.y, self.angle, self.scale_x, self.scale_y)
+end
+
+--- Gets the drawable's absolute transform
+--- @return love.Transform
+function Drawable:getAbsoluteTransform()
+  local parent = self:getParent()
+  local transforms = { self:getTransform() }
+  while parent ~= nil do
+    table.insert(transforms, 1, parent:getTransform())
+    parent = parent:getParent()
+  end
+
+  local transform = love.math.newTransform()
+  for _, t in ipairs(transforms) do
+    transform:apply(t)
+  end
+
+  return transform
 end
 
 --- Gets the drawable's origin

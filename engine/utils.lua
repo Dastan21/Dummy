@@ -319,4 +319,61 @@ function Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x,
   return points
 end
 
+--- Checks if two rectangles collide, using SAT-based rectangle collision
+--- @param rect1 [number, number, number, number]
+--- @param rect2 [number, number, number, number]
+--- @return boolean
+function Utils.checkCollision(rect1, rect2)
+  local function dot(a, b)
+    return a[1] * b[1] + a[2] * b[2]
+  end
+
+  local function getNormals(polygon)
+    local normals = {}
+    for i = 1, #polygon do
+      local p1 = polygon[i]
+      local p2 = polygon[(i % #polygon) + 1]
+      local edge = { p2[1] - p1[1], p2[2] - p1[2] }
+      table.insert(normals, { -edge[2], edge[1] })
+    end
+    return normals
+  end
+
+  local function projectPolygon(polygon, axis)
+    local min = dot(polygon[1], axis)
+    local max = min
+    for i = 2, #polygon do
+      local projection = dot(polygon[i], axis)
+      if projection < min then min = projection end
+      if projection > max then max = projection end
+    end
+    return min, max
+  end
+
+  local function overlap(minA, maxA, minB, maxB)
+    return maxA >= minB and maxB >= minA
+  end
+
+  local normals1 = getNormals(rect1)
+  local normals2 = getNormals(rect2)
+
+  for _, axis in ipairs(normals1) do
+    local minA, maxA = projectPolygon(rect1, axis)
+    local minB, maxB = projectPolygon(rect2, axis)
+    if not overlap(minA, maxA, minB, maxB) then
+      return false
+    end
+  end
+
+  for _, axis in ipairs(normals2) do
+    local minA, maxA = projectPolygon(rect1, axis)
+    local minB, maxB = projectPolygon(rect2, axis)
+    if not overlap(minA, maxA, minB, maxB) then
+      return false
+    end
+  end
+
+  return true
+end
+
 return Utils

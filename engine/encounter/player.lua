@@ -21,6 +21,7 @@
 --- @field protected weapon Dummy.Item.Equipment
 --- @field protected armor Dummy.Item.Equipment
 --- @field protected items Dummy.Item[]
+--- @field protected debug_hitbox_drawable Dummy.Drawable
 local Player = {}
 
 --- The minimum amount of experience required by level
@@ -64,6 +65,9 @@ function Player.load()
   Player.hitbox = { 4, 4, 8, 8 }
   Player.override = false
 
+  if Player.soul_sprite ~= nil then
+    Player.soul_sprite:remove()
+  end
   Player.soul_sprite = Sprite:new({ "heart", "heart_hurt" }, 2 / 30, nil, false)
   Player.soul_sprite:setPosition(320, 240)
   Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
@@ -80,19 +84,33 @@ function Player.load()
 
   Player.setLV(1)
 
-  local debug_hitbox_drawable = Drawable:new()
-  debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_SOUL)
-  function debug_hitbox_drawable.draw()
-    local width, height = Player.hitbox[3], Player.hitbox[4]
-    if not Player.isHidden() and Debugger.shouldDisplayHitbox() and (width > 0 or height > 0) then
-      local x, y = Player.getPosition()
-      local scale_x, scale_y = Player.getScale()
-      local hitbox_x = x + 0.5 - Player.hitbox[1] * scale_x
-      local hitbox_y = y + 0.5 - Player.hitbox[2] * scale_y
-      love.graphics.setColor(0, 1, 0, 1)
-      love.graphics.rectangle("line", hitbox_x, hitbox_y, width * scale_x - 1, height * scale_y - 1)
-    end
+  if Player.debug_hitbox_drawable ~= nil then
+    Player.debug_hitbox_drawable:remove()
   end
+  Player.debug_hitbox_drawable = Drawable:new()
+  Player.debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_SOUL)
+  function Player.debug_hitbox_drawable.draw()
+    if not Player.soul_sprite:isVisible() or not Debugger.shouldDisplayHitbox() then return end
+    if Player.hitbox[3] == 0 and Player.hitbox[4] == 0 then return end
+
+    local absolute_transform = Player.soul_sprite:getAbsoluteTransform()
+    local origin_x, origin_y = Player.soul_sprite:getOrigin()
+    local width, height = Player.soul_sprite:getWidth(), Player.soul_sprite:getHeight()
+    local x, y = -width * origin_x + Player.hitbox[1], -height * origin_y + Player.hitbox[2]
+    local x1, y1 = absolute_transform:transformPoint(x, y)
+    local x2, y2 = absolute_transform:transformPoint(x + Player.hitbox[3], y)
+    local x3, y3 = absolute_transform:transformPoint(x + Player.hitbox[3], y + Player.hitbox[4])
+    local x4, y4 = absolute_transform:transformPoint(x, y + Player.hitbox[4])
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.setLineStyle("rough")
+    love.graphics.polygon("line", x1 + 0.5, y1 + 0.5, x2 - 0.5, y2 + 0.5, x3 - 0.5, y3 - 0.5, x4 + 0.5, y4 - 0.5)
+  end
+end
+
+--- Gets the player's soul sprite
+--- @return Dummy.Sprite
+function Player.getSoul()
+  return Player.soul_sprite
 end
 
 --- Gets the player's soul position
@@ -110,7 +128,7 @@ function Player.setPosition(x, y, ignore_arena_bounds)
   if not ignore_arena_bounds then
     local arena_x, arena_y = Arena.getPosition()
     local arena_width, arena_height = Arena.getWidth(), Arena.getHeight()
-    local scale_x, scale_y = Player.getScale()
+    local scale_x, scale_y = Player.soul_sprite:getScale()
     local width, height = Player.soul_sprite:getWidth(), Player.soul_sprite:getHeight()
     local player_offset_x = width / 2 * scale_x
     local player_offset_y = height / 2 * scale_y
@@ -119,22 +137,6 @@ function Player.setPosition(x, y, ignore_arena_bounds)
   end
 
   Player.soul_sprite:setPosition(x, y)
-end
-
---- Shows the player's soul
-function Player.show()
-  Player.soul_sprite:setVisible(true)
-end
-
---- Hides the player's soul
-function Player.hide()
-  Player.soul_sprite:setVisible(false)
-end
-
---- Wether the player's soul is hidden
---- @return boolean
-function Player.isHidden()
-  return not Player.soul_sprite:isVisible()
 end
 
 --- Gets the player's name
@@ -334,20 +336,6 @@ function Player.setSpeed(speed)
   Player.speed_factor = speed
 end
 
---- Gets the player's scale
---- @return number, number
-function Player.getScale()
-  return Player.soul_sprite:getScale()
-end
-
---- Sets the player's scales
---- @overload fun(scale: number)
---- @param scale_x number
---- @param scale_y number
-function Player.setScale(scale_x, scale_y)
-  Player.soul_sprite:setScale(scale_x, scale_y)
-end
-
 --- Wether the player is invincible
 --- @return boolean
 function Player.isInvincible()
@@ -413,82 +401,32 @@ end
 function Player.isColliding(bullet)
   if not bullet:isVisible() then return end
 
-  local player_x, player_y = Player.getPosition()
-  local player_scale_x, player_scale_y = Player.getScale()
-  local player_hitbox_x = player_x - Player.hitbox[1] * player_scale_x
-  local player_hitbox_y = player_y - Player.hitbox[2] * player_scale_y
-  local player_hitbox_width = Player.hitbox[3] * player_scale_x
-  local player_hitbox_height = Player.hitbox[4] * player_scale_y
+  local player_width, player_height = Player.soul_sprite:getWidth(), Player.soul_sprite:getHeight()
+  local player_absolute_transform = Player.soul_sprite:getAbsoluteTransform()
+  local player_origin_x, player_origin_y = Player.soul_sprite:getOrigin()
+  local player_x = -player_width * player_origin_x + Player.hitbox[1]
+  local player_y = -player_height * player_origin_y + Player.hitbox[2]
+  local player_rect = {
+    { player_absolute_transform:transformPoint(player_x, player_y) },
+    { player_absolute_transform:transformPoint(player_x + Player.hitbox[3], player_y) },
+    { player_absolute_transform:transformPoint(player_x + Player.hitbox[3], player_y + Player.hitbox[4]) },
+    { player_absolute_transform:transformPoint(player_x, player_y + Player.hitbox[4]) },
+  }
 
-  local function pointInPlayerHitbox(x, y)
-    return x >= player_hitbox_x and x <= player_hitbox_x + player_hitbox_width and y >= player_hitbox_y and
-        y <= player_hitbox_y + player_hitbox_height
-  end
-
-  local function checkPointsInPlayerHitbox(points)
-    for i = 1, 4 do
-      if pointInPlayerHitbox(points[i][1], points[i][2]) then
-        return true
-      end
-    end
-    return false
-  end
-
-  local function doLinesIntersect(p1, p2, p3, p4)
-    local function cross(o, a, b) return (a[1] - o[1]) * (b[2] - o[2]) - (a[2] - o[2]) * (b[1] - o[1]) end
-    return cross(p1, p3, p4) * cross(p2, p3, p4) < 0 and cross(p3, p1, p2) * cross(p4, p1, p2) < 0
-  end
-
-  local function checkPointsIntersectPlayerHitboxEdges(points)
-    local edges = {
-      { player_hitbox_x,                       player_hitbox_y,                        player_hitbox_x + player_hitbox_width, player_hitbox_y },
-      { player_hitbox_x + player_hitbox_width, player_hitbox_y,                        player_hitbox_x + player_hitbox_width, player_hitbox_y + player_hitbox_height },
-      { player_hitbox_x + player_hitbox_width, player_hitbox_y + player_hitbox_height, player_hitbox_x,                       player_hitbox_y + player_hitbox_height },
-      { player_hitbox_x,                       player_hitbox_y + player_hitbox_height, player_hitbox_x,                       player_hitbox_y }
-    }
-
-    for _, edge in ipairs(edges) do
-      local x1, y1, x2, y2 = edge[1], edge[2], edge[3], edge[4]
-
-      for i = 1, 4 do
-        local p1 = points[i]
-        local p2 = points[(i % 4) + 1]
-        if doLinesIntersect({ x1, y1 }, { x2, y2 }, p1, p2) then
-          return true
-        end
-      end
-    end
-    return false
-  end
-
-  local bullet_x, bullet_y = bullet:getPosition()
   local bullet_width, bullet_height = bullet:getWidth(), bullet:getHeight()
+  local bullet_absolute_transform = bullet:getAbsoluteTransform()
   local bullet_origin_x, bullet_origin_y = bullet:getOrigin()
-  local bullet_scale_x, bullet_scale_y = bullet:getScale()
   local bullet_hitbox = bullet:getHitbox()
-  local bullet_angle = math.rad(bullet:getAngle())
-  local hitbox_x = bullet_x - bullet_width * bullet_origin_x * bullet_scale_x + bullet_hitbox[1] * bullet_scale_x + 0.5
-  local hitbox_y = bullet_y - bullet_height * bullet_origin_y * bullet_scale_y + bullet_hitbox[2] * bullet_scale_y + 0.5
-  local hitbox_width = bullet_hitbox[3] * bullet_scale_x - 1
-  local hitbox_height = bullet_hitbox[4] * bullet_scale_y - 1
-  local bullet_polygon_points = Utils.getPolygonPoints(hitbox_x, hitbox_y, hitbox_width, hitbox_height, 1, 1, 0, 0,
-    bullet_angle)
+  local bullet_x = -bullet_width * bullet_origin_x + bullet_hitbox[1]
+  local bullet_y = -bullet_height * bullet_origin_y + bullet_hitbox[2]
+  local bullet_rect = {
+    { bullet_absolute_transform:transformPoint(bullet_x, bullet_y) },
+    { bullet_absolute_transform:transformPoint(bullet_x + bullet_hitbox[3], bullet_y) },
+    { bullet_absolute_transform:transformPoint(bullet_x + bullet_hitbox[3], bullet_y + bullet_hitbox[4]) },
+    { bullet_absolute_transform:transformPoint(bullet_x, bullet_y + bullet_hitbox[4]) },
+  }
 
-  local bullet_hitbox_points = {}
-  bullet_hitbox_points[1] = { bullet_polygon_points[1], bullet_polygon_points[2] }
-  bullet_hitbox_points[2] = { bullet_polygon_points[3], bullet_polygon_points[4] }
-  bullet_hitbox_points[3] = { bullet_polygon_points[5], bullet_polygon_points[6] }
-  bullet_hitbox_points[4] = { bullet_polygon_points[7], bullet_polygon_points[8] }
-
-  if checkPointsInPlayerHitbox(bullet_hitbox_points) then
-    return true
-  end
-
-  if checkPointsIntersectPlayerHitboxEdges(bullet_hitbox_points) then
-    return true
-  end
-
-  return false
+  return Utils.checkCollision(player_rect, bullet_rect)
 end
 
 --- Animates the soul escaping

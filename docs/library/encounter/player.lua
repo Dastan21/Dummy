@@ -29,10 +29,15 @@
 --- @field protected weapon Dummy.Item.Equipment
 --- @field protected armor Dummy.Item.Equipment
 --- @field protected items Dummy.Item[]
+--- @field protected debug_hitbox_drawable Dummy.Drawable
 Player = {}
 
 --- Initializes the player
 function Player.load() end
+
+--- Gets the player's soul sprite
+--- @return Dummy.Sprite
+function Player.getSoul() end
 
 --- Gets the player's soul position
 --- @return number x horizontal position
@@ -44,16 +49,6 @@ function Player.getPosition() end
 --- @param y number vertical position
 --- @param ignore_arena_bounds? boolean ignore arena bounds collisions
 function Player.setPosition(x, y, ignore_arena_bounds) end
-
---- Shows the player's soul
-function Player.show() end
-
---- Hides the player's soul
-function Player.hide() end
-
---- Wether the player's soul is hidden
---- @return boolean
-function Player.isHidden() end
 
 --- Gets the player's name
 --- @return string
@@ -137,16 +132,6 @@ function Player.getSpeed() end
 --- Sets the player's speeds
 --- @param speed number
 function Player.setSpeed(speed) end
-
---- Gets the player's scale
---- @return number, number
-function Player.getScale() end
-
---- Sets the player's scales
---- @overload fun(scale: number)
---- @param scale_x number
---- @param scale_y number
-function Player.setScale(scale_x, scale_y) end
 
 --- Wether the player is invincible
 --- @return boolean

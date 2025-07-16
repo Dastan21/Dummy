@@ -12,7 +12,6 @@
 --- @field protected hitbox Dummy.Bullet.Hitbox
 --- @field protected removed boolean
 --- @field protected wave Dummy.Wave
---- @field protected debug_hitbox_drawable Dummy.Drawable
 Bullet = {}
 
 --- @alias Dummy.Bullet.Hitbox [ number, number, number, number ]
@@ -46,9 +45,6 @@ function Bullet:setSprite(sprites_names) end
 --- @protected
 function Bullet:setHitboxFromSprite() end
 
---- Removes the drawable from the current scene
-function Bullet:remove() end
-
 --- Gets the wave the bullet is from
 --- @return Dummy.Wave
 function Bullet:getWave() end
@@ -56,6 +52,9 @@ function Bullet:getWave() end
 --- Called on every game update
 --- @param dt number
 function Bullet:update(dt) end
+
+--- Draws for debugging
+function Bullet:drawDebug() end
 
 --- Creates a bullet
 --- @return Dummy.Bullet

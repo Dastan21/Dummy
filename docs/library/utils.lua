@@ -106,3 +106,9 @@ function Utils.getFilenameWithoutExt(filename) end
 --- @return table
 function Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x, origin_y, angle) end
 
+--- Checks if two rectangles collide, using SAT-based rectangle collision
+--- @param rect1 [number, number, number, number]
+--- @param rect2 [number, number, number, number]
+--- @return boolean
+function Utils.checkCollision(rect1, rect2) end
+

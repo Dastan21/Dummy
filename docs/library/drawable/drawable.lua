@@ -41,11 +41,11 @@ function Drawable:getPosition() end
 --- @param y number
 function Drawable:setPosition(x, y) end
 
---- Gets the drawable's angle, in degree
+--- Gets the drawable's angle, in degrees
 --- @return number
 function Drawable:getAngle() end
 
---- Sets the drawable's angle, in degree
+--- Sets the drawable's angle, in degrees
 --- @param angle number
 function Drawable:setAngle(angle) end
 
@@ -62,6 +62,10 @@ function Drawable:setScale(scale_x, scale_y) end
 --- Gets the drawable's transform
 --- @return love.Transform
 function Drawable:getTransform() end
+
+--- Gets the drawable's absolute transform
+--- @return love.Transform
+function Drawable:getAbsoluteTransform() end
 
 --- Gets the drawable's origin
 --- @return number, number
