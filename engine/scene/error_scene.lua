@@ -83,7 +83,8 @@ function error.update(dt)
   end
 
   if Input.isDown("ctrl") and Input.isPressed("c") then
-    love.system.setClipboardText(error.traceback .. "\n\n" .. error.mod_info .. "\n" .. error.engine_info)
+    local mod_info = error.mod_info ~= nil and (error.mod_info .. "\n") or ""
+    love.system.setClipboardText(error.traceback .. "\n\n" .. mod_info .. error.engine_info)
     error.copied_timer = error.copied_delay
   end
 
