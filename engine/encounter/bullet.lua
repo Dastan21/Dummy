@@ -69,7 +69,7 @@ function Bullet:getWave()
   return self.wave
 end
 
---- Updates the bullet
+--- Called on every game update
 --- @param dt number
 function Bullet:update(dt) end
 

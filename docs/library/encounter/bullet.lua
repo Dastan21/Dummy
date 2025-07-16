@@ -53,7 +53,7 @@ function Bullet:remove() end
 --- @return Dummy.Wave
 function Bullet:getWave() end
 
---- Updates the bullet
+--- Called on every game update
 --- @param dt number
 function Bullet:update(dt) end
 
