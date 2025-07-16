@@ -7,9 +7,9 @@ local FlyBullet = require "scripts.enemies.froggit.bullets.fly"
 
 --- Called when the wave starts
 function FlyWave:onStart()
-  -- self.spawn_timer = Timer.every(20 / 30, function()
-  --   self:spawnFly()
-  -- end)
+  self.spawn_timer = Timer.every(20 / 30, function()
+    self:spawnFly()
+  end)
   self:spawnFly()
 end
 
@@ -28,7 +28,7 @@ function FlyWave:update(dt) end
 
 --- Called when the wave ends
 function FlyWave:onEnd()
-  -- Timer.cancel(self.spawn_timer)
+  Timer.cancel(self.spawn_timer)
 end
 
 --- Initializes the wave
