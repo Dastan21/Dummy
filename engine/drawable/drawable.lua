@@ -26,6 +26,12 @@ function Drawable.getClassName()
   return "Dummy.Drawable"
 end
 
+--- Gets the drawable's absolute position
+--- @return number, number
+function Drawable:getAbsolutePosition()
+  return self:getAbsoluteTransform():apply(self:getTransform():inverse()):transformPoint(self.x, self.y)
+end
+
 --- Gets the drawable's relative position
 --- @return number, number
 function Drawable:getPosition()
@@ -77,18 +83,9 @@ end
 --- @return love.Transform
 function Drawable:getAbsoluteTransform()
   local parent = self:getParent()
-  local transforms = { self:getTransform() }
-  while parent ~= nil do
-    table.insert(transforms, 1, parent:getTransform())
-    parent = parent:getParent()
-  end
+  if parent == nil then return self:getTransform() end
 
-  local transform = love.math.newTransform()
-  for _, t in ipairs(transforms) do
-    transform:apply(t)
-  end
-
-  return transform
+  return parent:getAbsoluteTransform():apply(self:getTransform())
 end
 
 --- Gets the drawable's origin

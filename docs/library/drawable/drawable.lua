@@ -32,6 +32,10 @@ Drawable = {}
 --- @return string
 function Drawable.getClassName() end
 
+--- Gets the drawable's absolute position
+--- @return number, number
+function Drawable:getAbsolutePosition() end
+
 --- Gets the drawable's relative position
 --- @return number, number
 function Drawable:getPosition() end
