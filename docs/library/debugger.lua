@@ -38,6 +38,9 @@ function Debugger.load() end
 --- Saves the logs
 function Debugger.saveLogs() end
 
+--- Clears the logs
+function Debugger.clearLogs() end
+
 --- Updates the debugger
 --- @param dt number
 --- @return number

@@ -76,6 +76,11 @@ function Debugger.saveLogs()
   love.filesystem.write("logs.txt", table.concat(Debugger.logs, "\n"))
 end
 
+--- Clears the logs
+function Debugger.clearLogs()
+  Debugger.logs = {}
+end
+
 --- Updates the debugger
 --- @param dt number
 --- @return number
@@ -94,6 +99,8 @@ function Debugger.update(dt)
     Debugger.fps_text:setVisible(not Debugger.fps_text:isVisible())
   elseif Input.isPressed("f7") then
     Debugger.display_hitbox = not Debugger.display_hitbox
+  elseif Input.isDown("ctrl") and Input.isPressed("f8") then
+    Debugger.clearLogs()
   elseif Input.isPressed("f8") then
     local visible = not Debugger.log_bg_sprite:isVisible()
     Debugger.log_bg_sprite:setVisible(visible)
