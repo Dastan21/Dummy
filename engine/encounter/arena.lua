@@ -41,6 +41,8 @@ function Arena.load()
 
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
+
+    Arena.mask:draw()
   end
 
   --- arena border
@@ -59,6 +61,18 @@ function Arena.load()
     love.graphics.rectangle("fill", x - b, y + Arena.height, Arena.width + b * 2, b)
     love.graphics.rectangle("fill", x - b, y - b, b, Arena.height + b * 2)
     love.graphics.rectangle("fill", x + Arena.width, y - b, b, Arena.height + b * 2)
+  end
+
+  Arena.mask = Mask:new()
+  Arena.mask:setLayer(Constants.LAYERS.ARENA)
+  Arena.mask:setOrigin(0.5, 1)
+  Arena.mask:setParent(Arena.arena_background_drawable)
+  function Arena.mask.drawMask()
+    local arena_x = Arena.x - (Arena.width / 2)
+    local arena_y = Arena.y - Arena.height
+
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
   end
 end
 
@@ -187,7 +201,7 @@ function Arena.moveAbsolute(x, y, instant, move_callback)
   Arena.move(x - Arena.x, y - Arena.y, instant, move_callback)
 end
 
---- Resets the arena bounds
+--- Resets the arena's bounds
 --- @param reset_callback? fun() called when the reset is done
 function Arena.reset(reset_callback)
   local finished_resizing = false
@@ -208,19 +222,19 @@ function Arena.reset(reset_callback)
   Arena.move(move_x, move_y, false, function() callback(nil, true) end)
 end
 
---- Gets the arena position
+--- Gets the arena's position
 --- @return number, number
 function Arena.getPosition()
   return Arena.x, Arena.y
 end
 
---- Gets the arena width
+--- Gets the arena's width
 --- @return number
 function Arena.getWidth()
   return Arena.width
 end
 
---- Gets the arena height
+--- Gets the arena's height
 --- @return number
 function Arena.getHeight()
   return Arena.height
@@ -233,6 +247,11 @@ end
 function Arena.isInBounds(x, y)
   return x >= Arena.x - Arena.width / 2 and x <= Arena.x + Arena.width / 2 and y >= Arena.y - Arena.height and
       y <= Arena.y
+end
+
+--- Gets the arena's mask
+function Arena.getMask()
+  return Arena.mask
 end
 
 return Arena

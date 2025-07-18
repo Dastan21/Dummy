@@ -17,6 +17,7 @@ Shaker = require "shaker"
 Drawable = require "drawable.drawable"
 Sprite = require "drawable.sprite"
 Text = require "drawable.text"
+Mask = require "drawable.mask"
 DialogueText = require "drawable.dialogue_text"
 DialogueBubble = require "drawable.dialogue_bubble"
 Debugger = require "debugger"
@@ -143,7 +144,7 @@ end
 local function draw()
   limitFPS()
 
-  love.graphics.setCanvas(engine.canvas)
+  love.graphics.setCanvas({ engine.canvas, stencil = true })
   love.graphics.clear()
 
   Scene.draw()

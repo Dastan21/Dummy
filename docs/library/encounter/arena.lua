@@ -49,19 +49,19 @@ function Arena.move(x, y, instant, move_callback) end
 --- @param move_callback? fun() called when the move is done
 function Arena.moveAbsolute(x, y, instant, move_callback) end
 
---- Resets the arena bounds
+--- Resets the arena's bounds
 --- @param reset_callback? fun() called when the reset is done
 function Arena.reset(reset_callback) end
 
---- Gets the arena position
+--- Gets the arena's position
 --- @return number, number
 function Arena.getPosition() end
 
---- Gets the arena width
+--- Gets the arena's width
 --- @return number
 function Arena.getWidth() end
 
---- Gets the arena height
+--- Gets the arena's height
 --- @return number
 function Arena.getHeight() end
 
@@ -70,4 +70,7 @@ function Arena.getHeight() end
 --- @param y number
 --- @return boolean
 function Arena.isInBounds(x, y) end
+
+--- Gets the arena's mask
+function Arena.getMask() end
 
