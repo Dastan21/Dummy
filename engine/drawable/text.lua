@@ -67,7 +67,8 @@ end
 --- Updates the text
 function Text:updateText()
   if self.text ~= nil then
-    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), Constants.SCREEN_WIDTH, self.align)
+    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), Constants.SCREEN_WIDTH / self.scale_x,
+      self.align)
   end
 end
 
@@ -110,6 +111,7 @@ function Text:setFont(font)
 
   if self.text ~= nil then
     self.text:setFont(font)
+    self:updateText()
     self.width = self.text:getWidth()
     self.height = self.text:getHeight()
   else
@@ -127,6 +129,20 @@ end
 --- @param align Dummy.Text.Align
 function Text:setAlign(align)
   self.align = align
+
+  if self.text ~= nil then
+    self:updateText()
+    self.width = self.text:getWidth()
+    self.height = self.text:getHeight()
+  end
+end
+
+--- Sets the text's scale
+--- @overload fun(self: Dummy.Drawable, scale: number)
+--- @param scale_x number
+--- @param scale_y number
+function Text:setScale(scale_x, scale_y)
+  Drawable.setScale(self, scale_x, scale_y)
 
   if self.text ~= nil then
     self:updateText()

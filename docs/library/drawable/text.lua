@@ -80,6 +80,12 @@ function Text:getAlign() end
 --- @param align Dummy.Text.Align
 function Text:setAlign(align) end
 
+--- Sets the text's scale
+--- @overload fun(self: Dummy.Drawable, scale: number)
+--- @param scale_x number
+--- @param scale_y number
+function Text:setScale(scale_x, scale_y) end
+
 --- Gets the formatted text's value
 --- @param value Dummy.Text.Text
 --- @param color love.Color
