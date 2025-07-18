@@ -157,7 +157,6 @@ end
 function Drawable:setLayer(layer)
   self.layer = layer
 
-  self:remove()
   Scene.addDrawable(self)
 end
 
