@@ -86,12 +86,12 @@ end
 
 function MainMenu:setOptions(options)
   for _, option in ipairs(self.options) do
-    Scene.removeDrawable(option.text)
+    option.text:remove()
   end
 
-  Scene.removeDrawable(self.arrow_up)
-  Scene.removeDrawable(self.arrow_down)
-  Scene.removeDrawable(self.page_text)
+  self.arrow_up:remove()
+  self.arrow_down:remove()
+  self.page_text:remove()
 
   self.options = options
   self:init()

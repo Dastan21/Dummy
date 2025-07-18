@@ -10,6 +10,8 @@
 --- @field protected target_height number
 --- @field protected resize_callback fun()|nil
 --- @field protected move_callback fun()|nil
+--- @field protected arena_background_drawable Dummy.Drawable
+--- @field protected arena_border_drawable Dummy.Drawable
 local Arena = {}
 
 --- Loads the arena
@@ -27,12 +29,13 @@ function Arena.load()
   Arena.resize_callback = nil
   Arena.move_callback = nil
 
-  Arena.layer = Constants.LAYERS.ARENA
-
   --- arena background
-  local arena_background_drawable = Drawable:new()
-  arena_background_drawable:setLayer(Constants.LAYERS.ARENA)
-  function arena_background_drawable.draw()
+  if Arena.arena_background_drawable ~= nil then
+    Arena.arena_background_drawable:remove()
+  end
+  Arena.arena_background_drawable = Drawable:new()
+  Arena.arena_background_drawable:setLayer(Constants.LAYERS.ARENA)
+  function Arena.arena_background_drawable.draw()
     local arena_x = Arena.x - (Arena.width / 2)
     local arena_y = Arena.y - Arena.height
 
@@ -41,9 +44,12 @@ function Arena.load()
   end
 
   --- arena border
-  local arena_border_drawable = Drawable:new()
-  arena_border_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
-  function arena_border_drawable.draw()
+  if Arena.arena_border_drawable ~= nil then
+    Arena.arena_border_drawable:remove()
+  end
+  Arena.arena_border_drawable = Drawable:new()
+  Arena.arena_border_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
+  function Arena.arena_border_drawable.draw()
     local b = Constants.ARENA.BORDER_WIDTH
     local x = Arena.x - (Arena.width / 2)
     local y = Arena.y - Arena.height

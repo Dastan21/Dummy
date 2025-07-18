@@ -258,7 +258,7 @@ function Enemy:spare()
     end
   end, function()
     for _, dustcloud in ipairs(dustclouds) do
-      Scene.removeDrawable(dustcloud)
+      dustcloud:remove()
     end
   end)
 end

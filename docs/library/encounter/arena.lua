@@ -18,6 +18,8 @@
 --- @field protected target_height number
 --- @field protected resize_callback fun()|nil
 --- @field protected move_callback fun()|nil
+--- @field protected arena_background_drawable Dummy.Drawable
+--- @field protected arena_border_drawable Dummy.Drawable
 Arena = {}
 
 --- Loads the arena

@@ -134,7 +134,7 @@ end
 function ActionMenu:hide()
   for _, option in ipairs(self.options) do
     option.text:setVisible(false)
-    Scene.removeDrawable(option.drawable)
+    option.drawable:remove()
   end
 
   if self.page_text ~= nil then
