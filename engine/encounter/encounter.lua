@@ -732,6 +732,7 @@ function Encounter.enterMenu(menu)
   end
 
   Arena.reset()
+  Player.getSoul():setVisible(true)
 
   Encounter.leaveMenu()
   Encounter.current_menu = menu
