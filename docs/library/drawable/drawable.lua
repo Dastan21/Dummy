@@ -162,9 +162,12 @@ function Drawable:removeChild(child) end
 --- Sorts drawable's children by layer
 function Drawable:sortChildren() end
 
---- Updates the drawable
+--- Updates the drawable, called on every game update
 --- @param dt number
 function Drawable:update(dt) end
+
+--- Updates the drawable's children
+function Drawable:updateChildren(dt) end
 
 --- Draws the drawable
 function Drawable:draw() end

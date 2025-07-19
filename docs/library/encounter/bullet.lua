@@ -49,10 +49,6 @@ function Bullet:setHitboxFromSprite() end
 --- @return Dummy.Wave
 function Bullet:getWave() end
 
---- Called on every game update
---- @param dt number
-function Bullet:update(dt) end
-
 --- Draws for debugging
 function Bullet:debugDraw() end
 

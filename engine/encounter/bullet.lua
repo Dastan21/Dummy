@@ -62,10 +62,6 @@ function Bullet:getWave()
   return self.wave
 end
 
---- Called on every game update
---- @param dt number
-function Bullet:update(dt) end
-
 --- Draws for debugging
 function Bullet:debugDraw()
   if not Debugger.shouldDisplayHitbox() then return end

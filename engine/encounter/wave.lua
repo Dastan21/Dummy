@@ -100,8 +100,6 @@ function Wave:__update(dt)
   end
 
   for bullet in pairs(self.bullets) do
-    bullet:update(dt)
-
     if not Player.isInvincible() and Player.isColliding(bullet) then
       bullet:remove()
       Player.hurt(bullet:getDamage())

@@ -223,6 +223,8 @@ function Drawable:setParent(parent)
     if parent ~= nil then
       self:removeChild(parent)
       parent:addChild(self)
+
+      Scene.removeDrawable(self)
     end
   end
 end
@@ -260,6 +262,8 @@ end
 function Drawable:removeChild(child)
   table.removeByValue(self.children, child)
 
+  Scene.addDrawable(child)
+
   self:sortChildren()
 end
 
@@ -272,9 +276,22 @@ function Drawable:sortChildren()
   end)
 end
 
---- Updates the drawable
+--- Updates the drawable, called on every game update
 --- @param dt number
-function Drawable:update(dt) end
+function Drawable:update(dt)
+  self:updateChildren(dt)
+end
+
+--- Updates the drawable's children
+function Drawable:updateChildren(dt)
+  if #self.children <= 0 then return end
+
+  for _, child in ipairs(self.children) do
+    if type(child.update) == "function" then
+      child:update(dt)
+    end
+  end
+end
 
 --- Draws the drawable
 function Drawable:draw()
@@ -286,9 +303,11 @@ function Drawable:drawChildren()
   if #self.children <= 0 then return end
 
   for _, child in ipairs(self.children) do
-    love.graphics.push()
-    child:draw()
-    love.graphics.pop()
+    if type(child.draw) == "function" then
+      love.graphics.push()
+      child:draw()
+      love.graphics.pop()
+    end
   end
 end
 

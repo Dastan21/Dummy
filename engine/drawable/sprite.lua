@@ -101,10 +101,6 @@ function Sprite:setSprite(sprites_names)
     else
       self.sprite = sprites_names
     end
-
-    if self.sprite ~= nil then
-      Scene.addDrawable(self)
-    end
   end
 end
 

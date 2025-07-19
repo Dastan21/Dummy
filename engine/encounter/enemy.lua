@@ -311,10 +311,6 @@ function Enemy:onAfterDamage() end
 --- Called when the enemy is killed
 function Enemy:onKilled() end
 
---- Called on every game update
---- @param dt number
-function Enemy:update(dt) end
-
 --- Creates an enemy
 --- @param name Dummy.Text.Text
 --- @param sprite string
