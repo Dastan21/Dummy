@@ -54,7 +54,7 @@ function Bullet:getWave() end
 function Bullet:update(dt) end
 
 --- Draws for debugging
-function Bullet:drawDebug() end
+function Bullet:debugDraw() end
 
 --- Creates a bullet
 --- @return Dummy.Bullet

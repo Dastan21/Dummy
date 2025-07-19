@@ -351,12 +351,12 @@ function Sprite:draw()
   love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
   love.graphics.draw(sprite, -width * origin_x, -height * origin_y)
 
-  self:drawDebug()
+  self:debugDraw()
   self:drawChildren()
 end
 
 --- Draws for debugging
-function Sprite:drawDebug()
+function Sprite:debugDraw()
   if not Debugger.shouldDisplayHitbox() then return end
 
   local width, height = self:getWidth(), self:getHeight()

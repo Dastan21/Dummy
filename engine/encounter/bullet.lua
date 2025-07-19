@@ -67,13 +67,13 @@ end
 function Bullet:update(dt) end
 
 --- Draws for debugging
-function Bullet:drawDebug()
+function Bullet:debugDraw()
   if not Debugger.shouldDisplayHitbox() then return end
 
   local width, height = self:getWidth(), self:getHeight()
   if width == 0 and height == 0 then return end
 
-  Sprite.drawDebug(self)
+  Sprite.debugDraw(self)
 
   love.graphics.push()
   love.graphics.origin()

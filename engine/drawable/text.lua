@@ -248,18 +248,17 @@ function Text:draw()
       if node.type == "character" and node.state.text ~= nil then
         local scale_x, scale_y = node.state.scale_x or 1, node.state.scale_y or 1
         love.graphics.print(node.state.text or node.character, node.state.font or self.font, node.state.x, node.state.y,
-          0,
-          scale_x, scale_y)
+          0, scale_x, scale_y)
       end
     end
   end
 
-  self:drawDebug()
+  self:debugDraw()
   self:drawChildren()
 end
 
 --- Draws for debugging
-function Text:drawDebug()
+function Text:debugDraw()
   if not Debugger.shouldDisplayHitbox() then return end
 
   local width, height = self:getWidth(), self:getHeight()
