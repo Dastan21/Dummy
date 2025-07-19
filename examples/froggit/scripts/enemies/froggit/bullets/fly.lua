@@ -32,7 +32,7 @@ function FlyBullet:targetPlayer()
   self.target_angle = math.atan(dy / dx)
   if dx < 0 then self.target_angle = self.target_angle + math.pi end
 
-  self.fly_speed = 1.25
+  self.fly_speed = 3
   self.stop_timer = Timer.after(1, function()
     self:halt()
   end)

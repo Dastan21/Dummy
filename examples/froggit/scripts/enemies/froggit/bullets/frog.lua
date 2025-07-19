@@ -30,12 +30,12 @@ end
 --- Halts the bullet
 function FrogBullet:leap()
   local gravity_direction = math.rad(280)
-  self.acc_x = 90 * math.cos(gravity_direction)
-  self.acc_y = -90 * math.sin(gravity_direction)
+  self.acc_x = 200 * math.cos(gravity_direction)
+  self.acc_y = -200 * math.sin(gravity_direction)
 
   local leap_direction = math.rad(145 - (math.random() * 20))
-  self.vel_x = 120 * math.cos(leap_direction)
-  self.vel_y = -120 * math.sin(leap_direction)
+  self.vel_x = 200 * math.cos(leap_direction)
+  self.vel_y = -200 * math.sin(leap_direction)
   self.is_jumping = true
 
   self:setSprite("waves/frog/frog_bullet_2")
