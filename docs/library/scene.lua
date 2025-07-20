@@ -15,7 +15,10 @@
 --- @field protected quitting_delay number
 --- @field protected quitting_timer number
 --- @field protected quitting_sprite Dummy.Sprite
---- @field protected drawables Dummy.Drawable[]
+--- @field protected layers number[]
+--- @field protected layer_canvas [ love.Canvas, love.Canvas ]
+--- @field protected drawables table<number, Dummy.Drawable[]>
+--- @field protected shaders Dummy.Shader[]
 Scene = {}
 
 --- @class Dummy.Scene.Scene
@@ -65,14 +68,27 @@ function Scene.addScene(scene_name, scene) end
 
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable
+--- @return Dummy.Drawable|nil
 function Scene.addDrawable(drawable) end
 
 --- Removes a drawable in the current scene
 --- @param drawable Dummy.Drawable
 function Scene.removeDrawable(drawable) end
 
---- Sorts drawables by layer in the current scene
-function Scene.sortDrawables() end
+--- Adds a shader in the current scene
+--- @param shader Dummy.Shader
+--- @return Dummy.Shader|nil
+function Scene.addShader(shader) end
+
+--- Removes a shader in the current scene
+--- @param shader Dummy.Shader
+function Scene.removeShader(shader) end
+
+--- Sorts shaders in the current scene by priority
+function Scene.sortShaders() end
+
+--- Sorts current scene layers
+function Scene.sortLayers() end
 
 --- Cleans the current scene
 function Scene.clean() end
