@@ -218,14 +218,16 @@ end
 --- @param parent Dummy.Drawable|nil
 function Drawable:setParent(parent)
   if self.parent ~= parent then
-    self.parent = parent
-
     if parent ~= nil then
       self:removeChild(parent)
       parent:addChild(self)
 
       Scene.removeDrawable(self)
+    else
+      self.parent:removeChild(self)
     end
+
+    self.parent = parent
   end
 end
 
