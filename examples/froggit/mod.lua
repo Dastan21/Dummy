@@ -39,7 +39,7 @@ function mod:load()
   self.command = 0
 end
 
---- Called when on every game update
+--- Called on every game update
 function mod:update(dt) end
 
 --- Called when an enemy is selected for attack

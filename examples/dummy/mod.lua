@@ -39,7 +39,7 @@ function mod:load()
   self.done = false
 end
 
---- Called when on every game update
+--- Called on every game update
 function mod:update(dt)
   if self.turn > self.tire_turn then
     local x, y = self.dummy:getPosition()
