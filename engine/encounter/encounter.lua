@@ -268,7 +268,7 @@ function Encounter.load()
 
   -- attack target
   Encounter.target_sprite = Sprite:new("target")
-  Encounter.target_sprite:setPosition(320, 320)
+  Encounter.target_sprite:setPosition(319, 320)
   Encounter.target_sprite:setLayer(Constants.LAYERS.UI)
   Encounter.target_sprite:setVisible(false)
   Encounter.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1, nil, false)
@@ -279,7 +279,7 @@ function Encounter.load()
   Encounter.miss_text = Text:new("ENCOUNTER_ATTACK_MISS")
   Encounter.miss_text:setVisible(false)
   Encounter.miss_text:setFont(Assets.getFont("damage"))
-  Encounter.miss_text:setColor(0.75, 0.75, 0.75)
+  Encounter.miss_text:setColor(0.87, 0.87, 0.87)
   Encounter.miss_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
   -- strike
@@ -332,17 +332,15 @@ function Encounter.load()
 
   -- enemy hp bar & damage text
   Encounter.enemy_hp_draw = Drawable:new()
-  Encounter.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_BULLET)
-  Encounter.enemy_hp_draw:setVisible(false)
   Encounter.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_UI)
+  Encounter.enemy_hp_draw:setVisible(false)
 
   Encounter.enemy_hp_text = Text:new("")
   Encounter.enemy_hp_text:setColor(1, 0, 0)
-  Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_BULLET)
+  Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_UI)
   Encounter.enemy_hp_text:setFont(Assets.getFont("damage"))
   Encounter.enemy_hp_text:setScale(1)
   Encounter.enemy_hp_text:setVisible(false)
-  Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
   Encounter.can_flee = true
   Encounter.setMusic("battle")
@@ -908,7 +906,12 @@ function Encounter.startAttacking()
 
     local enemy = Encounter.enemies[Encounter.enemy_selected_index]
     local enemy_x, enemy_y = enemy:getPosition()
-    Encounter.strike_sprite:setPosition(enemy_x, enemy_y - enemy:getHeight() / 2)
+    local enemy_width, enemy_height = enemy:getWidth(), enemy:getHeight()
+    local enemy_origin_x, enemy_origin_y = enemy:getOrigin()
+    local enemy_scale_x, enemy_scale_y = enemy:getScale()
+    local enemy_center_x = enemy_x + (0.5 - enemy_origin_x) * enemy_width * enemy_scale_x
+    local enemy_center_y = enemy_y + (0.5 - enemy_origin_y) * enemy_height * enemy_scale_y
+    Encounter.strike_sprite:setPosition(enemy_center_x, enemy_center_y)
 
     local damage = 0
     local enemy_hp_text_vel_y = -4
@@ -917,9 +920,6 @@ function Encounter.startAttacking()
       if type(enemy.onBeforeDamage) == "function" then
         damage = Utils.getOrDefault(enemy:onBeforeDamage(damage), damage)
       end
-
-      local enemy_width, enemy_height = enemy:getWidth(), enemy:getHeight()
-      local enemy_top_y = enemy_y - enemy_height - 16
 
       local function end_attack()
         Timer.during(0.5, function(dt)
@@ -943,8 +943,9 @@ function Encounter.startAttacking()
         end
       end
 
+      local enemy_top_y = enemy_center_y - enemy_height * enemy_scale_y / 2 - 16
       if miss == true or damage == 0 then
-        Encounter.miss_text:setPosition(enemy_x, enemy_top_y)
+        Encounter.miss_text:setPosition(enemy_center_x, enemy_top_y)
         Encounter.miss_text:setVisible(true)
 
         Timer.after(1, function()
@@ -955,51 +956,49 @@ function Encounter.startAttacking()
       else
         Assets.playSound("damage")
 
-        enemy_width = math.max(100, enemy_width)
-        local stretchfactor = enemy_width / enemy:getMaxHP()
-        local width = math.round(enemy:getMaxHP() * stretchfactor)
+        local stretch_factor = math.max(100, enemy_width) / enemy:getMaxHP()
+        local hp_bar_width = math.round(enemy:getMaxHP() * stretch_factor)
         local enemy_apparent_hp = enemy:getHP()
-        local enemy_hp_draw_width = math.round(enemy_apparent_hp * stretchfactor)
-        local enemy_hp_draw_x = enemy_x - enemy_width / 2
+        local enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
+        local enemy_hp_draw_x = enemy_center_x - enemy_hp_draw_width / 2
 
         local fps = Config["fps"]
         if fps > 30 then
           Timer.during(1, function(dt)
             enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - damage * dt)
-            enemy_hp_draw_width = math.round(enemy_apparent_hp * stretchfactor)
+            enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
           end)
         else
           Timer.every(2 / 30, function()
             enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - (damage / 15))
-            enemy_hp_draw_width = math.round(enemy_apparent_hp * stretchfactor)
+            enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
           end, 15)
         end
 
         Encounter.enemy_hp_draw:setVisible(true)
         function Encounter.enemy_hp_draw.draw()
           love.graphics.setColor(0, 0, 0, 1)
-          love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, width + 2, 15)
+          love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, hp_bar_width + 2, 15)
           love.graphics.setColor(0.25, 0.25, 0.25, 1)
-          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, width, 13)
+          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, hp_bar_width, 13)
           love.graphics.setColor(0, 1, 0, 1)
           love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, enemy_hp_draw_width, 13)
         end
 
-        local enemy_hp_text_x = enemy_x
-        local enemy_hp_text_y_start = enemy_y - enemy_height - 31
+        local enemy_hp_text_y_start = enemy_top_y - 15
         local enemy_hp_text_y = enemy_hp_text_y_start
-        Encounter.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
+        Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
         Encounter.enemy_hp_text:setVisible(true)
         Encounter.enemy_hp_text:setText(tostring(damage))
         Encounter.enemy_hp_text_timer = Timer.during(1, function(dt)
           enemy_hp_text_vel_y = enemy_hp_text_vel_y + 0.5 * dt * 30
           enemy_hp_text_y = enemy_hp_text_y + enemy_hp_text_vel_y * dt * 30
-          Encounter.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y)
+          Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y)
 
           if enemy_hp_text_y >= enemy_hp_text_y_start + 8 then
             Timer.cancel(Encounter.enemy_hp_text_timer)
             Encounter.enemy_hp_text_timer = nil
-            Encounter.enemy_hp_text:setPosition(enemy_hp_text_x, enemy_hp_text_y_start)
+            Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
           end
         end)
 
