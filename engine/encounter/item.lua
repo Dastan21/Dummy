@@ -17,10 +17,22 @@ function Item:getName()
   return self.name
 end
 
+--- Sets the item's name
+--- @param name Dummy.Text.Text
+function Item:setName(name)
+  self.name = name
+end
+
 --- Gets the item's short name
 --- @return Dummy.Text.Text
 function Item:getShortName()
   return self.short_name
+end
+
+--- Sets the item's short name
+--- @param short_name Dummy.Text.Text
+function Item:setShortName(short_name)
+  self.short_name = short_name
 end
 
 --- Gets the item's dialogue text

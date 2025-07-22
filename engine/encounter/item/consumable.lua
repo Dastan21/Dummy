@@ -16,10 +16,22 @@ function ItemConsumable:getHeal()
   return self.heal
 end
 
+--- Sets the item's heal amount
+--- @param heal number
+function ItemConsumable:setHeal(heal)
+  self.heal = heal
+end
+
 --- Gets the item's type
 --- @return "food" | "drink"
 function ItemConsumable:getType()
   return self.type
+end
+
+--- Sets the item's type
+--- @param type "food" | "drink"
+function ItemConsumable:setType(type)
+  self.type = type
 end
 
 --- Uses the consumable item

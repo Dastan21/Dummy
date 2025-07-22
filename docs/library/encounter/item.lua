@@ -21,9 +21,17 @@ function Item.getClassName() end
 --- @return Dummy.Text.Text
 function Item:getName() end
 
+--- Sets the item's name
+--- @param name Dummy.Text.Text
+function Item:setName(name) end
+
 --- Gets the item's short name
 --- @return Dummy.Text.Text
 function Item:getShortName() end
+
+--- Sets the item's short name
+--- @param short_name Dummy.Text.Text
+function Item:setShortName(short_name) end
 
 --- Gets the item's dialogue text
 --- @return Dummy.Text.Text

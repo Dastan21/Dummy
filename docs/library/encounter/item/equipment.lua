@@ -20,9 +20,17 @@ function ItemEquipment.getClassName() end
 --- @return number
 function ItemEquipment:getValue() end
 
+--- Sets the item's value
+--- @param value number
+function ItemEquipment:setValue(value) end
+
 --- Gets the item's type
 --- @return "weapon" | "armor"
 function ItemEquipment:getType() end
+
+--- Sets the item's type
+--- @param type "weapon" | "armor"
+function ItemEquipment:setType(type) end
 
 --- Uses the equipment item
 function ItemEquipment:use() end

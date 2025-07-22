@@ -16,10 +16,22 @@ function ItemEquipment:getValue()
   return self.value
 end
 
+--- Sets the item's value
+--- @param value number
+function ItemEquipment:setValue(value)
+  self.value = value
+end
+
 --- Gets the item's type
 --- @return "weapon" | "armor"
 function ItemEquipment:getType()
   return self.type
+end
+
+--- Sets the item's type
+--- @param type "weapon" | "armor"
+function ItemEquipment:setType(type)
+  self.type = type
 end
 
 --- Uses the equipment item

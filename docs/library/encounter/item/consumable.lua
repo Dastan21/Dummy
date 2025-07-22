@@ -20,9 +20,17 @@ function ItemConsumable.getClassName() end
 --- @return number
 function ItemConsumable:getHeal() end
 
+--- Sets the item's heal amount
+--- @param heal number
+function ItemConsumable:setHeal(heal) end
+
 --- Gets the item's type
 --- @return "food" | "drink"
 function ItemConsumable:getType() end
+
+--- Sets the item's type
+--- @param type "food" | "drink"
+function ItemConsumable:setType(type) end
 
 --- Uses the consumable item
 function ItemConsumable:use() end
