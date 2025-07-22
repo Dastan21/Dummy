@@ -33,7 +33,8 @@ end
 
 --- Initializes the wave
 function FlyWave:new()
-  self = Class:new(FlyWave, { 10 / 3 })
+  self = Class:new(FlyWave)
+  self:setDuration(10 / 3)
   self:setArenaSize(155, 130)
 
   return self

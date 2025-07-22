@@ -78,8 +78,7 @@ function Wave:update(dt) end
 --- Called when the wave ends
 function Wave:onEnd() end
 
---- Creates an enemy Waveing
---- @param duration? number wave duration, in seconds (Defaults to `8`)
+--- Creates an enemy wave
 --- @return Dummy.Wave
-function Wave:new(duration) end
+function Wave:new() end
 

@@ -17,7 +17,8 @@ function FrogWave:onEnd() end
 
 --- Initializes the wave
 function FrogWave:new()
-  self = Class:new(FrogWave, { 10 / 3 })
+  self = Class:new(FrogWave)
+  self:setDuration(10 / 3)
   self:setArenaSize(155, 130)
 
   return self

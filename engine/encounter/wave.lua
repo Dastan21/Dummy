@@ -131,12 +131,11 @@ function Wave:update(dt) end
 --- Called when the wave ends
 function Wave:onEnd() end
 
---- Creates an enemy Waveing
---- @param duration? number wave duration, in seconds (Defaults to `8`)
+--- Creates an enemy wave
 --- @return Dummy.Wave
-function Wave:new(duration)
+function Wave:new()
   self = Class:new(Wave)
-  self.duration = Utils.getOrDefault(duration, 8)
+  self.duration = 8
   self.time = 0
   self.is_done = false
   self.arena_width = Constants.ARENA.DEFAULT_WIDTH
