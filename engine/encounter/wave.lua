@@ -104,8 +104,6 @@ function Wave:__update(dt)
       if type(bullet.onHit) == "function" then
         bullet:onHit()
       end
-      bullet:remove()
-      Player.hurt(bullet:getDamage())
     end
   end
 

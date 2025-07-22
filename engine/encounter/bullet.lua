@@ -63,7 +63,9 @@ function Bullet:getWave()
 end
 
 --- Called when the bullet hits the player
-function Bullet:onHit() end
+function Bullet:onHit()
+  Player.hurt(self:getDamage())
+end
 
 --- Draws for debugging
 function Bullet:debugDraw()
