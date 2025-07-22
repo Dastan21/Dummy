@@ -65,6 +65,7 @@ end
 --- Called when the bullet hits the player
 function Bullet:onHit()
   Player.hurt(self:getDamage())
+  self:remove()
 end
 
 --- Draws for debugging
