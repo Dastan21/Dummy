@@ -62,6 +62,9 @@ function Bullet:getWave()
   return self.wave
 end
 
+--- Called when the bullet hits the player
+function Bullet:onHit() end
+
 --- Draws for debugging
 function Bullet:debugDraw()
   if not Debugger.shouldDisplayHitbox() then return end

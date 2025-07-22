@@ -49,6 +49,9 @@ function Bullet:setHitboxFromSprite() end
 --- @return Dummy.Wave
 function Bullet:getWave() end
 
+--- Called when the bullet hits the player
+function Bullet:onHit() end
+
 --- Draws for debugging
 function Bullet:debugDraw() end
 
