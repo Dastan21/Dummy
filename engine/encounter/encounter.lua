@@ -99,7 +99,7 @@ end
 
 --- Sets one or more waves to the encounter
 --- @param wave Dummy.Wave
-function Encounter.setWave(wave, ...)
+function Encounter.setWaves(wave, ...)
   Encounter.waves = {}
 
   local waves = { wave, ... }
