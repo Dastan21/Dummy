@@ -18,15 +18,23 @@ local Input = {}
 function Input.hasAnyKey(keys, predicate)
   if type(predicate) ~= "function" then return false end
 
-  if keys == "ctrl" then
-    keys = { "lctrl", "rctrl" }
-  elseif keys == "shift" then
-    keys = { "lshift", "rshift" }
-  end
-
   if type(keys) ~= "table" then
     keys = { tostring(keys) }
   end
+
+  local tmp_keys = {}
+  for _, key in ipairs(keys) do
+    if key == "ctrl" then
+      table.insert(tmp_keys, "lctrl")
+      table.insert(tmp_keys, "rctrl")
+    elseif key == "shift" then
+      table.insert(tmp_keys, "lshift")
+      table.insert(tmp_keys, "rshift")
+    else
+      table.insert(tmp_keys, key)
+    end
+  end
+  keys = tmp_keys
 
   for _, key in ipairs(keys) do
     if predicate(key) then
@@ -91,7 +99,7 @@ function Input.load()
   Input.Left = { "a", "left", "gamepad:dpleft", "joystick:lsleft" }
   Input.Right = { "d", "right", "gamepad:dpright", "joystick:lsright" }
   Input.Confirm = { "z", "return", "kpenter", "gamepad:a" }
-  Input.Cancel = { "x", "rshift", "lshift", "gamepad:b" }
+  Input.Cancel = { "x", "shift", "gamepad:b" }
 end
 
 --- Updates the input

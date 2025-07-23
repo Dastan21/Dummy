@@ -109,7 +109,7 @@ function Debugger.update(dt)
     Assets.playSound("screenshot")
     love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
   elseif Input.isDown("ctrl") and Input.isPressed("r") then
-    if Input.isDown({ "lshift", "rshift" }) then
+    if Input.isDown("shift") then
       Scene.fullReload()
     else
       Scene.reload()
