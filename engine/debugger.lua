@@ -67,6 +67,16 @@ function Debugger.load()
   Debugger.fps_text:setFont(Assets.getFont("main_text"))
   Debugger.fps_text:setVisible(false)
   Debugger.fps_text:setPersistent(true)
+
+  Debugger.screenshot_text = Text:new("SCREENSHOT_TEXT")
+  Debugger.screenshot_text:setPosition(4, 0)
+  Debugger.screenshot_text:setOrigin(0, 0)
+  Debugger.screenshot_text:setLayer(Constants.LAYERS.DEBUG)
+  Debugger.screenshot_text:setFont(Assets.getFont("main_text"))
+  Debugger.screenshot_text:setVisible(false)
+  Debugger.screenshot_text:setPersistent(true)
+  Debugger.screenshot_data = { alpha = 1 }
+  Debugger.screenshot_fade_timer = 0
 end
 
 --- Saves the logs
@@ -95,6 +105,10 @@ function Debugger.update(dt)
   local logs = table.slice(Debugger.logs, #Debugger.logs - max_lines, #Debugger.logs)
   Debugger.log_text:setText(table.concat(logs, "\n"))
 
+  if Debugger.screenshot_text:isVisible() then
+    Debugger.screenshot_text:setAlpha(Debugger.screenshot_data.alpha)
+  end
+
   if Input.isPressed("f6") then
     Debugger.fps_text:setVisible(not Debugger.fps_text:isVisible())
   elseif Input.isPressed("f7") then
@@ -106,8 +120,29 @@ function Debugger.update(dt)
     Debugger.log_bg_sprite:setVisible(visible)
     Debugger.log_text:setVisible(visible)
   elseif Input.isPressed("f9") then
-    Assets.playSound("screenshot")
-    love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
+    if Input.isDown("ctrl") then
+      love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/screenshots")
+    else
+      Debugger.screenshot_text:setVisible(false)
+
+      Assets.playSound("screenshot")
+      love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
+
+      if Debugger.screenshot_fade_timer ~= nil then
+        Timer.cancel(Debugger.screenshot_fade_timer)
+      end
+
+      Debugger.screenshot_fade_timer = Timer.after(0.05, function()
+        Debugger.screenshot_data.alpha = 1
+        Debugger.screenshot_text:setVisible(true)
+        Debugger.screenshot_fade_timer = Timer.after(1, function()
+          Debugger.screenshot_fade_timer = Timer.tween(0.5, Debugger.screenshot_data, { alpha = 0 }, "out-sine",
+            function()
+              Debugger.screenshot_text:setVisible(false)
+            end)
+        end)
+      end)
+    end
   elseif Input.isDown("ctrl") and Input.isPressed("r") then
     if Input.isDown("shift") then
       Scene.fullReload()

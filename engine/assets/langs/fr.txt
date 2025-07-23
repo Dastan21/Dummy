@@ -42,11 +42,12 @@ ENCOUNTER_ITEM_USE_STICK=* Vous lancez le bâton.\n* Pour le ramasser juste apr�
 
 GAME_OVER_TITLE_GAME=FIN DE
 GAME_OVER_TITLE_OVER=PARTIE
+GAME_OVER_TEXT_1=[noskip]  Tu ne peux pas\n  abandonner\n  maintenant...
+GAME_OVER_TEXT_2=[noskip]  {}!\n  Garde ta détermination...
 
 ERROR_LABEL=ERREUR :
 ERROR_BACK_MAIN_MENU=Appuyez sur ÉCHAP pour retourner au menu principal
 ERROR_COPY_TRACEBACK=Appuyez sur CTRL+C pour copier la trace d'appels dans le presse-papier
 ERROR_MOD_INFO=Mod : {}
 
-GAME_OVER_TEXT_1=[noskip]  Tu ne peux pas\n  abandonner\n  maintenant...
-GAME_OVER_TEXT_2=[noskip]  {}!\n  Garde ta détermination...
+SCREENSHOT_TEXT=Capture d'écran enregistrée !\nAppuyez sur Ctrl+F9 pour ouvrir le dossier.
