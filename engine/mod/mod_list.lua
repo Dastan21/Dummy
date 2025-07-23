@@ -163,4 +163,14 @@ function ModList.setWindowTitleAndIcon(title)
   love.window.setIcon(love.image.newImageData("assets/icon.png"))
 end
 
+--- Copies a mod zip file into the mods folder
+--- @param file love.File
+function ModList.copyModZip(file)
+  if not Utils.checkExtension(file:getFilename(), "zip") then return end
+
+  local name = file:getFilename():match("([^/\\]+)$")
+  file:open("r")
+  love.filesystem.write("mods/" .. name, file:read())
+end
+
 return ModList

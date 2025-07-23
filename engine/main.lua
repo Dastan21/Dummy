@@ -177,6 +177,10 @@ function love.quit()
   return love.system.getOS() == "Web"
 end
 
+function love.filedropped(file)
+  ModList.copyModZip(file)
+end
+
 local function error_handler(err)
   if err == "stack overflow" then
     err = "Stack overflow!"
