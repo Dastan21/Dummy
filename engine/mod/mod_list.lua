@@ -86,7 +86,6 @@ end
 function ModList.loadMod(mod)
   if mod == nil then return end
 
-  ModList.unloadMod(mod)
 
   if type(mod.load) == "function" then
     ModList.mountMod(mod)
@@ -106,6 +105,7 @@ function ModList.mountMod(mod)
 
   love.filesystem.mount("mods/" .. mod:getId() .. "/assets", "assets")
   love.filesystem.mount("mods/" .. mod:getId() .. "/scripts", "scripts")
+  love.filesystem.mount("mods/" .. mod:getId() .. ".zip", "")
 end
 
 --- Unloads a mod
