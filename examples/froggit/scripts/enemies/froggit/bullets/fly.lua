@@ -2,8 +2,8 @@
 ---
 --- @field target_angle number
 --- @field fly_speed number
---- @field move_timer table
---- @field stop_timer table
+--- @field move_timer table|nil
+--- @field stop_timer table|nil
 local FlyBullet = Class:extend(Bullet)
 
 --- Initializes the bullet

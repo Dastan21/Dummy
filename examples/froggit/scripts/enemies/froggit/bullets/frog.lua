@@ -1,6 +1,6 @@
 --- @class FrogBullet : Dummy.Bullet
 ---
---- @field leap_timer table
+--- @field leap_timer table|nil
 --- @field vel_x number
 --- @field vel_y number
 --- @field acc_x number

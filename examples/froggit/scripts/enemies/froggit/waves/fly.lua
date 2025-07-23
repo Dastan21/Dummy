@@ -1,6 +1,6 @@
 --- @class FlyWave : Dummy.Wave
 ---
---- @field spawn_timer table
+--- @field spawn_timer table|nil
 local FlyWave = Class:extend(Wave)
 
 local FlyBullet = require "scripts.enemies.froggit.bullets.fly"
