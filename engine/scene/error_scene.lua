@@ -4,8 +4,8 @@
 --- @field protected error_text Dummy.Text
 --- @field protected back_main_menu_text Dummy.Text
 --- @field protected copy_traceback_text Dummy.Text
---- @field protected copied_delay number
---- @field protected copied_timer number
+--- @field protected copied_timer table|nil
+--- @field protected copied_data table<string, number>
 --- @field protected escape boolean
 local error = {}
 
@@ -67,8 +67,7 @@ function error.load(err)
     error.mod_info_text:setLayer(Constants.LAYERS.ABOVE_UI)
   end
 
-  error.copied_delay = 1
-  error.copied_timer = 0
+  error.copied_data = { color = 1 }
   error.escape = false
 end
 
@@ -85,13 +84,12 @@ function error.update(dt)
   if Input.isDown("ctrl") and Input.isPressed("c") then
     local mod_info = error.mod_info ~= nil and (error.mod_info .. "\n") or ""
     love.system.setClipboardText(error.traceback .. "\n\n" .. mod_info .. error.engine_info)
-    error.copied_timer = error.copied_delay
+
+    error.copied_data.color = 0
+    error.copied_timer = Timer.tween(1 / 3, error.copied_data, { color = 1 }, "out-sine")
   end
 
-  if error.copied_timer > 0 then
-    error.copied_timer = error.copied_timer - dt * 3
-    error.copy_traceback_text:setColor(1, 1, error.copied_delay - error.copied_timer)
-  end
+  error.copy_traceback_text:setColor(1, 1, error.copied_data.color)
 end
 
 return error
