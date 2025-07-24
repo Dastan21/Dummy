@@ -103,8 +103,7 @@ function ModList.mountMod(mod)
 
   ModList.unloadMod(mod)
 
-  love.filesystem.mount("mods/" .. mod:getId() .. "/assets", "assets")
-  love.filesystem.mount("mods/" .. mod:getId() .. "/scripts", "scripts")
+  love.filesystem.mount("mods/" .. mod:getId(), "")
   love.filesystem.mount("mods/" .. mod:getId() .. ".zip", "")
 end
 
@@ -113,8 +112,7 @@ end
 function ModList.unloadMod(mod)
   if mod == nil then return end
 
-  love.filesystem.unmount("mods/" .. mod:getId() .. "/scripts")
-  love.filesystem.unmount("mods/" .. mod:getId() .. "/assets")
+  love.filesystem.unmount("mods/" .. mod:getId())
   love.filesystem.unmount("mods/" .. mod:getId() .. ".zip")
 
   Lang.clearModsTranslations()
