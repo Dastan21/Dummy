@@ -453,7 +453,8 @@ function Text:parseNodes(value)
   local length = UTF8.len(value)
   local command = nil
   local escaping = false
-  for i = 1, length do
+  local i = 1
+  while i <= length do
     local char = UTF8.sub(value, i, i)
     local next_char = i < #value and UTF8.sub(value, i + 1, i + 1)
     if char == "\\" and (next_char == "[" or next_char == "]") then
@@ -465,6 +466,9 @@ function Text:parseNodes(value)
       if node ~= nil then
         self:processNode(node)
         table.insert(nodes, node)
+      else
+        i = i - #command - 2
+        escaping = true
       end
       command = nil
     elseif command ~= nil then
@@ -491,6 +495,8 @@ function Text:parseNodes(value)
         state = table.clone(self.state)
       })
     end
+
+    i = i + 1
   end
 
   self.width = width
