@@ -217,18 +217,18 @@ end
 --- Sets the drawable's parent
 --- @param parent Dummy.Drawable|nil
 function Drawable:setParent(parent)
-  if self.parent ~= parent then
-    if parent ~= nil then
-      self:removeChild(parent)
-      parent:addChild(self)
+  if self.parent == parent then return end
 
-      Scene.removeDrawable(self)
-    else
-      self.parent:removeChild(self)
-    end
+  if parent ~= nil then
+    parent:addChild(self)
+    self:removeChild(parent)
 
-    self.parent = parent
+    Scene.removeDrawable(self)
+  else
+    self.parent:removeChild(self)
   end
+
+  self.parent = parent
 end
 
 --- Wether the drawable has children
@@ -262,7 +262,10 @@ end
 --- Removes a child from the drawable
 --- @param child Dummy.Drawable
 function Drawable:removeChild(child)
-  table.removeByValue(self.children, child)
+  local removed = table.removeByValue(self.children, child)
+  if not removed then return end
+
+  child.parent = nil
 
   Scene.addDrawable(child)
 
