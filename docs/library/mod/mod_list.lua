@@ -58,3 +58,7 @@ function ModList.isModValid(success, mod) end
 --- @param title Dummy.Text.Text|nil
 function ModList.setWindowTitleAndIcon(title) end
 
+--- Copies a mod zip file into the mods folder
+--- @param file love.File
+function ModList.copyModZip(file) end
+

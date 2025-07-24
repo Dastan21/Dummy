@@ -91,7 +91,7 @@ function ModList.loadMod(mod)
     ModList.mountMod(mod)
 
     ModList.current_mod = mod
-    Lang.loadLanguages(mod:getId())
+    Lang.loadLanguages()
     mod:load()
   end
 end
@@ -115,7 +115,7 @@ function ModList.unloadMod(mod)
   love.filesystem.unmount("mods/" .. mod:getId())
   love.filesystem.unmount("mods/" .. mod:getId() .. ".zip")
 
-  Lang.clearModsTranslations()
+  Lang.load()
 
   -- uncache mod scripts modules
   for modname in pairs(package.loaded) do
