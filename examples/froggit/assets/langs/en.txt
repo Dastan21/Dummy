@@ -10,12 +10,12 @@ FROGGIT_MOD_ENCOUNTER_TEXT_5=* You are intimidated by\n  Froggit's raw strength.
 FROGGIT_MOD_ENCOUNTER_TEXT_MERCY=* Froggit seems reluctant\n  to fight you.
 FROGGIT_MOD_ENCOUNTER_TEXT_LOW_LIFE=* Froggit is trying to\n  run away.
 
-FROGGIT_MOD_ENCOUNTER_BUBBLE_1=[noskip]Ribbit,\nribbit.
-FROGGIT_MOD_ENCOUNTER_BUBBLE_2=[noskip]Croak,\ncroak.
-FROGGIT_MOD_ENCOUNTER_BUBBLE_3=[noskip]Hop,\nhop.
-FROGGIT_MOD_ENCOUNTER_BUBBLE_4=[noskip]Meow.
-FROGGIT_MOD_ENCOUNTER_BUBBLE_COMPLIMENT=[noskip](Blushes\ndeeply.)\nRibbit..
-FROGGIT_MOD_ENCOUNTER_BUBBLE_THREAT=[noskip]Shiver,\nshiver.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_1=[wave][noskip]Ribbit,\nribbit.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_2=[wave][noskip]Croak,\ncroak.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_3=[wave][noskip]Hop,\nhop.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_4=[wave][noskip]Meow.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_COMPLIMENT=[wave][noskip](Blushes\ndeeply.)\nRibbit..
+FROGGIT_MOD_ENCOUNTER_BUBBLE_THREAT=[wave][noskip]Shiver,\nshiver.
 
 FROGGIT_MOD_ENCOUNTER_CHECK_TEXT=* Life is difficult for\n  this enemy.
 
