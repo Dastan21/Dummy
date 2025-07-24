@@ -369,12 +369,17 @@ function Text:processNode(node)
       local r = tonumber(node.arguments[1])
       local g = tonumber(node.arguments[2])
       local b = tonumber(node.arguments[3])
+      local a = tonumber(node.arguments[4])
       if r ~= nil and g ~= nil and b ~= nil then
         self.state.color = {
           math.clamp(r, 0, 1),
           math.clamp(g, 0, 1),
           math.clamp(b, 0, 1)
         }
+
+        if a ~= nil then
+          self.state.color[4] = math.clamp(a, 0, 1)
+        end
       end
     end
   elseif node.command == "alpha" then
