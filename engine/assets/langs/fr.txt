@@ -50,4 +50,4 @@ ERROR_BACK_MAIN_MENU=Appuyez sur ÉCHAP pour retourner au menu principal
 ERROR_COPY_TRACEBACK=Appuyez sur CTRL+C pour copier la trace d'appels dans le presse-papier
 ERROR_MOD_INFO=Mod : {}
 
-SCREENSHOT_TEXT=Capture d'écran enregistrée !\nAppuyez sur Ctrl+F9 pour ouvrir le dossier.
+SCREENSHOT_TEXT=Capture d'écran enregistrée !\nAppuyez sur F10 pour ouvrir le dossier.

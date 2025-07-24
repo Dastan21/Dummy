@@ -50,4 +50,4 @@ ERROR_BACK_MAIN_MENU=Press ESC to return to main menu
 ERROR_COPY_TRACEBACK=Press CTRL+C to copy traceback to clipboard
 ERROR_MOD_INFO=Mod: {}
 
-SCREENSHOT_TEXT=Screenshot saved!\nPress Ctrl+F9 to open the folder.
+SCREENSHOT_TEXT=Screenshot saved!\nPress F10 to open the folder.

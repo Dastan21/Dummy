@@ -120,29 +120,27 @@ function Debugger.update(dt)
     Debugger.log_bg_sprite:setVisible(visible)
     Debugger.log_text:setVisible(visible)
   elseif Input.isPressed("f9") then
-    if Input.isDown("ctrl") then
-      love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/screenshots")
-    else
-      Debugger.screenshot_text:setVisible(false)
+    Debugger.screenshot_text:setVisible(false)
 
-      Assets.playSound("screenshot")
-      love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
+    Assets.playSound("screenshot")
+    love.graphics.captureScreenshot("screenshots/" .. os.time() .. ".png")
 
-      if Debugger.screenshot_fade_timer ~= nil then
-        Timer.cancel(Debugger.screenshot_fade_timer)
-      end
-
-      Debugger.screenshot_fade_timer = Timer.after(0.05, function()
-        Debugger.screenshot_data.alpha = 1
-        Debugger.screenshot_text:setVisible(true)
-        Debugger.screenshot_fade_timer = Timer.after(1, function()
-          Debugger.screenshot_fade_timer = Timer.tween(0.5, Debugger.screenshot_data, { alpha = 0 }, "out-sine",
-            function()
-              Debugger.screenshot_text:setVisible(false)
-            end)
-        end)
-      end)
+    if Debugger.screenshot_fade_timer ~= nil then
+      Timer.cancel(Debugger.screenshot_fade_timer)
     end
+
+    Debugger.screenshot_fade_timer = Timer.after(0.05, function()
+      Debugger.screenshot_data.alpha = 1
+      Debugger.screenshot_text:setVisible(true)
+      Debugger.screenshot_fade_timer = Timer.after(1, function()
+        Debugger.screenshot_fade_timer = Timer.tween(0.5, Debugger.screenshot_data, { alpha = 0 }, "out-sine",
+          function()
+            Debugger.screenshot_text:setVisible(false)
+          end)
+      end)
+    end)
+  elseif Input.isPressed("f10") then
+    love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/screenshots")
   elseif Input.isDown("ctrl") and Input.isPressed("r") then
     if Input.isDown("shift") then
       Scene.fullReload()
