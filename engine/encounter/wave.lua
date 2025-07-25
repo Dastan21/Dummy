@@ -99,8 +99,10 @@ function Wave:__update(dt)
     return
   end
 
-  for bullet in pairs(self.bullets) do
-    if not Player.isInvincible() and Player.isColliding(bullet) then
+  for _, bullet in ipairs(self:getBullets()) do
+    if bullet:isRemoved() then
+      self.bullets[bullet] = nil
+    elseif not Player.isInvincible() and Player.isColliding(bullet) then
       if type(bullet.onHit) == "function" then
         bullet:onHit()
       end

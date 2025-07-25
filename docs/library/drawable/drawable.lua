@@ -129,6 +129,10 @@ function Drawable:isPersistent() end
 --- @param persistent boolean
 function Drawable:setPersistent(persistent) end
 
+--- Wether the drawable has been removed
+--- @return boolean
+function Drawable:isRemoved() end
+
 --- Removes the drawable from the current scene
 function Drawable:remove() end
 

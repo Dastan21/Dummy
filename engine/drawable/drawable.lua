@@ -190,6 +190,12 @@ function Drawable:setPersistent(persistent)
   self.persistent = persistent
 end
 
+--- Wether the drawable has been removed
+--- @return boolean
+function Drawable:isRemoved()
+  return self.removed
+end
+
 --- Removes the drawable from the current scene
 function Drawable:remove()
   if self.removed then return end
@@ -291,7 +297,7 @@ end
 function Drawable:updateChildren(dt)
   if #self.children <= 0 then return end
 
-  for _, child in ipairs(self.children) do
+  for _, child in ipairs({ table.unpack(self.children) }) do
     if type(child.update) == "function" then
       child:update(dt)
     end
@@ -307,7 +313,7 @@ end
 function Drawable:drawChildren()
   if #self.children <= 0 then return end
 
-  for _, child in ipairs(self.children) do
+  for _, child in ipairs({ table.unpack(self.children) }) do
     if type(child.draw) == "function" then
       love.graphics.push()
       child:draw()
