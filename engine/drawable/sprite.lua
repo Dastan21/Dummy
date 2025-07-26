@@ -342,14 +342,14 @@ end
 function Sprite:draw()
   if not self:isVisible() then return end
 
-  local sprite = self:getSprite()
-  if sprite == nil then return end
-
   love.graphics.applyTransform(self:getTransform())
   local origin_x, origin_y = self:getOrigin()
   local width, height = self:getWidth(), self:getHeight()
   love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
-  love.graphics.draw(sprite, -width * origin_x, -height * origin_y)
+  local sprite = self:getSprite()
+  if sprite ~= nil then
+    love.graphics.draw(sprite, -width * origin_x, -height * origin_y)
+  end
 
   self:debugDraw()
   self:drawChildren()
