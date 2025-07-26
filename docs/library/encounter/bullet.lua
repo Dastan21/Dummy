@@ -37,7 +37,7 @@ function Bullet:getDamage() end
 function Bullet:setDamage(damage) end
 
 --- Sets the bullet's sprite
---- @overload fun(self: Dummy.Sprite, sprite_name: string|love.Image): Dummy.Sprite
+--- @overload fun(self: Dummy.Bullet, sprite_name?: string|love.Image): Dummy.Sprite
 --- @param sprites_names string[]|love.Image[]
 function Bullet:setSprite(sprites_names) end
 

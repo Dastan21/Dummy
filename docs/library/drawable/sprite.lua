@@ -8,7 +8,7 @@
 
 --- @class Dummy.Sprite : Dummy.Drawable
 ---
---- @field protected sprite love.Image
+--- @field protected sprite love.Image|nil
 --- @field protected frames love.Image[]
 --- @field protected frames_speed number
 --- @field protected loop boolean
@@ -32,11 +32,11 @@ function Sprite.clear() end
 function Sprite.loadSprite(sprite_path) end
 
 --- Gets the sprite's value
---- @return love.Image
+--- @return love.Image|nil
 function Sprite:getSprite() end
 
 --- Sets the sprite's value
---- @overload fun(self: Dummy.Sprite, sprite_name: string|love.Image): Dummy.Sprite
+--- @overload fun(self: Dummy.Sprite, sprite_name?: string|love.Image): Dummy.Sprite
 --- @param sprites_names string[]|love.Image[]
 function Sprite:setSprite(sprites_names) end
 

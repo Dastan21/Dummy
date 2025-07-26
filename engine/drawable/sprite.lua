@@ -1,6 +1,6 @@
 --- @class Dummy.Sprite : Dummy.Drawable
 ---
---- @field protected sprite love.Image
+--- @field protected sprite love.Image|nil
 --- @field protected frames love.Image[]
 --- @field protected frames_speed number
 --- @field protected loop boolean
@@ -70,7 +70,7 @@ function Sprite.loadSprite(sprite_path)
 end
 
 --- Gets the sprite's value
---- @return love.Image
+--- @return love.Image|nil
 function Sprite:getSprite()
   if #self.frames > 0 then
     return self.frames[self.frame_index]
@@ -80,7 +80,7 @@ function Sprite:getSprite()
 end
 
 --- Sets the sprite's value
---- @overload fun(self: Dummy.Sprite, sprite_name: string|love.Image): Dummy.Sprite
+--- @overload fun(self: Dummy.Sprite, sprite_name?: string|love.Image): Dummy.Sprite
 --- @param sprites_names string[]|love.Image[]
 function Sprite:setSprite(sprites_names)
   self:stop()
@@ -247,12 +247,14 @@ function Sprite:vaporize(type, size)
   type = Utils.getOrDefault(type, Utils.getOrDefault(self.vaporize_type, self:getWidth() > 120 and "line" or "pixel"))
   size = Utils.getOrDefault(size, Utils.getOrDefault(self.vaporize_size, 2))
 
+  local sprite_image = self:getSprite()
+  if sprite_image == nil then return end
+
   Assets.playSound("vaporized")
 
   local sprite_x, sprite_y = self:getPosition()
   local sprite_origin_x, sprite_origin_y = self:getOrigin()
   local sprite_width, sprite_height = self:getWidth(), self:getHeight()
-  local sprite_image = self:getSprite()
   local sprite_data = self:getSpriteData()
   local sprite_pixels_height = sprite_image:getPixelHeight()
   local sprite = self
@@ -263,9 +265,11 @@ function Sprite:vaporize(type, size)
   local vaporize_drawable = Drawable:new()
   vaporize_drawable:setPosition(sprite_x, sprite_y)
   function vaporize_drawable.draw()
+    local image = sprite:getSprite()
+    if image == nil then return end
+
     local origin_x, origin_y = sprite:getOrigin()
     local width, height = sprite:getWidth(), sprite:getHeight()
-    local image = sprite:getSprite()
     love.graphics.applyTransform(sprite:getTransform())
 
     -- particles
