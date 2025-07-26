@@ -141,6 +141,13 @@ function Scene.draw()
     if new_layer then
       local layer_canvas_index = 1
       if not first then
+        love.graphics.setCanvas(Scene.layer_canvas[2])
+        love.graphics.origin()
+        love.graphics.clear()
+        love.graphics.setCanvas({ Scene.layer_canvas[1], stencil = true })
+        love.graphics.origin()
+        love.graphics.clear()
+
         -- switch between 2 canvases to draw the shaders one after the other
         for _, shader in ipairs(Scene.shaders) do
           local layer_min, layer_max = shader:getLayers()
@@ -155,18 +162,11 @@ function Scene.draw()
             layer_canvas_index = (layer_canvas_index % 2) + 1
           end
         end
+
+        love.graphics.setCanvas({ prev_canvas, stencil = true })
+        love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
       end
-
-      love.graphics.setCanvas({ prev_canvas, stencil = true })
-      love.graphics.setColor(1, 1, 1, 1)
-      love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
-
-      love.graphics.setCanvas(Scene.layer_canvas[2])
-      love.graphics.origin()
-      love.graphics.clear()
-      love.graphics.setCanvas({ Scene.layer_canvas[1], stencil = true })
-      love.graphics.origin()
-      love.graphics.clear()
     end
 
     if drawable:isVisible() and drawable:getParent() == nil then
