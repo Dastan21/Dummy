@@ -169,9 +169,6 @@ function Scene.draw()
       love.graphics.clear()
     end
 
-    if drawable:getParent() ~= nil then
-      print(drawable, drawable.getClassName())
-    end
     if drawable:isVisible() and drawable:getParent() == nil then
       love.graphics.push()
       drawable:draw()
