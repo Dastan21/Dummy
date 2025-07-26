@@ -250,6 +250,7 @@ function Arena.isInBounds(x, y)
 end
 
 --- Gets the arena's mask
+--- @return Dummy.Mask
 function Arena.getMask()
   return Arena.mask
 end
