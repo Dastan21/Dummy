@@ -2,7 +2,7 @@
 ---
 --- @field protected sprite love.Image
 --- @field protected frames love.Image[]
---- @field protected speed number
+--- @field protected frames_speed number
 --- @field protected loop boolean
 --- @field protected keep_last_frame boolean
 --- @field protected frame_index number
@@ -139,7 +139,7 @@ function Sprite:play()
   self:stop()
   local stopped = false
 
-  self.timer = Timer.every(self.speed, function()
+  self.timer = Timer.every(self.frames_speed, function()
     if not self:isVisible() or stopped then return end
     if not self.loop and self.frame_index >= #self.frames then
       if self.keep_last_frame then
@@ -183,7 +183,7 @@ end
 --- Gets the sprite's animation speed
 --- @return number
 function Sprite:getSpeed()
-  return self.speed
+  return self.frames_speed
 end
 
 --- Sets the sprite's animation speed
@@ -191,7 +191,7 @@ end
 function Sprite:setSpeed(speed)
   local was_playing = self:isPlaying()
   self:stop()
-  self.speed = speed
+  self.frames_speed = speed
 
   if was_playing then
     self:play()
@@ -384,7 +384,7 @@ end
 function Sprite:new(sprites_names, speed, loop, play, keep_last_frame)
   self = Class:new(Sprite)
 
-  self.speed = Utils.getOrDefault(speed, 1 / 30)
+  self.frames_speed = Utils.getOrDefault(speed, 1 / 30)
   self.loop = Utils.getOrDefault(loop, true)
   self.keep_last_frame = Utils.getOrDefault(keep_last_frame, true)
   self.frames = {}

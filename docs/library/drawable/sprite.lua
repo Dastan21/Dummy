@@ -10,7 +10,7 @@
 ---
 --- @field protected sprite love.Image
 --- @field protected frames love.Image[]
---- @field protected speed number
+--- @field protected frames_speed number
 --- @field protected loop boolean
 --- @field protected keep_last_frame boolean
 --- @field protected frame_index number
