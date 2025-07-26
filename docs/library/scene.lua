@@ -15,9 +15,8 @@
 --- @field protected quitting_delay number
 --- @field protected quitting_timer number
 --- @field protected quitting_sprite Dummy.Sprite
---- @field protected layers number[]
 --- @field protected layer_canvas [ love.Canvas, love.Canvas ]
---- @field protected drawables table<number, Dummy.Drawable[]>
+--- @field protected drawables Dummy.Drawable[]
 --- @field protected shaders Dummy.Shader[]
 Scene = {}
 
@@ -87,8 +86,8 @@ function Scene.removeShader(shader) end
 --- Sorts shaders in the current scene by priority
 function Scene.sortShaders() end
 
---- Sorts current scene layers
-function Scene.sortLayers() end
+--- Sorts current scene drawables
+function Scene.sortDrawables() end
 
 --- Cleans the current scene
 function Scene.clean() end

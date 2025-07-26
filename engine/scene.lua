@@ -7,9 +7,8 @@
 --- @field protected quitting_delay number
 --- @field protected quitting_timer number
 --- @field protected quitting_sprite Dummy.Sprite
---- @field protected layers number[]
 --- @field protected layer_canvas [ love.Canvas, love.Canvas ]
---- @field protected drawables table<number, Dummy.Drawable[]>
+--- @field protected drawables Dummy.Drawable[]
 --- @field protected shaders Dummy.Shader[]
 local Scene = {}
 
@@ -114,11 +113,9 @@ end
 function Scene.update(dt)
   if Scene.scene == nil then return end
 
-  for _, layer in ipairs(Scene.layers) do
-    for _, drawable in ipairs(Scene.drawables[layer] or {}) do
-      if type(drawable.update) == "function" then
-        drawable:update(dt)
-      end
+  for _, drawable in ipairs({ table.unpack(Scene.drawables) }) do
+    if type(drawable.update) == "function" then
+      drawable:update(dt)
     end
   end
 
@@ -134,41 +131,54 @@ function Scene.draw()
   if Scene.scene == nil then return end
 
   local prev_canvas = love.graphics.getCanvas()
-  for _, layer in ipairs(Scene.layers) do
-    love.graphics.setCanvas(Scene.layer_canvas[2])
-    love.graphics.origin()
-    love.graphics.clear()
-    love.graphics.setCanvas({ Scene.layer_canvas[1], stencil = true })
-    love.graphics.origin()
-    love.graphics.clear()
+  local new_layer = true
+  local layer = Scene.drawables[1]:getLayer() or 0
+  local first = true
+  for _, drawable in ipairs({ table.unpack(Scene.drawables) }) do
+    new_layer = first or drawable:getLayer() ~= layer
+    layer = drawable:getLayer()
 
-    for _, drawable in pairs(Scene.drawables[layer] or {}) do
-      if drawable:isVisible() and drawable:getParent() == nil then
-        love.graphics.push()
-        drawable:draw()
-        love.graphics.pop()
+    if new_layer then
+      local layer_canvas_index = 1
+      if not first then
+        -- switch between 2 canvases to draw the shaders one after the other
+        for _, shader in ipairs(Scene.shaders) do
+          local layer_min, layer_max = shader:getLayers()
+          if layer >= layer_min and layer <= layer_max then
+            love.graphics.setCanvas(Scene.layer_canvas[(layer_canvas_index % 2) + 1])
+            love.graphics.clear()
+            love.graphics.setShader(shader:getShader())
+            love.graphics.setColor(1, 1, 1, 1)
+            love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
+            love.graphics.setShader()
+
+            layer_canvas_index = (layer_canvas_index % 2) + 1
+          end
+        end
       end
+
+      love.graphics.setCanvas({ prev_canvas, stencil = true })
+      love.graphics.setColor(1, 1, 1, 1)
+      love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
+
+      love.graphics.setCanvas(Scene.layer_canvas[2])
+      love.graphics.origin()
+      love.graphics.clear()
+      love.graphics.setCanvas({ Scene.layer_canvas[1], stencil = true })
+      love.graphics.origin()
+      love.graphics.clear()
     end
 
-    -- switch between 2 canvases to draw the shaders one after the other
-    local layer_canvas_index = 1
-    for _, shader in ipairs(Scene.shaders) do
-      local layer_min, layer_max = shader:getLayers()
-      if layer >= layer_min and layer <= layer_max then
-        love.graphics.setCanvas(Scene.layer_canvas[(layer_canvas_index % 2) + 1])
-        love.graphics.clear()
-        love.graphics.setShader(shader:getShader())
-        love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
-        love.graphics.setShader()
-
-        layer_canvas_index = (layer_canvas_index % 2) + 1
-      end
+    if drawable:getParent() ~= nil then
+      print(drawable, drawable.getClassName())
+    end
+    if drawable:isVisible() and drawable:getParent() == nil then
+      love.graphics.push()
+      drawable:draw()
+      love.graphics.pop()
     end
 
-    love.graphics.setCanvas({ prev_canvas, stencil = true })
-    love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
+    first = false
   end
 end
 
@@ -197,19 +207,17 @@ end
 --- @param drawable Dummy.Drawable
 --- @return Dummy.Drawable|nil
 function Scene.addDrawable(drawable)
-  if drawable == nil then return end
+  if drawable == nil or drawable:getParent() ~= nil then return end
 
   Scene.removeDrawable(drawable)
 
-  local layer = drawable:getLayer() or 0
-  if not Scene.drawables[layer] then Scene.drawables[layer] = {} end
-  table.insert(Scene.drawables[layer], drawable)
+  table.insert(Scene.drawables, drawable)
 
   for _, shader in ipairs({ table.unpack(Scene.shaders) }) do
     Scene.addShader(shader)
   end
 
-  Scene.sortLayers()
+  Scene.sortDrawables()
 
   return drawable
 end
@@ -225,15 +233,9 @@ function Scene.removeDrawable(drawable)
     end
   end
 
-  for layer in pairs(Scene.drawables) do
-    table.removeByValue(Scene.drawables[layer], drawable)
+  table.removeByValue(Scene.drawables, drawable)
 
-    if #Scene.drawables[layer] <= 0 then
-      Scene.drawables[layer] = nil
-    end
-  end
-
-  Scene.sortLayers()
+  Scene.sortDrawables()
 end
 
 --- Adds a shader in the current scene
@@ -266,30 +268,23 @@ function Scene.sortShaders()
   end)
 end
 
---- Sorts current scene layers
-function Scene.sortLayers()
-  Scene.layers = {}
-  for layer in pairs(Scene.drawables) do
-    table.insert(Scene.layers, layer)
-  end
-  table.stable_sort(Scene.layers, function(a, b) return a < b end)
+--- Sorts current scene drawables
+function Scene.sortDrawables()
+  table.stable_sort(Scene.drawables, function(a, b) return (a:getLayer() or 0) < (b:getLayer() or 0) end)
 end
 
 --- Cleans the current scene
 function Scene.clean()
   local tmp_drawables = {}
-  for layer in pairs(Scene.drawables or {}) do
-    tmp_drawables[layer] = {}
-    for _, drawable in ipairs(Scene.drawables[layer] or {}) do
-      if drawable:isPersistent() then
-        table.insert(tmp_drawables[layer], drawable)
-      end
+  for _, drawable in ipairs(Scene.drawables or {}) do
+    if drawable:isPersistent() then
+      table.insert(tmp_drawables, drawable)
     end
   end
   Scene.drawables = tmp_drawables
   Scene.shaders = {}
 
-  Scene.sortLayers()
+  Scene.sortDrawables()
 
   Sprite.clear()
   Assets.clear()
