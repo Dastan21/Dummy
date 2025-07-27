@@ -72,9 +72,6 @@ end
 function Bullet:debugDraw()
   if not Debugger.shouldDisplayHitbox() then return end
 
-  local width, height = self:getWidth(), self:getHeight()
-  if width == 0 and height == 0 then return end
-
   Sprite.debugDraw(self)
 
   love.graphics.push()
@@ -82,6 +79,7 @@ function Bullet:debugDraw()
   local absolute_transform = self:getAbsoluteTransform()
   local origin_x, origin_y = self:getOrigin()
   local hitbox = self:getHitbox()
+  local width, height = self:getWidth(), self:getHeight()
   local x, y = -width * origin_x + hitbox[1], -height * origin_y + hitbox[2]
   local x1, y1 = absolute_transform:transformPoint(x, y)
   local x2, y2 = absolute_transform:transformPoint(x + hitbox[3], y)
