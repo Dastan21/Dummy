@@ -1,10 +1,11 @@
---- @class Dummy.Shader : Dummy.Drawable
+--- @class Dummy.Shader : Dummy.Class
 ---
+--- @field protected active boolean
 --- @field protected priority number
 --- @field protected layer_min number
 --- @field protected layer_max number
 --- @field protected data table<string, any>
-local Shader = Class:extend(Drawable)
+local Shader = Class()
 
 --- Gets the class's name
 --- @return string
@@ -16,6 +17,18 @@ end
 --- @return love.Shader
 function Shader:getShader()
   return self.shader
+end
+
+--- Wether the shader is active
+--- @return boolean
+function Shader:isActive()
+  return self.active
+end
+
+--- Sets wether the shader is active
+--- @param active boolean
+function Shader:setActive(active)
+  self.active = active
 end
 
 --- Gets the shader's priority
@@ -55,56 +68,21 @@ function Shader:getData()
 end
 
 --- Sets the shader's data
---- @param data table<string, any>
-function Shader:setData(data)
-  self.data = data
-end
-
---- Sets the shader's parent
---- @param parent Dummy.Drawable|nil
-function Shader:setParent(parent)
-  Drawable.setParent(self, parent)
-
-  if parent ~= nil then
-    Scene.removeShader(self)
+--- @overload fun(self: Dummy.Shader, data: table<string, any>)
+--- @param key string
+--- @param value any
+function Shader:setData(key, value)
+  if type(key) == "table" then
+    self.data = key
   else
-    Scene.addShader(self)
+    self.data[tostring(key)] = value
   end
-end
-
---- Adds a child to the shader
---- @param child Dummy.Drawable
-function Shader:addChild(child)
-  Drawable.addChild(self, child)
-
-  Scene.removeShader(self)
-end
-
---- Removes a child from the shader
---- @param child Dummy.Drawable
-function Shader:removeChild(child)
-  Drawable.removeChild(self, child)
-
-  if not self:hasChildren() then
-    Scene.addShader(self)
-  end
-end
-
---- Draws the shader
-function Shader:draw()
-  if not self:isVisible() then return end
-
-  love.graphics.applyTransform(self:getTransform())
-
-  love.graphics.setShader(self.shader)
-  self:drawChildren()
-  love.graphics.setShader()
 end
 
 --- Updates the shader, called on every game update
 --- @param dt number
 function Shader:update(dt)
-  self:updateChildren(dt)
+  if not self:isActive() then return end
 
   for key, value in pairs(self.data) do
     if self.shader:hasUniform(key) then

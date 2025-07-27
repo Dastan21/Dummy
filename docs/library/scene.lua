@@ -74,6 +74,13 @@ function Scene.addDrawable(drawable) end
 --- @param drawable Dummy.Drawable
 function Scene.removeDrawable(drawable) end
 
+--- Sorts current scene drawables
+function Scene.sortDrawables() end
+
+--- Gets the current scene layers
+--- @return number[]
+function Scene.getLayers() end
+
 --- Adds a shader in the current scene
 --- @param shader Dummy.Shader
 --- @return Dummy.Shader|nil
@@ -85,9 +92,6 @@ function Scene.removeShader(shader) end
 
 --- Sorts shaders in the current scene by priority
 function Scene.sortShaders() end
-
---- Sorts current scene drawables
-function Scene.sortDrawables() end
 
 --- Cleans the current scene
 function Scene.clean() end

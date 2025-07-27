@@ -119,6 +119,12 @@ function Scene.update(dt)
     end
   end
 
+  for _, shader in ipairs({ table.unpack(Scene.shaders) }) do
+    if type(shader.update) == "function" then
+      shader:update(dt)
+    end
+  end
+
   if type(Scene.scene.update) == "function" then
     Scene.scene.update(dt)
   end
@@ -131,65 +137,42 @@ function Scene.draw()
   if Scene.scene == nil then return end
 
   local prev_canvas = love.graphics.getCanvas()
-  local new_layer = true
-  local layer = Scene.drawables[1]:getLayer() or 0
-  local first = true
-  local layer_canvas_index = 1
+  for _, layer in ipairs(Scene.getLayers()) do
+    love.graphics.setCanvas(Scene.layer_canvas[2])
+    love.graphics.origin()
+    love.graphics.clear()
+    love.graphics.setCanvas({ Scene.layer_canvas[1], stencil = true })
+    love.graphics.origin()
+    love.graphics.clear()
 
-  local function drawShaders()
+    for _, drawable in ipairs(Scene.drawables) do
+      if drawable:isVisible() and drawable:getLayer() == layer then
+        love.graphics.push()
+        drawable:draw()
+        love.graphics.pop()
+      end
+    end
+
     -- switch between 2 canvases to draw the shaders one after the other
-    layer_canvas_index = 1
+    local layer_canvas_index = 1
     for _, shader in ipairs(Scene.shaders) do
       local layer_min, layer_max = shader:getLayers()
-      if layer >= layer_min and layer <= layer_max then
-        local next_layer_canvas_index = (layer_canvas_index % 2) + 1
-        love.graphics.setCanvas(Scene.layer_canvas[next_layer_canvas_index])
+      if shader:isActive() and layer >= layer_min and layer <= layer_max then
+        love.graphics.setCanvas(Scene.layer_canvas[(layer_canvas_index % 2) + 1])
         love.graphics.clear()
         love.graphics.setShader(shader:getShader())
         love.graphics.setColor(1, 1, 1, 1)
         love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
         love.graphics.setShader()
 
-        layer_canvas_index = next_layer_canvas_index
+        layer_canvas_index = (layer_canvas_index % 2) + 1
       end
     end
-  end
 
-  local function drawToCanvas()
     love.graphics.setCanvas({ prev_canvas, stencil = true })
     love.graphics.setColor(1, 1, 1, 1)
     love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
   end
-
-  for _, drawable in ipairs({ table.unpack(Scene.drawables) }) do
-    new_layer = first or drawable:getLayer() ~= layer
-    layer = drawable:getLayer()
-
-    if new_layer then
-      if not first then
-        drawShaders()
-        drawToCanvas()
-      end
-
-      love.graphics.setCanvas(Scene.layer_canvas[2])
-      love.graphics.origin()
-      love.graphics.clear()
-      love.graphics.setCanvas({ Scene.layer_canvas[1], stencil = true })
-      love.graphics.origin()
-      love.graphics.clear()
-    end
-
-    if drawable:isVisible() and drawable:getParent() == nil then
-      love.graphics.push()
-      drawable:draw()
-      love.graphics.pop()
-    end
-
-    first = false
-  end
-
-  drawShaders()
-  drawToCanvas()
 end
 
 --- Gets the current scene name
@@ -248,11 +231,29 @@ function Scene.removeDrawable(drawable)
   Scene.sortDrawables()
 end
 
+--- Sorts current scene drawables
+function Scene.sortDrawables()
+  table.stable_sort(Scene.drawables, function(a, b) return (a:getLayer() or 0) < (b:getLayer() or 0) end)
+end
+
+--- Gets the current scene layers
+--- @return number[]
+function Scene.getLayers()
+  local layers = {}
+  for _, drawable in ipairs(Scene.drawables) do
+    if not table.contains(layers, drawable:getLayer()) then
+      table.insert(layers, drawable:getLayer())
+    end
+  end
+  table.stable_sort(layers, function(a, b) return a < b end)
+  return layers
+end
+
 --- Adds a shader in the current scene
 --- @param shader Dummy.Shader
 --- @return Dummy.Shader|nil
 function Scene.addShader(shader)
-  if shader == nil or shader:hasChildren() then return end
+  if shader == nil then return end
 
   Scene.removeShader(shader)
 
@@ -276,11 +277,6 @@ function Scene.sortShaders()
   table.stable_sort(Scene.shaders, function(a, b)
     return (a:getPriority() or 0) > (b:getPriority() or 0)
   end)
-end
-
---- Sorts current scene drawables
-function Scene.sortDrawables()
-  table.stable_sort(Scene.drawables, function(a, b) return (a:getLayer() or 0) < (b:getLayer() or 0) end)
 end
 
 --- Cleans the current scene

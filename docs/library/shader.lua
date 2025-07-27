@@ -1,13 +1,14 @@
 --[[
-  Generated from ..\engine\drawable\shader.lua
+  Generated from ..\engine\shader.lua
 
-  Source: https://github.com/Dastan21/Dummy/blob/main/engine/drawable/shader.lua
+  Source: https://github.com/Dastan21/Dummy/blob/main/engine/shader.lua
 ]]
 
 ---@meta
 
---- @class Dummy.Shader : Dummy.Drawable
+--- @class Dummy.Shader : Dummy.Class
 ---
+--- @field protected active boolean
 --- @field protected priority number
 --- @field protected layer_min number
 --- @field protected layer_max number
@@ -21,6 +22,14 @@ function Shader.getClassName() end
 --- Gets the shader's shader
 --- @return love.Shader
 function Shader:getShader() end
+
+--- Wether the shader is active
+--- @return boolean
+function Shader:isActive() end
+
+--- Sets wether the shader is active
+--- @param active boolean
+function Shader:setActive(active) end
 
 --- Gets the shader's priority
 --- @return number
@@ -44,23 +53,10 @@ function Shader:setLayers(min, max) end
 function Shader:getData() end
 
 --- Sets the shader's data
---- @param data table<string, any>
-function Shader:setData(data) end
-
---- Sets the shader's parent
---- @param parent Dummy.Drawable|nil
-function Shader:setParent(parent) end
-
---- Adds a child to the shader
---- @param child Dummy.Drawable
-function Shader:addChild(child) end
-
---- Removes a child from the shader
---- @param child Dummy.Drawable
-function Shader:removeChild(child) end
-
---- Draws the shader
-function Shader:draw() end
+--- @overload fun(self: Dummy.Shader, data: table<string, any>)
+--- @param key string
+--- @param value any
+function Shader:setData(key, value) end
 
 --- Updates the shader, called on every game update
 --- @param dt number
