@@ -71,7 +71,7 @@ function Arena.getHeight() end
 --- @return boolean
 function Arena.isInBounds(x, y) end
 
---- Gets the arena's mask
+--- Creates a mask for the arena
 --- @return Dummy.Mask
-function Arena.getMask() end
+function Arena.createMask() end
 

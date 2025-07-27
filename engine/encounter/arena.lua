@@ -41,8 +41,6 @@ function Arena.load()
 
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
-
-    Arena.mask:draw()
   end
 
   --- arena border
@@ -61,18 +59,6 @@ function Arena.load()
     love.graphics.rectangle("fill", x - b, y + Arena.height, Arena.width + b * 2, b)
     love.graphics.rectangle("fill", x - b, y - b, b, Arena.height + b * 2)
     love.graphics.rectangle("fill", x + Arena.width, y - b, b, Arena.height + b * 2)
-  end
-
-  Arena.mask = Mask:new()
-  Arena.mask:setLayer(Constants.LAYERS.ARENA)
-  Arena.mask:setOrigin(0.5, 1)
-  Arena.mask:setParent(Arena.arena_background_drawable)
-  function Arena.mask.drawMask()
-    local arena_x = Arena.x - (Arena.width / 2)
-    local arena_y = Arena.y - Arena.height
-
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
   end
 end
 
@@ -249,10 +235,22 @@ function Arena.isInBounds(x, y)
       y <= Arena.y
 end
 
---- Gets the arena's mask
+--- Creates a mask for the arena
 --- @return Dummy.Mask
-function Arena.getMask()
-  return Arena.mask
+function Arena.createMask()
+  local mask = Mask:new()
+  mask:setLayer(Constants.LAYERS.ARENA)
+  mask:setOrigin(0.5, 1)
+
+  function mask.drawMask()
+    local arena_x = Arena.x - (Arena.width / 2)
+    local arena_y = Arena.y - Arena.height
+
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
+  end
+
+  return mask
 end
 
 return Arena
