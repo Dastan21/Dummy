@@ -103,6 +103,7 @@ function Shader:new(shader)
     self.shader = shader
   end
 
+  self.active = true
   self.priority = 0
   self.layer_min = Constants.LAYERS.BOTTOM
   self.layer_max = Constants.LAYERS.TOP

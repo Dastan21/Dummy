@@ -113,13 +113,15 @@ end
 function Scene.update(dt)
   if Scene.scene == nil then return end
 
-  for _, drawable in ipairs({ table.unpack(Scene.drawables) }) do
+  local drawables = { table.unpack(Scene.drawables) }
+  for _, drawable in ipairs(drawables) do
     if type(drawable.update) == "function" then
       drawable:update(dt)
     end
   end
 
-  for _, shader in ipairs({ table.unpack(Scene.shaders) }) do
+  local shaders = { table.unpack(Scene.shaders) }
+  for _, shader in ipairs(shaders) do
     if type(shader.update) == "function" then
       shader:update(dt)
     end
@@ -136,6 +138,8 @@ end
 function Scene.draw()
   if Scene.scene == nil then return end
 
+  local drawables = { table.unpack(Scene.drawables) }
+  local shaders = { table.unpack(Scene.shaders) }
   local prev_canvas = love.graphics.getCanvas()
   for _, layer in ipairs(Scene.getLayers()) do
     love.graphics.setCanvas(Scene.layer_canvas[2])
@@ -145,7 +149,7 @@ function Scene.draw()
     love.graphics.origin()
     love.graphics.clear()
 
-    for _, drawable in ipairs(Scene.drawables) do
+    for _, drawable in ipairs(drawables) do
       if drawable:isVisible() and drawable:getLayer() == layer then
         love.graphics.push()
         drawable:draw()
@@ -155,14 +159,16 @@ function Scene.draw()
 
     -- switch between 2 canvases to draw the shaders one after the other
     local layer_canvas_index = 1
-    for _, shader in ipairs(Scene.shaders) do
+    for _, shader in ipairs(shaders) do
       local layer_min, layer_max = shader:getLayers()
       if shader:isActive() and layer >= layer_min and layer <= layer_max then
         love.graphics.setCanvas(Scene.layer_canvas[(layer_canvas_index % 2) + 1])
         love.graphics.clear()
         love.graphics.setShader(shader:getShader())
         love.graphics.setColor(1, 1, 1, 1)
+        love.graphics.setBlendMode("alpha", "premultiplied")
         love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
+        love.graphics.setBlendMode("alpha", "alphamultiply")
         love.graphics.setShader()
 
         layer_canvas_index = (layer_canvas_index % 2) + 1
@@ -206,7 +212,8 @@ function Scene.addDrawable(drawable)
 
   table.insert(Scene.drawables, drawable)
 
-  for _, shader in ipairs({ table.unpack(Scene.shaders) }) do
+  local shaders = { table.unpack(Scene.shaders) }
+  for _, shader in ipairs(shaders) do
     Scene.addShader(shader)
   end
 

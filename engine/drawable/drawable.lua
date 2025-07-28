@@ -297,7 +297,8 @@ end
 function Drawable:updateChildren(dt)
   if #self.children <= 0 then return end
 
-  for _, child in ipairs({ table.unpack(self.children) }) do
+  local children = { table.unpack(self.children) }
+  for _, child in ipairs(children) do
     if type(child.update) == "function" then
       child:update(dt)
     end
@@ -313,7 +314,8 @@ end
 function Drawable:drawChildren()
   if #self.children <= 0 then return end
 
-  for _, child in ipairs({ table.unpack(self.children) }) do
+  local children = { table.unpack(self.children) }
+  for _, child in ipairs(children) do
     if type(child.draw) == "function" then
       love.graphics.push()
       child:draw()
