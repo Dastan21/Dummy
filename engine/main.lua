@@ -122,6 +122,8 @@ local function updateFullscreen()
 end
 
 local function update(dt)
+  if dt > 2 * (1 / Config["fps"]) then return end
+
   engine.time = engine.time + (1 / Config["fps"])
 
   dt = Debugger.update(dt or love.timer.getDelta())
