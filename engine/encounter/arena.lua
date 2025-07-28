@@ -36,11 +36,8 @@ function Arena.load()
   Arena.arena_background_drawable = Drawable:new()
   Arena.arena_background_drawable:setLayer(Constants.LAYERS.ARENA)
   function Arena.arena_background_drawable.draw()
-    local arena_x = Arena.x - (Arena.width / 2)
-    local arena_y = Arena.y - Arena.height
-
     love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
+    love.graphics.rectangle("fill", Arena.x - (Arena.width / 2), Arena.y - Arena.height, Arena.width, Arena.height)
   end
 
   --- arena border
@@ -243,11 +240,7 @@ function Arena.createMask()
   mask:setOrigin(0.5, 1)
 
   function mask.drawMask()
-    local arena_x = Arena.x - (Arena.width / 2)
-    local arena_y = Arena.y - Arena.height
-
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.rectangle("fill", arena_x, arena_y, Arena.width, Arena.height)
+    love.graphics.rectangle("fill", Arena.x - (Arena.width / 2), Arena.y - Arena.height, Arena.width, Arena.height)
   end
 
   return mask

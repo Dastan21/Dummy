@@ -12,6 +12,7 @@ function Mask:draw()
   if not self:isVisible() then return end
 
   love.graphics.applyTransform(self:getTransform())
+  love.graphics.setBlendMode("alpha", "premultiplied")
 
   if type(self.drawMask) == "function" then
     love.graphics.stencil(self.drawMask, "replace", 1)
@@ -21,6 +22,7 @@ function Mask:draw()
   self:drawChildren()
 
   love.graphics.setStencilTest()
+  love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 --- Draws to the mask
