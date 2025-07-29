@@ -236,7 +236,7 @@ end
 --- @return Dummy.Mask
 function Arena.createMask()
   local mask = Mask:new()
-  mask:setLayer(Constants.LAYERS.ARENA)
+  mask:setLayer(Constants.LAYERS.BULLET)
   mask:setOrigin(0.5, 1)
 
   function mask.drawMask()
