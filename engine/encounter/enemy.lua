@@ -332,7 +332,7 @@ function Enemy:new(name, sprite)
   self.can_be_spared = false
 
   self:setOrigin(0.5, 1)
-  self:setLayer(Constants.LAYERS.BELOW_UI)
+  self:setLayer(Constants.LAYERS.BELOW_ARENA)
   self:setPosition(320, 240)
 
   return self
