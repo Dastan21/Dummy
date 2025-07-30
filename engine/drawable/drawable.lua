@@ -201,10 +201,17 @@ function Drawable:remove()
   if self.removed then return end
   self.removed = true
 
+  if #self.children > 0 then
+    for _, child in ipairs(self.children) do
+      child:remove()
+    end
+  end
+
+  Scene.removeDrawable(self)
+
   if self.parent ~= nil then
     self.parent:removeChild(self)
   end
-  Scene.removeDrawable(self)
 
   if self.onRemoved ~= nil then
     self:onRemoved()
@@ -226,13 +233,11 @@ function Drawable:setParent(parent)
   if self.parent == parent then return end
 
   if parent ~= nil then
-    parent:addChild(self)
     self:removeChild(parent)
+    parent:addChild(self)
   else
     self.parent:removeChild(self)
   end
-
-  self.parent = parent
 end
 
 --- Wether the drawable has children
