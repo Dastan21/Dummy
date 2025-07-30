@@ -150,7 +150,7 @@ function Scene.draw()
     love.graphics.clear()
 
     for _, drawable in ipairs(drawables) do
-      if drawable:isVisible() and drawable:getLayer() == layer then
+      if drawable:isVisible() and drawable:getParent() == nil and drawable:getLayer() == layer then
         love.graphics.push()
         drawable:draw()
         love.graphics.pop()
@@ -206,16 +206,9 @@ end
 --- @param drawable Dummy.Drawable
 --- @return Dummy.Drawable|nil
 function Scene.addDrawable(drawable)
-  if drawable == nil or drawable:getParent() ~= nil then return end
-
-  Scene.removeDrawable(drawable)
+  if drawable == nil or table.contains(Scene.drawables, drawable) then return end
 
   table.insert(Scene.drawables, drawable)
-
-  local shaders = { table.unpack(Scene.shaders) }
-  for _, shader in ipairs(shaders) do
-    Scene.addShader(shader)
-  end
 
   Scene.sortDrawables()
 
@@ -226,12 +219,6 @@ end
 --- @param drawable Dummy.Drawable
 function Scene.removeDrawable(drawable)
   if drawable == nil then return end
-
-  if drawable:hasChildren() then
-    for _, child in ipairs(drawable:getChildren()) do
-      Scene.removeDrawable(child)
-    end
-  end
 
   table.removeByValue(Scene.drawables, drawable)
 
@@ -260,9 +247,7 @@ end
 --- @param shader Dummy.Shader
 --- @return Dummy.Shader|nil
 function Scene.addShader(shader)
-  if shader == nil then return end
-
-  Scene.removeShader(shader)
+  if shader == nil or table.contains(Scene.shaders, shader) then return end
 
   table.insert(Scene.shaders, shader)
 
@@ -277,6 +262,8 @@ function Scene.removeShader(shader)
   if shader == nil then return end
 
   table.removeByValue(Scene.shaders, shader)
+
+  Scene.sortShaders()
 end
 
 --- Sorts shaders in the current scene by priority

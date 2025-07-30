@@ -157,7 +157,7 @@ end
 function Drawable:setLayer(layer)
   self.layer = layer
 
-  Scene.addDrawable(self)
+  Scene.sortDrawables()
 end
 
 --- Wether the drawable is visible
@@ -228,8 +228,6 @@ function Drawable:setParent(parent)
   if parent ~= nil then
     parent:addChild(self)
     self:removeChild(parent)
-
-    Scene.removeDrawable(self)
   else
     self.parent:removeChild(self)
   end
@@ -268,12 +266,8 @@ end
 --- Removes a child from the drawable
 --- @param child Dummy.Drawable
 function Drawable:removeChild(child)
-  local removed = table.removeByValue(self.children, child)
-  if not removed then return end
-
+  table.removeByValue(self.children, child)
   child.parent = nil
-
-  Scene.addDrawable(child)
 
   self:sortChildren()
 end
