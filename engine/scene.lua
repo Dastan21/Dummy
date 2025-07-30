@@ -115,8 +115,10 @@ function Scene.update(dt)
 
   local drawables = { table.unpack(Scene.drawables) }
   for _, drawable in ipairs(drawables) do
-    if type(drawable.update) == "function" then
-      drawable:update(dt)
+    if drawable:getParent() == nil then
+      if type(drawable.update) == "function" then
+        drawable:update(dt)
+      end
     end
   end
 

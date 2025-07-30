@@ -1212,12 +1212,6 @@ function Encounter.update(dt)
 
   -- player UI
   Encounter.updatePlayerUI()
-
-  for _, enemy in ipairs(Encounter.enemies) do
-    if type(enemy.update) == "function" then
-      enemy:update(dt)
-    end
-  end
 end
 
 --- Updates the player UI
