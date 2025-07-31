@@ -39,6 +39,18 @@ function main_menu.changeMenu(new_menu) end
 --- Switches current language
 function main_menu.switchLanguage() end
 
+--- Sets the logo sprite
+--- @param sprite_name string
+function main_menu.setLogo(sprite_name) end
+
+--- Sets the background sprite
+--- @param sprite_name string
+function main_menu.setBackground(sprite_name) end
+
+--- Sets the menu music
+--- @param music_name string
+function main_menu.setMenuMusic(music_name) end
+
 --- Updates the main menu
 function main_menu.update() end
 

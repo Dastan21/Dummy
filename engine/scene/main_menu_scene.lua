@@ -17,9 +17,6 @@ function main_menu.load()
   if standalone ~= nil then
     ModList.mountMod(standalone)
     Lang.loadLanguages()
-    if type(standalone.preview) == "function" then
-      standalone:preview()
-    end
   end
 
   main_menu.logo_sprite = Sprite:new("logo")
@@ -43,6 +40,12 @@ function main_menu.load()
 
   main_menu.menu_music = Assets.playMusic("main_menu")
   main_menu.menu_music:setVolume(0.5)
+
+  if standalone ~= nil then
+    if type(standalone.preview) == "function" then
+      standalone:preview()
+    end
+  end
 end
 
 --- Loads menus
@@ -200,6 +203,25 @@ end
 function main_menu.switchLanguage()
   Lang.switchLanguage()
   main_menu.current_menu:show()
+end
+
+--- Sets the logo sprite
+--- @param sprite_name string
+function main_menu.setLogo(sprite_name)
+  main_menu.logo_sprite:setSprite(sprite_name)
+end
+
+--- Sets the background sprite
+--- @param sprite_name string
+function main_menu.setBackground(sprite_name)
+  main_menu.background_sprite:setSprite(sprite_name)
+end
+
+--- Sets the menu music
+--- @param music_name string
+function main_menu.setMenuMusic(music_name)
+  main_menu.menu_music = Assets.playMusic(music_name)
+  main_menu.menu_music:setVolume(0.5)
 end
 
 --- Updates the main menu
