@@ -947,6 +947,9 @@ function Encounter.startAttacking()
       end
 
       local enemy_top_y = enemy_center_y - enemy_height * enemy_scale_y / 2 - 16
+      if enemy:getWidth() > 120 then
+        enemy_top_y = enemy_center_y
+      end
       if miss == true or damage == 0 then
         Encounter.miss_text:setPosition(enemy_center_x, enemy_top_y)
         Encounter.miss_text:setVisible(true)
