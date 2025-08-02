@@ -296,6 +296,9 @@ function Enemy:onDialogue() end
 --- @param spared boolean wether the enemy has been spared
 function Enemy:onSpared(spared) end
 
+--- Called before the strike animation is played on the enemy
+function Enemy:onBeforeAttack() end
+
 --- Called before the enemy is damaged
 --- @param damage number calculated damage
 --- @return number|nil damage override damage
@@ -307,6 +310,9 @@ function Enemy:onDamage(damage) end
 
 --- Called after when the enemy is damaged
 function Enemy:onAfterDamage() end
+
+--- Called after attacking the enemy
+function Enemy:onAfterAttack() end
 
 --- Called when the enemy is killed
 function Enemy:onKilled() end

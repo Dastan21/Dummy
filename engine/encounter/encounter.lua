@@ -890,7 +890,6 @@ function Encounter.startAttacking()
   Encounter.target_sprite:setAlpha(1)
   Encounter.target_sprite:setScale(1)
 
-
   local attacking = false
   local attack_window_timer = nil
   local alpha = 1
@@ -922,6 +921,10 @@ function Encounter.startAttacking()
       end
 
       local function end_attack()
+        if type(enemy.onAfterAttack) == "function" then
+          enemy:onAfterAttack()
+        end
+
         Timer.during(0.5, function(dt)
           alpha = math.clamp(alpha - 2.4 * dt, 0, 1)
           Encounter.target_sprite:setAlpha(alpha)
@@ -1062,6 +1065,10 @@ function Encounter.startAttacking()
     if miss == true then
       do_attack()
     else
+      if type(enemy.onBeforeAttack) == "function" then
+        enemy:onBeforeAttack()
+      end
+
       local target_x = Encounter.target_sprite:getPosition()
       local target_width = Encounter.target_sprite:getWidth()
       local target_bar_x = Encounter.target_bar_sprite:getPosition()
