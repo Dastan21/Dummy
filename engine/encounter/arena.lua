@@ -45,7 +45,7 @@ function Arena.load()
     Arena.arena_border_drawable:remove()
   end
   Arena.arena_border_drawable = Drawable:new()
-  Arena.arena_border_drawable:setLayer(Constants.LAYERS.ABOVE_BULLET)
+  Arena.arena_border_drawable:setLayer(Constants.LAYERS.ABOVE_SOUL)
   function Arena.arena_border_drawable.draw()
     local b = Constants.ARENA.BORDER_WIDTH
     local x = Arena.x - (Arena.width / 2)
