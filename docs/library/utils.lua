@@ -6,6 +6,9 @@
 
 ---@meta
 
+--- @class Dummy.Utils
+---
+--- @field private __hooks table
 Utils = {}
 
 function table.tostring(node) end
@@ -98,4 +101,10 @@ function Utils.getFilenameWithoutExt(filename) end
 --- @param rect2 [number, number, number, number]
 --- @return boolean
 function Utils.checkCollision(rect1, rect2) end
+
+--- Replaces a function
+--- @param target table
+--- @param name string
+--- @param func fun(orig:fun(...), ...)
+function Utils.hook(target, name, func) end
 

@@ -257,6 +257,9 @@ end
 
 -- other --
 
+--- @class Dummy.Utils
+---
+--- @field private __hooks table
 local Utils = {}
 
 --- Get value or default
@@ -340,6 +343,28 @@ function Utils.checkCollision(rect1, rect2)
   end
 
   return true
+end
+
+Utils.__hooks = {}
+
+--- Replaces a function
+--- @param target table
+--- @param name string
+--- @param func fun(orig:fun(...), ...)
+function Utils.hook(target, name, func)
+  local orig = target[name]
+
+  table.insert(Utils.__hooks, {
+    target = target,
+    name = name,
+    func = func,
+    original = orig
+  })
+
+  local orig_func = orig or function() end
+  target[name] = function(...)
+    return func(orig_func, ...)
+  end
 end
 
 return Utils

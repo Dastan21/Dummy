@@ -136,6 +136,13 @@ function ModList.unloadMods()
   end
 
   ModList.unloadMod(ModList.standalone)
+
+  ---@diagnostic disable-next-line: invisible
+  for _, hook in pairs(Utils.__hooks) do
+    hook.target[hook.name] = hook.original
+  end
+  ---@diagnostic disable-next-line: invisible
+  Utils.__hooks = {}
 end
 
 --- Wether a mod is valid
