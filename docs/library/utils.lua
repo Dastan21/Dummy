@@ -93,19 +93,6 @@ function Utils.checkExtension(path, ...) end
 --- @param filename string
 function Utils.getFilenameWithoutExt(filename) end
 
---- Gets the points of a rectangle
---- @param x number
---- @param y number
---- @param width number
---- @param height number
---- @param scale_x? number
---- @param scale_y? number
---- @param origin_x? number
---- @param origin_y? number
---- @param angle? number
---- @return table
-function Utils.getPolygonPoints(x, y, width, height, scale_x, scale_y, origin_x, origin_y, angle) end
-
 --- Checks if two rectangles collide, using SAT-based rectangle collision
 --- @param rect1 [number, number, number, number]
 --- @param rect2 [number, number, number, number]
