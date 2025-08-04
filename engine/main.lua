@@ -122,7 +122,7 @@ local function updateFullscreen()
 end
 
 local function update(dt)
-  if dt > 2 * (1 / Config["fps"]) then return end
+  if dt > 2 / 30 then return end
 
   engine.time = engine.time + (1 / Config["fps"])
 
