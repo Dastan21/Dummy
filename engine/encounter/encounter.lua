@@ -43,6 +43,8 @@
 --- @field protected exp_reward number
 --- @field protected gold_reward number
 --- @field protected defend_timer table|nil
+--- @field protected is_attacking boolean
+--- @field protected attack_window_timer table|nil
 local Encounter = {}
 
 --- Encounter actions
@@ -56,6 +58,122 @@ Encounter.ACTIONS = {
   --- MERCY action
   MERCY = 4,
 }
+
+--- Loads the encounter
+function Encounter.load()
+  -- background
+  Encounter.bg_sprite = Sprite:new("battle_bg")
+  Encounter.bg_sprite:setPosition(319.5, 127)
+  Encounter.bg_sprite:setLayer(Constants.LAYERS.BOTTOM)
+
+  -- state
+  Encounter.previous_state = Constants.ENCOUNTER_STATES.ACTION_SELECT
+  Encounter.current_state = Constants.ENCOUNTER_STATES.ACTION_SELECT
+
+  -- actions
+  Encounter.loadActions()
+
+  -- textbox dialogue
+  Encounter.dialogue_text = DialogueText:new(table.unpack(Encounter.getText()))
+  Encounter.dialogue_text:setPosition(52, 270)
+  Encounter.dialogue_text:setOrigin(0, 0)
+  Encounter.dialogue_text:setFont(Assets.getFont("main_text"))
+  Encounter.dialogue_text:setScale(2)
+  Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
+
+  Encounter.bubble_dialogues = {}
+  Encounter.can_skip_bubble_dialogues = false
+
+  -- attack target
+  Encounter.target_sprite = Sprite:new("target")
+  Encounter.target_sprite:setPosition(319, 320)
+  Encounter.target_sprite:setLayer(Constants.LAYERS.UI)
+  Encounter.target_sprite:setVisible(false)
+  Encounter.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1, nil, false)
+  Encounter.target_bar_sprite:setVisible(false)
+  Encounter.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
+
+  -- miss
+  Encounter.miss_text = Text:new("ENCOUNTER_ATTACK_MISS")
+  Encounter.miss_text:setVisible(false)
+  Encounter.miss_text:setFont(Assets.getFont("damage"))
+  Encounter.miss_text:setColor(0.87, 0.87, 0.87)
+  Encounter.miss_text:setLayer(Constants.LAYERS.ABOVE_UI)
+
+  -- strike
+  Encounter.strike_sprite = Sprite:new({
+    "strike1",
+    "strike2",
+    "strike3",
+    "strike4",
+    "strike5",
+    "strike6"
+  }, 4 / 30, false, false, false)
+  Encounter.strike_sprite:setOrigin(0.5, 0.5)
+  Encounter.strike_sprite:setScale(1.5)
+  Encounter.strike_sprite:setVisible(false)
+  Encounter.strike_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
+
+  -- player name
+  Encounter.player_name_text = Text:new(Player.getName())
+  Encounter.player_name_text:setPosition(30, 400)
+  Encounter.player_name_text:setOrigin(0)
+  Encounter.player_name_text:setFont(Assets.getFont("curs"))
+
+  -- player level
+  Encounter.player_lv_text = Text:new("")
+  Encounter.player_lv_text:setPosition(174, 400)
+  Encounter.player_lv_text:setOrigin(0)
+  Encounter.player_lv_text:setFont(Assets.getFont("curs"))
+
+  -- player hp text
+  Encounter.player_hp_sprite = Sprite:new("hp")
+  Encounter.player_hp_sprite:setPosition(240, 400)
+  Encounter.player_hp_sprite:setOrigin(0)
+  Encounter.player_hp_value_text = Text:new("")
+  Encounter.player_hp_value_text:setPosition(314, 400)
+  Encounter.player_hp_value_text:setOrigin(0)
+  Encounter.player_hp_value_text:setFont(Assets.getFont("curs"))
+
+  -- player hp bar
+  local player_hp_bar_drawable = Drawable:new()
+  player_hp_bar_drawable:setLayer(Constants.LAYERS.UI)
+  function player_hp_bar_drawable.draw()
+    local max_hp_bar_width = math.clamp(5 * Player.getLV() + 20, 25, 120)
+    local hp_bar_width = max_hp_bar_width * Player.getHP() / Player.getMaxHP()
+
+    love.graphics.setColor(1, 0, 0, 1)
+    love.graphics.rectangle("fill", 275, 400, max_hp_bar_width, 21)
+    love.graphics.setColor(1, 1, 0, 1)
+    love.graphics.rectangle("fill", 275, 400, hp_bar_width, 21)
+  end
+
+  -- enemy hp bar & damage text
+  Encounter.enemy_hp_draw = Drawable:new()
+  Encounter.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_UI)
+  Encounter.enemy_hp_draw:setVisible(false)
+
+  Encounter.enemy_hp_text = Text:new("")
+  Encounter.enemy_hp_text:setColor(1, 0, 0)
+  Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_UI)
+  Encounter.enemy_hp_text:setFont(Assets.getFont("damage"))
+  Encounter.enemy_hp_text:setScale(1)
+  Encounter.enemy_hp_text:setVisible(false)
+
+  Encounter.can_flee = true
+  Encounter.setMusic("battle")
+
+  Encounter.enemies = {}
+  Encounter.enemy_selected_index = 1
+
+  Encounter.waves = {}
+
+  Encounter.exp_reward = 0
+  Encounter.gold_reward = 0
+  Encounter.has_won = false
+
+  Encounter.is_attacking = false
+end
 
 --- Gets the class name
 --- @return string
@@ -239,120 +357,6 @@ end
 --- @return Dummy.Enemy|nil
 function Encounter.getSelectedEnemy()
   return Encounter.enemies[Encounter.enemy_selected_index]
-end
-
---- Loads the encounter
-function Encounter.load()
-  -- background
-  Encounter.bg_sprite = Sprite:new("battle_bg")
-  Encounter.bg_sprite:setPosition(319.5, 127)
-  Encounter.bg_sprite:setLayer(Constants.LAYERS.BOTTOM)
-
-  -- state
-  Encounter.previous_state = Constants.ENCOUNTER_STATES.ACTION_SELECT
-  Encounter.current_state = Constants.ENCOUNTER_STATES.ACTION_SELECT
-
-  -- actions
-  Encounter.loadActions()
-
-  -- textbox dialogue
-  Encounter.dialogue_text = DialogueText:new(table.unpack(Encounter.getText()))
-  Encounter.dialogue_text:setPosition(52, 270)
-  Encounter.dialogue_text:setOrigin(0, 0)
-  Encounter.dialogue_text:setFont(Assets.getFont("main_text"))
-  Encounter.dialogue_text:setScale(2)
-  Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
-
-  Encounter.bubble_dialogues = {}
-  Encounter.can_skip_bubble_dialogues = false
-
-  -- attack target
-  Encounter.target_sprite = Sprite:new("target")
-  Encounter.target_sprite:setPosition(319, 320)
-  Encounter.target_sprite:setLayer(Constants.LAYERS.UI)
-  Encounter.target_sprite:setVisible(false)
-  Encounter.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1, nil, false)
-  Encounter.target_bar_sprite:setVisible(false)
-  Encounter.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
-
-  -- miss
-  Encounter.miss_text = Text:new("ENCOUNTER_ATTACK_MISS")
-  Encounter.miss_text:setVisible(false)
-  Encounter.miss_text:setFont(Assets.getFont("damage"))
-  Encounter.miss_text:setColor(0.87, 0.87, 0.87)
-  Encounter.miss_text:setLayer(Constants.LAYERS.ABOVE_UI)
-
-  -- strike
-  Encounter.strike_sprite = Sprite:new({
-    "strike1",
-    "strike2",
-    "strike3",
-    "strike4",
-    "strike5",
-    "strike6"
-  }, 4 / 30, false, false, false)
-  Encounter.strike_sprite:setOrigin(0.5, 0.5)
-  Encounter.strike_sprite:setScale(1.5)
-  Encounter.strike_sprite:setVisible(false)
-  Encounter.strike_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
-
-  -- player name
-  Encounter.player_name_text = Text:new(Player.getName())
-  Encounter.player_name_text:setPosition(30, 400)
-  Encounter.player_name_text:setOrigin(0)
-  Encounter.player_name_text:setFont(Assets.getFont("curs"))
-
-  -- player level
-  Encounter.player_lv_text = Text:new("")
-  Encounter.player_lv_text:setPosition(174, 400)
-  Encounter.player_lv_text:setOrigin(0)
-  Encounter.player_lv_text:setFont(Assets.getFont("curs"))
-
-  -- player hp text
-  Encounter.player_hp_sprite = Sprite:new("hp")
-  Encounter.player_hp_sprite:setPosition(240, 400)
-  Encounter.player_hp_sprite:setOrigin(0)
-  Encounter.player_hp_value_text = Text:new("")
-  Encounter.player_hp_value_text:setPosition(314, 400)
-  Encounter.player_hp_value_text:setOrigin(0)
-  Encounter.player_hp_value_text:setFont(Assets.getFont("curs"))
-
-  -- player hp bar
-  local player_hp_bar_drawable = Drawable:new()
-  player_hp_bar_drawable:setLayer(Constants.LAYERS.UI)
-  function player_hp_bar_drawable.draw()
-    local max_hp_bar_width = math.clamp(5 * Player.getLV() + 20, 25, 120)
-    local hp_bar_width = max_hp_bar_width * Player.getHP() / Player.getMaxHP()
-
-    love.graphics.setColor(1, 0, 0, 1)
-    love.graphics.rectangle("fill", 275, 400, max_hp_bar_width, 21)
-    love.graphics.setColor(1, 1, 0, 1)
-    love.graphics.rectangle("fill", 275, 400, hp_bar_width, 21)
-  end
-
-  -- enemy hp bar & damage text
-  Encounter.enemy_hp_draw = Drawable:new()
-  Encounter.enemy_hp_draw:setLayer(Constants.LAYERS.ABOVE_UI)
-  Encounter.enemy_hp_draw:setVisible(false)
-
-  Encounter.enemy_hp_text = Text:new("")
-  Encounter.enemy_hp_text:setColor(1, 0, 0)
-  Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_UI)
-  Encounter.enemy_hp_text:setFont(Assets.getFont("damage"))
-  Encounter.enemy_hp_text:setScale(1)
-  Encounter.enemy_hp_text:setVisible(false)
-
-  Encounter.can_flee = true
-  Encounter.setMusic("battle")
-
-  Encounter.enemies = {}
-  Encounter.enemy_selected_index = 1
-
-  Encounter.waves = {}
-
-  Encounter.exp_reward = 0
-  Encounter.gold_reward = 0
-  Encounter.has_won = false
 end
 
 --- Gets the encounter's fight enemy menu
@@ -890,219 +894,16 @@ function Encounter.startAttacking()
   Encounter.target_sprite:setAlpha(1)
   Encounter.target_sprite:setScale(1)
 
-  local attacking = false
-  local attack_window_timer = nil
-  local alpha = 1
-  local scale_x = 1
+  Encounter.is_attacking = false
+  Encounter.attack_window_timer = nil
   local attack_speed = 11
-
-  local function attack(miss)
-    if attacking then return end
-
-    attacking = true
-    Timer.cancel(attack_window_timer)
-    attack_window_timer = nil
-
-    local enemy = Encounter.enemies[Encounter.enemy_selected_index]
-    local enemy_x, enemy_y = enemy:getPosition()
-    local enemy_width, enemy_height = enemy:getWidth(), enemy:getHeight()
-    local enemy_origin_x, enemy_origin_y = enemy:getOrigin()
-    local enemy_scale_x, enemy_scale_y = enemy:getScale()
-    local enemy_center_x = enemy_x + (0.5 - enemy_origin_x) * enemy_width * enemy_scale_x
-    local enemy_center_y = enemy_y + (0.5 - enemy_origin_y) * enemy_height * enemy_scale_y
-    Encounter.strike_sprite:setPosition(enemy_center_x, enemy_center_y)
-
-    local damage = 0
-    local enemy_hp_text_vel_y = -4
-
-    local do_attack = function()
-      if type(enemy.onBeforeDamage) == "function" then
-        damage = Utils.getOrDefault(enemy:onBeforeDamage(damage), damage)
-      end
-
-      local function end_attack()
-        if type(enemy.onAfterAttack) == "function" then
-          enemy:onAfterAttack()
-        end
-
-        Timer.during(0.5, function(dt)
-          alpha = math.clamp(alpha - 2.4 * dt, 0, 1)
-          Encounter.target_sprite:setAlpha(alpha)
-
-          scale_x = math.max(0.25, scale_x - 1.8 * dt)
-          Encounter.target_sprite:setScale(scale_x, 1)
-
-          if alpha <= 0 then
-            Encounter.target_sprite:setVisible(false)
-          end
-        end)
-
-        Encounter.target_bar_sprite:setVisible(false)
-
-        if not Encounter.allSparedOrKilled() then
-          Timer.after(0.05, function()
-            Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
-          end)
-        end
-      end
-
-      local enemy_top_y = enemy_center_y - enemy_height * enemy_scale_y / 2 - 16
-      if enemy:getWidth() > 120 then
-        enemy_top_y = enemy_center_y
-      end
-      if miss == true or damage == 0 then
-        Encounter.miss_text:setPosition(enemy_center_x, enemy_top_y)
-        Encounter.miss_text:setVisible(true)
-
-        Timer.after(1, function()
-          Encounter.miss_text:setVisible(false)
-        end)
-
-        end_attack()
-      else
-        Assets.playSound("damage")
-
-        local stretch_factor = math.max(100, enemy_width) / enemy:getMaxHP()
-        local hp_bar_width = math.round(enemy:getMaxHP() * stretch_factor)
-        local enemy_apparent_hp = enemy:getHP()
-        local enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
-        local enemy_hp_draw_x = enemy_center_x - enemy_hp_draw_width / 2
-
-        local fps = Config["fps"]
-        if fps > 30 then
-          Timer.during(1, function(dt)
-            enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - damage * dt)
-            enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
-          end)
-        else
-          Timer.every(2 / 30, function()
-            enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - (damage / 15))
-            enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
-          end, 15)
-        end
-
-        Encounter.enemy_hp_draw:setVisible(true)
-        function Encounter.enemy_hp_draw.draw()
-          love.graphics.setColor(0, 0, 0, 1)
-          love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, hp_bar_width + 2, 15)
-          love.graphics.setColor(0.25, 0.25, 0.25, 1)
-          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, hp_bar_width, 13)
-          love.graphics.setColor(0, 1, 0, 1)
-          love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, enemy_hp_draw_width, 13)
-        end
-
-        local enemy_hp_text_y_start = enemy_top_y - 15
-        local enemy_hp_text_y = enemy_hp_text_y_start
-        Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
-        Encounter.enemy_hp_text:setVisible(true)
-        Encounter.enemy_hp_text:setText(tostring(damage))
-        Encounter.enemy_hp_text_timer = Timer.during(1, function(dt)
-          enemy_hp_text_vel_y = enemy_hp_text_vel_y + 0.5 * dt * 30
-          enemy_hp_text_y = enemy_hp_text_y + enemy_hp_text_vel_y * dt * 30
-          Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y)
-
-          if enemy_hp_text_y >= enemy_hp_text_y_start + 8 then
-            Timer.cancel(Encounter.enemy_hp_text_timer)
-            Encounter.enemy_hp_text_timer = nil
-            Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
-          end
-        end)
-
-        Timer.after(1.5, function()
-          Encounter.enemy_hp_draw:setVisible(false)
-          Encounter.enemy_hp_text:setVisible(false)
-        end)
-
-        if type(enemy.onDamage) == "function" then
-          enemy:onDamage(damage)
-        end
-
-        enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
-
-        if enemy:getHurtSound() ~= nil then
-          Timer.after(0.37, function()
-            if enemy:getHurtSound() ~= nil then
-              enemy:getHurtSound():play()
-            end
-          end)
-        end
-
-        local shudder = 16
-        Timer.every(2 / 30, function()
-          if shudder == 0 then return end
-
-          local x, y = enemy:getPosition()
-          enemy:setPosition(x + shudder, y)
-          if shudder < 0 then
-            shudder = -(shudder + 2)
-          else
-            shudder = -shudder
-          end
-
-          if shudder == 0 then
-            if enemy:isKilled() then
-              Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
-              Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
-
-              if type(enemy.onKilled) == "function" then
-                enemy:onKilled()
-              end
-
-              enemy:vaporize()
-            else
-              if type(enemy.onAfterDamage) == "function" then
-                enemy:onAfterDamage()
-              end
-            end
-
-            Encounter.checkEncounterEnd()
-          end
-        end, 16)
-
-        Timer.after(1, function()
-          end_attack()
-        end)
-      end
-    end
-
-    if miss == true then
-      do_attack()
-    else
-      if type(enemy.onBeforeAttack) == "function" then
-        enemy:onBeforeAttack()
-      end
-
-      local target_x = Encounter.target_sprite:getPosition()
-      local target_width = Encounter.target_sprite:getWidth()
-      local target_bar_x = Encounter.target_bar_sprite:getPosition()
-      local bonus_factor = math.abs(target_x - target_bar_x)
-      local stretch = (target_width - bonus_factor) / target_width
-      damage = math.max(0, Player.getAT() - enemy:getDF() + (love.math.random() * 2))
-      if bonus_factor <= 12 then
-        damage = math.round(damage * 2.2)
-      else
-        damage = math.round(damage * 2 * stretch)
-      end
-
-      Encounter.strike_sprite:setVisible(true)
-      Encounter.strike_sprite:setScale(stretch * 2 - 0.5)
-      local strike_speed_base = 0.5 - stretch / 4
-      local strike_speed = 1 / (strike_speed_base * 30)
-      Encounter.strike_sprite:setSpeed(strike_speed)
-      Encounter.strike_sprite:play()
-      Encounter.target_bar_sprite:play()
-      Assets.playSound("strike")
-      local damage_delay = (1 / strike_speed_base * 6 + 3) / 30
-      Timer.after(damage_delay, do_attack)
-    end
-  end
 
   Encounter.target_bar_sprite:setPosition(22, 320)
   Encounter.target_bar_sprite:setVisible(true)
   Encounter.target_bar_sprite:setFrame(1)
 
   local bar_speed = attack_speed + (love.math.random() * 2)
-  attack_window_timer = Timer.during(2, function(dt)
+  Encounter.attack_window_timer = Timer.during(2, function(dt)
     local x, y = Encounter.target_bar_sprite:getPosition()
     local target_bar_x = x + bar_speed * dt * 30
     Encounter.target_bar_sprite:setPosition(target_bar_x, y)
@@ -1110,13 +911,225 @@ function Encounter.startAttacking()
     local target_x = Encounter.target_sprite:getPosition()
     local width = Encounter.target_sprite:getWidth()
     if target_bar_x > target_x + width / 2 then
-      attack(true)
+      Encounter.attack(true)
     end
 
     if Input.isPressed(Input.Confirm) then
-      attack()
+      Encounter.attack()
     end
   end)
+end
+
+--- Attacks the enemy
+--- @param miss? boolean wether the attack missed
+function Encounter.attack(miss)
+  if Encounter.is_attacking then return end
+
+  Encounter.is_attacking = true
+  Timer.cancel(Encounter.attack_window_timer)
+  Encounter.attack_window_timer = nil
+
+  local enemy = Encounter.enemies[Encounter.enemy_selected_index]
+  local enemy_x, enemy_y = enemy:getPosition()
+  local enemy_width, enemy_height = enemy:getWidth(), enemy:getHeight()
+  local enemy_origin_x, enemy_origin_y = enemy:getOrigin()
+  local enemy_scale_x, enemy_scale_y = enemy:getScale()
+  local enemy_center_x = enemy_x + (0.5 - enemy_origin_x) * enemy_width * enemy_scale_x
+  local enemy_center_y = enemy_y + (0.5 - enemy_origin_y) * enemy_height * enemy_scale_y
+  Encounter.strike_sprite:setPosition(enemy_center_x, enemy_center_y)
+
+  if miss == true then
+    Encounter.proceedAttack(enemy, 0, true)
+  else
+    if type(enemy.onBeforeAttack) == "function" then
+      enemy:onBeforeAttack()
+    end
+
+    local target_x = Encounter.target_sprite:getPosition()
+    local target_width = Encounter.target_sprite:getWidth()
+    local target_bar_x = Encounter.target_bar_sprite:getPosition()
+    local bonus_factor = math.abs(target_x - target_bar_x)
+    local stretch = (target_width - bonus_factor) / target_width
+    local damage = math.max(0, Player.getAT() - enemy:getDF() + (love.math.random() * 2))
+    if bonus_factor <= 12 then
+      damage = math.round(damage * 2.2)
+    else
+      damage = math.round(damage * 2 * stretch)
+    end
+
+    Encounter.strike_sprite:setVisible(true)
+    Encounter.strike_sprite:setScale(stretch * 2 - 0.5)
+    local strike_speed_base = 0.5 - stretch / 4
+    local strike_speed = 1 / (strike_speed_base * 30)
+    Encounter.strike_sprite:setSpeed(strike_speed)
+    Encounter.strike_sprite:play()
+    Encounter.target_bar_sprite:play()
+    Assets.playSound("strike")
+    local damage_delay = (1 / strike_speed_base * 6 + 3) / 30
+    Timer.after(damage_delay, function()
+      Encounter.proceedAttack(enemy, damage, miss)
+    end)
+  end
+end
+
+--- Proceeds attack on an enemy
+--- @param enemy Dummy.Enemy the attacked enemy
+--- @param damage number damage amount
+--- @param miss? boolean wether the attack missed
+--- @protected
+function Encounter.proceedAttack(enemy, damage, miss)
+  if type(enemy.onBeforeDamage) == "function" then
+    damage = Utils.getOrDefault(enemy:onBeforeDamage(damage), damage)
+  end
+
+  local enemy_x, enemy_y = enemy:getPosition()
+  local enemy_width, enemy_height = enemy:getWidth(), enemy:getHeight()
+  local enemy_origin_x, enemy_origin_y = enemy:getOrigin()
+  local enemy_scale_x, enemy_scale_y = enemy:getScale()
+  local enemy_center_x = enemy_x + (0.5 - enemy_origin_x) * enemy_width * enemy_scale_x
+  local enemy_center_y = enemy_y + (0.5 - enemy_origin_y) * enemy_height * enemy_scale_y
+  local enemy_top_y = enemy_center_y - enemy_height * enemy_scale_y / 2 - 16
+  if enemy:getWidth() > 120 then
+    enemy_top_y = enemy_center_y
+  end
+  if miss == true then
+    Encounter.miss_text:setPosition(enemy_center_x, enemy_top_y)
+    Encounter.miss_text:setVisible(true)
+
+    Timer.after(1, function()
+      Encounter.miss_text:setVisible(false)
+    end)
+
+    Encounter.endAttack(enemy)
+  else
+    Assets.playSound("damage")
+
+    local stretch_factor = math.max(100, enemy_width) / enemy:getMaxHP()
+    local hp_bar_width = math.round(enemy:getMaxHP() * stretch_factor)
+    local enemy_apparent_hp = enemy:getHP()
+    local enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
+    local enemy_hp_draw_x = enemy_center_x - enemy_hp_draw_width / 2
+
+    local fps = Config["fps"]
+    Timer.every(2 / fps, function()
+      enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - (damage / (fps / 2)))
+      enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
+    end, fps / 2)
+
+    Encounter.enemy_hp_draw:setVisible(true)
+    function Encounter.enemy_hp_draw.draw()
+      love.graphics.setColor(0, 0, 0, 1)
+      love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, hp_bar_width + 2, 15)
+      love.graphics.setColor(0.25, 0.25, 0.25, 1)
+      love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, hp_bar_width, 13)
+      love.graphics.setColor(0, 1, 0, 1)
+      love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, enemy_hp_draw_width, 13)
+    end
+
+    local enemy_hp_text_vel_y = -4
+    local enemy_hp_text_y_start = enemy_top_y - 15
+    local enemy_hp_text_y = enemy_hp_text_y_start
+    Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
+    Encounter.enemy_hp_text:setVisible(true)
+    Encounter.enemy_hp_text:setText(tostring(damage))
+    Encounter.enemy_hp_text_timer = Timer.during(1, function(dt)
+      enemy_hp_text_vel_y = enemy_hp_text_vel_y + 0.5 * dt * 30
+      enemy_hp_text_y = enemy_hp_text_y + enemy_hp_text_vel_y * dt * 30
+      Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y)
+
+      if enemy_hp_text_y >= enemy_hp_text_y_start + 8 then
+        Timer.cancel(Encounter.enemy_hp_text_timer)
+        Encounter.enemy_hp_text_timer = nil
+        Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
+      end
+    end)
+
+    Timer.after(1.5, function()
+      Encounter.enemy_hp_draw:setVisible(false)
+      Encounter.enemy_hp_text:setVisible(false)
+    end)
+
+    if type(enemy.onDamage) == "function" then
+      enemy:onDamage(damage)
+    end
+
+    enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
+
+    if enemy:getHurtSound() ~= nil then
+      Timer.after(0.37, function()
+        if enemy:getHurtSound() ~= nil then
+          enemy:getHurtSound():play()
+        end
+      end)
+    end
+
+    local shudder = 16
+    Timer.every(2 / 30, function()
+      if shudder == 0 then return end
+
+      local x, y = enemy:getPosition()
+      enemy:setPosition(x + shudder, y)
+      if shudder < 0 then
+        shudder = -(shudder + 2)
+      else
+        shudder = -shudder
+      end
+
+      if shudder == 0 then
+        if enemy:isKilled() then
+          Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
+          Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
+
+          if type(enemy.onKilled) == "function" then
+            enemy:onKilled()
+          end
+
+          enemy:vaporize()
+        else
+          if type(enemy.onAfterDamage) == "function" then
+            enemy:onAfterDamage()
+          end
+        end
+
+        Encounter.checkEncounterEnd()
+      end
+    end, 16)
+
+    Timer.after(1, function()
+      Encounter.endAttack(enemy)
+    end)
+  end
+end
+
+--- Ends attack on an enemy
+--- @param enemy Dummy.Enemy the attacked enemy
+function Encounter.endAttack(enemy)
+  local alpha = 1
+  local scale_x = 1
+
+  if type(enemy.onAfterAttack) == "function" then
+    enemy:onAfterAttack()
+  end
+
+  Timer.during(0.5, function(dt)
+    alpha = math.clamp(alpha - 2.4 * dt, 0, 1)
+    Encounter.target_sprite:setAlpha(alpha)
+
+    scale_x = math.max(0.25, scale_x - 1.8 * dt)
+    Encounter.target_sprite:setScale(scale_x, 1)
+
+    if alpha <= 0 then
+      Encounter.target_sprite:setVisible(false)
+    end
+  end)
+
+  Encounter.target_bar_sprite:setVisible(false)
+
+  if not Encounter.allSparedOrKilled() then
+    Timer.after(0.05, function()
+      Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
+    end)
+  end
 end
 
 --- Starts defending

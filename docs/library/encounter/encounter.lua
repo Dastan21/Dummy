@@ -51,7 +51,12 @@
 --- @field protected exp_reward number
 --- @field protected gold_reward number
 --- @field protected defend_timer table|nil
+--- @field protected is_attacking boolean
+--- @field protected attack_window_timer table|nil
 Encounter = {}
+
+--- Loads the encounter
+function Encounter.load() end
 
 --- Gets the class name
 --- @return string
@@ -136,9 +141,6 @@ function Encounter.win(exp, gold) end
 --- @return Dummy.Enemy|nil
 function Encounter.getSelectedEnemy() end
 
---- Loads the encounter
-function Encounter.load() end
-
 --- Gets the encounter's fight enemy menu
 --- @return Dummy.Encounter.ActionMenu
 function Encounter.getFightEnemyMenu() end
@@ -221,6 +223,21 @@ function Encounter.updateEnemyDialogue() end
 
 --- Starts attacking
 function Encounter.startAttacking() end
+
+--- Attacks the enemy
+--- @param miss? boolean wether the attack missed
+function Encounter.attack(miss) end
+
+--- Proceeds attack on an enemy
+--- @param enemy Dummy.Enemy the attacked enemy
+--- @param damage number damage amount
+--- @param miss? boolean wether the attack missed
+--- @protected
+function Encounter.proceedAttack(enemy, damage, miss) end
+
+--- Ends attack on an enemy
+--- @param enemy Dummy.Enemy the attacked enemy
+function Encounter.endAttack(enemy) end
 
 --- Starts defending
 function Encounter.startDefending() end
