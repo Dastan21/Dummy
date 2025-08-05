@@ -57,25 +57,14 @@ Config = {
   fullscreen = false
 }
 
-local function loadConfig()
+function engine.loadConfig()
   if love.filesystem.getInfo("settings.json") ~= nil then
     table.merge(Config, JSON.decode(love.filesystem.read("settings.json")))
   end
 end
 
-local function saveConfig()
+function engine.saveConfig()
   love.filesystem.write("settings.json", JSON.encode(Config))
-end
-
-function love.scale()
-  if Config["fullscreen"] == true then
-    love.window.setFullscreen(true)
-  else
-    local width = Constants.SCREEN_WIDTH * Config["window_scale"]
-    local height = Constants.SCREEN_HEIGHT * Config["window_scale"]
-    love.window.setMode(width, height)
-    love.resize(width, height)
-  end
 end
 
 function love.load()
@@ -89,7 +78,7 @@ function love.load()
 
   love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
 
-  loadConfig()
+  engine.loadConfig()
 
   engine.canvas = love.graphics.newCanvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)
   engine.canvas:setFilter("nearest", "nearest")
@@ -113,7 +102,29 @@ function love.load()
   engine.time = love.timer.getTime()
 end
 
-local function updateFullscreen()
+function love.resize(width, height)
+  local scale = math.min(width / Constants.SCREEN_WIDTH, height / Constants.SCREEN_HEIGHT)
+  engine.window.translate_x = (width - Constants.SCREEN_WIDTH * scale) / 2
+  engine.window.translate_y = (height - Constants.SCREEN_HEIGHT * scale) / 2
+  engine.window.scale = scale
+end
+
+function love.scale()
+  if Config["fullscreen"] == true then
+    love.window.setFullscreen(true)
+  else
+    local width = Constants.SCREEN_WIDTH * Config["window_scale"]
+    local height = Constants.SCREEN_HEIGHT * Config["window_scale"]
+    love.window.setMode(width, height)
+    love.resize(width, height)
+  end
+end
+
+function love.filedropped(file)
+  ModList.copyModZip(file)
+end
+
+function engine.updateFullscreen()
   if Input.isPressed("f4") or (Input.isDown("lalt") and Input.isPressed("return")) then
     local fullscreen = not love.window.getFullscreen()
     Config["fullscreen"] = fullscreen
@@ -121,21 +132,7 @@ local function updateFullscreen()
   end
 end
 
-local function update(dt)
-  if dt > 2 / 30 then return end
-
-  engine.time = engine.time + (1 / Config["fps"])
-
-  dt = Debugger.update(dt or love.timer.getDelta())
-
-  Input.update()
-  Scene.update(dt)
-  Timer.update(dt)
-
-  updateFullscreen()
-end
-
-local function limitFPS()
+function engine.limitFPS()
   local time = love.timer.getTime()
   if engine.time <= time then
     engine.time = time
@@ -144,46 +141,7 @@ local function limitFPS()
   love.timer.sleep(engine.time - time)
 end
 
-local function draw()
-  limitFPS()
-
-  love.graphics.setCanvas({ engine.canvas, stencil = true })
-  love.graphics.clear()
-
-  Scene.draw()
-  Shaker.draw()
-
-  love.graphics.setCanvas()
-
-  love.graphics.setColor(1, 1, 1, 1)
-  love.graphics.translate(engine.window.translate_x, engine.window.translate_y)
-  love.graphics.scale(engine.window.scale)
-  love.graphics.draw(engine.canvas)
-
-  love.graphics.setColor(0, 0, 0, 1)
-  love.graphics.rectangle("fill", -engine.window.translate_x, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)
-  love.graphics.rectangle("fill", Constants.SCREEN_WIDTH, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)
-end
-
-function love.resize(width, height)
-  local scale = math.min(width / Constants.SCREEN_WIDTH, height / Constants.SCREEN_HEIGHT)
-  engine.window.translate_x = (width - Constants.SCREEN_WIDTH * scale) / 2
-  engine.window.translate_y = (height - Constants.SCREEN_HEIGHT * scale) / 2
-  engine.window.scale = scale
-end
-
-function love.quit()
-  saveConfig()
-  Debugger.saveLogs()
-
-  return love.system.getOS() == "Web"
-end
-
-function love.filedropped(file)
-  ModList.copyModZip(file)
-end
-
-local function error_handler(err)
+function engine.error_handler(err)
   if err == "stack overflow" then
     err = "Stack overflow!"
   else
@@ -196,9 +154,47 @@ local function error_handler(err)
 end
 
 function love.update(dt)
-  xpcall(update, error_handler, dt)
+  xpcall(function()
+    if dt > 2 / 30 then return end
+
+    engine.time = engine.time + (1 / Config["fps"])
+
+    dt = Debugger.update(dt or love.timer.getDelta())
+
+    Input.update()
+    Scene.update(dt)
+    Timer.update(dt)
+
+    engine.updateFullscreen()
+  end, engine.error_handler, dt)
 end
 
 function love.draw()
-  xpcall(draw, error_handler)
+  xpcall(function()
+    engine.limitFPS()
+
+    love.graphics.setCanvas({ engine.canvas, stencil = true })
+    love.graphics.clear()
+
+    Scene.draw()
+    Shaker.draw()
+
+    love.graphics.setCanvas()
+
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.translate(engine.window.translate_x, engine.window.translate_y)
+    love.graphics.scale(engine.window.scale)
+    love.graphics.draw(engine.canvas)
+
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.rectangle("fill", -engine.window.translate_x, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)
+    love.graphics.rectangle("fill", Constants.SCREEN_WIDTH, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)
+  end, engine.error_handler)
+end
+
+function love.quit()
+  engine.saveConfig()
+  Debugger.saveLogs()
+
+  return love.system.getOS() == "Web"
 end
