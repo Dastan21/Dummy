@@ -16,8 +16,8 @@
 --- @field protected quitting_timer number
 --- @field protected quitting_sprite Dummy.Sprite
 --- @field protected layer_canvas [ love.Canvas, love.Canvas ]
---- @field protected drawables table<Dummy.Drawable, boolean>
---- @field protected shaders table<Dummy.Shader, boolean>
+--- @field protected drawables Dummy.Drawable[]
+--- @field protected shaders Dummy.Shader[]
 Scene = {}
 
 --- @class Dummy.Scene.Scene
@@ -65,11 +65,6 @@ function Scene.getCurrentScene() end
 --- @param scene Dummy.Scene.Scene
 function Scene.addScene(scene_name, scene) end
 
---- Gets the current scene drawables
---- @return Dummy.Drawable[]
---- @private
-function Scene.getDrawables() end
-
 --- Adds a drawable in the current scene
 --- @param drawable Dummy.Drawable
 --- @return Dummy.Drawable|nil
@@ -79,14 +74,12 @@ function Scene.addDrawable(drawable) end
 --- @param drawable Dummy.Drawable
 function Scene.removeDrawable(drawable) end
 
+--- Sorts current scene drawables
+function Scene.sortDrawables() end
+
 --- Gets the current scene layers
 --- @return number[]
 function Scene.getLayers() end
-
---- Gets the current scene shaders
---- @return Dummy.Shader[]
---- @private
-function Scene.getShaders() end
 
 --- Adds a shader in the current scene
 --- @param shader Dummy.Shader
@@ -96,6 +89,9 @@ function Scene.addShader(shader) end
 --- Removes a shader in the current scene
 --- @param shader Dummy.Shader
 function Scene.removeShader(shader) end
+
+--- Sorts shaders in the current scene by priority
+function Scene.sortShaders() end
 
 --- Cleans the current scene
 function Scene.clean() end

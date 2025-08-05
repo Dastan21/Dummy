@@ -156,6 +156,8 @@ end
 --- @param layer number
 function Drawable:setLayer(layer)
   self.layer = layer
+
+  Scene.sortDrawables()
 end
 
 --- Wether the drawable is visible
