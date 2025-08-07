@@ -52,8 +52,8 @@ function game_over.load(x, y)
     shard_sprite:setVisible(false)
     game_over.player_shards[i] = {
       ["sprite"] = shard_sprite,
-      ["vel_x"] = (love.math.random() - 0.5) * 7,
-      ["vel_y"] = (love.math.random() - 0.5) * 7
+      ["vel_x"] = (love.math.random() - 0.5) * 14,
+      ["vel_y"] = (love.math.random() - 0.5) * 14
     }
   end
 
