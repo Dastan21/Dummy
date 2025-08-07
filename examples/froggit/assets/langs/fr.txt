@@ -10,12 +10,12 @@ FROGGIT_MOD_ENCOUNTER_TEXT_5=* La force pure de Croâpaud vous\n  intimide.[wait
 FROGGIT_MOD_ENCOUNTER_TEXT_MERCY=* Croâpaud semble réticent\n  à l'idée de vous combattre.
 FROGGIT_MOD_ENCOUNTER_TEXT_LOW_LIFE=* Croâpaud essaye\n  de s'enfuir.
 
-FROGGIT_MOD_ENCOUNTER_BUBBLE_1=[wave][noskip]Croâ,\ncroâ.
-FROGGIT_MOD_ENCOUNTER_BUBBLE_2=[wave][noskip]Croasse-\nment.
-FROGGIT_MOD_ENCOUNTER_BUBBLE_3=[wave][noskip]Saut-\nille.
-FROGGIT_MOD_ENCOUNTER_BUBBLE_4=[wave][noskip]Miaou.
-FROGGIT_MOD_ENCOUNTER_BUBBLE_COMPLIMENT=[wave][noskip](Rougit\nforte-\nment.)\nCroâ..
-FROGGIT_MOD_ENCOUNTER_BUBBLE_THREAT=[wave][noskip]Tremble,\ntremble.
+FROGGIT_MOD_ENCOUNTER_BUBBLE_1=[wave][noskip]Croâ,\ncroâ.[wait:30][next]
+FROGGIT_MOD_ENCOUNTER_BUBBLE_2=[wave][noskip]Croasse-\nment.[wait:30][next]
+FROGGIT_MOD_ENCOUNTER_BUBBLE_3=[wave][noskip]Saut-\nille.[wait:30][next]
+FROGGIT_MOD_ENCOUNTER_BUBBLE_4=[wave][noskip]Miaou.[wait:30][next]
+FROGGIT_MOD_ENCOUNTER_BUBBLE_COMPLIMENT=[wave][noskip](Rougit\nforte-\nment.)\nCroâ..[wait:30][next]
+FROGGIT_MOD_ENCOUNTER_BUBBLE_THREAT=[wave][noskip]Tremble,\ntremble.[wait:30][next]
 
 FROGGIT_MOD_ENCOUNTER_CHECK_TEXT=* La vie est dure pour\n  cet ennemi.
 

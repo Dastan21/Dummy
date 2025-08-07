@@ -50,7 +50,6 @@
 --- @field protected action.mercy_hover_sprite Dummy.Sprite
 --- @field protected exp_reward number
 --- @field protected gold_reward number
---- @field protected defend_timer table|nil
 --- @field protected is_attacking boolean
 --- @field protected attack_window_timer table|nil
 Encounter = {}

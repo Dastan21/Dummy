@@ -14,4 +14,4 @@ DUMMY_MOD_ENCOUNTER_TALK_TEXT_2=* Il ne semble pas vouloir\n  discuter.
 DUMMY_MOD_ENCOUNTER_TALK_TEXT_3=* Vos actions ont l'air\n  de faire plaisir à Toriel.
 
 DUMMY_MOD_ENCOUNTER_TIRE=* Mannequin se lasse de\n  vos idioties sans but.
-DUMMY_MOD_ENCOUNTER_BUBBLE=[wave].[wait:5].[wait:5].[wait:5].[wait:5].
+DUMMY_MOD_ENCOUNTER_BUBBLE=[wave].[wait:5].[wait:5].[wait:5].[wait:5].[wait:30][next]

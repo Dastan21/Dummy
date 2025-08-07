@@ -42,7 +42,6 @@
 --- @field protected action.mercy_hover_sprite Dummy.Sprite
 --- @field protected exp_reward number
 --- @field protected gold_reward number
---- @field protected defend_timer table|nil
 --- @field protected is_attacking boolean
 --- @field protected attack_window_timer table|nil
 local Encounter = {}
@@ -804,7 +803,7 @@ end
 
 --- Updates text dialogue
 function Encounter.updateTextDialogue()
-  if Input.isPressed(Input.Confirm) and Encounter.dialogue_text:isDone() then
+  if Encounter.dialogue_text:isDone() then
     Encounter.checkEncounterEnd()
   end
 end
@@ -863,24 +862,11 @@ function Encounter.updateEnemyDialogue()
   end
 
   if all_done then
-    local function defend()
-      for _, dialogue in ipairs(Encounter.bubble_dialogues) do
-        dialogue:remove()
-      end
-      Encounter.bubble_dialogues = {}
-      Encounter.defend_timer = nil
-      Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
+    for _, dialogue in ipairs(Encounter.bubble_dialogues) do
+      dialogue:remove()
     end
-
-    if Encounter.defend_timer == nil then
-      Encounter.defend_timer = Timer.after(1, defend)
-    end
-
-    if Input.isPressed(Input.Confirm) then
-      Timer.cancel(Encounter.defend_timer)
-      Encounter.defend_timer = nil
-      defend()
-    end
+    Encounter.bubble_dialogues = {}
+    Encounter.setState(Constants.ENCOUNTER_STATES.DEFENDING)
   end
 end
 

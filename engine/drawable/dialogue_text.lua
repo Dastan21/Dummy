@@ -7,6 +7,7 @@
 --- @field protected dialogue_timer number
 --- @field protected state table<string, any>
 --- @field protected total_nodes Dummy.Text.Node[]
+--- @field protected done boolean
 --- @field protected speed number
 --- @field protected text_value_index number
 --- @field protected text_index number
@@ -49,6 +50,7 @@ end
 
 --- Resets the dialogue's current text
 function DialogueText:reset()
+  self.done = false
   self.dialogue_timer = 0
   self.text_index = 0
   self.skipping = false
@@ -76,7 +78,7 @@ end
 --- Wether the dialogue is done
 --- @return boolean
 function DialogueText:isDone()
-  return not self:isVisible() or (self.text_value_index >= #self.text_values and self.text_index >= #self.total_nodes)
+  return self.done
 end
 
 --- Wether the dialogue's current text is done
@@ -212,7 +214,16 @@ function DialogueText:update(dt)
     if Input.isPressed(Input.Confirm) or (self.auto_next and not self.skipping) then
       self.text_value_index = self.text_value_index + 1
       self.text_value = self.text_values[self.text_value_index] or ""
-      self:reset()
+
+      if self.text_value_index >= #self.text_values and self.text_index >= #self.total_nodes then
+        self.done = true
+        self.skipping = false
+        if type(self.onDone) == "function" then
+          self:onDone()
+        end
+      else
+        self:reset()
+      end
     end
     return
   end
@@ -255,13 +266,6 @@ function DialogueText:update(dt)
 
   if Input.isPressed(Input.Cancel) then
     self:skip()
-  end
-
-  if self:isDone() then
-    self.skipping = false
-    if type(self.onDone) == "function" then
-      self:onDone()
-    end
   end
 
   self:updateDialogue()

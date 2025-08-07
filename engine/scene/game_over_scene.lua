@@ -100,7 +100,7 @@ end
 
 function game_over.update(dt)
   if game_over.dialogue_text:isVisible() then
-    if Input.isPressed(Input.Confirm) and game_over.dialogue_text:isDone() then
+    if game_over.dialogue_text:isDone() then
       game_over.dialogue_index = game_over.dialogue_index + 1
 
       if game_over.dialogue_index == 2 then

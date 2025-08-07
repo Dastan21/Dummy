@@ -14,4 +14,4 @@ DUMMY_MOD_ENCOUNTER_TALK_TEXT_2=* It doesn't seem much for\n  conversation.
 DUMMY_MOD_ENCOUNTER_TALK_TEXT_3=* TORIEL seems happy with you.
 
 DUMMY_MOD_ENCOUNTER_TIRE=* Dummy tires of your\n  aimless shenanigans.
-DUMMY_MOD_ENCOUNTER_BUBBLE=[wave].[wait:5].[wait:5].[wait:5].[wait:5].
+DUMMY_MOD_ENCOUNTER_BUBBLE=[wave].[wait:5].[wait:5].[wait:5].[wait:5].[wait:30][next]

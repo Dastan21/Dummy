@@ -15,6 +15,7 @@
 --- @field protected dialogue_timer number
 --- @field protected state table<string, any>
 --- @field protected total_nodes Dummy.Text.Node[]
+--- @field protected done boolean
 --- @field protected speed number
 --- @field protected text_value_index number
 --- @field protected text_index number
