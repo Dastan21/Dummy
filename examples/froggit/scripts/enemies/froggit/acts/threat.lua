@@ -1,10 +1,10 @@
--- talk act
-local act = ACT:new("FROGGIT_MOD_ENCOUNTER_THREAT_ACT")
+--- @class Threat : Dummy.ACT
+local Threat = ACT:new("FROGGIT_MOD_ENCOUNTER_THREAT_ACT")
 
 --- Called when the ACT is used
-function act:onUse()
+function Threat:onUse()
   Encounter.playDialogueText("FROGGIT_MOD_ENCOUNTER_THREAT_TEXT")
   self:getEnemy():setCanBeSpared(true)
 end
 
-return act
+return Threat

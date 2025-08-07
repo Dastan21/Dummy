@@ -1,10 +1,10 @@
--- talk act
-local act = ACT:new("FROGGIT_MOD_ENCOUNTER_COMPLIMENT_ACT")
+--- @class Compliment : Dummy.ACT
+local Compliment = ACT:new("FROGGIT_MOD_ENCOUNTER_COMPLIMENT_ACT")
 
 --- Called when the ACT is used
-function act:onUse()
+function Compliment:onUse()
   Encounter.playDialogueText("FROGGIT_MOD_ENCOUNTER_COMPLIMENT_TEXT")
   self:getEnemy():setCanBeSpared(true)
 end
 
-return act
+return Compliment

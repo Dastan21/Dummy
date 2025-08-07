@@ -1,8 +1,8 @@
--- talk act
-local act = ACT:new("DUMMY_MOD_ENCOUNTER_TALK_ACT")
+--- @class Talk : Dummy.ACT
+local Talk = ACT:new("DUMMY_MOD_ENCOUNTER_TALK_ACT")
 
 --- Called when the ACT is used
-function act:onUse()
+function Talk:onUse()
   -- you can play multiples dialogues one after the other
   Encounter.playDialogueText(
     "DUMMY_MOD_ENCOUNTER_TALK_TEXT_1",
@@ -14,4 +14,4 @@ function act:onUse()
   self:getEnemy():setSpared(true)
 end
 
-return act
+return Talk
