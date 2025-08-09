@@ -158,6 +158,12 @@ function Enemy:addACT(act, ...)
   end
 end
 
+--- Removes an ACT from the enemy
+--- @param act Dummy.ACT
+function Enemy:removeACT(act)
+  table.removeByValue(self.acts, act)
+end
+
 --- Wether the enemy can be spared
 --- @return boolean
 function Enemy:getCanBeSpared()

@@ -110,6 +110,10 @@ function Enemy:getACTs() end
 --- @param ... Dummy.ACT
 function Enemy:addACT(act, ...) end
 
+--- Removes an ACT from the enemy
+--- @param act Dummy.ACT
+function Enemy:removeACT(act) end
+
 --- Wether the enemy can be spared
 --- @return boolean
 function Enemy:getCanBeSpared() end
