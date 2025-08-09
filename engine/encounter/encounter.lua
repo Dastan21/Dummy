@@ -967,7 +967,9 @@ end
 --- @protected
 function Encounter.proceedAttack(enemy, damage, miss)
   if type(enemy.onBeforeDamage) == "function" then
-    damage = Utils.getOrDefault(enemy:onBeforeDamage(damage), damage)
+    local d, m = enemy:onBeforeDamage(damage, miss or false)
+    damage = Utils.getOrDefault(d, damage)
+    miss = Utils.getOrDefault(m, miss)
   end
 
   local enemy_x, enemy_y = enemy:getPosition()

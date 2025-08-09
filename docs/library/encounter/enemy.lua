@@ -157,8 +157,9 @@ function Enemy:onBeforeAttack() end
 
 --- Called before the enemy is damaged
 --- @param damage number calculated damage
---- @return number|nil damage override damage
-function Enemy:onBeforeDamage(damage) end
+--- @param miss boolean wether the attack missed
+--- @return number|nil damage, boolean|nil miss override damage & wether the attack missed
+function Enemy:onBeforeDamage(damage, miss) end
 
 --- Called when the enemy is damaged
 --- @param damage number damage taken
