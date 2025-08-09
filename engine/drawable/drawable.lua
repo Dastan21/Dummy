@@ -233,7 +233,7 @@ function Drawable:setParent(parent)
   if self.parent == parent then return end
 
   if parent ~= nil then
-    self:removeChild(parent)
+    parent:removeChild(self)
     parent:addChild(self)
   else
     self.parent:removeChild(self)
