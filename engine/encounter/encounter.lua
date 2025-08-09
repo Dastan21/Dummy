@@ -215,9 +215,11 @@ function Encounter.addEnemy(enemy, ...)
 end
 
 --- Sets one or more waves to the encounter
---- @param wave Dummy.Wave
+--- @param wave Dummy.Wave|nil
+--- @param ... Dummy.Wave
 function Encounter.setWaves(wave, ...)
   Encounter.waves = {}
+  if wave == nil then return end
 
   local waves = { wave, ... }
   if #wave >= 1 then waves = wave end

@@ -80,7 +80,8 @@ function Encounter.getEnemies() end
 function Encounter.addEnemy(enemy, ...) end
 
 --- Sets one or more waves to the encounter
---- @param wave Dummy.Wave
+--- @param wave Dummy.Wave|nil
+--- @param ... Dummy.Wave
 function Encounter.setWaves(wave, ...) end
 
 --- Wether the player can flee the encounter
