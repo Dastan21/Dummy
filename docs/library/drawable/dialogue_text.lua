@@ -72,7 +72,7 @@ function DialogueText:getVoice() end
 function DialogueText:setVoice(voice) end
 
 --- Sets the dialogue text's font
---- @param font love.Font
+--- @param font love.Font|string
 function DialogueText:setFont(font) end
 
 --- Applies the node state

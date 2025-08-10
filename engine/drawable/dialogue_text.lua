@@ -113,8 +113,11 @@ function DialogueText:setVoice(voice)
 end
 
 --- Sets the dialogue text's font
---- @param font love.Font
+--- @param font love.Font|string
 function DialogueText:setFont(font)
+  if type(font) == "string" then
+    font = Assets.getFont(font)
+  end
   self.font = font
   self:parseNodes(self.text_value)
 end

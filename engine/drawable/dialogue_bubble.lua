@@ -85,7 +85,7 @@ function DialogueBubble:new(type, value, ...)
   self.dialogue:setOrigin(0, 0)
   self.dialogue:setColor(type ~= "shock" and { 0, 0, 0 } or { 1, 1, 1 })
   self.dialogue:setVoice("voice_bubble")
-  self.dialogue:setFont(Assets.getFont("plain"))
+  self.dialogue:setFont("plain")
   self.dialogue:setParent(self)
 
   self:init()

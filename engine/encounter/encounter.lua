@@ -76,7 +76,7 @@ function Encounter.load()
   Encounter.dialogue_text = DialogueText:new(table.unpack(Encounter.getText()))
   Encounter.dialogue_text:setPosition(52, 270)
   Encounter.dialogue_text:setOrigin(0, 0)
-  Encounter.dialogue_text:setFont(Assets.getFont("main_text"))
+  Encounter.dialogue_text:setFont("main_text")
   Encounter.dialogue_text:setScale(2)
   Encounter.dialogue_text:setLayer(Constants.LAYERS.ABOVE_ARENA)
 
@@ -95,7 +95,7 @@ function Encounter.load()
   -- miss
   Encounter.miss_text = Text:new("ENCOUNTER_ATTACK_MISS")
   Encounter.miss_text:setVisible(false)
-  Encounter.miss_text:setFont(Assets.getFont("damage"))
+  Encounter.miss_text:setFont("damage")
   Encounter.miss_text:setColor(0.87, 0.87, 0.87)
   Encounter.miss_text:setLayer(Constants.LAYERS.ABOVE_UI)
 
@@ -117,13 +117,13 @@ function Encounter.load()
   Encounter.player_name_text = Text:new(Player.getName())
   Encounter.player_name_text:setPosition(30, 400)
   Encounter.player_name_text:setOrigin(0)
-  Encounter.player_name_text:setFont(Assets.getFont("curs"))
+  Encounter.player_name_text:setFont("curs")
 
   -- player level
   Encounter.player_lv_text = Text:new("")
   Encounter.player_lv_text:setPosition(174, 400)
   Encounter.player_lv_text:setOrigin(0)
-  Encounter.player_lv_text:setFont(Assets.getFont("curs"))
+  Encounter.player_lv_text:setFont("curs")
 
   -- player hp text
   Encounter.player_hp_sprite = Sprite:new("hp")
@@ -132,7 +132,7 @@ function Encounter.load()
   Encounter.player_hp_value_text = Text:new("")
   Encounter.player_hp_value_text:setPosition(314, 400)
   Encounter.player_hp_value_text:setOrigin(0)
-  Encounter.player_hp_value_text:setFont(Assets.getFont("curs"))
+  Encounter.player_hp_value_text:setFont("curs")
 
   -- player hp bar
   local player_hp_bar_drawable = Drawable:new()
@@ -155,7 +155,7 @@ function Encounter.load()
   Encounter.enemy_hp_text = Text:new("")
   Encounter.enemy_hp_text:setColor(1, 0, 0)
   Encounter.enemy_hp_text:setLayer(Constants.LAYERS.ABOVE_UI)
-  Encounter.enemy_hp_text:setFont(Assets.getFont("damage"))
+  Encounter.enemy_hp_text:setFont("damage")
   Encounter.enemy_hp_text:setScale(1)
   Encounter.enemy_hp_text:setVisible(false)
 

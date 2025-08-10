@@ -25,7 +25,7 @@ function main_menu.load()
 
   main_menu.credits_text = Text:new(Constants.CREDITS.NAME ..
     " v" .. Constants.CREDITS.VERSION .. " " .. Constants.CREDITS.AUTHOR .. " " .. Constants.CREDITS.YEAR)
-  main_menu.credits_text:setFont(Assets.getFont("small"))
+  main_menu.credits_text:setFont("small")
   main_menu.credits_text:setAlpha(0.707)
   main_menu.credits_text:setPosition(320, 476)
   main_menu.credits_text:setOrigin(0.5, 1)

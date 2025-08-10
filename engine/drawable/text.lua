@@ -105,8 +105,11 @@ function Text:getFont()
 end
 
 --- Sets the text's font
---- @param font love.Font
+--- @param font love.Font|string
 function Text:setFont(font)
+  if type(font) == "string" then
+    font = Assets.getFont(font)
+  end
   self.font = font
 
   if self.text ~= nil then
