@@ -235,7 +235,7 @@ function Text:draw()
   if not self:isVisible() then return end
 
   love.graphics.applyTransform(self:getTransform())
-  love.graphics.setColor(self.color[1], self.color[2], self.color[3], self.alpha)
+  love.graphics.setColor(1, 1, 1, self.alpha)
   if self.text ~= nil then
     local align_offset = 0
     if self.align == "right" then
