@@ -620,8 +620,6 @@ end
 --- Sets current encounter state
 --- @param state string
 function Encounter.setState(state)
-  assert(Constants.ENCOUNTER_STATES[state:upper()] ~= nil, "Unknown encounter state \"" .. tostring(state) .. "\"")
-
   Encounter.current_state = state
 end
 
