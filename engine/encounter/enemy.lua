@@ -114,7 +114,7 @@ end
 --- Wether the enemy has a check text
 --- @return boolean
 function Enemy:hasCheck()
-  return self.check ~= nil
+  return self.check ~= nil and self.check ~= ""
 end
 
 --- Gets the enemy's check
