@@ -6,10 +6,10 @@ DUMMY_MOD_ENCOUNTER_TEXT_1=* Vous rencontrez le Mannequin.
 DUMMY_MOD_ENCOUNTER_TEXT_2=* Le Mannequin semble sur\n  le point de tomber.
 DUMMY_MOD_ENCOUNTER_TEXT_3=* Mannequin reste là,\n  l'air absent.
 
-DUMMY_MOD_ENCOUNTER_CHECK_TEXT=* Coeur de coton, oeil en bouton.[wait:5]\n* La prunelle de mes yeux.
+DUMMY_MOD_ENCOUNTER_CHECK_TEXT=* Coeur de coton, oeil en bouton.\n[wait:5]* La prunelle de mes yeux.
 
 DUMMY_MOD_ENCOUNTER_TALK_ACT=Parler
-DUMMY_MOD_ENCOUNTER_TALK_TEXT_1=* Vous parlez au MANNEQUIN[wait:10].\n* ...
+DUMMY_MOD_ENCOUNTER_TALK_TEXT_1=* Vous parlez au MANNEQUIN.\n[wait:10]* ...
 DUMMY_MOD_ENCOUNTER_TALK_TEXT_2=* Il ne semble pas vouloir\n  discuter.
 DUMMY_MOD_ENCOUNTER_TALK_TEXT_3=* Vos actions ont l'air\n  de faire plaisir à Toriel.
 
