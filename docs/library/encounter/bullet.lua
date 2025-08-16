@@ -39,7 +39,11 @@ function Bullet:setDamage(damage) end
 --- Sets the bullet's sprite
 --- @overload fun(self: Dummy.Bullet, sprite_name?: string|love.Image): Dummy.Sprite
 --- @param sprites_names string[]|love.Image[]
-function Bullet:setSprite(sprites_names) end
+--- @param speed? number time between frames, in seconds (Defaults to 1/30)
+--- @param loop? boolean loops the animation (Defaults to `true`)
+--- @param play? boolean wether the animation should start playing instantly (Defaults to `true`)
+--- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
+function Bullet:setSprite(sprites_names, speed, loop, play, keep_last_frame) end
 
 --- Sets the bullet's hitbox from the sprite
 --- @protected

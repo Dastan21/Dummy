@@ -68,7 +68,7 @@ function Player.load()
   if Player.soul_sprite ~= nil then
     Player.soul_sprite:remove()
   end
-  Player.soul_sprite = Sprite:new({ "heart", "heart_hurt" }, 2 / 30, nil, false)
+  Player.soul_sprite = Sprite:new({ "heart", "heart_hurt" }, 2 / 30, true, false)
   Player.soul_sprite:setPosition(320, 240)
   Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
 
@@ -434,11 +434,9 @@ function Player.flee()
   if Player.is_fleeing then return end
 
   Player.is_fleeing = true
-  Player.soul_sprite:setSprite({ "heart_escape1", "heart_escape2" })
-  Player.soul_sprite:setSpeed(2 / 30)
+  Player.soul_sprite:setSprite({ "heart_escape1", "heart_escape2" }, 2 / 30)
   Player.soul_sprite:setPosition(Player.getPosition())
   Player.soul_sprite:setLayer(Constants.LAYERS.SOUL)
-  Player.soul_sprite:play()
 
   Timer.during(1, function(dt)
     local x, y = Player.soul_sprite:getPosition()

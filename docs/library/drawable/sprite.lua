@@ -38,7 +38,11 @@ function Sprite:getSprite() end
 --- Sets the sprite's value
 --- @overload fun(self: Dummy.Sprite, sprite_name?: string|love.Image): Dummy.Sprite
 --- @param sprites_names string[]|love.Image[]
-function Sprite:setSprite(sprites_names) end
+--- @param speed? number time between frames, in seconds (Defaults to 1/30)
+--- @param loop? boolean loops the animation (Defaults to `true`)
+--- @param play? boolean wether the animation should start playing instantly (Defaults to `true`)
+--- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
+function Sprite:setSprite(sprites_names, speed, loop, play, keep_last_frame) end
 
 --- Gets the sprite's image data
 --- @return love.ImageData

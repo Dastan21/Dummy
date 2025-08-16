@@ -82,10 +82,17 @@ end
 --- Sets the sprite's value
 --- @overload fun(self: Dummy.Sprite, sprite_name?: string|love.Image): Dummy.Sprite
 --- @param sprites_names string[]|love.Image[]
-function Sprite:setSprite(sprites_names)
+--- @param speed? number time between frames, in seconds (Defaults to 1/30)
+--- @param loop? boolean loops the animation (Defaults to `true`)
+--- @param play? boolean wether the animation should start playing instantly (Defaults to `true`)
+--- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
+function Sprite:setSprite(sprites_names, speed, loop, play, keep_last_frame)
   self:stop()
 
   if type(sprites_names) == "table" then
+    self.frames_speed = Utils.getOrDefault(speed, self.frames_speed)
+    self.loop = Utils.getOrDefault(loop, self.loop)
+    self.keep_last_frame = Utils.getOrDefault(keep_last_frame, self.keep_last_frame)
     self.frames = {}
     self.frame_index = 1
     for i, frame in ipairs(sprites_names) do
@@ -101,6 +108,10 @@ function Sprite:setSprite(sprites_names)
     else
       self.sprite = sprites_names
     end
+  end
+
+  if Utils.getOrDefault(play, true) then
+    self:play()
   end
 end
 
@@ -396,13 +407,8 @@ function Sprite:new(sprites_names, speed, loop, play, keep_last_frame)
   self.vaporize_type = nil
   self.vaporize_size = 2
 
-
   if sprites_names ~= nil then
-    self:setSprite(sprites_names)
-  end
-
-  if Utils.getOrDefault(play, true) then
-    self:play()
+    self:setSprite(sprites_names, speed, loop, play, keep_last_frame)
   end
 
   return self

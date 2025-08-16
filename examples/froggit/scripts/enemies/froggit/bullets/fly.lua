@@ -9,9 +9,7 @@ local FlyBullet = Class:extend(Bullet)
 --- Initializes the bullet
 function FlyBullet:new()
   self = Class:new(FlyBullet)
-  self:setSprite({ "waves/fly/fly_bullet_1", "waves/fly/fly_bullet_2" })
-  self:play()
-  self:setSpeed(2 / 30)
+  self:setSprite({ "waves/fly/fly_bullet_1", "waves/fly/fly_bullet_2" }, 2 / 30)
   self:setHitbox({ 4, 4, 4, 4 })
   self:setDamage(Encounter.getEnemies()[1]:getAT())
 
