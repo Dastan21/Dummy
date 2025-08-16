@@ -168,9 +168,8 @@ function Scene.draw()
         love.graphics.clear()
         love.graphics.setShader(shader:getShader())
         love.graphics.setColor(1, 1, 1, 1)
-        love.graphics.setBlendMode("alpha", "alphamultiply")
-        love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
         love.graphics.setBlendMode("alpha", "premultiplied")
+        love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
         love.graphics.setShader()
 
         layer_canvas_index = (layer_canvas_index % 2) + 1
@@ -179,6 +178,7 @@ function Scene.draw()
 
     love.graphics.setCanvas({ prev_canvas, stencil = true })
     love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
     love.graphics.draw(Scene.layer_canvas[layer_canvas_index])
   end
 end
