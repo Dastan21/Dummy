@@ -851,6 +851,8 @@ end
 
 --- Updates enemy dialogue
 function Encounter.updateEnemyDialogue()
+  Player.setPosition(Player.getPosition())
+
   if #Encounter.bubble_dialogues <= 0 or not Encounter.can_skip_bubble_dialogues then return end
 
   local all_done = true
