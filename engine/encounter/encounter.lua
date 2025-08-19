@@ -1219,8 +1219,11 @@ function Encounter.update(dt)
   end
 
   if Player.getHP() <= 0 then
+    Encounter.setState(Constants.ENCOUNTER_STATES.NONE)
     local x, y = Player.getPosition()
-    Scene.change("GAME_OVER", x, y)
+    Timer.after(4 / 30, function()
+      Scene.change("GAME_OVER", x, y)
+    end)
   end
 
   -- player UI

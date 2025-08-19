@@ -151,8 +151,7 @@ function Debugger.update(dt)
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
   elseif Input.isDown("ctrl") and Input.isPressed("g") then
     if Scene.getSceneName() == "ENCOUNTER" then
-      local x, y = Player.getPosition()
-      Scene.change("GAME_OVER", x, y)
+      Player.hurt(Player.getHP() * 2, true)
     end
   elseif Input.isDown("ctrl") and Input.isPressed("p") then
     Debugger.paused = not Debugger.paused
