@@ -116,7 +116,9 @@ end
 --- @private
 function Wave:__end()
   for bullet in pairs(self.bullets) do
-    bullet:remove()
+    if not bullet:isPersistent() then
+      bullet:remove()
+    end
   end
 
   if type(self.onEnd) == "function" then
