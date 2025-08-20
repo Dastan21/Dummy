@@ -62,7 +62,7 @@ Encounter.ACTIONS = {
 function Encounter.load()
   -- background
   Encounter.bg_sprite = Sprite:new("battle_bg")
-  Encounter.bg_sprite:setPosition(319.5, 127)
+  Encounter.bg_sprite:setOrigin(0, 0)
   Encounter.bg_sprite:setLayer(Constants.LAYERS.BOTTOM)
 
   -- state
