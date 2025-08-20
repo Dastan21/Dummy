@@ -25,7 +25,7 @@ function error.load(err)
   error.error_text:setScale(0.5)
 
   local text_overlay_drawable = Drawable:new()
-  text_overlay_drawable:setLayer(Constants.LAYERS.ABOVE_UI)
+  text_overlay_drawable:setLayer(Constants.LAYERS.UI)
   function text_overlay_drawable.draw()
     love.graphics.setColor(0, 0, 0, 1)
     love.graphics.rectangle("fill", 0, Constants.SCREEN_HEIGHT - 40 - MARGIN_INFO, Constants.SCREEN_WIDTH,
@@ -72,7 +72,7 @@ function error.load(err)
 end
 
 --- Updates the error scene
-function error.update(dt)
+function error.update()
   if error.escape then
     Scene.change("MAIN_MENU")
   end

@@ -21,5 +21,5 @@ error = {}
 function error.load(err) end
 
 --- Updates the error scene
-function error.update(dt) end
+function error.update() end
 
