@@ -98,8 +98,8 @@ function Input.load()
   Input.Down = { "s", "down", "gamepad:dpdown", "joystick:lsdown" }
   Input.Left = { "a", "left", "gamepad:dpleft", "joystick:lsleft" }
   Input.Right = { "d", "right", "gamepad:dpright", "joystick:lsright" }
-  Input.Confirm = { "z", "return", "kpenter", "gamepad:a" }
-  Input.Cancel = { "x", "shift", "gamepad:b" }
+  Input.Confirm = { "z", "e", "return", "kpenter", "gamepad:a" }
+  Input.Cancel = { "x", "q", "shift", "gamepad:b" }
 end
 
 --- Updates the input
