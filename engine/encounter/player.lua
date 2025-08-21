@@ -401,6 +401,23 @@ end
 function Player.isColliding(bullet)
   if not bullet:isVisible() then return end
 
+  local bullet_hitbox = bullet:getHitbox()
+  if bullet_hitbox[3] == 0 and bullet_hitbox[4] == 0 then
+    return false
+  end
+
+  local bullet_width, bullet_height = bullet:getWidth(), bullet:getHeight()
+  local bullet_absolute_transform = bullet:getAbsoluteTransform()
+  local bullet_origin_x, bullet_origin_y = bullet:getOrigin()
+  local bullet_x = -bullet_width * bullet_origin_x + bullet_hitbox[1]
+  local bullet_y = -bullet_height * bullet_origin_y + bullet_hitbox[2]
+  local bullet_rect = {
+    { bullet_absolute_transform:transformPoint(bullet_x, bullet_y) },
+    { bullet_absolute_transform:transformPoint(bullet_x + bullet_hitbox[3], bullet_y) },
+    { bullet_absolute_transform:transformPoint(bullet_x + bullet_hitbox[3], bullet_y + bullet_hitbox[4]) },
+    { bullet_absolute_transform:transformPoint(bullet_x, bullet_y + bullet_hitbox[4]) },
+  }
+
   local player_width, player_height = Player.soul_sprite:getWidth(), Player.soul_sprite:getHeight()
   local player_absolute_transform = Player.soul_sprite:getAbsoluteTransform()
   local player_origin_x, player_origin_y = Player.soul_sprite:getOrigin()
@@ -411,19 +428,6 @@ function Player.isColliding(bullet)
     { player_absolute_transform:transformPoint(player_x + Player.hitbox[3], player_y) },
     { player_absolute_transform:transformPoint(player_x + Player.hitbox[3], player_y + Player.hitbox[4]) },
     { player_absolute_transform:transformPoint(player_x, player_y + Player.hitbox[4]) },
-  }
-
-  local bullet_width, bullet_height = bullet:getWidth(), bullet:getHeight()
-  local bullet_absolute_transform = bullet:getAbsoluteTransform()
-  local bullet_origin_x, bullet_origin_y = bullet:getOrigin()
-  local bullet_hitbox = bullet:getHitbox()
-  local bullet_x = -bullet_width * bullet_origin_x + bullet_hitbox[1]
-  local bullet_y = -bullet_height * bullet_origin_y + bullet_hitbox[2]
-  local bullet_rect = {
-    { bullet_absolute_transform:transformPoint(bullet_x, bullet_y) },
-    { bullet_absolute_transform:transformPoint(bullet_x + bullet_hitbox[3], bullet_y) },
-    { bullet_absolute_transform:transformPoint(bullet_x + bullet_hitbox[3], bullet_y + bullet_hitbox[4]) },
-    { bullet_absolute_transform:transformPoint(bullet_x, bullet_y + bullet_hitbox[4]) },
   }
 
   return Utils.checkCollision(player_rect, bullet_rect)
