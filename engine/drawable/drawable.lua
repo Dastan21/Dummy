@@ -306,6 +306,7 @@ end
 
 --- Draws the drawable
 function Drawable:draw()
+  love.graphics.applyTransform(self:getTransform())
   self:drawChildren()
 end
 
