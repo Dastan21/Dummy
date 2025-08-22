@@ -56,6 +56,14 @@ function ActionMenu:getSize() end
 --- @return boolean
 function ActionMenu:allDisabled() end
 
+--- Gets the menu options
+--- @return Dummy.Menu.Option[]
+function ActionMenu:getOptions() end
+
+--- Sets the menu options
+--- @param options Dummy.Menu.Option[]
+function ActionMenu:setOptions(options) end
+
 --- Gets an option
 --- @param index_x number
 --- @param index_y number
@@ -102,6 +110,9 @@ function ActionMenu:isActive() end
 --- Sets wether the menu is active
 --- @param active boolean
 function ActionMenu:setActive(active) end
+
+--- Removes the menu
+function ActionMenu:remove() end
 
 --- Initializes the menu options
 function ActionMenu:init() end

@@ -161,6 +161,27 @@ function ActionMenu:allDisabled()
   return true
 end
 
+--- Gets the menu options
+--- @return Dummy.Menu.Option[]
+function ActionMenu:getOptions()
+  return self.options
+end
+
+--- Sets the menu options
+--- @param options Dummy.Menu.Option[]
+function ActionMenu:setOptions(options)
+  for _, option in ipairs(self.options) do
+    option.text:remove()
+
+    if option.drawable ~= nil then
+      option.drawable:remove()
+    end
+  end
+
+  self.options = options
+  self:init()
+end
+
 --- Gets an option
 --- @param index_x number
 --- @param index_y number
@@ -256,6 +277,21 @@ function ActionMenu:setActive(active)
   self.active = active
 end
 
+--- Removes the menu
+function ActionMenu:remove()
+  for _, option in ipairs(self.options) do
+    option.text:remove()
+
+    if option.drawable ~= nil then
+      option.drawable:remove()
+    end
+  end
+
+  if self.page_text ~= nil then
+    self.page_text:remove()
+  end
+end
+
 --- Initializes the menu options
 function ActionMenu:init()
   for i, option in ipairs(self.options) do
@@ -275,6 +311,10 @@ function ActionMenu:init()
     option.text:setScale(2)
     option.text:setVisible(false)
     option.text:setLayer(Constants.LAYERS.UI)
+  end
+
+  if self.page_text ~= nil then
+    self.page_text:remove()
   end
 
   if self.pagination then

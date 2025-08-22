@@ -398,10 +398,14 @@ function Encounter.loadFightEnemyMenu()
     }
   end
 
-  Encounter.fight_enemy_menu = ActionMenu:new(options, "vertical", #options > 3, function(i)
-    Encounter.enemy_selected_index = i
-    Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
-  end)
+  if Encounter.fight_enemy_menu ~= nil then
+    Encounter.fight_enemy_menu:setOptions(options)
+  else
+    Encounter.fight_enemy_menu = ActionMenu:new(options, "vertical", #options > 3, function(i)
+      Encounter.enemy_selected_index = i
+      Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
+    end)
+  end
 end
 
 --- Gets the encounter's act enemy menu
@@ -433,10 +437,14 @@ function Encounter.loadActEnemyMenu()
     }
   end
 
-  Encounter.act_enemy_menu = ActionMenu:new(options, "vertical", #options > 3, function(i)
-    Encounter.enemy_selected_index = i
-    Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
-  end)
+  if Encounter.act_enemy_menu ~= nil then
+    Encounter.act_enemy_menu:setOptions(options)
+  else
+    Encounter.act_enemy_menu = ActionMenu:new(options, "vertical", #options > 3, function(i)
+      Encounter.enemy_selected_index = i
+      Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
+    end)
+  end
 end
 
 --- Gets the encounter's act menus
@@ -447,7 +455,13 @@ end
 
 --- Loads act menus
 function Encounter.loadActMenus()
+  if Encounter.act_menus ~= nil and #Encounter.act_menus > 0 then
+    for _, menu in ipairs(Encounter.act_menus) do
+      menu:remove()
+    end
+  end
   Encounter.act_menus = {}
+
   for i, enemy in ipairs(Encounter.enemies) do
     --- @type Dummy.Menu.Options
     local options = {}
@@ -501,9 +515,13 @@ function Encounter.loadItemMenu()
     })
   end
 
-  Encounter.item_menu = ActionMenu:new(options, "horizontal", true, function()
-    Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
-  end)
+  if Encounter.item_menu ~= nil then
+    Encounter.item_menu:setOptions(options)
+  else
+    Encounter.item_menu = ActionMenu:new(options, "horizontal", true, function()
+      Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
+    end)
+  end
 end
 
 --- Gets the encounter's mercy menu
@@ -568,9 +586,13 @@ function Encounter.loadMercyMenu()
     })
   end
 
-  Encounter.mercy_menu = ActionMenu:new(options, "vertical", false, function()
-    Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
-  end)
+  if Encounter.mercy_menu ~= nil then
+    Encounter.mercy_menu:setOptions(options)
+  else
+    Encounter.mercy_menu = ActionMenu:new(options, "vertical", false, function()
+      Encounter.setState(Constants.ENCOUNTER_STATES.ACTION_SELECT)
+    end)
+  end
 end
 
 --- Flees the encounter
