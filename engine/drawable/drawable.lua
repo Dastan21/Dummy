@@ -157,7 +157,8 @@ end
 function Drawable:setLayer(layer)
   self.layer = layer
 
-  Scene.sortDrawables()
+  Scene.removeDrawable(self)
+  Scene.addDrawable(self)
 end
 
 --- Wether the drawable is visible
