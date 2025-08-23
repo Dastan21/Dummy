@@ -50,6 +50,10 @@ function Wave:spawnBullet(bullet)
   --- @diagnostic disable-next-line: invisible
   bullet.wave = self
   self.bullets[bullet] = true
+
+  if type(bullet.onSpawned) == "function" then
+    bullet:onSpawned()
+  end
 end
 
 --- Gets the wave's bullets

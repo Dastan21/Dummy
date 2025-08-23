@@ -66,6 +66,9 @@ function Bullet:getWave()
   return self.wave
 end
 
+--- Called when the bullet is spawned
+function Bullet:onSpawned() end
+
 --- Called when the bullet hits the player
 function Bullet:onHit()
   Player.hurt(self:getDamage())
