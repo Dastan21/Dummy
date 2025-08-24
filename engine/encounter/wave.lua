@@ -27,6 +27,8 @@ function Wave:getDuration()
 end
 
 --- Sets the wave's duration
+---
+--- Note: Set `-1` for infinite wave duration, call `done()` to end the wave
 --- @param duration number
 function Wave:setDuration(duration)
   self.duration = duration
@@ -98,7 +100,7 @@ function Wave:__update(dt)
   if self.is_done then return end
 
   self.time = self.time + dt
-  if self.time >= self.duration then
+  if self.duration >= 0 and self.time >= self.duration then
     self:done()
     return
   end

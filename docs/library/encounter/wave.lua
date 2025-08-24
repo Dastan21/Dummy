@@ -29,6 +29,8 @@ function Wave:getTime() end
 function Wave:getDuration() end
 
 --- Sets the wave's duration
+---
+--- Note: Set `-1` for infinite wave duration, call `done()` to end the wave
 --- @param duration number
 function Wave:setDuration(duration) end
 
