@@ -83,10 +83,10 @@ function Froggit:onDialogue()
 
   if mod.command <= 0.4 then
     local FrogWave = require "scripts.enemies.froggit.waves.frog"
-    Encounter.setWaves(FrogWave:new())
+    Encounter.setWave(FrogWave:new())
   else
     local FlyWave = require "scripts.enemies.froggit.waves.fly"
-    Encounter.setWaves(FlyWave:new())
+    Encounter.setWave(FlyWave:new())
   end
 end
 

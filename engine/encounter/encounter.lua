@@ -217,7 +217,7 @@ end
 --- Sets one or more waves to the encounter
 --- @param wave Dummy.Wave|nil
 --- @param ... Dummy.Wave
-function Encounter.setWaves(wave, ...)
+function Encounter.setWave(wave, ...)
   Encounter.waves = {}
   if wave == nil then return end
 
