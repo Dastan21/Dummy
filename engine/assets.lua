@@ -119,9 +119,10 @@ function Assets.playMusic(music_name, play, loop, replace)
     if Assets.current_music ~= nil then
       Assets.current_music:stop()
     end
+
+    Assets.current_music = source
   end
 
-  Assets.current_music = source
   return source
 end
 
@@ -141,9 +142,10 @@ function Assets.playSound(sound_name, play, loop, replace)
     if Assets.current_sound ~= nil then
       Assets.current_sound:stop()
     end
+
+    Assets.current_sound = source
   end
 
-  Assets.current_sound = source
   return source
 end
 
