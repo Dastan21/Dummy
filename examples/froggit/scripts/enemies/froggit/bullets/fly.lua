@@ -16,9 +16,14 @@ function FlyBullet:new()
   local arena_x, arena_y = Arena.getPosition()
   self:setPosition(arena_x + math.round((math.random() - 0.5) * Arena.getWidth()), arena_y - Arena.getHeight())
 
-  self:targetPlayer()
+  self.target_angle = 0
 
   return self
+end
+
+--- Called when the bullet is spawned
+function FlyBullet:onSpawned()
+  self:targetPlayer()
 end
 
 --- Targets the player

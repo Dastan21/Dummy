@@ -14,17 +14,21 @@ function FrogBullet:new()
   self:setOrigin(0, 0)
   self:setHitbox({ 5, 18, 32, 20 })
   self:setDamage(Encounter.getEnemies()[1]:getAT() * 1.8)
+
   local arena_x, arena_y = Arena.getPosition()
   self:setPosition(arena_x + Arena.getWidth() / 2 - self:getWidth(), arena_y - self:getHeight())
 
   self.is_jumping = false
 
+  return self
+end
+
+--- Called when the bullet is spawned
+function FrogBullet:onSpawned()
   local leap_delay = 1 + math.random()
   self.leap_timer = Timer.after(leap_delay, function()
     self:leap()
   end)
-
-  return self
 end
 
 --- Halts the bullet
