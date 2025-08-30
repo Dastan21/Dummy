@@ -69,6 +69,16 @@ function Lang.translate(key, ...)
   end))
 end
 
+--- Adds a translation to the current language
+--- @param key string key to translate
+--- @param value string translation
+--- @param lang? string language code to use
+function Lang.addTranslation(key, value, lang)
+  lang = Utils.getOrDefault(lang, Lang.language_code)
+  assert(Lang.translations[lang] ~= nil, "Cannot add translation to unexisting language")
+  Lang.translations[lang][key] = value
+end
+
 --- Loads languages from the lang folder
 function Lang.loadLanguages()
   for _, filename in pairs(love.filesystem.getDirectoryItems("assets/langs")) do

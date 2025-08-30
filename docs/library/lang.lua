@@ -35,6 +35,12 @@ function Lang.switchLanguage() end
 --- @return string
 function Lang.translate(key, ...) end
 
+--- Adds a translation to the current language
+--- @param key string key to translate
+--- @param value string translation
+--- @param lang? string language code to use
+function Lang.addTranslation(key, value, lang) end
+
 --- Loads languages from the lang folder
 function Lang.loadLanguages() end
 
