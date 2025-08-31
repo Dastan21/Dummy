@@ -120,33 +120,35 @@ function main_menu.loadSettingsMenu()
       end,
     },
     {
-      text = Text:new({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] }),
+      text = Text:new({ "MAIN_MENU_SETTINGS_FPS", Config.getSettings()["fps"] }),
       action = function(option)
+        local settings = Config.getSettings()
         local fps = { 30, 60, 120, 144, 240 }
         local fps_index = 1
         for i, v in ipairs(fps) do
-          if v == Config["fps"] then
+          if v == settings.fps then
             fps_index = i
             break
           end
         end
-        Config["fps"] = fps[(fps_index % #fps) + 1]
-        option.text:setText({ "MAIN_MENU_SETTINGS_FPS", Config["fps"] })
+        settings.fps = fps[(fps_index % #fps) + 1]
+        option.text:setText({ "MAIN_MENU_SETTINGS_FPS", settings.fps })
       end,
     },
     {
-      text = Text:new({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config["window_scale"] }),
+      text = Text:new({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config.getSettings()["window_scale"] }),
       action = function(option)
+        local settings = Config.getSettings()
         local scales = { 0.5, 1, 2, 3, 4 }
         local scale_index = 2
         for i, v in ipairs(scales) do
-          if v == Config["window_scale"] then
+          if v == settings["window_scale"] then
             scale_index = i
             break
           end
         end
-        Config["window_scale"] = scales[(scale_index % #scales) + 1]
-        option.text:setText({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config["window_scale"] })
+        settings["window_scale"] = scales[(scale_index % #scales) + 1]
+        option.text:setText({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", settings["window_scale"] })
 
         love.scale()
       end,

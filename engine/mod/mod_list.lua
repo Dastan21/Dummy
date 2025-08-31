@@ -92,6 +92,8 @@ function ModList.loadMod(mod)
 
     ModList.current_mod = mod
     Lang.loadLanguages()
+    ---@diagnostic disable-next-line: invisible
+    mod.config = Config.loadConfig("saves/" .. mod:getId())
     mod:load()
   end
 end

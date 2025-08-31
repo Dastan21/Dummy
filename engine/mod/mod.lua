@@ -5,7 +5,6 @@
 --- @field version string|nil
 --- @field standalone boolean|nil
 
-
 --- @class Dummy.Mod : Dummy.Class
 ---
 --- @field protected id string
@@ -13,6 +12,7 @@
 --- @field protected version string
 --- @field protected title Dummy.Text.Text|nil
 --- @field protected standalone boolean
+--- @field protected config table<string, any>
 local Mod = Class()
 
 --- Gets the class name
@@ -49,6 +49,12 @@ end
 --- @param title string
 function Mod:setTitle(title)
   self.title = title
+end
+
+--- Gets the mod's config
+--- @return table<string, any>
+function Mod:getConfig()
+  return self.config
 end
 
 --- Called when the mod is loading
@@ -97,6 +103,7 @@ function Mod:new(data)
   self.title = Utils.getOrDefault(data.title, data.name)
   self.version = data.version
   self.standalone = Utils.getOrDefault(data.standalone, false)
+  self.config = nil
 
   return self
 end

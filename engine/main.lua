@@ -8,6 +8,7 @@ require "lib.stable_sort"
 
 -- engine
 Utils = require "utils"
+Config = require "config"
 Class = require "class"
 Assets = require "assets"
 Input = require "input"
@@ -50,23 +51,6 @@ local engine = {
   time = 0
 }
 
-Config = {
-  language = "en",
-  fps = 30,
-  window_scale = 1,
-  fullscreen = false
-}
-
-function engine.loadConfig()
-  if love.filesystem.getInfo("settings.json") ~= nil then
-    table.merge(Config, JSON.decode(love.filesystem.read("settings.json")))
-  end
-end
-
-function engine.saveConfig()
-  love.filesystem.write("settings.json", JSON.encode(Config))
-end
-
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -74,15 +58,15 @@ function love.load()
   if Constants.DEBUG then love.audio.setVolume(0) end
 
   love.filesystem.createDirectory("mods")
+  love.filesystem.createDirectory("saves")
   love.filesystem.createDirectory("screenshots")
 
   love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
 
-  engine.loadConfig()
-
   engine.canvas = love.graphics.newCanvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)
   engine.canvas:setFilter("nearest", "nearest")
 
+  Config.load()
   love.scale()
 
   Input.load()
@@ -110,11 +94,12 @@ function love.resize(width, height)
 end
 
 function love.scale()
-  if Config["fullscreen"] == true then
+  local settings = Config.getSettings()
+  if settings.fullscreen == true then
     love.window.setFullscreen(true)
   else
-    local width = Constants.SCREEN_WIDTH * Config["window_scale"]
-    local height = Constants.SCREEN_HEIGHT * Config["window_scale"]
+    local width = Constants.SCREEN_WIDTH * settings["window_scale"]
+    local height = Constants.SCREEN_HEIGHT * settings["window_scale"]
     love.window.setMode(width, height)
     love.resize(width, height)
   end
@@ -125,9 +110,10 @@ function love.filedropped(file)
 end
 
 function engine.updateFullscreen()
+  local settings = Config.getSettings()
   if Input.isPressed("f4") or (Input.isDown("lalt") and Input.isPressed("return")) then
     local fullscreen = not love.window.getFullscreen()
-    Config["fullscreen"] = fullscreen
+    settings.fullscreen = fullscreen
     love.scale()
   end
 end
@@ -157,7 +143,7 @@ function love.update(dt)
   xpcall(function()
     if dt > 2 / 30 then return end
 
-    engine.time = engine.time + (1 / Config["fps"])
+    engine.time = engine.time + (1 / Config.getSettings()["fps"])
 
     dt = Debugger.update(dt or love.timer.getDelta())
 
@@ -193,7 +179,7 @@ function love.draw()
 end
 
 function love.quit()
-  engine.saveConfig()
+  Config.save()
   Debugger.saveLogs()
 
   return love.system.getOS() == "Web"

@@ -13,6 +13,7 @@
 --- @field protected version string
 --- @field protected title Dummy.Text.Text|nil
 --- @field protected standalone boolean
+--- @field protected config table<string, any>
 Mod = {}
 
 --- @class Dummy.Mod.Data
@@ -21,7 +22,6 @@ Mod = {}
 --- @field title Dummy.Text.Text|nil
 --- @field version string|nil
 --- @field standalone boolean|nil
-
 
 --- Gets the class name
 --- @return string
@@ -46,6 +46,10 @@ function Mod:getTitle() end
 --- Gets the mod's title
 --- @param title string
 function Mod:setTitle(title) end
+
+--- Gets the mod's config
+--- @return table<string, any>
+function Mod:getConfig() end
 
 --- Called when the mod is loading
 function Mod:load() end

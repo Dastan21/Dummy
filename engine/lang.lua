@@ -26,7 +26,7 @@ function Lang.setLanguage(code)
   Lang.language_code = code
   Lang.language_name = Lang.translate("LANGUAGE_" .. Lang.language_code:upper())
 
-  Config["language"] = Lang.language_code
+  Config.getSettings()["language"] = Lang.language_code
 end
 
 --- Switches current language
@@ -98,7 +98,7 @@ function Lang.loadLanguages()
     end
   end
 
-  Lang.setLanguage(Config["language"])
+  Lang.setLanguage(Config.getSettings()["language"])
 end
 
 --- Loads languages
