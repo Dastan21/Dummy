@@ -1020,7 +1020,7 @@ function Encounter.proceedAttack(enemy, damage, miss)
     local hp_bar_width = math.round(enemy:getMaxHP() * stretch_factor)
     local enemy_apparent_hp = enemy:getHP()
     local enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
-    local enemy_hp_draw_x = enemy_center_x - enemy_hp_draw_width / 2
+    local enemy_hp_draw_x = enemy_center_x - hp_bar_width / 2
 
     local fps = Config["fps"]
     Timer.every(2 / fps, function()
