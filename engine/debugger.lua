@@ -76,6 +76,7 @@ function Debugger.load()
   Debugger.screenshot_text:setVisible(false)
   Debugger.screenshot_text:setPersistent(true)
   Debugger.screenshot_data = { alpha = 1 }
+  Debugger.screenshot_fade_delay = 2
   Debugger.screenshot_fade_timer = 0
 end
 
@@ -132,7 +133,7 @@ function Debugger.update(dt)
     Debugger.screenshot_fade_timer = Timer.after(0.05, function()
       Debugger.screenshot_data.alpha = 1
       Debugger.screenshot_text:setVisible(true)
-      Debugger.screenshot_fade_timer = Timer.after(1, function()
+      Debugger.screenshot_fade_timer = Timer.after(Debugger.screenshot_fade_delay, function()
         Debugger.screenshot_fade_timer = Timer.tween(0.5, Debugger.screenshot_data, { alpha = 0 }, "out-sine",
           function()
             Debugger.screenshot_text:setVisible(false)
