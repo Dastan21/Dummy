@@ -36,6 +36,10 @@ end
 
 --- Uses the equipment item
 function ItemEquipment:use()
+  if type(self.onBeforeUse) == "function" then
+    self:onBeforeUse()
+  end
+
   Encounter.playDialogueText({ "ENCOUNTER_ITEM_EQUIPMENT_USE", Lang.translate(self.name) })
   Player.removeItem(self)
   Assets.playSound("item")
@@ -71,7 +75,7 @@ function ItemEquipment:use()
   end
 
 
-  if (type(self.onUse) == "function") then
+  if type(self.onUse) == "function" then
     self:onUse()
   end
 end

@@ -24,7 +24,9 @@ end
 
 --- Does the ACT
 function ACT:use()
-  self:onUse()
+  if type(self.onUse) == "function" then
+    self:onUse()
+  end
 end
 
 --- Called when the ACT is used

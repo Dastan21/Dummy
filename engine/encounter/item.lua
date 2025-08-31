@@ -49,12 +49,23 @@ end
 
 --- Uses the item
 function Item:use()
+  if type(self.onBeforeUse) == "function" then
+    self:onBeforeUse()
+  end
+
   if self.text ~= nil then
     Encounter.playDialogueText(self.text)
   end
 
-  self:onUse()
+  if type(self.onUse) == "function" then
+    self:onUse()
+  end
 end
+
+--- Called right before the item is used
+---
+--- Note: you can change the item dialogue text here
+function Item:onBeforeUse() end
 
 --- Called when the item is used
 function Item:onUse() end

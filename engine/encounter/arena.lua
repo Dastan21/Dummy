@@ -71,7 +71,7 @@ function Arena.update(dt)
   if Arena.width ~= Arena.target_width then
     local sign = math.sign(Arena.target_width - Arena.width)
     Arena.width = Arena.width + sign * Constants.ARENA.RESIZE_SPEED * dt * 30
-    if (math.sign(Arena.target_width - Arena.width) ~= sign) then
+    if math.sign(Arena.target_width - Arena.width) ~= sign then
       Arena.width = Arena.target_width
     end
   else
@@ -92,14 +92,14 @@ function Arena.update(dt)
   if Arena.x ~= Arena.target_x then
     local sign = math.sign(Arena.target_x - Arena.x)
     Arena.x = Arena.x + sign * Constants.ARENA.RESIZE_SPEED * dt * 30
-    if (math.sign(Arena.target_x - Arena.x) ~= sign) then
+    if math.sign(Arena.target_x - Arena.x) ~= sign then
       Arena.x = Arena.target_x
     end
   end
   if Arena.y ~= Arena.target_y then
     local sign = math.sign(Arena.target_y - Arena.y)
     Arena.y = Arena.y + sign * Constants.ARENA.RESIZE_SPEED * dt * 30
-    if (math.sign(Arena.target_y - Arena.y) ~= sign) then
+    if math.sign(Arena.target_y - Arena.y) ~= sign then
       Arena.y = Arena.target_y
     end
   end

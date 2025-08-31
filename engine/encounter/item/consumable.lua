@@ -36,6 +36,10 @@ end
 
 --- Uses the consumable item
 function ItemConsumable:use()
+  if type(self.onBeforeUse) == "function" then
+    self:onBeforeUse()
+  end
+
   local heal_text = Lang.translate("ENCOUNTER_ITEM_HEAL", self.heal)
   if self.heal + Player.getHP() >= Player.getMaxHP() then
     heal_text = Lang.translate("ENCOUNTER_ITEM_HEAL_MAX")
@@ -55,7 +59,7 @@ function ItemConsumable:use()
     Assets.playSound("heal")
   end)
 
-  if (type(self.onUse) == "function") then
+  if type(self.onUse) == "function" then
     self:onUse()
   end
 end
