@@ -77,7 +77,7 @@ end
 
 --- Draws for debugging
 function Bullet:debugDraw()
-  if not Debugger.shouldDisplayHitbox() then return end
+  if not Debug.shouldDisplayHitbox() then return end
 
   Sprite.debugDraw(self)
 

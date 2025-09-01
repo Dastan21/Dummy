@@ -6,7 +6,7 @@
 --- @field protected loop boolean
 --- @field protected keep_last_frame boolean
 --- @field protected frame_index number
---- @field protected timer table|nil
+--- @field protected frames_timer table|nil
 --- @field protected vaporize_type "pixel" | "line" | nil
 --- @field protected vaporize_size number
 local Sprite = Class:extend(Drawable)
@@ -150,7 +150,7 @@ function Sprite:play()
   self:stop()
   local stopped = false
 
-  self.timer = Timer.every(self.frames_speed, function()
+  self.frames_timer = Timer.every(self.frames_speed, function()
     if not self:isVisible() or stopped then return end
     if not self.loop and self.frame_index >= #self.frames then
       if self.keep_last_frame then
@@ -170,9 +170,8 @@ end
 function Sprite:stop()
   if self.frames == nil then return end
 
-  if self.timer ~= nil then
-    Timer.cancel(self.timer)
-    self.timer = nil
+  if self.frames_timer ~= nil then
+    Timer.cancel(self.frames_timer)
   end
 
   self.frame_index = 1
@@ -181,7 +180,7 @@ end
 --- Wether the sprite's animation is playing
 --- @return boolean
 function Sprite:isPlaying()
-  return self.timer ~= nil
+  return self.frames_timer ~= nil
 end
 
 --- Sets the current sprite's animation frame
@@ -368,7 +367,7 @@ end
 
 --- Draws for debugging
 function Sprite:debugDraw()
-  if not Debugger.shouldDisplayHitbox() then return end
+  if not Debug.shouldDisplayHitbox() then return end
 
   local width, height = self:getWidth(), self:getHeight()
   if width == 0 and height == 0 then return end

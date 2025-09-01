@@ -4,7 +4,6 @@
 --- @field protected error_text Dummy.Text
 --- @field protected back_main_menu_text Dummy.Text
 --- @field protected copy_traceback_text Dummy.Text
---- @field protected copied_timer table|nil
 --- @field protected copied_data table<string, number>
 --- @field protected escape boolean
 local error = {}
@@ -86,7 +85,7 @@ function error.update()
     love.system.setClipboardText(error.traceback .. "\n\n" .. mod_info .. error.engine_info)
 
     error.copied_data.color = 0
-    error.copied_timer = Timer.tween(1 / 3, error.copied_data, { color = 1 }, "out-sine")
+    Timer.tween(1 / 3, error.copied_data, { color = 1 }, "out-sine")
   end
 
   error.copy_traceback_text:setColor(1, 1, error.copied_data.color)

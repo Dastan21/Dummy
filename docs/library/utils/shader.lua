@@ -1,7 +1,7 @@
 --[[
-  Generated from ..\engine\shader.lua
+  Generated from ..\engine\utils\shader.lua
 
-  Source: https://github.com/Dastan21/Dummy/blob/main/engine/shader.lua
+  Source: https://github.com/Dastan21/Dummy/blob/main/engine/utils/shader.lua
 ]]
 
 ---@meta

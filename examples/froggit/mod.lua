@@ -86,7 +86,7 @@ function mod:onStateChange(current_state, previous_state)
   if current_state == Constants.ENCOUNTER_STATES.DONE and not self.done then
     self.done = true
     Encounter.setState(Constants.ENCOUNTER_STATES.NONE)
-    Fader.fadeIn(0.5, function()
+    Fader.fadeIn(0.5, "linear", function()
       Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
     end)
   end

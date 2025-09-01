@@ -1,7 +1,7 @@
 --[[
-  Generated from ..\engine\shaker.lua
+  Generated from ..\engine\utils\shaker.lua
 
-  Source: https://github.com/Dastan21/Dummy/blob/main/engine/shaker.lua
+  Source: https://github.com/Dastan21/Dummy/blob/main/engine/utils/shaker.lua
 ]]
 
 ---@meta

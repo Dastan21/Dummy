@@ -262,7 +262,7 @@ end
 
 --- Draws for debugging
 function Text:debugDraw()
-  if not Debugger.shouldDisplayHitbox() then return end
+  if not Debug.shouldDisplayHitbox() then return end
 
   local width, height = self:getWidth(), self:getHeight()
   if width == 0 and height == 0 then return end

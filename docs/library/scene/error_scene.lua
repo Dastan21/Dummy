@@ -12,7 +12,6 @@
 --- @field protected error_text Dummy.Text
 --- @field protected back_main_menu_text Dummy.Text
 --- @field protected copy_traceback_text Dummy.Text
---- @field protected copied_timer table|nil
 --- @field protected copied_data table<string, number>
 --- @field protected escape boolean
 error = {}

@@ -602,7 +602,7 @@ function Encounter.flee()
   Player.flee()
 
   Timer.after(1, function()
-    Fader.fadeIn(1 / 2.4, function()
+    Fader.fadeIn(1 / 2.4, "linear", function()
       Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
     end)
   end)
@@ -905,7 +905,6 @@ function Encounter.startAttacking()
   Encounter.target_sprite:setScale(1)
 
   Encounter.is_attacking = false
-  Encounter.attack_window_timer = nil
   local attack_speed = 11
 
   Encounter.target_bar_sprite:setPosition(22, 320)
@@ -936,8 +935,9 @@ function Encounter.attack(miss)
   if Encounter.is_attacking then return end
 
   Encounter.is_attacking = true
-  Timer.cancel(Encounter.attack_window_timer)
-  Encounter.attack_window_timer = nil
+  if Encounter.attack_window_timer ~= nil then
+    Timer.cancel(Encounter.attack_window_timer)
+  end
 
   local enemy = Encounter.enemies[Encounter.enemy_selected_index]
   local enemy_x, enemy_y = enemy:getPosition()
@@ -1050,8 +1050,9 @@ function Encounter.proceedAttack(enemy, damage, miss)
       Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y)
 
       if enemy_hp_text_y >= enemy_hp_text_y_start + 8 then
-        Timer.cancel(Encounter.enemy_hp_text_timer)
-        Encounter.enemy_hp_text_timer = nil
+        if Encounter.enemy_hp_text_timer ~= nil then
+          Timer.cancel(Encounter.enemy_hp_text_timer)
+        end
         Encounter.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
       end
     end)

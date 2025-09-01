@@ -90,7 +90,7 @@ function Player.load()
   Player.debug_hitbox_drawable = Drawable:new()
   Player.debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_SOUL)
   function Player.debug_hitbox_drawable.draw()
-    if not Player.soul_sprite:isVisible() or not Debugger.shouldDisplayHitbox() then return end
+    if not Player.soul_sprite:isVisible() or not Debug.shouldDisplayHitbox() then return end
     if Player.hitbox[3] == 0 and Player.hitbox[4] == 0 then return end
 
     local absolute_transform = Player.soul_sprite:getAbsoluteTransform()

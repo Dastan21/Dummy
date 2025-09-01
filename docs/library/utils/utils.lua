@@ -1,7 +1,7 @@
 --[[
-  Generated from ..\engine\utils.lua
+  Generated from ..\engine\utils\utils.lua
 
-  Source: https://github.com/Dastan21/Dummy/blob/main/engine/utils.lua
+  Source: https://github.com/Dastan21/Dummy/blob/main/engine/utils/utils.lua
 ]]
 
 ---@meta

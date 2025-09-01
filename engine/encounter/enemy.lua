@@ -15,6 +15,7 @@
 --- @field protected acts Dummy.ACT[]
 --- @field protected can_be_spared boolean
 --- @field protected is_spared boolean
+--- @field protected spare_dust_timer table|nil
 local Enemy = Class:extend(Sprite)
 
 --- Gets the class name
@@ -253,11 +254,11 @@ function Enemy:spare()
     return vel
   end
 
-  Timer.during(1, function(dt)
+  self.spare_dust_timer = Timer.during(1, function(dt)
     for _, dustcloud in ipairs(dustclouds) do
-      local x, y = dustcloud:getPosition()
+      local dust_x, dust_y = dustcloud:getPosition()
       dustcloud:setAlpha(math.max(0, dustcloud:getAlpha() - 0.03 * 30 * dt))
-      dustcloud:setPosition(x + dustcloud["vel_x"] * 30 * dt, y + dustcloud["vel_y"] * 30 * dt)
+      dustcloud:setPosition(dust_x + dustcloud["vel_x"] * 30 * dt, dust_y + dustcloud["vel_y"] * 30 * dt)
 
       dustcloud["vel_x"] = applyFriction(dustcloud["vel_x"], 0.8 * 30 * dt)
       dustcloud["vel_y"] = applyFriction(dustcloud["vel_y"], 0.8 * 30 * dt)
@@ -293,6 +294,15 @@ function Enemy:setHurtSound(hurt_sound)
   else
     self.hurt_sound = Assets.playSound(hurt_sound, false)
   end
+end
+
+--- Removes the drawable from the current scene
+function Enemy:remove()
+  if self.spare_dust_timer ~= nil then
+    Timer.cancel(self.spare_dust_timer)
+  end
+
+  Drawable.remove(self)
 end
 
 --- Called when the enemy should dialogue

@@ -2,27 +2,27 @@ require "constants"
 
 -- libraries
 JSON = require "lib.json"
-Timer = require "lib.timer"
 UTF8 = require "lib.utf8"
 require "lib.stable_sort"
 
 -- engine
-Utils = require "utils"
+Utils = require "utils.utils"
 Config = require "config"
 Class = require "class"
 Assets = require "assets"
 Input = require "input"
 Lang = require "lang"
-Fader = require "fader"
-Shaker = require "shaker"
-Shader = require "shader"
+Timer = require "utils.timer"
 Drawable = require "drawable.drawable"
 Sprite = require "drawable.sprite"
 Text = require "drawable.text"
 Mask = require "drawable.mask"
 DialogueText = require "drawable.dialogue_text"
 DialogueBubble = require "drawable.dialogue_bubble"
-Debugger = require "debugger"
+Fader = require "utils.fader"
+Shaker = require "utils.shaker"
+Shader = require "utils.shader"
+Debug = require "utils.debug"
 Scene = require "scene"
 MainMenu = require "main_menu"
 ModList = require "mod.mod_list"
@@ -75,7 +75,7 @@ function love.load()
   Scene.load()
   Fader.load()
   Shaker.load()
-  Debugger.load()
+  Debug.load()
 
   Scene.addScene("MAIN_MENU", require "scene.main_menu_scene")
   Scene.addScene("ENCOUNTER", require "scene.encounter_scene")
@@ -145,7 +145,7 @@ function love.update(dt)
 
     engine.time = engine.time + (1 / Config.getSettings()["fps"])
 
-    dt = Debugger.update(dt or love.timer.getDelta())
+    dt = Debug.update(dt or love.timer.getDelta())
 
     Input.update()
     Scene.update(dt)
@@ -180,7 +180,7 @@ end
 
 function love.quit()
   Config.save()
-  Debugger.saveLogs()
+  Debug.saveLogs()
 
   return love.system.getOS() == "Web"
 end

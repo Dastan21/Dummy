@@ -5,6 +5,15 @@ local FlyWave = Class:extend(Wave)
 
 local FlyBullet = require "scripts.enemies.froggit.bullets.fly"
 
+--- Initializes the wave
+function FlyWave:new()
+  self = Class:new(FlyWave)
+  self:setDuration(10 / 3)
+  self:setArenaSize(155, 130)
+
+  return self
+end
+
 --- Called when the wave starts
 function FlyWave:onStart()
   self.spawn_timer = Timer.every(20 / 30, function()
@@ -28,16 +37,9 @@ function FlyWave:update(dt) end
 
 --- Called when the wave ends
 function FlyWave:onEnd()
-  Timer.cancel(self.spawn_timer)
-end
-
---- Initializes the wave
-function FlyWave:new()
-  self = Class:new(FlyWave)
-  self:setDuration(10 / 3)
-  self:setArenaSize(155, 130)
-
-  return self
+  if self.spawn_timer ~= nil then
+    Timer.cancel(self.spawn_timer)
+  end
 end
 
 return FlyWave

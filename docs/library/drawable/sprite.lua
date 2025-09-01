@@ -14,7 +14,7 @@
 --- @field protected loop boolean
 --- @field protected keep_last_frame boolean
 --- @field protected frame_index number
---- @field protected timer table|nil
+--- @field protected frames_timer table|nil
 --- @field protected vaporize_type "pixel" | "line" | nil
 --- @field protected vaporize_size number
 Sprite = {}

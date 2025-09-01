@@ -23,6 +23,7 @@
 --- @field protected acts Dummy.ACT[]
 --- @field protected can_be_spared boolean
 --- @field protected is_spared boolean
+--- @field protected spare_dust_timer table|nil
 Enemy = {}
 
 --- Gets the class name
@@ -144,6 +145,9 @@ function Enemy:getHurtSound() end
 --- Sets the enemy's hurt sound
 --- @param hurt_sound string|nil
 function Enemy:setHurtSound(hurt_sound) end
+
+--- Removes the drawable from the current scene
+function Enemy:remove() end
 
 --- Called when the enemy should dialogue
 function Enemy:onDialogue() end

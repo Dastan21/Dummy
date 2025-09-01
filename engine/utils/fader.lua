@@ -22,20 +22,20 @@ end
 --- Fades in or out
 --- @param fade_in boolean wether to fade in or out
 --- @param duration? number duration of the fade, in seconds (Defaults to `1`)
+--- @param method? Dummy.Timer.Tween tweening method (Defaults to `"linear"`)
 --- @param fade_callback? fun() called when the fade is done
 --- @private
-function Fader.fade(fade_in, duration, fade_callback)
+function Fader.fade(fade_in, duration, method, fade_callback)
   Fader.reset()
 
   duration = Utils.getOrDefault(duration, 1)
+  method = Utils.getOrDefault(method, "linear")
 
   local alpha = fade_in and 0 or 1
   Fader.background:setAlpha(alpha)
   Fader.background:setVisible(true)
 
-  Timer.tween(duration, Fader.background, { alpha = math.abs(1 - alpha) })
-
-  Fader.fade_timer = Timer.after(duration, function()
+  Fader.fade_timer = Timer.tween(duration, Fader.background, { alpha = math.abs(1 - alpha) }, method, function()
     if type(fade_callback) == "function" then
       fade_callback()
     end
@@ -44,16 +44,18 @@ end
 
 --- Fades in
 --- @param duration? number duration of the fade, in seconds (Defaults to `1`)
+--- @param method? Dummy.Timer.Tween tweening method (Defaults to `"linear"`)
 --- @param fade_callback? fun() called when the fade is done
-function Fader.fadeIn(duration, fade_callback)
-  Fader.fade(true, duration, fade_callback)
+function Fader.fadeIn(duration, method, fade_callback)
+  Fader.fade(true, duration, method, fade_callback)
 end
 
 --- Fades out
 --- @param duration? number duration of the fade, in seconds (Defaults to `1`)
+--- @param method? Dummy.Timer.Tween tweening method (Defaults to `"linear"`)
 --- @param fade_callback? fun() called when the fade is done
-function Fader.fadeOut(duration, fade_callback)
-  Fader.fade(false, duration, fade_callback)
+function Fader.fadeOut(duration, method, fade_callback)
+  Fader.fade(false, duration, method, fade_callback)
 end
 
 --- Resets the currently playing fader

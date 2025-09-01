@@ -1,12 +1,12 @@
 --[[
-  Generated from ..\engine\debugger.lua
+  Generated from ..\engine\utils\debug.lua
 
-  Source: https://github.com/Dastan21/Dummy/blob/main/engine/debugger.lua
+  Source: https://github.com/Dastan21/Dummy/blob/main/engine/utils/debug.lua
 ]]
 
 ---@meta
 
---- @class Dummy.Debugger
+--- @class Dummy.Debug
 ---
 --- @field protected logs string[]
 --- @field protected margin number
@@ -16,35 +16,39 @@
 --- @field protected log_bg_sprite Dummy.Sprite
 --- @field protected log_text Dummy.Text
 --- @field protected fps_text Dummy.Text
-Debugger = {}
+--- @field protected screenshot_text Dummy.Text
+--- @field protected screenshot_fade_delay number
+--- @field protected screenshot_fade_time number
+--- @field protected screenshot_fade_timer table|nil
+Debug = {}
 
 --- Wether the hitboxes should be displayed
 --- @return boolean
-function Debugger.shouldDisplayHitbox() end
+function Debug.shouldDisplayHitbox() end
 
 --- Wether the debugger is paused
 --- @return boolean
-function Debugger.isPaused() end
+function Debug.isPaused() end
 
 --- Pauses the game
-function Debugger.pause() end
+function Debug.pause() end
 
 --- Resumes the game
-function Debugger.resume() end
+function Debug.resume() end
 
 --- Loads the debugger
-function Debugger.load() end
+function Debug.load() end
 
 --- Saves the logs
-function Debugger.saveLogs() end
+function Debug.saveLogs() end
 
 --- Clears the logs
-function Debugger.clearLogs() end
+function Debug.clearLogs() end
 
 --- Updates the debugger
 --- @param dt number
 --- @return number
-function Debugger.update(dt) end
+function Debug.update(dt) end
 
 ---
 ---Receives any number of arguments and prints their values to `stdout`, converting each argument to a string following the same rules of [tostring](command:extension.lua.doc?["en-us/54/manual.html/pdf-tostring"]).
