@@ -69,7 +69,7 @@ function Text:setColor(r, g, b, a) end
 function Text:getFont() end
 
 --- Sets the text's font
---- @param font love.Font|string
+--- @param font love.Font|Dummy.Assets.Font|string
 function Text:setFont(font) end
 
 --- Gets the text's align
