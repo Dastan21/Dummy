@@ -1,29 +1,28 @@
---- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage" | "plain"
+--- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "damage" | "plain" | "wonder"
 
 --- @class Dummy.Assets
 ---
---- @field protected fonts table<Dummy.Assets.Font, love.Font>
+--- @field protected fonts table<Dummy.Assets.Font|string, love.Font>
 --- @field protected current_music love.Source|nil
 --- @field protected current_sound love.Source|nil
 local Assets = {}
 
 function Assets.load()
   Assets.fonts = {}
-  Assets.fonts.main = love.graphics.newImageFont("assets/fonts/main.png",
-    " !\"#$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜàáâäæçèéêëìíîïòóôöùúûü")
-  Assets.fonts.main_text = love.graphics.newImageFont("assets/fonts/main_text.png",
-    " !\"#$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜàáâäæçèéêëìíîïòóôöùúûü")
-  Assets.fonts.main_text_mono = love.graphics.newImageFont("assets/fonts/main_text_mono.png",
-    " !\"#$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^abcdefghijklmnopqrstuvwxyz{|}~_ÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜàáâäæçèéêëìíîïòóôöùúûü")
-  Assets.fonts.small = love.graphics.newImageFont("assets/fonts/small.png",
-    " !\"#$%'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
-  Assets.fonts.curs = love.graphics.newImageFont("assets/fonts/curs.png",
-    " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
+
+  local full_characters =
+  " !\"#$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜàáâäæçèéêëìíîïòóôöùúûü"
+  local limited_letters =
+  " !\"#$%&'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+
+  Assets.fonts.main = love.graphics.newImageFont("assets/fonts/main.png", full_characters)
+  Assets.fonts.main_text = love.graphics.newImageFont("assets/fonts/main_text.png", full_characters)
+  Assets.fonts.main_text_mono = love.graphics.newImageFont("assets/fonts/main_text_mono.png", full_characters)
+  Assets.fonts.small = love.graphics.newImageFont("assets/fonts/small.png", limited_letters)
+  Assets.fonts.curs = love.graphics.newImageFont("assets/fonts/curs.png", limited_letters)
+  Assets.fonts.damage = love.graphics.newImageFont("assets/fonts/damage.png", limited_letters)
+  Assets.fonts.plain = love.graphics.newImageFont("assets/fonts/plain.png", limited_letters)
   Assets.fonts.wonder = love.graphics.newImageFont("assets/fonts/wonder.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-  Assets.fonts.damage = love.graphics.newImageFont("assets/fonts/damage.png",
-    " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
-  Assets.fonts.plain = love.graphics.newImageFont("assets/fonts/plain.png",
-    " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~")
 
   -- Antialiazing
   for _, font in pairs(Assets.fonts) do
@@ -46,6 +45,7 @@ end
 --- @param font love.Font
 function Assets.addFont(font_name, font)
   Assets.fonts[tostring(font_name):lower()] = font
+  font:setFilter("nearest", "nearest")
 end
 
 --- Checks which extension to use

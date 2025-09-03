@@ -8,12 +8,12 @@
 
 --- @class Dummy.Assets
 ---
---- @field protected fonts table<Dummy.Assets.Font, love.Font>
+--- @field protected fonts table<Dummy.Assets.Font|string, love.Font>
 --- @field protected current_music love.Source|nil
 --- @field protected current_sound love.Source|nil
 Assets = {}
 
---- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "wonder" | "damage" | "plain"
+--- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "damage" | "plain" | "wonder"
 
 function Assets.load() end
 
