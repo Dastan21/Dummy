@@ -130,6 +130,7 @@ function Debug.update(dt)
     end
 
     Debug.screenshot_fade_timer = Timer.after(0.05, function()
+      Debug.screenshot_text:setAlpha(1)
       Debug.screenshot_text:setVisible(true)
       Debug.screenshot_fade_timer = Timer.after(Debug.screenshot_fade_delay, function()
         Debug.screenshot_fade_timer = Timer.tween(Debug.screenshot_fade_time, Debug.screenshot_text, { alpha = 0 },
