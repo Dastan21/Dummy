@@ -11,17 +11,19 @@ function Assets.load()
   Assets.fonts = {}
 
   local full_characters =
+  " !\"#$%&'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜàáâäæçèéêëìíîïòóôöùúûü"
+  local almost_full_characters =
   " !\"#$%'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜàáâäæçèéêëìíîïòóôöùúûü"
   local limited_letters =
   " !\"#$%&'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~"
 
-  Assets.fonts.main = love.graphics.newImageFont("assets/fonts/main.png", full_characters)
-  Assets.fonts.main_text = love.graphics.newImageFont("assets/fonts/main_text.png", full_characters)
-  Assets.fonts.main_text_mono = love.graphics.newImageFont("assets/fonts/main_text_mono.png", full_characters)
+  Assets.fonts.main = love.graphics.newImageFont("assets/fonts/main.png", almost_full_characters)
+  Assets.fonts.main_text = love.graphics.newImageFont("assets/fonts/main_text.png", almost_full_characters)
+  Assets.fonts.main_text_mono = love.graphics.newImageFont("assets/fonts/main_text_mono.png", almost_full_characters)
   Assets.fonts.small = love.graphics.newImageFont("assets/fonts/small.png", limited_letters)
   Assets.fonts.curs = love.graphics.newImageFont("assets/fonts/curs.png", limited_letters)
   Assets.fonts.damage = love.graphics.newImageFont("assets/fonts/damage.png", limited_letters)
-  Assets.fonts.plain = love.graphics.newImageFont("assets/fonts/plain.png", limited_letters)
+  Assets.fonts.plain = love.graphics.newImageFont("assets/fonts/plain.png", full_characters)
   Assets.fonts.wonder = love.graphics.newImageFont("assets/fonts/wonder.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
   -- Antialiazing
