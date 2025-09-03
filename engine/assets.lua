@@ -37,6 +37,7 @@ end
 --- @param name Dummy.Assets.Font
 --- @return love.Font
 function Assets.getFont(name)
+  assert(Assets.fonts[name] ~= nil, "Font \"" .. name .. "\" not found")
   return Assets.fonts[name]
 end
 
