@@ -75,3 +75,11 @@ function Arena.isInBounds(x, y) end
 --- @return Dummy.Mask
 function Arena.createMask() end
 
+--- Gets the arena's background drawable
+--- @return Dummy.Drawable
+function Arena.getBackgroundDrawable() end
+
+--- Gets the arena's border drawable
+--- @return Dummy.Drawable
+function Arena.getBorderDrawable() end
+

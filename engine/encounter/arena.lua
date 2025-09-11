@@ -246,4 +246,16 @@ function Arena.createMask()
   return mask
 end
 
+--- Gets the arena's background drawable
+--- @return Dummy.Drawable
+function Arena.getBackgroundDrawable()
+  return Arena.arena_background_drawable
+end
+
+--- Gets the arena's border drawable
+--- @return Dummy.Drawable
+function Arena.getBorderDrawable()
+  return Arena.arena_border_drawable
+end
+
 return Arena
