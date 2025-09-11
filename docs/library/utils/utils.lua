@@ -8,7 +8,7 @@
 
 --- @class Dummy.Utils
 ---
---- @field private __hooks table
+--- @field private __hooks table<table, boolean>
 Utils = {}
 
 function table.tostring(node) end

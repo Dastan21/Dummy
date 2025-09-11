@@ -139,8 +139,9 @@ function ModList.unloadMods()
 
   ModList.unloadMod(ModList.standalone)
 
+  -- reset hooks
   ---@diagnostic disable-next-line: invisible
-  for _, hook in pairs(Utils.__hooks) do
+  for hook in pairs(Utils.__hooks) do
     hook.target[hook.name] = hook.original
   end
   ---@diagnostic disable-next-line: invisible

@@ -259,7 +259,7 @@ end
 
 --- @class Dummy.Utils
 ---
---- @field private __hooks table
+--- @field private __hooks table<table, boolean>
 local Utils = {}
 
 --- Get value or default
@@ -354,12 +354,12 @@ Utils.__hooks = {}
 function Utils.hook(target, name, func)
   local orig = target[name]
 
-  table.insert(Utils.__hooks, {
+  Utils.__hooks[{
     target = target,
     name = name,
     func = func,
     original = orig
-  })
+  }] = true
 
   local orig_func = orig or function() end
   target[name] = function(...)
