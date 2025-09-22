@@ -253,6 +253,18 @@ function Encounter.setMusic(music)
   Encounter.music:setVolume(0.5)
 end
 
+--- Gets the encounter background sprite
+--- @return Dummy.Sprite
+function Encounter.getBackgroundSprite()
+  return Encounter.bg_sprite
+end
+
+--- Sets the encounter background sprite
+--- @param sprite Dummy.Sprite
+function Encounter.setBackgroundSprite(sprite)
+  Encounter.bg_sprite = sprite
+end
+
 --- Gets the encounter dialogue text
 --- @return Dummy.DialogueText
 function Encounter.getDialogueText()

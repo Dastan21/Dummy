@@ -100,6 +100,14 @@ function Encounter.getMusic() end
 --- @param music string
 function Encounter.setMusic(music) end
 
+--- Gets the encounter background sprite
+--- @return Dummy.Sprite
+function Encounter.getBackgroundSprite() end
+
+--- Sets the encounter background sprite
+--- @param sprite Dummy.Sprite
+function Encounter.setBackgroundSprite(sprite) end
+
 --- Gets the encounter dialogue text
 --- @return Dummy.DialogueText
 function Encounter.getDialogueText() end
