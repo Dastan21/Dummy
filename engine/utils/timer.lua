@@ -65,6 +65,7 @@ end
 --- @param method? Dummy.Timer.Tween tweening method (Defaults to `"linear"`)
 --- @param after? fun() function to execute after the tween has finished
 --- @param ... any additional arguments to the tweening function
+--- @return table
 function Timer.tween(duration, subject, target, method, after, ...)
   HumpTimer.tween(duration, subject, target, method, after, ...)
 end
