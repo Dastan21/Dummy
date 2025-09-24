@@ -67,7 +67,7 @@ end
 --- @param ... any additional arguments to the tweening function
 --- @return table
 function Timer.tween(duration, subject, target, method, after, ...)
-  HumpTimer.tween(duration, subject, target, method, after, ...)
+  return HumpTimer.tween(duration, subject, target, method, after, ...)
 end
 
 --- Creates a custom interpolation method
