@@ -33,7 +33,9 @@ end
 --- Saves the configs
 function Config.save()
   for config_path, config in pairs(Config.configs) do
-    love.filesystem.write(config_path .. ".json", JSON.encode(config))
+    if not Config.isEmpty(config) then
+      love.filesystem.write(config_path .. ".json", JSON.encode(config))
+    end
   end
 end
 
@@ -48,6 +50,16 @@ function Config.loadConfig(config_path)
   end
 
   return Config.configs[config_path]
+end
+
+--- Wether a config is empty
+--- @param config table<string, any>
+--- @return boolean
+function Config.isEmpty(config)
+  for _, value in pairs(config) do
+    if value ~= nil then return false end
+  end
+  return true
 end
 
 return Config
