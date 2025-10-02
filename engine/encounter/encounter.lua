@@ -214,6 +214,15 @@ function Encounter.addEnemy(enemy, ...)
   Encounter.loadActEnemyMenu()
 end
 
+--- Removes an enemy from the encounter
+--- @param enemy Dummy.Enemy
+function Encounter.removeEnemy(enemy)
+  table.removeByValue(Encounter.enemies, enemy)
+
+  Encounter.loadFightEnemyMenu()
+  Encounter.loadActEnemyMenu()
+end
+
 --- Sets one or more waves to the encounter
 --- @param wave Dummy.Wave|nil
 --- @param ... Dummy.Wave

@@ -79,6 +79,10 @@ function Encounter.getEnemies() end
 --- @param ... Dummy.Enemy
 function Encounter.addEnemy(enemy, ...) end
 
+--- Removes an enemy from the encounter
+--- @param enemy Dummy.Enemy
+function Encounter.removeEnemy(enemy) end
+
 --- Sets one or more waves to the encounter
 --- @param wave Dummy.Wave|nil
 --- @param ... Dummy.Wave
