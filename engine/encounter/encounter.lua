@@ -704,13 +704,17 @@ function Encounter.updateActionSelect()
     Encounter.updateActions()
     Assets.playSound("menu_move")
   elseif Input.isPressed(Input.Confirm) then
-    if Encounter.action.index == Encounter.ACTIONS.FIGHT and Encounter.fight_enemy_menu:getSize() > 0 and not Encounter.fight_enemy_menu:allDisabled() then
-      Encounter.setState(Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU)
-    elseif Encounter.action.index == Encounter.ACTIONS.ACT and Encounter.act_enemy_menu:getSize() > 0 and not Encounter.act_enemy_menu:allDisabled() then
-      Encounter.setState(Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU)
+    if Encounter.action.index == Encounter.ACTIONS.FIGHT then
+      if Encounter.canEnterMenu(Encounter.fight_enemy_menu) then
+        Encounter.setState(Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU)
+      end
+    elseif Encounter.action.index == Encounter.ACTIONS.ACT then
+      if Encounter.canEnterMenu(Encounter.act_enemy_menu) then
+        Encounter.setState(Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU)
+      end
     elseif Encounter.action.index == Encounter.ACTIONS.ITEM then
       Encounter.loadItemMenu()
-      if Encounter.item_menu:getSize() > 0 then
+      if Encounter.canEnterMenu(Encounter.item_menu) then
         Encounter.setState(Constants.ENCOUNTER_STATES.ITEM_MENU)
       end
     elseif Encounter.action.index == Encounter.ACTIONS.MERCY then
@@ -765,6 +769,13 @@ function Encounter.loadActions()
   Encounter.action.mercy_hover_sprite:setVisible(false)
 
   Encounter.updateActions()
+end
+
+--- Wether an action menu can be entered
+--- @param menu Dummy.Encounter.ActionMenu | nil
+--- @return boolean
+function Encounter.canEnterMenu(menu)
+  return menu ~= nil and menu:getSize() > 0 and not menu:allDisabled()
 end
 
 --- Opens an action's menu

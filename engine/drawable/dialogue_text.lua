@@ -218,16 +218,14 @@ function DialogueText:update(dt)
       self.text_value_index = self.text_value_index + 1
       self.text_value = self.text_values[self.text_value_index] or ""
 
-      if self.text_index >= #self.total_nodes then
-        self:reset()
-      end
       if self.text_value_index > #self.text_values then
         self.done = true
         self.skipping = false
         if type(self.onDone) == "function" then
           self:onDone()
         end
-      else
+      elseif self.text_index >= #self.total_nodes then
+        self:reset()
       end
     end
     return

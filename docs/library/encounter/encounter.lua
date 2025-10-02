@@ -208,6 +208,11 @@ function Encounter.updateActionSelect() end
 --- Loads encounter actions
 function Encounter.loadActions() end
 
+--- Wether an action menu can be entered
+--- @param menu Dummy.Encounter.ActionMenu | nil
+--- @return boolean
+function Encounter.canEnterMenu(menu) end
+
 --- Opens an action's menu
 --- @param menu Dummy.Encounter.ActionMenu|nil
 function Encounter.enterMenu(menu) end
