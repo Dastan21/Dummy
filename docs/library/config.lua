@@ -32,3 +32,8 @@ function Config.save() end
 --- @param config_path string
 function Config.loadConfig(config_path) end
 
+--- Wether a config is empty
+--- @param config table<string, any>
+--- @return boolean
+function Config.isEmpty(config) end
+
