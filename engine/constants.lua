@@ -56,6 +56,17 @@ Constants = {
     DONE             = "DONE",
   },
 
+  ENCOUNTER_ACTIONS = {
+    --- FIGHT action
+    FIGHT = 1,
+    --- ACT action
+    ACT = 2,
+    --- ITEM action
+    ITEM = 3,
+    --- MERCY action
+    MERCY = 4,
+  },
+
   ARENA = {
     RESIZE_SPEED   = 30,
     TEXTBOX_WIDTH  = 565,

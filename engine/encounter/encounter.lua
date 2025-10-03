@@ -46,18 +46,6 @@
 --- @field protected attack_window_timer table|nil
 local Encounter = {}
 
---- Encounter actions
-Encounter.ACTIONS = {
-  --- FIGHT action
-  FIGHT = 1,
-  --- ACT action
-  ACT = 2,
-  --- ITEM action
-  ITEM = 3,
-  --- MERCY action
-  MERCY = 4,
-}
-
 --- Loads the encounter
 function Encounter.load()
   -- background
@@ -300,6 +288,21 @@ function Encounter.playDialogueBubble(bubble_type, text, ...)
   local dialogue = DialogueBubble:new(bubble_type, text, ...)
   table.insert(Encounter.bubble_dialogues, dialogue)
   return dialogue
+end
+
+--- Sets the selected action
+--- @param action number
+function Encounter.setAction(action)
+  Player.getSoul():setVisible(true)
+  Encounter.action.index = math.clamp(action, 1, 4)
+  Encounter.updateActions()
+end
+
+--- Disables the selected action
+function Encounter.disableAction()
+  Player.getSoul():setVisible(false)
+  Encounter.action.index = -math.abs(Encounter.action.index)
+  Encounter.updateActions()
 end
 
 --- Wether all the enemies are spared
@@ -688,36 +691,36 @@ function Encounter.updateActionSelect()
   if not Player.getSoul():isVisible() then return end
 
   if Input.isPressed(Input.Left) then
-    if Encounter.action.index <= Encounter.ACTIONS.FIGHT then
-      Encounter.action.index = Encounter.ACTIONS.MERCY
+    if Encounter.action.index <= Constants.ENCOUNTER_ACTIONS.FIGHT then
+      Encounter.action.index = Constants.ENCOUNTER_ACTIONS.MERCY
     else
       Encounter.action.index = Encounter.action.index - 1
     end
     Encounter.updateActions()
     Assets.playSound("menu_move")
   elseif Input.isPressed(Input.Right) then
-    if Encounter.action.index >= Encounter.ACTIONS.MERCY then
-      Encounter.action.index = Encounter.ACTIONS.FIGHT
+    if Encounter.action.index >= Constants.ENCOUNTER_ACTIONS.MERCY then
+      Encounter.action.index = Constants.ENCOUNTER_ACTIONS.FIGHT
     else
       Encounter.action.index = Encounter.action.index + 1
     end
     Encounter.updateActions()
     Assets.playSound("menu_move")
   elseif Input.isPressed(Input.Confirm) then
-    if Encounter.action.index == Encounter.ACTIONS.FIGHT then
+    if Encounter.action.index == Constants.ENCOUNTER_ACTIONS.FIGHT then
       if Encounter.canEnterMenu(Encounter.fight_enemy_menu) then
         Encounter.setState(Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU)
       end
-    elseif Encounter.action.index == Encounter.ACTIONS.ACT then
+    elseif Encounter.action.index == Constants.ENCOUNTER_ACTIONS.ACT then
       if Encounter.canEnterMenu(Encounter.act_enemy_menu) then
         Encounter.setState(Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU)
       end
-    elseif Encounter.action.index == Encounter.ACTIONS.ITEM then
+    elseif Encounter.action.index == Constants.ENCOUNTER_ACTIONS.ITEM then
       Encounter.loadItemMenu()
       if Encounter.canEnterMenu(Encounter.item_menu) then
         Encounter.setState(Constants.ENCOUNTER_STATES.ITEM_MENU)
       end
-    elseif Encounter.action.index == Encounter.ACTIONS.MERCY then
+    elseif Encounter.action.index == Constants.ENCOUNTER_ACTIONS.MERCY then
       Encounter.setState(Constants.ENCOUNTER_STATES.MERCY_MENU)
     end
 
@@ -730,7 +733,7 @@ end
 --- Loads encounter actions
 function Encounter.loadActions()
   Encounter.action = {}
-  Encounter.action.index = Encounter.ACTIONS.FIGHT
+  Encounter.action.index = Constants.ENCOUNTER_ACTIONS.FIGHT
 
   -- FIGHT
   Encounter.action.fight_sprite = Sprite:new("fight")
@@ -816,16 +819,16 @@ function Encounter.updateActions()
   Encounter.action.mercy_hover_sprite:setVisible(false)
 
   local selected_sprite, selected_sprite_hover
-  if Encounter.action.index == Encounter.ACTIONS.FIGHT then
+  if Encounter.action.index == Constants.ENCOUNTER_ACTIONS.FIGHT then
     selected_sprite = Encounter.action.fight_sprite
     selected_sprite_hover = Encounter.action.fight_hover_sprite
-  elseif Encounter.action.index == Encounter.ACTIONS.ACT then
+  elseif Encounter.action.index == Constants.ENCOUNTER_ACTIONS.ACT then
     selected_sprite = Encounter.action.act_sprite
     selected_sprite_hover = Encounter.action.act_hover_sprite
-  elseif Encounter.action.index == Encounter.ACTIONS.ITEM then
+  elseif Encounter.action.index == Constants.ENCOUNTER_ACTIONS.ITEM then
     selected_sprite = Encounter.action.item_sprite
     selected_sprite_hover = Encounter.action.item_hover_sprite
-  elseif Encounter.action.index == Encounter.ACTIONS.MERCY then
+  elseif Encounter.action.index == Constants.ENCOUNTER_ACTIONS.MERCY then
     selected_sprite = Encounter.action.mercy_sprite
     selected_sprite_hover = Encounter.action.mercy_hover_sprite
   end

@@ -129,6 +129,13 @@ function Encounter.playDialogueText(text, ...) end
 --- @return Dummy.DialogueBubble
 function Encounter.playDialogueBubble(bubble_type, text, ...) end
 
+--- Sets the selected action
+--- @param action number
+function Encounter.setAction(action) end
+
+--- Disables the selected action
+function Encounter.disableAction() end
+
 --- Wether all the enemies are spared
 --- @return boolean
 function Encounter.allSpared() end
