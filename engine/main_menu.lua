@@ -34,7 +34,8 @@ function MainMenu:select(index, silent)
   -- previously selected menu item
   local menu_item = self.options[self.selected_index]
   if menu_item ~= nil then
-    menu_item.text:setColor(1, 1, 1)
+    local color = menu_item.disabled == true and 0.5 or 1
+    menu_item.text:setColor(color, color, color)
   end
 
   self.selected_index = index
@@ -42,7 +43,8 @@ function MainMenu:select(index, silent)
   -- newly selected menu item
   menu_item = self.options[index]
   if menu_item ~= nil and (menu_item.action ~= nil or menu_item.menu ~= nil) then
-    menu_item.text:setColor(1, 1, 0)
+    local color = menu_item.disabled == true and 0.5 or 1
+    menu_item.text:setColor(color, color, 0)
   end
 
   for i, option in ipairs(self.options) do
@@ -102,7 +104,8 @@ function MainMenu:init()
   for i, menu_item in ipairs(self.options) do
     if menu_item.text ~= nil then
       local is_selected = i == self.selected_index and (menu_item.action ~= nil or menu_item.menu ~= nil)
-      menu_item.text:setColor(1, 1, is_selected and 0 or 1)
+      local color = menu_item.disabled == true and 0.5 or 1
+      menu_item.text:setColor(color, color, is_selected and 0 or color)
       menu_item.text:setPosition(320, 260 + ((i - 1) % MAX_DISPLAYED_OPTIONS * 40))
       menu_item.text:setVisible(false)
     end
