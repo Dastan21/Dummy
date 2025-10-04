@@ -68,7 +68,9 @@ function ModList.preloadMod(mod_id)
   else
     mod = {
       name = { "MAIN_MENU_MODLIST_MOD_ERROR", mod_id },
-      error = mod
+      error = mod,
+      getId = function(self) return self.id end,
+      getName = function(self) return self.name end
     }
     if type(mod.error) == "table" then
       print(table.tostring(mod.error))
