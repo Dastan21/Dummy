@@ -33,8 +33,11 @@ end
 --- Saves the configs
 function Config.save()
   for config_path, config in pairs(Config.configs) do
+    local config_file = config_path .. ".json"
     if not Config.isEmpty(config) then
-      love.filesystem.write(config_path .. ".json", JSON.encode(config))
+      love.filesystem.write(config_file, JSON.encode(config))
+    else
+      love.filesystem.remove(config_file)
     end
   end
 end
