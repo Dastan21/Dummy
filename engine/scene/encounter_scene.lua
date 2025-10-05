@@ -28,11 +28,17 @@ function encounter.update(dt)
   if current_state ~= encounter.previous_state then
     if encounter.previous_state == Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU and current_state == Constants.ENCOUNTER_STATES.ATTACKING then
       if type(encounter.mod.onEnemyAttackSelected) == "function" then
-        encounter.mod:onEnemyAttackSelected(Encounter.getSelectedEnemy())
+        local enemy = Encounter.getSelectedEnemy()
+        if enemy ~= nil then
+          encounter.mod:onEnemyAttackSelected(enemy)
+        end
       end
     elseif encounter.previous_state == Constants.ENCOUNTER_STATES.ACT_MENU and current_state == Constants.ENCOUNTER_STATES.ACT_MENU then
       if type(encounter.mod.onEnemyActSelected) == "function" then
-        encounter.mod:onEnemyActSelected(Encounter.getSelectedEnemy())
+        local enemy = Encounter.getSelectedEnemy()
+        if enemy ~= nil then
+          encounter.mod:onEnemyActSelected(enemy)
+        end
       end
     elseif encounter.previous_state == Constants.ENCOUNTER_STATES.TEXT_DIALOGUE and current_state == Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE then
       if type(encounter.mod.onEncounterTextEnd) == "function" then

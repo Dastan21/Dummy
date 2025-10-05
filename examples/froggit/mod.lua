@@ -43,10 +43,10 @@ end
 function mod:update(dt) end
 
 --- Called when an enemy is selected for attack
-function mod:onEnemyAttackSelected() end
+function mod:onEnemyAttackSelected(enemy) end
 
 --- Called when an enemy is selected for ACT
-function mod:onEnemyActSelected() end
+function mod:onEnemyActSelected(enemy) end
 
 --- Called when the encounter text is done
 function mod:onEncounterTextEnd() end

@@ -73,11 +73,11 @@ function Mod:update(dt) end
 function Mod:onStateChange(current_state, previous_state) end
 
 --- Called when an enemy is selected for attack
---- @param enemy Dummy.Enemy|nil
+--- @param enemy Dummy.Enemy
 function Mod:onEnemyAttackSelected(enemy) end
 
 --- Called when an enemy is selected for ACT
---- @param enemy Dummy.Enemy|nil
+--- @param enemy Dummy.Enemy
 function Mod:onEnemyActSelected(enemy) end
 
 --- Called when the encounter text is done
