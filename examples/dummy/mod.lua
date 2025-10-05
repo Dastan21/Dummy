@@ -76,8 +76,8 @@ function mod:onDefendingEnd()
   end
 end
 
---- Called when the player escaped
-function mod:onEscaped()
+--- Called when the player is fleeing
+function mod:onFlee()
   self.done = true
 end
 

@@ -83,8 +83,8 @@ function Mod:onEnemyDialoguesEnd() end
 --- Called when the defending phase is done
 function Mod:onDefendingEnd() end
 
---- Called when the player escaped
-function Mod:onEscaped() end
+--- Called when the player is fleeing
+function Mod:onFlee() end
 
 --- Creates a mod
 --- @param data Dummy.Mod.Data
