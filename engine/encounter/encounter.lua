@@ -623,6 +623,13 @@ end
 function Encounter.flee()
   if Encounter.canFlee() == false then return end
 
+  if Scene.getSceneName() == "ENCOUNTER" then
+    local mod = Scene.getCurrentScene()["mod"]
+    if type(mod.onFlee) == "function" then
+      if mod:onFlee() == false then return end
+    end
+  end
+
   Player.flee()
 
   Timer.after(1, function()

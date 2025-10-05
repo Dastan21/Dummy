@@ -83,7 +83,8 @@ function Mod:onEnemyDialoguesEnd() end
 --- Called when the defending phase is done
 function Mod:onDefendingEnd() end
 
---- Called when the player is fleeing
+--- Called when the player tries to flee
+--- @return boolean|nil
 function Mod:onFlee() end
 
 --- Creates a mod
