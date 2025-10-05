@@ -52,10 +52,6 @@ function encounter.update(dt)
       if type(encounter.mod.onDefendingEnd) == "function" then
         encounter.mod:onDefendingEnd()
       end
-    elseif current_state == Constants.ENCOUNTER_STATES.DONE and Player.isFleeing() then
-      if type(encounter.mod.onFlee) == "function" then
-        encounter.mod:onFlee()
-      end
     end
 
     if type(encounter.mod.onStateChange) == "function" then
