@@ -164,7 +164,7 @@ end
 --- Gets the menu options
 --- @return Dummy.Menu.Option[]
 function ActionMenu:getOptions()
-  return self.options
+  return { table.unpack(self.options) }
 end
 
 --- Sets the menu options
