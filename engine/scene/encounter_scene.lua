@@ -33,7 +33,7 @@ function encounter.update(dt)
           encounter.mod:onEnemyAttackSelected(enemy)
         end
       end
-    elseif encounter.previous_state == Constants.ENCOUNTER_STATES.ACT_MENU and current_state == Constants.ENCOUNTER_STATES.ACT_MENU then
+    elseif encounter.previous_state == Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU and current_state == Constants.ENCOUNTER_STATES.ACT_MENU then
       if type(encounter.mod.onEnemyActSelected) == "function" then
         local enemy = Encounter.getSelectedEnemy()
         if enemy ~= nil then
