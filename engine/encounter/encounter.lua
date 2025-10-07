@@ -1280,6 +1280,7 @@ function Encounter.update(dt)
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.DEFENDING then
     Encounter.updateDefending(dt)
   elseif Encounter.current_state == Constants.ENCOUNTER_STATES.DONE then
+    Config.save()
     Scene.change("MAIN_MENU")
   end
 
