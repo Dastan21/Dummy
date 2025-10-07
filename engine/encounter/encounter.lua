@@ -147,6 +147,13 @@ function Encounter.load()
   Encounter.enemy_hp_text:setScale(1)
   Encounter.enemy_hp_text:setVisible(false)
 
+  -- menus
+  Encounter.fight_enemy_menu = nil
+  Encounter.act_enemy_menu = nil
+  Encounter.act_menus = {}
+  Encounter.item_menu = nil
+  Encounter.mercy_menu = nil
+
   Encounter.can_flee = true
   Encounter.setMusic("battle")
 
@@ -605,7 +612,9 @@ function Encounter.loadMercyMenu()
   if Encounter.canFlee() ~= false then
     table.insert(options, {
       text = Text:new("ENCOUNTER_MENU_MERCY_FLEE"),
-      action = Encounter.flee,
+      action = function()
+        Encounter.flee()
+      end,
       silent = true
     })
   end
