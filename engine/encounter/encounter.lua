@@ -192,7 +192,7 @@ end
 --- Gets the encounter's enemies
 --- @return Dummy.Enemy[]
 function Encounter.getEnemies()
-  return Encounter.enemies
+  return { table.unpack(Encounter.enemies) }
 end
 
 --- Adds one or more enemies to the encounter
@@ -216,6 +216,12 @@ function Encounter.removeEnemy(enemy)
 
   Encounter.loadFightEnemyMenu()
   Encounter.loadActEnemyMenu()
+end
+
+--- Gets the encounter's waves
+--- @return Dummy.Wave[]
+function Encounter.getWaves()
+  return { table.unpack(Encounter.waves) }
 end
 
 --- Sets one or more waves to the encounter

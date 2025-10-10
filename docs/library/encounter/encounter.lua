@@ -83,6 +83,10 @@ function Encounter.addEnemy(enemy, ...) end
 --- @param enemy Dummy.Enemy
 function Encounter.removeEnemy(enemy) end
 
+--- Gets the encounter's waves
+--- @return Dummy.Wave[]
+function Encounter.getWaves() end
+
 --- Sets one or more waves to the encounter
 --- @param wave Dummy.Wave|nil
 --- @param ... Dummy.Wave
