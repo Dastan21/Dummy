@@ -1160,8 +1160,6 @@ function Encounter.proceedAttack(enemy, damage, miss)
             enemy:onAfterDamage()
           end
         end
-
-        Encounter.checkEncounterEnd()
       end
     end, 16)
 
@@ -1195,11 +1193,7 @@ function Encounter.endAttack(enemy)
 
   Encounter.target_bar_sprite:setVisible(false)
 
-  if not Encounter.allSparedOrKilled() then
-    Timer.after(0.05, function()
-      Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
-    end)
-  end
+  Encounter.checkEncounterEnd()
 end
 
 --- Starts defending
