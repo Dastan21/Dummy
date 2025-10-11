@@ -108,3 +108,8 @@ function Utils.checkCollision(rect1, rect2) end
 --- @param func fun(orig:fun(...), ...)
 function Utils.hook(target, name, func) end
 
+--- Unhooks a function
+--- @param target table
+--- @param name string
+function Utils.unhook(target, name) end
+

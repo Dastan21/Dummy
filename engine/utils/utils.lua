@@ -367,4 +367,17 @@ function Utils.hook(target, name, func)
   end
 end
 
+--- Unhooks a function
+--- @param target table
+--- @param name string
+function Utils.unhook(target, name)
+  for hook in pairs(Utils.__hooks) do
+    if hook.target == target and hook.name == name then
+      hook.target[hook.name] = hook.original
+      Utils.__hooks[hook] = nil
+      return
+    end
+  end
+end
+
 return Utils
