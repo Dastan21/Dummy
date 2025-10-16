@@ -127,6 +127,8 @@ function ModList.unloadMod(mod)
       package.loaded[modname] = nil
     end
   end
+
+  package.loaded["mods." .. mod:getId() .. ".mod"] = nil
 end
 
 --- Unloads all mods
