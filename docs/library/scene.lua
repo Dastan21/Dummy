@@ -10,7 +10,8 @@
 ---
 --- @field protected scenes table<string, Dummy.Scene.Scene>
 --- @field protected scene Dummy.Scene.Scene|nil
---- @field protected scene_name string
+--- @field protected scene_name string|nil
+--- @field protected previous_scene_name string|nil
 --- @field protected scene_data table
 --- @field protected quitting_delay number
 --- @field protected quitting_timer number
@@ -54,7 +55,11 @@ function Scene.draw() end
 
 --- Gets the current scene name
 --- @return string
-function Scene.getSceneName() end
+function Scene.getCurrentSceneName() end
+
+--- Gets the previous scene name
+--- @return string
+function Scene.getPreviousSceneName() end
 
 --- Gets the current scene
 --- @return Dummy.Scene.Scene

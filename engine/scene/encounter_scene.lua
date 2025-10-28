@@ -61,7 +61,7 @@ function encounter.update(dt)
     encounter.previous_state = current_state
   end
 
-  if Scene.getSceneName() ~= "ENCOUNTER" then return end
+  if Scene.getCurrentSceneName() ~= "ENCOUNTER" then return end
 
   Arena.update(dt)
   Encounter.update(dt)

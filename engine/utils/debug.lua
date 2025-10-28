@@ -150,7 +150,7 @@ function Debug.update(dt)
   elseif Input.isDown("ctrl") and Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or 1)
   elseif Input.isDown("ctrl") and Input.isPressed("g") then
-    if Scene.getSceneName() == "ENCOUNTER" then
+    if Scene.getCurrentSceneName() == "ENCOUNTER" then
       Player.hurt(Player.getHP() * 2, true)
     end
   elseif Input.isDown("ctrl") and Input.isPressed("p") then

@@ -134,7 +134,7 @@ function engine.error_handler(err)
     err = debug.traceback(err)
   end
   print(err)
-  if Scene.getSceneName() ~= "ERROR" then
+  if Scene.getCurrentSceneName() ~= "ERROR" then
     Scene.change("ERROR", err)
   end
 end

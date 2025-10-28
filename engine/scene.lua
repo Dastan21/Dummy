@@ -2,7 +2,8 @@
 ---
 --- @field protected scenes table<string, Dummy.Scene.Scene>
 --- @field protected scene Dummy.Scene.Scene|nil
---- @field protected scene_name string
+--- @field protected scene_name string|nil
+--- @field protected previous_scene_name string|nil
 --- @field protected scene_data table
 --- @field protected quitting_delay number
 --- @field protected quitting_timer number
@@ -24,6 +25,8 @@ function Scene.load()
   Scene.clean()
 
   Scene.scenes = {}
+  Scene.scene = nil
+  Scene.scene_data = {}
   Scene.layer_canvas = {
     love.graphics.newCanvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT),
     love.graphics.newCanvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)
@@ -47,6 +50,7 @@ function Scene.change(scene_name, ...)
   Shaker.reset()
   Scene.clean()
   Scene.scene = Scene.scenes[scene_name]
+  Scene.previous_scene_name = Scene.scene_name
   Scene.scene_name = scene_name
   Scene.scene_data = { ... }
   if type(Scene.scene.load) == "function" then
@@ -98,9 +102,11 @@ end
 
 --- Reloads the current scene
 function Scene.reload()
-  local scene_name = Scene.scene_name
+  if Scene.scene_name == nil then return end
+
+  Scene.previous_scene_name = Scene.scene_name
   Scene.scene_name = nil
-  Scene.change(scene_name, table.unpack(Scene.scene_data))
+  Scene.change(Scene.previous_scene_name, table.unpack(Scene.scene_data))
 end
 
 --- Fully reloads the engine
@@ -187,8 +193,14 @@ end
 
 --- Gets the current scene name
 --- @return string
-function Scene.getSceneName()
+function Scene.getCurrentSceneName()
   return Scene.scene_name
+end
+
+--- Gets the previous scene name
+--- @return string
+function Scene.getPreviousSceneName()
+  return Scene.previous_scene_name
 end
 
 --- Gets the current scene
