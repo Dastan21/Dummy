@@ -17,6 +17,8 @@ function main_menu.load()
   if standalone ~= nil then
     ModList.mountMod(standalone)
     Lang.loadLanguages()
+    ---@diagnostic disable-next-line: invisible
+    standalone.config = Config.loadConfig("configs/" .. standalone:getId())
   end
 
   main_menu.logo_sprite = Sprite:new("logo")
