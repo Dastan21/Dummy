@@ -161,12 +161,13 @@ function ModList.setWindowTitleAndIcon()
       title = Lang.translate(mod_title)
     end
 
-    local success, mod_icon = pcall(love.image.newImageData, "mods/" .. mod:getId() .. "/assets/icon.png")
-    if success then
-      icon = mod_icon
+    local icon_info = love.filesystem.getInfo("mods/" .. mod:getId() .. "/assets/icon.png")
+    if icon_info ~= nil and icon_info.type == "file" then
+      icon = love.image.newImageData("mods/" .. mod:getId() .. "/assets/icon.png")
     end
   end
 
+  print(title, icon)
   love.window.setTitle(title)
   love.window.setIcon(icon)
 end
