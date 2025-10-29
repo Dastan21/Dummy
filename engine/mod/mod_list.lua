@@ -167,7 +167,6 @@ function ModList.setWindowTitleAndIcon()
     end
   end
 
-  print(title, icon)
   love.window.setTitle(title)
   love.window.setIcon(icon)
 end
