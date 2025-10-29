@@ -179,8 +179,8 @@ function love.draw()
 end
 
 function love.quit()
+  if love.system.getOS() == "Web" then return true end
+
   Config.save()
   Debug.saveLogs()
-
-  return love.system.getOS() == "Web"
 end
