@@ -11,6 +11,11 @@
 --- @field private __hooks table<table, boolean>
 Utils = {}
 
+--- Requires a module from the current mod
+--- @param modname string
+--- @return unknown, unknown
+function modRequire(modname) end
+
 function table.tostring(node) end
 
 function table.clone(obj, seen) end

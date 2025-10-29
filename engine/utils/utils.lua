@@ -1,3 +1,12 @@
+--- Requires a module from the current mod
+--- @param modname string
+--- @return unknown, unknown
+function modRequire(modname)
+  local mod = ModList.getCurrentMod()
+  assert(mod ~= nil, "Cannot require outside of a mod")
+  return require("mods." .. mod:getId() .. "." .. modname)
+end
+
 -- table --
 
 -- https://gist.github.com/revolucas/dd1ecccfca32d558fddf70ddb39eb8a6

@@ -81,14 +81,25 @@ end
 
 --- Loads languages from the lang folder
 function Lang.loadLanguages()
-  for _, filename in pairs(love.filesystem.getDirectoryItems("assets/langs")) do
+  Lang.loadLanguagesFromFolder("assets/langs")
+
+  local mod = ModList.getCurrentMod()
+  if mod ~= nil then
+    Lang.loadLanguagesFromFolder("mods/" .. mod:getId() .. "/assets/langs")
+  end
+
+  Lang.setLanguage(Config.getSettings()["language"])
+end
+
+function Lang.loadLanguagesFromFolder(base_folder)
+  for _, filename in pairs(love.filesystem.getDirectoryItems(base_folder)) do
     if Utils.checkExtension(filename, "txt") then
       local code = filename:sub(1, #filename - 4)
       if Lang.translations[code] == nil then
         Lang.translations[code] = {}
         table.insert(Lang.languages, code)
       end
-      for txt in love.filesystem.lines("assets/langs/" .. filename) do
+      for txt in love.filesystem.lines(base_folder .. "/" .. filename) do
         if txt ~= "" and txt:sub(1, 1) ~= "#" then -- for comments
           local t = {}
           for str in string.gmatch(txt, "([^=]+)") do table.insert(t, str) end
@@ -97,8 +108,6 @@ function Lang.loadLanguages()
       end
     end
   end
-
-  Lang.setLanguage(Config.getSettings()["language"])
 end
 
 --- Loads languages

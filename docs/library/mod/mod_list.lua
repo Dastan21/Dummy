@@ -37,10 +37,6 @@ function ModList.preloadMod(mod_id) end
 --- @param mod Dummy.Mod
 function ModList.loadMod(mod) end
 
---- Mounts a mod
---- @param mod Dummy.Mod
-function ModList.mountMod(mod) end
-
 --- Unloads a mod
 --- @param mod Dummy.Mod
 function ModList.unloadMod(mod) end
@@ -55,8 +51,7 @@ function ModList.unloadMods() end
 function ModList.isModValid(success, mod) end
 
 --- Sets the window title and icon
---- @param title Dummy.Text.Text|nil
-function ModList.setWindowTitleAndIcon(title) end
+function ModList.setWindowTitleAndIcon() end
 
 --- Copies a mod zip file into the mods folder
 --- @param file love.File

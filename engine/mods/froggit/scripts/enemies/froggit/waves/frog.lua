@@ -1,7 +1,7 @@
 --- @class FrogWave : Dummy.Wave
 local FrogWave = Class:extend(Wave)
 
-local FrogBullet = require "scripts.enemies.froggit.bullets.frog"
+local FrogBullet = modRequire "scripts.enemies.froggit.bullets.frog"
 
 --- Initializes the wave
 function FrogWave:new()

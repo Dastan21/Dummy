@@ -14,7 +14,7 @@ function encounter.load(mod)
 
   encounter.mod = mod
   ModList.loadMod(mod)
-  ModList.setWindowTitleAndIcon(mod:getTitle())
+  ModList.setWindowTitleAndIcon()
 
   Encounter.updatePlayerUI()
 end

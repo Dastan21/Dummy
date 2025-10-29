@@ -15,7 +15,6 @@ function main_menu.load()
 
   local standalone = ModList.getStandalone()
   if standalone ~= nil then
-    ModList.mountMod(standalone)
     Lang.loadLanguages()
     ---@diagnostic disable-next-line: invisible
     standalone.config = Config.loadConfig("configs/" .. standalone:getId())
@@ -48,6 +47,8 @@ function main_menu.load()
       standalone:preview()
     end
   end
+
+  ModList.setWindowTitleAndIcon()
 end
 
 --- Loads menus
@@ -79,8 +80,6 @@ function main_menu.loadMainMenu()
         end
       })
     end
-
-    ModList.setWindowTitleAndIcon(Constants.CREDITS.NAME)
   else
     table.insert(options, {
       text = Text:new("MAIN_MENU_PLAY"),
@@ -88,8 +87,6 @@ function main_menu.loadMainMenu()
         Scene.change("ENCOUNTER", standalone)
       end
     })
-
-    ModList.setWindowTitleAndIcon(standalone:getTitle())
   end
 
   table.insert(options, {

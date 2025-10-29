@@ -3,7 +3,7 @@
 --- @field spawn_timer table|nil
 local FlyWave = Class:extend(Wave)
 
-local FlyBullet = require "scripts.enemies.froggit.bullets.fly"
+local FlyBullet = modRequire "scripts.enemies.froggit.bullets.fly"
 
 --- Initializes the wave
 function FlyWave:new()

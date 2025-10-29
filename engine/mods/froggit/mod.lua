@@ -27,7 +27,7 @@ function mod:load()
   Player.setLV(1)
 
   -- add the Froggit to the encounter
-  local Dummy = require("scripts.enemies.froggit.froggit")
+  local Dummy = modRequire("scripts.enemies.froggit.froggit")
   self.froggit = Dummy:new()
   Encounter.addEnemy(self.froggit)
 

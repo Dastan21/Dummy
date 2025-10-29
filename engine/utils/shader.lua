@@ -98,7 +98,10 @@ function Shader:new(shader)
   self = Class:new(Shader)
 
   if type(shader) == "string" then
-    self.shader = love.graphics.newShader("assets/shaders/" .. shader .. ".glsl")
+    local mod = ModList.getCurrentMod()
+    assert(mod ~= nil, "Cannot load shader outside of a mod")
+
+    self.shader = love.graphics.newShader("mods/" .. mod:getId() .. "/assets/shaders/" .. shader .. ".glsl")
   else
     self.shader = shader
   end

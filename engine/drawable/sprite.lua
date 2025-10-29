@@ -30,14 +30,35 @@ end
 
 --- Loads a sprite
 --- @param sprite_path string
---- @return love.Image
+--- @return love.Image|nil
 function Sprite.loadSprite(sprite_path)
-  local sprite_full_path = "assets/sprites/" .. Lang.getLanguage() .. "/" .. sprite_path .. ".png"
+  local image = nil
+
+  local mod = ModList.getCurrentMod()
+  if mod ~= nil then
+    image = Sprite.loadSpriteFromFolder("mods/" .. mod:getId() .. "/assets/sprites/", sprite_path)
+  end
+
+  if image == nil or type(image) == "string" then
+    image = Sprite.loadSpriteFromFolder("assets/sprites/", sprite_path)
+  end
+
+  assert(image ~= nil and type(image) ~= "string", image)
+
+  return image
+end
+
+--- Loads a sprite from a folder
+--- @param sprite_path string
+--- @return love.Image|string
+--- @private
+function Sprite.loadSpriteFromFolder(base_sprites_path, sprite_path)
+  local sprite_full_path = base_sprites_path .. Lang.getLanguage() .. "/" .. sprite_path .. ".png"
   -- try to get image data from cache
   local image = cache_image[sprite_full_path]
   if image ~= nil then return image end
 
-  local success
+  local success = false
 
   -- try to get image data from cache
   local image_data = cache_image_data[sprite_full_path]
@@ -48,12 +69,14 @@ function Sprite.loadSprite(sprite_path)
 
     -- if sprite is not available in the current language, get it from the sprites root folder
     if not success then
-      sprite_full_path = "assets/sprites/" .. sprite_path .. ".png"
+      sprite_full_path = base_sprites_path .. sprite_path .. ".png"
       if love.filesystem.getInfo(sprite_full_path) ~= nil then
         success, image_data = pcall(love.image.newImageData, sprite_full_path)
       end
 
-      assert(success, "Sprite \"" .. sprite_path .. "\" not found : " .. tostring(image_data))
+      if not success then
+        return "Sprite \"" .. sprite_path .. "\" not found : " .. tostring(image_data)
+      end
     end
 
     cache_image_data[sprite_full_path] = image_data
@@ -61,7 +84,9 @@ function Sprite.loadSprite(sprite_path)
 
   -- create an image from the sprite data
   success, image = pcall(love.graphics.newImage, image_data)
-  assert(success, "Sprite \"" .. sprite_path .. "\" not found : " .. tostring(image))
+  if not success then
+    return "Sprite \"" .. sprite_path .. "\" not found : " .. tostring(image)
+  end
 
   cache_image[sprite_full_path] = image
   cache_image_data[image] = image_data

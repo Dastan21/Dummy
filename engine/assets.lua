@@ -4,11 +4,13 @@
 ---
 --- @field protected fonts table<Dummy.Assets.Font|string, love.Font>
 --- @field protected current_music love.Source|nil
+--- @field protected current_musics table<love.Source, boolean>
 --- @field protected current_sound love.Source|nil
+--- @field protected current_sounds table<love.Source, boolean>
 local Assets = {}
 
 function Assets.load()
-  Assets.fonts = {}
+  Assets.clear()
 
   local full_characters =
   " !\"#$%&'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~ÀÁÂÄÇÈÉÊËÌÍÎÏÒÓÔÖÙÚÛÜàáâäæçèéêëìíîïòóôöùúûü"
@@ -17,14 +19,16 @@ function Assets.load()
   local limited_letters =
   " !\"#$%&'()*+,-./\\0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~"
 
-  Assets.fonts.main = love.graphics.newImageFont("assets/fonts/main.png", almost_full_characters)
-  Assets.fonts.main_text = love.graphics.newImageFont("assets/fonts/main_text.png", almost_full_characters)
-  Assets.fonts.main_text_mono = love.graphics.newImageFont("assets/fonts/main_text_mono.png", almost_full_characters)
-  Assets.fonts.small = love.graphics.newImageFont("assets/fonts/small.png", limited_letters)
-  Assets.fonts.curs = love.graphics.newImageFont("assets/fonts/curs.png", limited_letters)
-  Assets.fonts.damage = love.graphics.newImageFont("assets/fonts/damage.png", limited_letters)
-  Assets.fonts.plain = love.graphics.newImageFont("assets/fonts/plain.png", full_characters)
-  Assets.fonts.wonder = love.graphics.newImageFont("assets/fonts/wonder.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+  Assets.fonts = {
+    main = love.graphics.newImageFont("assets/fonts/main.png", almost_full_characters),
+    main_text = love.graphics.newImageFont("assets/fonts/main_text.png", almost_full_characters),
+    main_text_mono = love.graphics.newImageFont("assets/fonts/main_text_mono.png", almost_full_characters),
+    small = love.graphics.newImageFont("assets/fonts/small.png", limited_letters),
+    curs = love.graphics.newImageFont("assets/fonts/curs.png", limited_letters),
+    damage = love.graphics.newImageFont("assets/fonts/damage.png", limited_letters),
+    plain = love.graphics.newImageFont("assets/fonts/plain.png", full_characters),
+    wonder = love.graphics.newImageFont("assets/fonts/wonder.png", " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"),
+  }
 
   -- Antialiazing
   for _, font in pairs(Assets.fonts) do
@@ -53,7 +57,7 @@ end
 --- Checks which extension to use
 --- @param name string
 --- @param exts table<string, string>
---- @return string
+--- @return string|nil
 function Assets.checkFilenameExt(name, exts)
   local ext_index = 1
   local filename = ""
@@ -64,9 +68,7 @@ function Assets.checkFilenameExt(name, exts)
     ext_index = ext_index + 1
   until fileinfo ~= nil or ext_index > #exts
 
-  assert(fileinfo ~= nil, "File \"" .. name .. "\" not found")
-
-  return filename
+  return fileinfo ~= nil and filename or nil
 end
 
 --- @type table<string, love.FileData>
@@ -75,13 +77,24 @@ local audio_cache = {}
 --- Plays an audio
 --- @param folder string
 --- @param audio_name string
---- @param type "queue" | "static" | "stream"
+--- @param mode "queue" | "static" | "stream"
 --- @param play boolean
 --- @param loop boolean
---- @return love.Source
+--- @return love.Source|string
 --- @protected
-function Assets.playAudio(folder, audio_name, type, play, loop)
-  local filename = Assets.checkFilenameExt(folder .. audio_name, { "mp3", "wav", "ogg" })
+function Assets.playAudio(folder, audio_name, mode, play, loop)
+  local filename = nil
+  local audio_path = folder .. audio_name
+
+  local mod = ModList.getCurrentMod()
+  if mod ~= nil then
+    filename = Assets.checkFilenameExt("mods/" .. mod:getId() .. "/" .. audio_path, { "mp3", "wav", "ogg" })
+  end
+
+  if filename == nil then
+    filename = Assets.checkFilenameExt(audio_path, { "mp3", "wav", "ogg" })
+  end
+  assert(filename ~= nil, "File \"" .. audio_path .. "\" not found")
 
   local source = nil
   local success = true
@@ -89,11 +102,15 @@ function Assets.playAudio(folder, audio_name, type, play, loop)
 
   if file_data == nil then
     success, file_data = pcall(love.filesystem.newFileData, filename)
-    assert(success, "Audio \"" .. audio_name .. "\" not found")
+    if not success then
+      return "Audio \"" .. audio_name .. "\" not found"
+    end
   end
 
-  success, source = pcall(love.audio.newSource, file_data, type)
-  assert(success, "Audio \"" .. audio_name .. "\" not found")
+  success, source = pcall(love.audio.newSource, file_data, mode)
+  if not success then
+    return "Audio \"" .. audio_name .. "\" not found"
+  end
 
   if audio_cache[filename] == nil then
     audio_cache[filename] = file_data
@@ -116,7 +133,9 @@ function Assets.playMusic(music_name, play, loop, replace)
   loop = Utils.getOrDefault(loop, true)
   replace = Utils.getOrDefault(replace, true)
 
-  local source = Assets.playAudio("assets/musics/", music_name, "stream", play, loop)
+  local music_mode = love.system.getOS() == "Web" and "static" or "stream"
+  local source = Assets.playAudio("assets/musics/", music_name, music_mode, play, loop)
+  assert(source ~= nil and type(source) ~= "string", source)
 
   if replace then
     if Assets.current_music ~= nil then
@@ -125,6 +144,8 @@ function Assets.playMusic(music_name, play, loop, replace)
 
     Assets.current_music = source
   end
+
+  Assets.current_musics[source] = true
 
   return source
 end
@@ -140,6 +161,7 @@ function Assets.playSound(sound_name, play, loop, replace)
   loop = Utils.getOrDefault(loop, false)
 
   local source = Assets.playAudio("assets/sounds/", sound_name, "static", play, loop)
+  assert(source ~= nil and type(source) ~= "string", source)
 
   if replace == true then
     if Assets.current_sound ~= nil then
@@ -148,6 +170,8 @@ function Assets.playSound(sound_name, play, loop, replace)
 
     Assets.current_sound = source
   end
+
+  Assets.current_sounds[source] = true
 
   return source
 end
@@ -167,6 +191,18 @@ end
 --- Clears the cache
 function Assets.clear()
   audio_cache = {}
+
+  for source, _ in pairs(Assets.current_musics or {}) do
+    source:stop()
+  end
+  Assets.current_musics = {}
+  Assets.current_music = nil
+
+  for source, _ in pairs(Assets.current_sounds or {}) do
+    source:stop()
+  end
+  Assets.current_sounds = {}
+  Assets.current_sound = nil
 end
 
 return Assets

@@ -90,8 +90,6 @@ function ModList.loadMod(mod)
 
 
   if type(mod.load) == "function" then
-    ModList.mountMod(mod)
-
     ModList.current_mod = mod
     Lang.loadLanguages()
     ---@diagnostic disable-next-line: invisible
@@ -100,30 +98,16 @@ function ModList.loadMod(mod)
   end
 end
 
---- Mounts a mod
---- @param mod Dummy.Mod
-function ModList.mountMod(mod)
-  if mod == nil then return end
-
-  ModList.unloadMod(mod)
-
-  love.filesystem.mount("mods/" .. mod:getId(), "")
-  love.filesystem.mount("mods/" .. mod:getId() .. ".zip", "")
-end
-
 --- Unloads a mod
 --- @param mod Dummy.Mod
 function ModList.unloadMod(mod)
   if mod == nil then return end
 
-  love.filesystem.unmount("mods/" .. mod:getId())
-  love.filesystem.unmount("mods/" .. mod:getId() .. ".zip")
-
   Lang.load()
 
   -- uncache mod scripts modules
   for modname in pairs(package.loaded) do
-    if modname:sub(1, 8) == "scripts." then
+    if modname:sub(1, 8) == "mods." .. mod:getId() .. ".scripts." then
       package.loaded[modname] = nil
     end
   end
@@ -166,13 +150,25 @@ function ModList.isModValid(success, mod)
 end
 
 --- Sets the window title and icon
---- @param title Dummy.Text.Text|nil
-function ModList.setWindowTitleAndIcon(title)
-  if title ~= nil then
-    love.window.setTitle(Lang.translate(title))
+function ModList.setWindowTitleAndIcon()
+  local title = Constants.CREDITS.NAME
+  local icon = love.image.newImageData("assets/icon.png")
+
+  local mod = ModList.getCurrentMod()
+  if mod ~= nil then
+    local mod_title = mod:getTitle()
+    if mod_title ~= nil then
+      title = Lang.translate(mod_title)
+    end
+
+    local success, mod_icon = pcall(love.image.newImageData, "mods/" .. mod:getId() .. "/assets/icon.png")
+    if success then
+      icon = mod_icon
+    end
   end
 
-  love.window.setIcon(love.image.newImageData("assets/icon.png"))
+  love.window.setTitle(title)
+  love.window.setIcon(icon)
 end
 
 --- Copies a mod zip file into the mods folder

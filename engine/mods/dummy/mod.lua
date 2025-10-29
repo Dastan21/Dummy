@@ -29,7 +29,7 @@ function mod:load()
   Player.setLV(1)
 
   -- add the Dummy to the encounter
-  local Dummy = require("scripts.enemies.dummy.dummy")
+  local Dummy = modRequire("scripts.enemies.dummy.dummy")
   self.dummy = Dummy:new()
   Encounter.addEnemy(self.dummy)
 

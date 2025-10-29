@@ -32,8 +32,8 @@ function Froggit:new()
   self:setHurtSound("enemy_hurt")
 
   -- add ACTs
-  self:addACT(require("scripts.enemies.froggit.acts.compliment"))
-  self:addACT(require("scripts.enemies.froggit.acts.threat"))
+  self:addACT(modRequire("scripts.enemies.froggit.acts.compliment"))
+  self:addACT(modRequire("scripts.enemies.froggit.acts.threat"))
 
   -- add custom animation
   self.legs = Sprite:new({ "froggit_legs_1", "froggit_legs_2" }, 1 / 0.04 / 30)
@@ -82,10 +82,10 @@ function Froggit:onDialogue()
   dialogue:setPosition(dialogue_x, dialogue_y)
 
   if mod.command <= 0.4 then
-    local FrogWave = require "scripts.enemies.froggit.waves.frog"
+    local FrogWave = modRequire "scripts.enemies.froggit.waves.frog"
     Encounter.setWave(FrogWave:new())
   else
-    local FlyWave = require "scripts.enemies.froggit.waves.fly"
+    local FlyWave = modRequire "scripts.enemies.froggit.waves.fly"
     Encounter.setWave(FlyWave:new())
   end
 end

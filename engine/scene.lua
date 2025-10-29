@@ -304,7 +304,6 @@ function Scene.clean()
 
   Sprite.clear()
   Assets.clear()
-  love.audio.stop()
   Timer.clear()
 end
 

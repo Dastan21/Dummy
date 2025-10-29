@@ -44,6 +44,8 @@ function Lang.addTranslation(key, value, lang) end
 --- Loads languages from the lang folder
 function Lang.loadLanguages() end
 
+function Lang.loadLanguagesFromFolder(base_folder) end
+
 --- Loads languages
 function Lang.load() end
 

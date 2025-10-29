@@ -28,8 +28,14 @@ function Sprite.clear() end
 
 --- Loads a sprite
 --- @param sprite_path string
---- @return love.Image
+--- @return love.Image|nil
 function Sprite.loadSprite(sprite_path) end
+
+--- Loads a sprite from a folder
+--- @param sprite_path string
+--- @return love.Image|string
+--- @private
+function Sprite.loadSpriteFromFolder(base_sprites_path, sprite_path) end
 
 --- Gets the sprite's value
 --- @return love.Image|nil

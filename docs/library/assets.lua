@@ -10,7 +10,9 @@
 ---
 --- @field protected fonts table<Dummy.Assets.Font|string, love.Font>
 --- @field protected current_music love.Source|nil
+--- @field protected current_musics table<love.Source, boolean>
 --- @field protected current_sound love.Source|nil
+--- @field protected current_sounds table<love.Source, boolean>
 Assets = {}
 
 --- @alias Dummy.Assets.Font "main" | "main_text" | "main_text_mono" | "small" | "curs" | "damage" | "plain" | "wonder"
@@ -30,18 +32,18 @@ function Assets.addFont(font_name, font) end
 --- Checks which extension to use
 --- @param name string
 --- @param exts table<string, string>
---- @return string
+--- @return string|nil
 function Assets.checkFilenameExt(name, exts) end
 
 --- Plays an audio
 --- @param folder string
 --- @param audio_name string
---- @param type "queue" | "static" | "stream"
+--- @param mode "queue" | "static" | "stream"
 --- @param play boolean
 --- @param loop boolean
---- @return love.Source
+--- @return love.Source|string
 --- @protected
-function Assets.playAudio(folder, audio_name, type, play, loop) end
+function Assets.playAudio(folder, audio_name, mode, play, loop) end
 
 --- Plays a music
 --- @param music_name string the music name to play
