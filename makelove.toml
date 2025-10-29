@@ -3,10 +3,13 @@ default_targets = [
   # "win32",
   "win64",
   # "macos",
-  # "lovejs"
+  "lovejs"
 ]
 build_directory = "../builds"
 love_files = [
   "+*",
   "-*/.*",
 ]
+
+[lovejs]
+memory = "200000000"
