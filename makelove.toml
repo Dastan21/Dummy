@@ -9,5 +9,4 @@ build_directory = "../builds"
 love_files = [
   "+*",
   "-*/.*",
-  "-*/mods/*",
 ]
