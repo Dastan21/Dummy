@@ -149,6 +149,7 @@ function main_menu.loadSettingsMenu()
         settings["window_scale"] = scales[(scale_index % #scales) + 1]
         option.text:setText({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", settings["window_scale"] })
 
+        Config.getSettings()["fullscreen"] = false
         love.scale()
       end,
     }
