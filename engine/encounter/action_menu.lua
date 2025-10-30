@@ -201,7 +201,7 @@ end
 --- @param index_y number
 --- @return number
 function ActionMenu:getOptionIndex(index_x, index_y)
-  return (self.indexes_x[index_y + 1] or {})[index_x + 1]
+  return (self.indexes_x[index_y + 1] or {})[index_x + 1] or 0
 end
 
 --- Gets the selected option index
