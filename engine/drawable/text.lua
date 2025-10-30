@@ -239,9 +239,9 @@ function Text:draw()
   if self.text ~= nil then
     local align_offset = 0
     if self.align == "right" then
-      align_offset = Constants.SCREEN_WIDTH - self.text:getWidth()
+      align_offset = Constants.SCREEN_WIDTH / self.scale_x - self.text:getWidth()
     elseif self.align == "center" then
-      align_offset = Constants.SCREEN_WIDTH / 2 - self.text:getWidth() / 2
+      align_offset = (Constants.SCREEN_WIDTH / self.scale_x - self.text:getWidth()) / 2
     end
     local origin_x, origin_y = self:getOrigin()
     local width, height = self:getWidth(), self:getHeight()
