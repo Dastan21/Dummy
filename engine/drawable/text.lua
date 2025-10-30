@@ -137,6 +137,8 @@ function Text:setAlign(align)
     self:updateText()
     self.width = self.text:getWidth()
     self.height = self.text:getHeight()
+  else
+    self.nodes = self:parseNodes(self.value)
   end
 end
 
