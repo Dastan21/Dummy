@@ -52,6 +52,7 @@ local engine = {
 }
 
 function love.load()
+  Constants.DEBUG = os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1"
   love.graphics.setDefaultFilter("nearest", "nearest")
 
   love.audio.stop()
@@ -76,7 +77,7 @@ function love.load()
   Shaker.load()
   Debug.load()
 
-  love.audio.setVolume(Constants.DEBUG and 0 or (Config.getSettings()["volume"] / 100))
+  love.audio.setVolume(Config.getSettings()["volume"] / 100)
 
   Scene.addScene("MAIN_MENU", require "scene.main_menu_scene")
   Scene.addScene("ENCOUNTER", require "scene.encounter_scene")
