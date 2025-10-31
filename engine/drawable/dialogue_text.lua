@@ -265,7 +265,7 @@ function DialogueText:update(dt)
     end
   end
 
-  self.text_index = math.max(1, math.floor(self.dialogue_timer))
+  self.text_index = math.max(0, math.floor(self.dialogue_timer))
 
   if Input.isPressed(Input.Cancel) then
     self:skip()
