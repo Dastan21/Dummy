@@ -84,7 +84,6 @@ function love.load()
   Scene.addScene("ERROR", require "scene.error_scene")
   Scene.change("MAIN_MENU")
 
-
   engine.time = love.timer.getTime()
 end
 
