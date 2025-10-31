@@ -40,7 +40,13 @@ function MainMenu:show() end
 --- Hides the menu
 function MainMenu:hide() end
 
+--- Sets the menu options
+--- @param options Dummy.Menu.Option[]
 function MainMenu:setOptions(options) end
+
+--- Gets the menu options
+--- @return Dummy.Menu.Option[]
+function MainMenu:getOptions() end
 
 --- Initializes the menu options
 function MainMenu:init() end

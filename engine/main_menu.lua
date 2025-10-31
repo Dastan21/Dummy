@@ -86,6 +86,8 @@ function MainMenu:hide()
   self.page_text:setVisible(false)
 end
 
+--- Sets the menu options
+--- @param options Dummy.Menu.Option[]
 function MainMenu:setOptions(options)
   for _, option in ipairs(self.options) do
     option.text:remove()
@@ -97,6 +99,12 @@ function MainMenu:setOptions(options)
 
   self.options = options
   self:init()
+end
+
+--- Gets the menu options
+--- @return Dummy.Menu.Option[]
+function MainMenu:getOptions()
+  return { table.unpack(self.options) }
 end
 
 --- Initializes the menu options

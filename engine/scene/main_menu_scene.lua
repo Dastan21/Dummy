@@ -135,6 +135,19 @@ function main_menu.loadSettingsMenu()
       end,
     },
     {
+      text = Text:new({ "MAIN_MENU_SETTINGS_FULLSCREEN", Lang.translate(Config.getSettings()["fullscreen"] and
+        "MAIN_MENU_SETTINGS_SWITCH_ON" or "MAIN_MENU_SETTINGS_SWITCH_OFF") }),
+      action = function(option)
+        local fullscreen = not Config.getSettings()["fullscreen"]
+        option.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", Lang.translate(fullscreen and
+          "MAIN_MENU_SETTINGS_SWITCH_ON" or
+          "MAIN_MENU_SETTINGS_SWITCH_OFF") })
+
+        Config.getSettings()["fullscreen"] = fullscreen
+        love.scale()
+      end,
+    },
+    {
       text = Text:new({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config.getSettings()["window_scale"] }),
       action = function(option)
         local settings = Config.getSettings()
@@ -148,6 +161,12 @@ function main_menu.loadSettingsMenu()
         end
         settings["window_scale"] = scales[(scale_index % #scales) + 1]
         option.text:setText({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", settings["window_scale"] })
+
+        for _, opt in ipairs(main_menu.settings_menu:getOptions()) do
+          if opt.text:getText()[1] == "MAIN_MENU_SETTINGS_FULLSCREEN" then
+            opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", Lang.translate("MAIN_MENU_SETTINGS_SWITCH_OFF") })
+          end
+        end
 
         Config.getSettings()["fullscreen"] = false
         love.scale()
