@@ -48,6 +48,10 @@ function MainMenu:setOptions(options) end
 --- @return Dummy.Menu.Option[]
 function MainMenu:getOptions() end
 
+--- Gets the selected option
+--- @return Dummy.Menu.Option
+function MainMenu:getSelectedOption() end
+
 --- Initializes the menu options
 function MainMenu:init() end
 

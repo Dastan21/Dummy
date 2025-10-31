@@ -55,7 +55,6 @@ function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
 
   love.audio.stop()
-  if Constants.DEBUG then love.audio.setVolume(0) end
 
   love.filesystem.createDirectory("mods")
   love.filesystem.createDirectory("configs")
@@ -77,11 +76,14 @@ function love.load()
   Shaker.load()
   Debug.load()
 
+  love.audio.setVolume(Constants.DEBUG and 0 or (Config.getSettings()["volume"] / 100))
+
   Scene.addScene("MAIN_MENU", require "scene.main_menu_scene")
   Scene.addScene("ENCOUNTER", require "scene.encounter_scene")
   Scene.addScene("GAME_OVER", require "scene.game_over_scene")
   Scene.addScene("ERROR", require "scene.error_scene")
   Scene.change("MAIN_MENU")
+
 
   engine.time = love.timer.getTime()
 end

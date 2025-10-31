@@ -32,7 +32,7 @@ function MainMenu:select(index, silent)
   if index == self.selected_index then return end
 
   -- previously selected menu item
-  local menu_item = self.options[self.selected_index]
+  local menu_item = self:getSelectedOption()
   if menu_item ~= nil then
     local color = menu_item.disabled == true and 0.5 or 1
     menu_item.text:setColor(color, color, color)
@@ -107,6 +107,12 @@ function MainMenu:getOptions()
   return { table.unpack(self.options) }
 end
 
+--- Gets the selected option
+--- @return Dummy.Menu.Option
+function MainMenu:getSelectedOption()
+  return self.options[self.selected_index]
+end
+
 --- Initializes the menu options
 function MainMenu:init()
   for i, menu_item in ipairs(self.options) do
@@ -120,7 +126,6 @@ function MainMenu:init()
   end
 
   -- pagination
-  local has_pagination = #self.options > MAX_DISPLAYED_OPTIONS
   self.arrow_up = Text:new("<")
   self.arrow_up:setPosition(320, 220)
   self.arrow_up:setVisible(false)
@@ -128,10 +133,10 @@ function MainMenu:init()
   self.arrow_down = Text:new(">")
   self.arrow_down:setPosition(320, 260 + MAX_DISPLAYED_OPTIONS * 40)
   self.arrow_down:setAngle(90)
-  self.arrow_down:setVisible(has_pagination)
+  self.arrow_down:setVisible(false)
   self.page_text = Text:new({ "MAIN_MENU_PAGE", 1 })
   self.page_text:setPosition(520, 420)
-  self.page_text:setVisible(has_pagination)
+  self.page_text:setVisible(false)
 end
 
 --- Updates the menu
@@ -149,12 +154,14 @@ function MainMenu:update()
       self:select(self.selected_index + 1)
     end
   elseif Input.isPressed(Input.Confirm) then
-    local selected_menu_item = self.options[self.selected_index]
+    local selected_menu_item = self:getSelectedOption()
     if type(selected_menu_item.action) == "function" then
       if selected_menu_item.disabled == true then
         Assets.playSound("hurt")
       else
-        Assets.playSound("menu_select")
+        if selected_menu_item.silent ~= true then
+          Assets.playSound("menu_select")
+        end
         selected_menu_item.action(selected_menu_item)
       end
     end

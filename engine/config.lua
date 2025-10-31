@@ -22,8 +22,9 @@ function Config.load()
     settings = {
       language = "en",
       fps = 30,
-      window_scale = 1,
-      fullscreen = false
+      volume = 100,
+      fullscreen = false,
+      window_scale = 1
     }
   }
 

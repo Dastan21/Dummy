@@ -135,6 +135,11 @@ function main_menu.loadSettingsMenu()
       end,
     },
     {
+      text = Text:new({ "MAIN_MENU_SETTINGS_VOLUME", Config.getSettings()["volume"] }),
+      action = function() end,
+      silent = true
+    },
+    {
       text = Text:new({ "MAIN_MENU_SETTINGS_FULLSCREEN", Lang.translate(Config.getSettings()["fullscreen"] and
         "MAIN_MENU_SETTINGS_SWITCH_ON" or "MAIN_MENU_SETTINGS_SWITCH_OFF") }),
       action = function(option)
@@ -249,6 +254,26 @@ end
 function main_menu.update()
   if main_menu.current_menu ~= nil then
     main_menu.current_menu:update()
+  end
+
+  if main_menu.current_menu == main_menu.settings_menu then
+    local option = main_menu.settings_menu:getSelectedOption()
+    if option ~= nil and option.text:getText()[1] == "MAIN_MENU_SETTINGS_VOLUME" then
+      local settings = Config.getSettings()
+      local volume = settings["volume"]
+      local old_volume = volume
+      if Input.isPressed(Input.Right) then
+        volume = math.min(volume + 5, 100)
+      elseif Input.isPressed(Input.Left) then
+        volume = math.max(volume - 5, 0)
+      end
+      if old_volume ~= volume then
+        love.audio.setVolume(volume / 100)
+        settings["volume"] = volume
+        option.text:setText({ "MAIN_MENU_SETTINGS_VOLUME", volume })
+        Assets.playSound("menu_select")
+      end
+    end
   end
 end
 
