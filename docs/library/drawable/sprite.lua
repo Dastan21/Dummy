@@ -117,6 +117,9 @@ function Sprite:setVaporizeSize(size) end
 --- @param size? number size of the particles (Defaults to `vaporize_size` if set, else `2`)
 function Sprite:vaporize(type, size) end
 
+--- Removes the sprite from the current scene
+function Sprite:remove() end
+
 --- Draws the sprite
 function Sprite:draw() end
 

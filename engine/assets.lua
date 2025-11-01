@@ -190,16 +190,21 @@ end
 
 --- Clears the cache
 function Assets.clear()
+  for _, data in pairs(audio_cache or {}) do
+    data:release()
+  end
   audio_cache = {}
 
   for source, _ in pairs(Assets.current_musics or {}) do
     source:stop()
+    source:release()
   end
   Assets.current_musics = {}
   Assets.current_music = nil
 
   for source, _ in pairs(Assets.current_sounds or {}) do
     source:stop()
+    source:release()
   end
   Assets.current_sounds = {}
   Assets.current_sound = nil
