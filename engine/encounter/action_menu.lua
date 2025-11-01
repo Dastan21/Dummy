@@ -98,6 +98,9 @@ function ActionMenu:fillIndexes()
       i = i + 1
     end
   end
+
+  self.index_x = math.min(#self.indexes_x - 1, self.index_x)
+  self.index_y = math.min(#self.indexes_y - 1, self.index_y)
 end
 
 --- Shows the menu
