@@ -54,8 +54,8 @@ end
 --- @private
 function Sprite.loadSpriteFromFolder(base_sprites_path, sprite_path)
   local sprite_full_path = base_sprites_path .. Lang.getLanguage() .. "/" .. sprite_path .. ".png"
-  -- try to get image data from cache
-  local image = cache_image[sprite_full_path]
+  -- try to get image from cache
+  local image = cache_image[sprite_full_path] or cache_image[base_sprites_path .. sprite_path .. ".png"]
   if image ~= nil then return image end
 
   local success = false
