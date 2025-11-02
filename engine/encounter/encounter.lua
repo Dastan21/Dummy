@@ -204,18 +204,12 @@ function Encounter.addEnemy(enemy, ...)
   for _, enemy in ipairs(enemies) do
     table.insert(Encounter.enemies, enemy)
   end
-
-  Encounter.loadFightEnemyMenu()
-  Encounter.loadActEnemyMenu()
 end
 
 --- Removes an enemy from the encounter
 --- @param enemy Dummy.Enemy
 function Encounter.removeEnemy(enemy)
   table.removeByValue(Encounter.enemies, enemy)
-
-  Encounter.loadFightEnemyMenu()
-  Encounter.loadActEnemyMenu()
 end
 
 --- Gets the encounter's waves
@@ -730,10 +724,12 @@ function Encounter.updateActionSelect()
     Assets.playSound("menu_move")
   elseif Input.isPressed(Input.Confirm) then
     if Encounter.action.index == Constants.ENCOUNTER_ACTIONS.FIGHT then
+      Encounter.loadFightEnemyMenu()
       if Encounter.canEnterMenu(Encounter.fight_enemy_menu) then
         Encounter.setState(Constants.ENCOUNTER_STATES.FIGHT_ENEMY_MENU)
       end
     elseif Encounter.action.index == Constants.ENCOUNTER_ACTIONS.ACT then
+      Encounter.loadActEnemyMenu()
       if Encounter.canEnterMenu(Encounter.act_enemy_menu) then
         Encounter.setState(Constants.ENCOUNTER_STATES.ACT_ENEMY_MENU)
       end
