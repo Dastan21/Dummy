@@ -124,6 +124,7 @@ function Wave:__end()
   for bullet in pairs(self.bullets) do
     if not bullet:isPersistent() then
       bullet:remove()
+      self.bullets[bullet] = nil
     end
   end
 
