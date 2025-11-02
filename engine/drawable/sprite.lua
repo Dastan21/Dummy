@@ -373,21 +373,6 @@ function Sprite:vaporize(type, size)
   end)
 end
 
---- Removes the sprite from the current scene
-function Sprite:remove()
-  Drawable.remove(self)
-
-  for _, frame in ipairs(self.frames) do
-    frame:release()
-  end
-  self.frames = {}
-
-  if self.sprite ~= nil then
-    self.sprite:release()
-    self.sprite = nil
-  end
-end
-
 --- Draws the sprite
 function Sprite:draw()
   if not self:isVisible() then return end

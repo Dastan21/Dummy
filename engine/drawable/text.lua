@@ -232,16 +232,6 @@ function Text:update(dt)
   self:updateNodes(dt)
 end
 
---- Removes the text from the current scene
-function Text:remove()
-  Drawable.remove(self)
-
-  if self.text ~= nil then
-    self.text:release()
-    self.text = nil
-  end
-end
-
 --- Draws the text
 function Text:draw()
   if not self:isVisible() then return end

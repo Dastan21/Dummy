@@ -115,9 +115,6 @@ function Text:registerCommand(command, func) end
 --- Updates the text
 function Text:update(dt) end
 
---- Removes the text from the current scene
-function Text:remove() end
-
 --- Draws the text
 function Text:draw() end
 
