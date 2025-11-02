@@ -40,7 +40,7 @@ function ItemEquipment:use()
     self:onBeforeUse()
   end
 
-  Encounter.playDialogueText({ "ENCOUNTER_ITEM_EQUIPMENT_USE", Lang.translate(self.name) })
+  Encounter.playDialogueText({ "ENCOUNTER_ITEM_EQUIPMENT_USE", Lang.translate(self.name) }, table.unpack(self.texts, 2))
   Player.removeItem(self)
   Assets.playSound("item")
 

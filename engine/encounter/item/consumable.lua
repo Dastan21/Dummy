@@ -46,11 +46,11 @@ function ItemConsumable:use()
   end
 
   local dialogue_text = heal_text
-  if self.text ~= nil then
-    dialogue_text = Lang.translate(self.text, Lang.translate(self.name)) .. "\n" .. heal_text
+  if #self.texts > 0 then
+    dialogue_text = Lang.translate(self.texts[1], Lang.translate(self.name)) .. "\n" .. heal_text
   end
 
-  Encounter.playDialogueText(dialogue_text)
+  Encounter.playDialogueText(dialogue_text, table.unpack(self.texts, 2))
   Player.removeItem(self)
   Assets.playSound("swallow")
 
@@ -73,7 +73,7 @@ end
 function ItemConsumable:new(name, short_name, heal, type)
   self = Class:new(ItemConsumable, { name, short_name })
   self.heal = heal
-  self.text = type == "drink" and "ENCOUNTER_ITEM_DRINK_USE" or "ENCOUNTER_ITEM_FOOD_USE"
+  self.texts = { type == "drink" and "ENCOUNTER_ITEM_DRINK_USE" or "ENCOUNTER_ITEM_FOOD_USE" }
 
   return self
 end

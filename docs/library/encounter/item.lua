@@ -10,7 +10,7 @@
 ---
 --- @field protected name Dummy.Text.Text
 --- @field protected short_name Dummy.Text.Text
---- @field protected text Dummy.Text.Text|nil
+--- @field protected texts Dummy.Text.Text[]
 Item = {}
 
 --- Gets the class name
@@ -33,13 +33,14 @@ function Item:getShortName() end
 --- @param short_name Dummy.Text.Text
 function Item:setShortName(short_name) end
 
---- Gets the item's dialogue text
---- @return Dummy.Text.Text
-function Item:getText() end
+--- Gets the item's dialogue texts
+--- @return Dummy.Text.Text[]
+function Item:getTexts() end
 
 --- Sets the item's dialogue text
 --- @param text Dummy.Text.Text
-function Item:setText(text) end
+--- @param ... Dummy.Text.Text
+function Item:setText(text, ...) end
 
 --- Uses the item
 function Item:use() end

@@ -2,7 +2,7 @@
 ---
 --- @field protected name Dummy.Text.Text
 --- @field protected short_name Dummy.Text.Text
---- @field protected text Dummy.Text.Text|nil
+--- @field protected texts Dummy.Text.Text[]
 local Item = Class()
 
 --- Gets the class name
@@ -35,16 +35,17 @@ function Item:setShortName(short_name)
   self.short_name = short_name
 end
 
---- Gets the item's dialogue text
---- @return Dummy.Text.Text
-function Item:getText()
-  return self.text
+--- Gets the item's dialogue texts
+--- @return Dummy.Text.Text[]
+function Item:getTexts()
+  return self.texts
 end
 
 --- Sets the item's dialogue text
 --- @param text Dummy.Text.Text
-function Item:setText(text)
-  self.text = text
+--- @param ... Dummy.Text.Text
+function Item:setText(text, ...)
+  self.texts = { text, ... }
 end
 
 --- Uses the item
@@ -53,8 +54,8 @@ function Item:use()
     self:onBeforeUse()
   end
 
-  if self.text ~= nil then
-    Encounter.playDialogueText(self.text)
+  if #self.texts > 0 then
+    Encounter.playDialogueText(table.unpack(self.texts))
   end
 
   if type(self.onUse) == "function" then
@@ -78,6 +79,7 @@ function Item:new(name, short_name)
   self = Class:new(Item)
   self.name = name
   self.short_name = short_name
+  self.texts = {}
 
   return self
 end
