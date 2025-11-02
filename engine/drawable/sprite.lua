@@ -193,8 +193,6 @@ end
 
 --- Stops the sprite's animation
 function Sprite:stop()
-  if self.frames == nil then return end
-
   if self.frames_timer ~= nil then
     Timer.cancel(self.frames_timer)
   end
@@ -249,6 +247,13 @@ function Sprite:setLoop(loop)
   if was_playing then
     self:play()
   end
+end
+
+--- Called when the drawable is removed
+function Sprite:onRemoved()
+  Drawable.onRemoved(self)
+
+  self:stop()
 end
 
 --- Gets the sprite's vaporize type

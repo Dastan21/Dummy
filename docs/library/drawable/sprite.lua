@@ -96,6 +96,9 @@ function Sprite:getLoop() end
 --- @param loop boolean
 function Sprite:setLoop(loop) end
 
+--- Called when the drawable is removed
+function Sprite:onRemoved() end
+
 --- Gets the sprite's vaporize type
 --- @return "pixel" | "line" | nil
 function Sprite:getVaporizeType() end
