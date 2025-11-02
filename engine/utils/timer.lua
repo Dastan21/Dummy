@@ -17,6 +17,13 @@ function Timer.update(dt)
   HumpTimer.update(dt)
 end
 
+--- Schedules a function to be called the next update.
+--- @param func fun()
+--- @return table
+function Timer.next(func)
+  return HumpTimer.after(0, func)
+end
+
 --- Schedules a function. The function will be executed after `delay` seconds have elapsed.
 ---
 --- `func` will receive itself as only parameter. This is useful to implement periodic behavior.

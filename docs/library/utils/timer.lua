@@ -18,6 +18,11 @@ Timer = {}
 --- @param dt number
 function Timer.update(dt) end
 
+--- Schedules a function to be called the next update.
+--- @param func fun()
+--- @return table
+function Timer.next(func) end
+
 --- Schedules a function. The function will be executed after `delay` seconds have elapsed.
 ---
 --- `func` will receive itself as only parameter. This is useful to implement periodic behavior.
