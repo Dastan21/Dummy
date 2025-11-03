@@ -182,12 +182,12 @@ function Debug.update(dt)
     Debug.paused = not Debug.paused
   end
 
-  if Input.isDown("ctrl") and Input.isDown("shift") and Input.isDown("lalt") and Input.isPressed("d") then
-    Debug.debug_mode = not Debug.debug_mode
+  if Debug.debug_mode and Input.isDown("ctrl") and Input.isDown("shift") and Input.isDown("kp+") then
+    dt = dt * 8
   end
 
-  if Input.isDown("ctrl") and Input.isDown("shift") and Input.isDown("kp+") then
-    dt = dt * 8
+  if Input.isDown("ctrl") and Input.isDown("shift") and Input.isDown("lalt") and Input.isPressed("d") then
+    Debug.debug_mode = not Debug.debug_mode
   end
 
   return dt
