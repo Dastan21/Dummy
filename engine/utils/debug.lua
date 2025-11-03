@@ -42,6 +42,7 @@ function Debug.load()
   Debug.margin = 5
   Debug.scale = 1
 
+  Debug.debug_mode = Constants.DEBUG
   Debug.display_hitbox = false
   Debug.paused = false
 
@@ -111,15 +112,23 @@ function Debug.update(dt)
 
   if Input.isPressed("f6") then
     Debug.fps_text:setVisible(not Debug.fps_text:isVisible())
-  elseif Input.isPressed("f7") then
+  end
+
+  if Debug.debug_mode and Input.isPressed("f7") then
     Debug.display_hitbox = not Debug.display_hitbox
-  elseif Input.isDown("ctrl") and Input.isPressed("f8") then
-    Debug.clearLogs()
-  elseif Input.isPressed("f8") then
-    local visible = not Debug.log_bg_sprite:isVisible()
-    Debug.log_bg_sprite:setVisible(visible)
-    Debug.log_text:setVisible(visible)
-  elseif Input.isPressed("f9") then
+  end
+
+  if Debug.debug_mode and Input.isPressed("f8") then
+    if Input.isDown("ctrl") then
+      Debug.clearLogs()
+    else
+      local visible = not Debug.log_bg_sprite:isVisible()
+      Debug.log_bg_sprite:setVisible(visible)
+      Debug.log_text:setVisible(visible)
+    end
+  end
+
+  if Input.isPressed("f9") then
     Debug.screenshot_text:setVisible(false)
 
     Assets.playSound("screenshot")
@@ -139,22 +148,46 @@ function Debug.update(dt)
           end)
       end)
     end)
-  elseif Input.isPressed("f10") then
+  end
+
+  if Input.isPressed("f10") then
     love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/screenshots")
-  elseif Input.isDown("ctrl") and Input.isPressed("r") then
+  end
+
+  if Debug.debug_mode and Input.isDown("ctrl") and Input.isPressed("r") then
     if Input.isDown("shift") then
       Scene.fullReload()
     else
       Scene.reload()
     end
-  elseif Input.isDown("ctrl") and Input.isPressed(";") then
+  end
+
+  if Input.isDown("ctrl") and Input.isPressed(";") then
     love.audio.setVolume(love.audio.getVolume() > 0 and 0 or (Config.getSettings()["volume"] / 100))
-  elseif Input.isDown("ctrl") and Input.isPressed("g") then
+  end
+
+  if Debug.debug_mode and Input.isDown("ctrl") and Input.isPressed("g") then
     if Scene.getCurrentSceneName() == "ENCOUNTER" then
       Player.hurt(Player.getHP() * 2, true)
     end
-  elseif Input.isDown("ctrl") and Input.isPressed("p") then
+  end
+
+  if Debug.debug_mode and Input.isDown("ctrl") and Input.isPressed("h") then
+    if Scene.getCurrentSceneName() == "ENCOUNTER" then
+      Player.heal(Player.getMaxHP() * 2)
+    end
+  end
+
+  if Debug.debug_mode and Input.isDown("ctrl") and Input.isPressed("p") then
     Debug.paused = not Debug.paused
+  end
+
+  if Input.isDown("ctrl") and Input.isDown("shift") and Input.isDown("lalt") and Input.isPressed("d") then
+    Debug.debug_mode = not Debug.debug_mode
+  end
+
+  if Input.isDown("ctrl") and Input.isDown("shift") and Input.isDown("kp+") then
+    dt = dt * 8
   end
 
   return dt
