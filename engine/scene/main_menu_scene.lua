@@ -232,6 +232,7 @@ end
 --- Switches current language
 function main_menu.switchLanguage()
   Lang.switchLanguage()
+  ModList.setWindowTitleAndIcon()
   main_menu.current_menu:show()
 end
 
