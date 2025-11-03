@@ -68,7 +68,7 @@ function main_menu.loadMainMenu()
       text = Text:new("MAIN_MENU_PLAY"),
       action = function()
         main_menu.loadModListMenu()
-        main_menu.changeMenu(main_menu.mod_list_menu)
+        main_menu.changeMenu(main_menu.mod_list_menu, 1)
       end
     })
 
@@ -92,7 +92,7 @@ function main_menu.loadMainMenu()
   table.insert(options, {
     text = Text:new("MAIN_MENU_SETTINGS"),
     action = function()
-      main_menu.changeMenu(main_menu.settings_menu)
+      main_menu.changeMenu(main_menu.settings_menu, 1)
     end
   })
 
@@ -207,7 +207,6 @@ function main_menu.loadModListMenu()
 
   if main_menu.mod_list_menu ~= nil then
     main_menu.mod_list_menu:setOptions(options)
-    main_menu.mod_list_menu:select(1, true)
   else
     main_menu.mod_list_menu = MainMenu:new(options, function()
       main_menu.changeMenu(main_menu.main_menu)
@@ -217,12 +216,17 @@ end
 
 --- Changes menu
 --- @param new_menu Dummy.MainMenu
-function main_menu.changeMenu(new_menu)
+--- @param index? integer
+function main_menu.changeMenu(new_menu, index)
   if main_menu.current_menu ~= nil then
     main_menu.current_menu:hide()
   end
   main_menu.current_menu = new_menu
   main_menu.current_menu:show()
+
+  if index ~= nil then
+    main_menu.current_menu:select(index, true)
+  end
 end
 
 --- Switches current language

@@ -34,7 +34,8 @@ function main_menu.loadModListMenu() end
 
 --- Changes menu
 --- @param new_menu Dummy.MainMenu
-function main_menu.changeMenu(new_menu) end
+--- @param index? integer
+function main_menu.changeMenu(new_menu, index) end
 
 --- Switches current language
 function main_menu.switchLanguage() end
