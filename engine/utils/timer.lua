@@ -56,7 +56,7 @@ end
 ---
 --- Optionally runs `after()` once `delay` seconds have passed.
 --- @param delay number number of seconds the func will be called
---- @param func fun(dt: number) the function to be called
+--- @param func fun(dt: number, left: number) the function to be called
 --- @param after? fun() a function to be called after `delay` seconds
 --- @return table
 function Timer.during(delay, func, after)
@@ -88,7 +88,6 @@ end
 --- @param handle table|nil the function to be canceled
 function Timer.cancel(handle)
   HumpTimer.cancel(handle)
-  handle = nil
 end
 
 --- Remove all timed and periodic functions. Functions that have not yet been executed will discarded.
