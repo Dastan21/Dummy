@@ -113,13 +113,12 @@ end
 --- @param keep_last_frame? boolean stays on the last frame in oneshot animation (Defaults to `true`)
 function Sprite:setSprite(sprites_names, speed, loop, play, keep_last_frame)
   self:stop()
+  self.frames = {}
 
   if type(sprites_names) == "table" then
     self.frames_speed = Utils.getOrDefault(speed, self.frames_speed)
     self.loop = Utils.getOrDefault(loop, self.loop)
     self.keep_last_frame = Utils.getOrDefault(keep_last_frame, self.keep_last_frame)
-    self.frames = {}
-    self.frame_index = 1
     for i, frame in ipairs(sprites_names) do
       if type(frame) == "string" then
         self.frames[i] = Sprite.loadSprite(frame)
@@ -170,7 +169,7 @@ end
 
 --- Plays the sprite's animation
 function Sprite:play()
-  if self.frames == nil then return end
+  if self.frames == nil or #self.frames <= 0 then return end
 
   self:stop()
   local stopped = false
@@ -195,6 +194,7 @@ end
 function Sprite:stop()
   if self.frames_timer ~= nil then
     Timer.cancel(self.frames_timer)
+    self.frames_timer = nil
   end
 
   self.frame_index = 1
@@ -249,11 +249,12 @@ function Sprite:setLoop(loop)
   end
 end
 
---- Called when the drawable is removed
-function Sprite:onRemoved()
-  Drawable.onRemoved(self)
+--- Removes the sprite from the current scene
+function Sprite:remove()
+  Drawable.remove(self)
 
   self:stop()
+  self.frames = {}
 end
 
 --- Gets the sprite's vaporize type
