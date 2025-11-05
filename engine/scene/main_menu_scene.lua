@@ -140,13 +140,12 @@ function main_menu.loadSettingsMenu()
       silent = true
     },
     {
-      text = Text:new({ "MAIN_MENU_SETTINGS_FULLSCREEN", Lang.translate(Config.getSettings()["fullscreen"] and
-        "MAIN_MENU_SETTINGS_SWITCH_ON" or "MAIN_MENU_SETTINGS_SWITCH_OFF") }),
+      text = Text:new({ "MAIN_MENU_SETTINGS_FULLSCREEN", Config.getSettings()["fullscreen"] and
+      "MAIN_MENU_SETTINGS_SWITCH_ON" or "MAIN_MENU_SETTINGS_SWITCH_OFF" }),
       action = function(option)
         local fullscreen = not Config.getSettings()["fullscreen"]
-        option.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", Lang.translate(fullscreen and
-          "MAIN_MENU_SETTINGS_SWITCH_ON" or
-          "MAIN_MENU_SETTINGS_SWITCH_OFF") })
+        option.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", fullscreen and "MAIN_MENU_SETTINGS_SWITCH_ON" or
+        "MAIN_MENU_SETTINGS_SWITCH_OFF" })
 
         Config.getSettings()["fullscreen"] = fullscreen
         love.scale()
@@ -169,7 +168,7 @@ function main_menu.loadSettingsMenu()
 
         for _, opt in ipairs(main_menu.settings_menu:getOptions()) do
           if opt.text:getText()[1] == "MAIN_MENU_SETTINGS_FULLSCREEN" then
-            opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", Lang.translate("MAIN_MENU_SETTINGS_SWITCH_OFF") })
+            opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", "MAIN_MENU_SETTINGS_SWITCH_OFF" })
           end
         end
 
