@@ -58,6 +58,11 @@ function Lang.translate(key, ...)
   end
 
   key = tostring(key)
+  for i, v in pairs(data) do
+    if type(v) == "string" then
+      data[i] = Lang.translate(v)
+    end
+  end
 
   local txt = (Lang.translations[Lang.language_code] and Lang.translations[Lang.language_code][key]) or key or ""
   local i = 1
