@@ -16,6 +16,7 @@ MainMenu = {}
 
 --- @class Dummy.Menu.Option
 ---
+--- @field id string|nil unique identifier
 --- @field text Dummy.Text text to display
 --- @field action fun(self: Dummy.Menu.Option)|nil callback when the option is confirmed
 --- @field draw fun(self: Dummy.Menu.Option)|nil draw along the option
@@ -51,6 +52,11 @@ function MainMenu:getOptions() end
 --- Gets the selected option
 --- @return Dummy.Menu.Option
 function MainMenu:getSelectedOption() end
+
+--- Gets a meny option by id
+--- @param id string
+--- @return Dummy.Menu.Option|nil
+function MainMenu:getOptionById(id) end
 
 --- Initializes the menu options
 function MainMenu:init() end

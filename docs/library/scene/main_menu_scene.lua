@@ -15,6 +15,7 @@
 --- @field protected credits_text Dummy.Text
 --- @field protected background_sprite Dummy.Sprite
 --- @field protected menu_music love.Source
+--- @field protected was_fullscreen boolean
 main_menu = {}
 
 --- Loads the main menu

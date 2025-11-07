@@ -2,6 +2,7 @@
 
 --- @class Dummy.Menu.Option
 ---
+--- @field id string|nil unique identifier
 --- @field text Dummy.Text text to display
 --- @field action fun(self: Dummy.Menu.Option)|nil callback when the option is confirmed
 --- @field draw fun(self: Dummy.Menu.Option)|nil draw along the option
@@ -29,8 +30,6 @@ local MAX_DISPLAYED_OPTIONS = 4
 --- @param index number options index
 --- @param silent? boolean wether to play a sound (Defaults to `false`)
 function MainMenu:select(index, silent)
-  if index == self.selected_index then return end
-
   -- previously selected menu item
   local menu_item = self:getSelectedOption()
   if menu_item ~= nil then
@@ -56,7 +55,6 @@ function MainMenu:select(index, silent)
   local page = math.floor((self.selected_index - 1) / MAX_DISPLAYED_OPTIONS) + 1
   self.arrow_up:setVisible(page > 1)
   self.arrow_down:setVisible(page < math.ceil(#self.options / MAX_DISPLAYED_OPTIONS))
-  self.page_text:setText({ "MAIN_MENU_PAGE", page })
 
   if not silent then
     Assets.playSound("menu_move")
@@ -68,13 +66,9 @@ function MainMenu:show()
   for i, option in ipairs(self.options) do
     option.text:setVisible((i - 1) < MAX_DISPLAYED_OPTIONS)
     option.text:setText(option.text:getText(), true)
-    local page = math.floor((self.selected_index - 1) / MAX_DISPLAYED_OPTIONS) + 1
-    self.page_text:setText({ "MAIN_MENU_PAGE", page })
   end
 
-  local has_pagination = #self.options > MAX_DISPLAYED_OPTIONS
-  self.arrow_down:setVisible(has_pagination)
-  self.page_text:setVisible(has_pagination)
+  self:select(self.selected_index, true)
 end
 
 --- Hides the menu
@@ -85,7 +79,6 @@ function MainMenu:hide()
 
   self.arrow_up:setVisible(false)
   self.arrow_down:setVisible(false)
-  self.page_text:setVisible(false)
 end
 
 --- Sets the menu options
@@ -97,7 +90,6 @@ function MainMenu:setOptions(options)
 
   self.arrow_up:remove()
   self.arrow_down:remove()
-  self.page_text:remove()
 
   self.options = options
   self:init()
@@ -113,6 +105,17 @@ end
 --- @return Dummy.Menu.Option
 function MainMenu:getSelectedOption()
   return self.options[self.selected_index]
+end
+
+--- Gets a meny option by id
+--- @param id string
+--- @return Dummy.Menu.Option|nil
+function MainMenu:getOptionById(id)
+  for _, opt in ipairs(self.options) do
+    if opt.id ~= nil and opt.id == id then
+      return opt
+    end
+  end
 end
 
 --- Initializes the menu options
@@ -136,9 +139,6 @@ function MainMenu:init()
   self.arrow_down:setPosition(320, 260 + MAX_DISPLAYED_OPTIONS * 40)
   self.arrow_down:setAngle(90)
   self.arrow_down:setVisible(false)
-  self.page_text = Text:new({ "MAIN_MENU_PAGE", 1 })
-  self.page_text:setPosition(520, 420)
-  self.page_text:setVisible(false)
 end
 
 --- Updates the menu

@@ -7,6 +7,7 @@
 --- @field protected credits_text Dummy.Text
 --- @field protected background_sprite Dummy.Sprite
 --- @field protected menu_music love.Source
+--- @field protected was_fullscreen boolean
 local main_menu = {}
 
 --- Loads the main menu
@@ -41,6 +42,8 @@ function main_menu.load()
 
   main_menu.menu_music = Assets.playMusic("main_menu")
   main_menu.menu_music:setVolume(0.5)
+
+  main_menu.was_fullscreen = love.window.getFullscreen()
 
   if standalone ~= nil then
     if type(standalone.preview) == "function" then
@@ -92,7 +95,7 @@ function main_menu.loadMainMenu()
   table.insert(options, {
     text = Text:new("MAIN_MENU_SETTINGS"),
     action = function()
-      main_menu.changeMenu(main_menu.settings_menu, 1)
+      main_menu.changeMenu(main_menu.settings_menu)
     end
   })
 
@@ -112,6 +115,7 @@ end
 function main_menu.loadSettingsMenu()
   main_menu.settings_menu = MainMenu:new({
     {
+      id = "LANGUAGE_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() }),
       action = function(option)
         main_menu.switchLanguage()
@@ -119,6 +123,7 @@ function main_menu.loadSettingsMenu()
       end,
     },
     {
+      id = "FPS_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_FPS", Config.getSettings()["fps"] }),
       action = function(option)
         local settings = Config.getSettings()
@@ -135,11 +140,13 @@ function main_menu.loadSettingsMenu()
       end,
     },
     {
+      id = "VOLUME_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_VOLUME", Config.getSettings()["volume"] }),
       action = function() end,
       silent = true
     },
     {
+      id = "FULLSCREEN_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_FULLSCREEN", Config.getSettings()["fullscreen"] and
       "MAIN_MENU_SETTINGS_SWITCH_ON" or "MAIN_MENU_SETTINGS_SWITCH_OFF" }),
       action = function(option)
@@ -152,6 +159,7 @@ function main_menu.loadSettingsMenu()
       end,
     },
     {
+      id = "WINDOW_SCALE_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config.getSettings()["window_scale"] }),
       action = function(option)
         local settings = Config.getSettings()
@@ -166,10 +174,9 @@ function main_menu.loadSettingsMenu()
         settings["window_scale"] = scales[(scale_index % #scales) + 1]
         option.text:setText({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", settings["window_scale"] })
 
-        for _, opt in ipairs(main_menu.settings_menu:getOptions()) do
-          if opt.text:getText()[1] == "MAIN_MENU_SETTINGS_FULLSCREEN" then
-            opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", "MAIN_MENU_SETTINGS_SWITCH_OFF" })
-          end
+        local opt = main_menu.settings_menu:getOptionById("FULLSCREEN_SETTING")
+        if opt ~= nil then
+          opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", "MAIN_MENU_SETTINGS_SWITCH_OFF" })
         end
 
         Config.getSettings()["fullscreen"] = false
@@ -276,6 +283,15 @@ function main_menu.update()
         settings["volume"] = volume
         option.text:setText({ "MAIN_MENU_SETTINGS_VOLUME", volume })
         Assets.playSound("menu_select")
+      end
+    end
+
+    if main_menu.was_fullscreen ~= love.window.getFullscreen() then
+      main_menu.was_fullscreen = love.window.getFullscreen()
+      local opt = main_menu.settings_menu:getOptionById("FULLSCREEN_SETTING")
+      if opt ~= nil then
+        opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", main_menu.was_fullscreen and
+        "MAIN_MENU_SETTINGS_SWITCH_ON" or "MAIN_MENU_SETTINGS_SWITCH_OFF" })
       end
     end
   end
