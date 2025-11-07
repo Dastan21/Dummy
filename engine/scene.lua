@@ -5,6 +5,7 @@
 --- @field protected scene_name string|nil
 --- @field protected previous_scene_name string|nil
 --- @field protected scene_data table
+--- @field protected quit_was_pressed boolean
 --- @field protected quitting_delay number
 --- @field protected quitting_timer number
 --- @field protected quitting_sprite Dummy.Sprite
@@ -32,6 +33,7 @@ function Scene.load()
     love.graphics.newCanvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)
   }
 
+  Scene.quit_was_pressed = false
   Scene.quitting_delay = SCENE_QUITTING_DELAY
   Scene.quitting_timer = 0
 end
@@ -57,6 +59,7 @@ function Scene.change(scene_name, ...)
     Scene.scene.load(...)
   end
 
+  Scene.quit_was_pressed = false
   Scene.quitting_delay = SCENE_QUITTING_DELAY
   Scene.quitting_timer = 0
   Scene.quitting_sprite = Sprite:new("quitting1")
@@ -68,6 +71,7 @@ end
 
 --- Resets the quitting timer
 function Scene.resetQuitting()
+  Scene.quit_was_pressed = false
   Scene.quitting_timer = 0
   Scene.quitting_sprite:setSprite("quitting1")
   Scene.quitting_sprite:setAlpha(0)
@@ -76,27 +80,30 @@ end
 
 --- Updates the quitting timer
 function Scene.updateQuitting(dt)
-  if Scene.scene_name == "MAIN_MENU" then
-    if Input.isPressed("escape") then
-      love.event.quit()
-    end
-  else
-    if Input.isDown("escape") and Scene.quitting_timer < Scene.quitting_delay then
-      Scene.quitting_sprite:setVisible(true)
-      Scene.quitting_timer = Scene.quitting_timer + dt
-      Scene.quitting_sprite:setAlpha(Scene.quitting_timer / Scene.quitting_delay)
-    elseif Input.isReleased("escape") then
-      Scene.resetQuitting()
-    end
+  if Scene.quit_was_pressed and Input.isDown("escape") and Scene.quitting_timer < Scene.quitting_delay then
+    Scene.quitting_sprite:setVisible(true)
+    Scene.quitting_timer = Scene.quitting_timer + dt
+    Scene.quitting_sprite:setAlpha(Scene.quitting_timer / Scene.quitting_delay)
+  elseif Input.isReleased("escape") then
+    Scene.resetQuitting()
+  end
 
-    if Scene.quitting_timer >= Scene.quitting_delay then
-      Scene.resetQuitting()
+  if Scene.quitting_timer >= Scene.quitting_delay then
+    Scene.resetQuitting()
+
+    if Scene.scene_name == "MAIN_MENU" then
+      love.event.quit()
+    else
       Scene.change("MAIN_MENU")
-    elseif Scene.quitting_timer > Scene.quitting_delay * 2 / 3 then
-      Scene.quitting_sprite:setSprite("quitting3")
-    elseif Scene.quitting_timer > Scene.quitting_delay * 1 / 3 then
-      Scene.quitting_sprite:setSprite("quitting2")
     end
+  elseif Scene.quitting_timer > Scene.quitting_delay * 2 / 3 then
+    Scene.quitting_sprite:setSprite("quitting3")
+  elseif Scene.quitting_timer > Scene.quitting_delay * 1 / 3 then
+    Scene.quitting_sprite:setSprite("quitting2")
+  end
+
+  if Input.isPressed("escape") then
+    Scene.quit_was_pressed = true
   end
 end
 
