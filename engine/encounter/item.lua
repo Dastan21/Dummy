@@ -64,11 +64,11 @@ function Item:use()
 end
 
 --- Called right before the item is used
----
---- Note: you can change the item dialogue text here
 function Item:onBeforeUse() end
 
 --- Called when the item is used
+---
+--- Note: you can change the item dialogue text here
 function Item:onUse() end
 
 --- Creates an item
