@@ -12,6 +12,7 @@ local main_menu = {}
 
 --- Loads the main menu
 function main_menu.load()
+  Config.save()
   ModList.load()
 
   local standalone = ModList.getStandalone()
