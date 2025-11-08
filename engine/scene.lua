@@ -80,6 +80,8 @@ end
 
 --- Updates the quitting timer
 function Scene.updateQuitting(dt)
+  if Scene.getCurrentSceneName() == "MAIN_MENU" and love.system.getOS() == "Web" then return end
+
   if Scene.quit_was_pressed and Input.isDown("escape") and Scene.quitting_timer < Scene.quitting_delay then
     Scene.quitting_sprite:setVisible(true)
     Scene.quitting_timer = Scene.quitting_timer + dt
