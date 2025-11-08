@@ -38,9 +38,6 @@ function main_menu.loadModListMenu() end
 --- @param index? integer
 function main_menu.changeMenu(new_menu, index) end
 
---- Switches current language
-function main_menu.switchLanguage() end
-
 --- Sets the logo sprite
 --- @param sprite_name string
 function main_menu.setLogo(sprite_name) end

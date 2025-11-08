@@ -119,7 +119,11 @@ function main_menu.loadSettingsMenu()
       id = "LANGUAGE_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() }),
       action = function(option)
-        main_menu.switchLanguage()
+        Lang.switchLanguage()
+        Scene.refreshQuittingSprite()
+        ModList.setWindowTitleAndIcon()
+
+        main_menu.current_menu:show()
         option.text:setText({ "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() })
       end,
     },
@@ -234,13 +238,6 @@ function main_menu.changeMenu(new_menu, index)
   if index ~= nil then
     main_menu.current_menu:select(index, true)
   end
-end
-
---- Switches current language
-function main_menu.switchLanguage()
-  Lang.switchLanguage()
-  ModList.setWindowTitleAndIcon()
-  main_menu.current_menu:show()
 end
 
 --- Sets the logo sprite

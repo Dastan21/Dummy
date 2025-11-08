@@ -99,6 +99,11 @@ function Scene.removeShader(shader) end
 --- Sorts shaders in the current scene by priority
 function Scene.sortShaders() end
 
+--- Refreshes the quitting sprite
+---
+--- Used when the language is changed
+function Scene.refreshQuittingSprite() end
+
 --- Cleans the current scene
 function Scene.clean() end
 

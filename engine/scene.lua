@@ -298,6 +298,13 @@ function Scene.sortShaders()
   end)
 end
 
+--- Refreshes the quitting sprite
+---
+--- Used when the language is changed
+function Scene.refreshQuittingSprite()
+  Scene.quitting_sprite:setSprite("quitting1")
+end
+
 --- Cleans the current scene
 function Scene.clean()
   local tmp_drawables = {}
