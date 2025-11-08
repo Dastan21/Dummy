@@ -13,6 +13,7 @@
 --- @field protected scene_name string|nil
 --- @field protected previous_scene_name string|nil
 --- @field protected scene_data table
+--- @field protected quit_was_pressed boolean
 --- @field protected quitting_delay number
 --- @field protected quitting_timer number
 --- @field protected quitting_sprite Dummy.Sprite
