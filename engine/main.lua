@@ -43,12 +43,8 @@ ItemConsumable = require "encounter.item.consumable"
 ItemEquipment = require "encounter.item.equipment"
 
 local engine = {
-  window = {
-    translate_x = 0,
-    translate_y = 0,
-    scale = 1,
-  },
-  time = 0
+  time = 0,
+  canvas = nil
 }
 
 function love.load()
@@ -88,13 +84,6 @@ function love.load()
   engine.time = love.timer.getTime()
 end
 
-function love.resize(width, height)
-  local scale = math.min(width / Constants.SCREEN_WIDTH, height / Constants.SCREEN_HEIGHT)
-  engine.window.translate_x = (width - Constants.SCREEN_WIDTH * scale) / 2
-  engine.window.translate_y = (height - Constants.SCREEN_HEIGHT * scale) / 2
-  engine.window.scale = scale
-end
-
 function love.scale()
   local settings = Config.getSettings()
   if settings.fullscreen == true then
@@ -103,7 +92,6 @@ function love.scale()
     local width = Constants.SCREEN_WIDTH * settings["window_scale"]
     local height = Constants.SCREEN_HEIGHT * settings["window_scale"]
     love.window.setMode(width, height)
-    love.resize(width, height)
   end
 end
 
@@ -170,13 +158,11 @@ function love.draw()
     love.graphics.setCanvas()
 
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.translate(engine.window.translate_x, engine.window.translate_y)
-    love.graphics.scale(engine.window.scale)
-    love.graphics.draw(engine.canvas)
-
-    love.graphics.setColor(0, 0, 0, 1)
-    love.graphics.rectangle("fill", -engine.window.translate_x, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)
-    love.graphics.rectangle("fill", Constants.SCREEN_WIDTH, 0, engine.window.translate_x, Constants.SCREEN_HEIGHT)
+    love.graphics.translate(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
+    local width, height = love.window.getMode()
+    local scale = math.min(width / Constants.SCREEN_WIDTH, height / Constants.SCREEN_HEIGHT)
+    love.graphics.scale(scale)
+    love.graphics.draw(engine.canvas, -Constants.SCREEN_WIDTH / 2, -Constants.SCREEN_HEIGHT / 2)
   end, engine.error_handler)
 end
 
