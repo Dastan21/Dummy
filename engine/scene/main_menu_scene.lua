@@ -119,7 +119,8 @@ end
 
 --- Loads settings menu
 function main_menu.loadSettingsMenu()
-  main_menu.settings_menu = MainMenu:new({
+  --- @type Dummy.Menu.Options
+  local options = {
     {
       id = "LANGUAGE_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() }),
@@ -167,8 +168,11 @@ function main_menu.loadSettingsMenu()
         Config.getSettings()["fullscreen"] = fullscreen
         love.scale()
       end,
-    },
-    {
+    }
+  }
+
+  if love.system.getOS() ~= "Web" then
+    table.insert(options, {
       id = "WINDOW_SCALE_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config.getSettings()["window_scale"] }),
       action = function(option)
@@ -192,8 +196,10 @@ function main_menu.loadSettingsMenu()
         Config.getSettings()["fullscreen"] = false
         love.scale()
       end,
-    }
-  }, function()
+    })
+  end
+
+  main_menu.settings_menu = MainMenu:new(options, function()
     main_menu.changeMenu(main_menu.main_menu)
   end)
 end
