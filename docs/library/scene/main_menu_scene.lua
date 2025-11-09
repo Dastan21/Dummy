@@ -16,6 +16,8 @@
 --- @field protected background_sprite Dummy.Sprite
 --- @field protected menu_music love.Source
 --- @field protected was_fullscreen boolean
+--- @field protected input_hold_time number
+--- @field protected input_hold_delay number
 main_menu = {}
 
 --- Loads the main menu
@@ -51,5 +53,5 @@ function main_menu.setBackground(sprite_name) end
 function main_menu.setMenuMusic(music_name) end
 
 --- Updates the main menu
-function main_menu.update() end
+function main_menu.update(dt) end
 

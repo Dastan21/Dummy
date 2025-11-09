@@ -8,6 +8,8 @@
 --- @field protected background_sprite Dummy.Sprite
 --- @field protected menu_music love.Source
 --- @field protected was_fullscreen boolean
+--- @field protected input_hold_time number
+--- @field protected input_hold_delay number
 local main_menu = {}
 
 --- Loads the main menu
@@ -45,6 +47,9 @@ function main_menu.load()
   main_menu.menu_music:setVolume(0.5)
 
   main_menu.was_fullscreen = love.window.getFullscreen()
+
+  main_menu.input_hold_time = 0
+  main_menu.input_hold_delay = 0.1
 
   if standalone ~= nil then
     if type(standalone.preview) == "function" then
@@ -260,7 +265,7 @@ function main_menu.setMenuMusic(music_name)
 end
 
 --- Updates the main menu
-function main_menu.update()
+function main_menu.update(dt)
   if main_menu.current_menu ~= nil then
     main_menu.current_menu:update()
   end
@@ -271,10 +276,17 @@ function main_menu.update()
       local settings = Config.getSettings()
       local volume = settings["volume"]
       local old_volume = volume
-      if Input.isPressed(Input.Right) then
+      if Input.isDown(Input.Right) or Input.isDown(Input.Left) then
+        main_menu.input_hold_time = main_menu.input_hold_time + dt
+      else
+        main_menu.input_hold_time = 0
+      end
+      if Input.isPressed(Input.Right) or (Input.isDown(Input.Right) and main_menu.input_hold_time >= main_menu.input_hold_delay) then
         volume = math.min(volume + 5, 100)
-      elseif Input.isPressed(Input.Left) then
+        main_menu.input_hold_time = 0
+      elseif Input.isPressed(Input.Left) or (Input.isDown(Input.Left) and main_menu.input_hold_time >= main_menu.input_hold_delay) then
         volume = math.max(volume - 5, 0)
+        main_menu.input_hold_time = 0
       end
       if old_volume ~= volume then
         love.audio.setVolume(volume / 100)
