@@ -76,7 +76,7 @@ function error.update()
     Scene.change("MAIN_MENU")
   end
 
-  if Input.isPressed("escape") then
+  if Input.isPressed(Input.Escape) then
     error.escape = true
   end
 

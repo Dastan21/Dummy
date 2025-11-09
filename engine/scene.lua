@@ -82,11 +82,11 @@ end
 function Scene.updateQuitting(dt)
   if Scene.getCurrentSceneName() == "MAIN_MENU" and love.system.getOS() == "Web" then return end
 
-  if Scene.quit_was_pressed and Input.isDown("escape") and Scene.quitting_timer < Scene.quitting_delay then
+  if Scene.quit_was_pressed and Input.isDown(Input.Escape) and Scene.quitting_timer < Scene.quitting_delay then
     Scene.quitting_sprite:setVisible(true)
     Scene.quitting_timer = Scene.quitting_timer + dt
     Scene.quitting_sprite:setAlpha(Scene.quitting_timer / Scene.quitting_delay)
-  elseif Input.isReleased("escape") then
+  elseif Input.isReleased(Input.Escape) then
     Scene.resetQuitting()
   end
 
@@ -104,7 +104,7 @@ function Scene.updateQuitting(dt)
     Scene.quitting_sprite:setSprite("quitting2")
   end
 
-  if Input.isPressed("escape") then
+  if Input.isPressed(Input.Escape) then
     Scene.quit_was_pressed = true
   end
 end

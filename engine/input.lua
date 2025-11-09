@@ -100,6 +100,7 @@ function Input.load()
   Input.Right = { "d", "right", "gamepad:dpright", "joystick:lsright" }
   Input.Confirm = { "z", "e", "return", "kpenter", "gamepad:a" }
   Input.Cancel = { "x", "q", "shift", "gamepad:b" }
+  Input.Escape = { "escape", "gamepad:start" }
 end
 
 --- Updates the input
