@@ -9,9 +9,6 @@
     "lib",
     "docs/library"
   ],
-  "Lua.diagnostics.disable": [
-    "lowercase-global"
-  ],
   "search.exclude": {
     "**/node_modules": true,
     "**/bower_components": true,
