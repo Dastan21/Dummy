@@ -1,10 +1,9 @@
 name = "DUMMY"
 default_targets = [
-  # "win32",
   "win64",
-  # "appimage",
-  # "macos",
-  # "lovejs"
+  "appimage",
+  "macos",
+  "lovejs",
 ]
 build_directory = "../builds"
 love_files = [
