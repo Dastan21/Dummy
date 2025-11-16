@@ -12,7 +12,9 @@ jobs:
     - name: Update
       run: sudo apt-get update
     - name: Install Dependencies
-      run: sudo apt-get install --assume-yes wine-stable wine64 python3-pip
+      run: /
+        sudo add-apt-repository --assume-yes universe
+        sudo apt-get install --assume-yes python3-pip libfuse2t64
     - name: Checkout makelove
       uses: actions/checkout@v5
       with:
