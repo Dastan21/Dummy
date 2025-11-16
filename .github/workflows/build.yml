@@ -25,29 +25,8 @@ jobs:
         pip3 install ./makelove
     - name: Build
       run: cd main/engine && python3 -m makelove --config ../makelove.toml
-    - name: Prepare Artifact Names
-      run: |
-        echo "ARTIFACT_NAME_LOVE=$(ls main/builds/love | head -n1)" >> $GITHUB_ENV
-        echo "ARTIFACT_NAME_APPIMAGE=$(ls main/builds/appimage | head -n1)" >> $GITHUB_ENV
-        echo "ARTIFACT_NAME_WIN64=$(ls main/builds/win64 | head -n1)" >> $GITHUB_ENV
-        echo "ARTIFACT_NAME_MACOS=$(ls main/builds/macos | head -n1)" >> $GITHUB_ENV
-    - name: Artifact (love)
+    - name: Artifact
       uses: actions/upload-artifact@v5
       with:
-        name: ${{ env.ARTIFACT_NAME_LOVE }}
-        path: main/builds/love/${{ env.ARTIFACT_NAME_LOVE }}
-    - name: Artifact (AppImage)
-      uses: actions/upload-artifact@v5
-      with:
-        name: ${{ env.ARTIFACT_NAME_APPIMAGE }}
-        path: main/builds/appimage/${{ env.ARTIFACT_NAME_APPIMAGE }}
-    - name: Artifact (Win64)
-      uses: actions/upload-artifact@v5
-      with:
-        name: ${{ env.ARTIFACT_NAME_WIN64 }}
-        path: main/builds/win64/${{ env.ARTIFACT_NAME_WIN64 }}
-    - name: Artifact (MacOS)
-      uses: actions/upload-artifact@v5
-      with:
-        name: ${{ env.ARTIFACT_NAME_MACOS }}
-        path: main/builds/macos/${{ env.ARTIFACT_NAME_MACOS }}
+        name: DUMMY
+        path: main/builds
