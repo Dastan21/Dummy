@@ -12,7 +12,7 @@ jobs:
     - name: Update
       run: sudo apt-get update
     - name: Install Dependencies
-      run: /
+      run: |
         sudo add-apt-repository --assume-yes universe
         sudo apt-get install --assume-yes python3-pip libfuse2t64
     - name: Checkout makelove
