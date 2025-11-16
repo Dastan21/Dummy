@@ -25,10 +25,10 @@ jobs:
       run: cd main/engine && python3 -m makelove --config ../makelove.toml
     - name: Prepare Artifact Names
       run: |
-        echo "::set-env name=ARTIFACT_NAME_LOVE::$(ls main/builds/love | head -n1)"
-        echo "::set-env name=ARTIFACT_NAME_APPIMAGE::$(ls main/builds/appimage | head -n1)"
-        echo "::set-env name=ARTIFACT_NAME_WIN64::$(ls main/builds/win64 | head -n1)"
-        echo "::set-env name=ARTIFACT_NAME_MACOS::$(ls main/builds/macos | head -n1)"
+        echo "ARTIFACT_NAME_LOVE=$(ls main/builds/love | head -n1)" >> $GITHUB_ENV
+        echo "ARTIFACT_NAME_APPIMAGE=$(ls main/builds/appimage | head -n1)" >> $GITHUB_ENV
+        echo "ARTIFACT_NAME_WIN64=$(ls main/builds/win64 | head -n1)" >> $GITHUB_ENV
+        echo "ARTIFACT_NAME_MACOS=$(ls main/builds/macos | head -n1)" >> $GITHUB_ENV
     - name: Artifact (love)
       uses: actions/upload-artifact@v5
       with:
