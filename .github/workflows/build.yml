@@ -22,7 +22,7 @@ jobs:
       run:
         pip3 install ./makelove
     - name: Build
-      run: cd main/game && python3 -m makelove
+      run: cd engine && python3 -m makelove --config ../makelove.toml
     - name: Prepare Artifact Names
       run: |
         echo "::set-env name=ARTIFACT_NAME_LOVE::$(ls main/makelove-build/love | head -n1)"
