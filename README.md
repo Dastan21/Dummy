@@ -17,7 +17,7 @@ Folders and ZIP files are supported.
 If you want to share your mod as a standalone:
 
 1. In your `mod.lua`, set `standalone = true` in the mod constructor ;
-2. Open `DUMMY.exe` as a ZIP archive ;
+2. Open `DUMMY.exe` or `DUMMY.love` as a ZIP archive ;
 3. Copy your mod folder into the `mods` folder.
 
 ## Credits
