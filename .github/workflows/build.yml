@@ -13,7 +13,7 @@ jobs:
       run: sudo apt-get update
     - name: Install Dependencies
       run: |
-        sudo add-apt-repository --assume-yes universe
+        sudo add-apt-repository universe
         sudo apt-get install --assume-yes python3-pip libfuse2t64
     - name: Checkout makelove
       uses: actions/checkout@v5
