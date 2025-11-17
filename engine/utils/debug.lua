@@ -131,7 +131,7 @@ function Debug.update(dt)
     end
   end
 
-  if Input.isPressed("f9") then
+  if love.system.getOS() ~= "Web" and Input.isPressed("f9") then
     Debug.screenshot_text:setVisible(false)
 
     Assets.playSound("screenshot")
@@ -153,7 +153,7 @@ function Debug.update(dt)
     end)
   end
 
-  if Input.isPressed("f10") then
+  if love.system.getOS() ~= "Web" and Input.isPressed("f10") then
     love.system.openURL("file://" .. love.filesystem.getSaveDirectory() .. "/screenshots")
   end
 
