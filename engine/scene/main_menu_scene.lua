@@ -126,7 +126,6 @@ function main_menu.loadSettingsMenu()
       text = Text:new({ "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() }),
       action = function(option)
         Lang.switchLanguage()
-        Scene.refreshQuittingSprite()
         ModList.setWindowTitleAndIcon()
 
         main_menu.current_menu:show()

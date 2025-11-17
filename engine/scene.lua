@@ -36,6 +36,10 @@ function Scene.load()
   Scene.quit_was_pressed = false
   Scene.quitting_delay = SCENE_QUITTING_DELAY
   Scene.quitting_timer = 0
+
+  Lang.onSwitchLanguage(function()
+    Scene.quitting_sprite:setSprite("quitting1")
+  end)
 end
 
 --- Changes scene
@@ -296,13 +300,6 @@ function Scene.sortShaders()
   table.stable_sort(Scene.shaders, function(a, b)
     return (a:getPriority() or 0) > (b:getPriority() or 0)
   end)
-end
-
---- Refreshes the quitting sprite
----
---- Used when the language is changed
-function Scene.refreshQuittingSprite()
-  Scene.quitting_sprite:setSprite("quitting1")
 end
 
 --- Cleans the current scene

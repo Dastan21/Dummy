@@ -4,6 +4,7 @@
 --- @field protected languages string[]
 --- @field protected language_code string
 --- @field protected language_name string
+--- @field protected switch_callbacks function[]
 local Lang = {}
 
 --- Gets the current language name
@@ -39,6 +40,15 @@ function Lang.switchLanguage()
     end
   end
   Lang.setLanguage(Lang.languages[lang_index + 1] or Lang.languages[1])
+  for _, callback in ipairs(Lang.switch_callbacks) do
+    pcall(callback)
+  end
+end
+
+--- Add a callback to be called when switching language
+function Lang.onSwitchLanguage(func)
+  assert(type(func) == "function", "Function callback must be a function")
+  table.insert(Lang.switch_callbacks, func)
 end
 
 --- Translate a key in the current language
@@ -121,6 +131,7 @@ function Lang.load()
   Lang.languages = {}
   Lang.language_code = ""
   Lang.language_name = ""
+  Lang.switch_callbacks = {}
 
   Lang.loadLanguages()
 end

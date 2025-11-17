@@ -12,6 +12,7 @@
 --- @field protected languages string[]
 --- @field protected language_code string
 --- @field protected language_name string
+--- @field protected switch_callbacks function[]
 Lang = {}
 
 --- Gets the current language name
@@ -28,6 +29,9 @@ function Lang.setLanguage(code) end
 
 --- Switches current language
 function Lang.switchLanguage() end
+
+--- Add a callback to be called when switching language
+function Lang.onSwitchLanguage(func) end
 
 --- Translate a key in the current language
 --- @param key Dummy.Text.Text key to translate

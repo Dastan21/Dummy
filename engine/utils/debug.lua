@@ -82,6 +82,9 @@ function Debug.load()
   Debug.screenshot_text:setPersistent(true)
   Debug.screenshot_fade_delay = 3
   Debug.screenshot_fade_time = 0.5
+  Lang.onSwitchLanguage(function()
+    Debug.screenshot_text:setText("SCREENSHOT_TEXT", true)
+  end)
 end
 
 --- Saves the logs
