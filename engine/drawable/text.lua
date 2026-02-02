@@ -309,7 +309,7 @@ function Text:updateNodes(dt)
 
       if node.state.shake ~= nil and node.state.shake > 0 and dt > 0 then
         if node.state == nil then node.state = {} end
-        if self.timer - (node.state.last_shake or 0) >= dt * 30 then
+        if self.timer - (node.state.last_shake or 0) >= 1 then
           node.state.last_shake = self.timer
           node.state.offset_x = math.round(love.math.random() * (2 * node.state.shake) - node.state.shake)
           node.state.offset_y = math.round(love.math.random() * (2 * node.state.shake) - node.state.shake)
