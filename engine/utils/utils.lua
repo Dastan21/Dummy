@@ -294,7 +294,7 @@ end
 --- Gets a filename without extension
 --- @param filename string
 function Utils.getFilenameWithoutExt(filename)
-  return filename:gsub("%.[^.]*$", "")
+  return (filename:gsub("%.[^.]*$", ""))
 end
 
 --- Checks if two rectangles collide, using SAT-based rectangle collision
