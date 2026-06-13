@@ -355,7 +355,14 @@ function Encounter.checkEncounterEnd()
   if Encounter.has_won then
     Encounter.setState(Constants.ENCOUNTER_STATES.DONE)
   elseif Encounter.allSparedOrKilled() then
-    Encounter.win()
+    for _, enemy in ipairs(Encounter.enemies) do
+      if enemy:isKilled() then
+        Encounter.exp_reward = Encounter.exp_reward + enemy:getEXP()
+        Encounter.gold_reward = Encounter.gold_reward + enemy:getGold()
+      end
+    end
+
+    Encounter.win(Encounter.exp_reward, Encounter.gold_reward)
   else
     Encounter.setState(Constants.ENCOUNTER_STATES.ENEMY_DIALOGUE)
   end
@@ -365,18 +372,18 @@ end
 --- @param exp? number EXP reward
 --- @param gold? number GOLD reward
 function Encounter.win(exp, gold)
-  Encounter.exp_reward = Utils.getOrDefault(exp, Encounter.exp_reward)
-  Encounter.gold_reward = Utils.getOrDefault(gold, Encounter.gold_reward)
+  exp = Utils.getOrDefault(exp, 0)
+  gold = Utils.getOrDefault(gold, 0)
 
   local current_music = Assets.getCurrentMusic()
   if current_music ~= nil then
     current_music:stop()
   end
 
-  local win_text = Lang.translate("ENCOUNTER_WIN_REWARD", Encounter.exp_reward, Encounter.gold_reward)
+  local win_text = Lang.translate("ENCOUNTER_WIN_REWARD", exp, gold)
   local level_old = Player.getLV()
-  Player.setEXP(Player.getEXP() + Encounter.exp_reward)
-  Player.setGold(Player.getGold() + Encounter.gold_reward)
+  Player.setEXP(Player.getEXP() + exp)
+  Player.setGold(Player.getGold() + gold)
   local level = Player.getLV()
   if level ~= level_old then
     win_text = win_text .. "\n" .. Lang.translate("ENCOUNTER_WIN_LEVEL_UP", level)
