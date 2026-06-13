@@ -2,7 +2,7 @@ Constants = {
   CREDITS = {
     NAME    = "DUMMY",
     AUTHOR  = "Dastan",
-    YEAR    = "2025",
+    YEAR    = "2025-2026",
     VERSION = "1.0.0"
   },
 
