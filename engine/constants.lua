@@ -3,7 +3,7 @@ Constants = {
     NAME    = "DUMMY",
     AUTHOR  = "Dastan",
     YEAR    = "2025-2026",
-    VERSION = "1.0.0"
+    VERSION = "1.0.1"
   },
 
   SCREEN_WIDTH = 640,
