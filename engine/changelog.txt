@@ -1,0 +1,16 @@
+DUMMY v1.0.1 (13/06/2026)
+-------------------
+
+* Added Lang.onSwitchLanguage.
+
+* Disabled screenshots on web builds.
+
+* Fixed screen shaking on different FPS.
+* Fixed Utils.getFilenameWithoutExt() return value.
+* Fixed encounter EXP and Gold rewards always being 0 on win.
+
+
+DUMMY v1.0.0 (16/10/2025)
+-------------------
+
+First public release of the engine.
