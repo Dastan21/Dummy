@@ -2,6 +2,8 @@
 
 DUMMY is an UNDERTALE fangame and battle engine, made with [LÖVE](https://love2d.org/).
 
+![Screenshot of the main menu](preview.png)
+
 ## Download
 
 Get the latest release [here](https://github.com/Dastan21/DUMMY/releases).
