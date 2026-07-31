@@ -30,6 +30,8 @@ function ModList.load()
   ModList.current_mod = nil
   ModList.standalone = nil
 
+  --- @type table<string, boolean>
+  local registered_mods = {}
   local mods_dirs = love.filesystem.getDirectoryItems("mods")
   for _, mod_dir in ipairs(mods_dirs) do
     local mod_dir_info = love.filesystem.getInfo("mods/" .. mod_dir)
@@ -44,8 +46,11 @@ function ModList.load()
         mod_dir = mod_name
       end
 
-      if love.filesystem.getInfo("mods/" .. mod_dir .. "/mod.lua") ~= nil then
-        ModList.preloadMod(mod_dir)
+      if not registered_mods[mod_dir] then
+        if love.filesystem.getInfo("mods/" .. mod_dir .. "/mod.lua") ~= nil then
+          ModList.preloadMod(mod_dir)
+          registered_mods[mod_dir] = true
+        end
       end
 
       if ModList.standalone ~= nil then return end
@@ -87,7 +92,6 @@ end
 --- @param mod Dummy.Mod
 function ModList.loadMod(mod)
   if mod == nil then return end
-
 
   if type(mod.load) == "function" then
     ModList.current_mod = mod
@@ -143,8 +147,7 @@ end
 function ModList.isModValid(success, mod)
   if not success then return false end
   if type(mod) ~= "table" then return false end
-  if type(mod.getClassName) ~= "function" then return false end
-  if mod.getClassName() ~= "Dummy.Mod" then return false end
+  if not mod:is(Mod) then return false end
 
   return true
 end

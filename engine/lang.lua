@@ -1,3 +1,9 @@
+--- @class Dummy.Lang.Language
+---
+--- @field language_base string
+--- @field language_code string
+--- @field timestamp number
+
 --- @class Dummy.Lang
 ---
 --- @field protected translations table<string, table<string, string>>
@@ -5,6 +11,7 @@
 --- @field protected language_code string
 --- @field protected language_name string
 --- @field protected switch_callbacks function[]
+--- @field protected hmr_languages table<string, Dummy.Lang.Language>
 local Lang = {}
 
 --- Gets the current language name
@@ -31,15 +38,17 @@ function Lang.setLanguage(code)
 end
 
 --- Switches current language
-function Lang.switchLanguage()
-  local lang_index = 1
+--- @param delta? integer
+function Lang.switchLanguage(delta)
+  delta = Utils.getOrDefault(delta, 1)
+  local lang_index = 0
   for i, l in ipairs(Lang.languages) do
     if l == Lang.language_code then
-      lang_index = i
+      lang_index = i - 1
       break
     end
   end
-  Lang.setLanguage(Lang.languages[lang_index + 1] or Lang.languages[1])
+  Lang.setLanguage(Lang.languages[(lang_index + #Lang.languages + delta) % #Lang.languages + 1])
   for _, callback in ipairs(Lang.switch_callbacks) do
     pcall(callback)
   end
@@ -84,6 +93,41 @@ function Lang.translate(key, ...)
   end))
 end
 
+--- Reloads the translations if they have changed
+function Lang.hotReload()
+  for _, language in pairs(Lang.hmr_languages) do
+    local info = love.filesystem.getInfo(language.language_base .. "/" .. language.language_code .. ".txt")
+    if info ~= nil and info.modtime ~= language.timestamp then
+      Lang.loadLanguage(language.language_base, language.language_code)
+
+      Signal.emit("hot_reload_language", language.language_code)
+    end
+  end
+end
+
+--- Loads a language
+--- @param base_folder string
+--- @param language_code string
+function Lang.loadLanguage(base_folder, language_code)
+  if Lang.translations[language_code] == nil then
+    Lang.translations[language_code] = {}
+    table.insert(Lang.languages, language_code)
+  end
+  local language_path = base_folder .. "/" .. language_code .. ".txt"
+  Lang.hmr_languages[language_path] = {
+    language_base = base_folder,
+    language_code = language_code,
+    timestamp = love.filesystem.getInfo(language_path).modtime
+  }
+  for txt in love.filesystem.lines(language_path) do
+    if txt ~= "" and txt:sub(1, 1) ~= "#" then -- for comments
+      local t = {}
+      for str in string.gmatch(txt, "([^=]+)") do table.insert(t, str) end
+      Lang.translations[language_code][t[1]] = t[2]
+    end
+  end
+end
+
 --- Adds a translation to the current language
 --- @param key string key to translate
 --- @param value string translation
@@ -92,6 +136,16 @@ function Lang.addTranslation(key, value, lang)
   lang = Utils.getOrDefault(lang, Lang.language_code)
   assert(Lang.translations[lang] ~= nil, "Cannot add translation to unexisting language")
   Lang.translations[lang][key] = value
+end
+
+--- Loads languages from a folder
+--- @param base_folder string
+function Lang.loadLanguagesFromFolder(base_folder)
+  for _, filename in pairs(love.filesystem.getDirectoryItems(base_folder)) do
+    if Utils.checkExtension(filename, "txt") then
+      Lang.loadLanguage(base_folder, filename:sub(1, #filename - 4))
+    end
+  end
 end
 
 --- Loads languages from the lang folder
@@ -106,25 +160,6 @@ function Lang.loadLanguages()
   Lang.setLanguage(Config.getSettings()["language"])
 end
 
-function Lang.loadLanguagesFromFolder(base_folder)
-  for _, filename in pairs(love.filesystem.getDirectoryItems(base_folder)) do
-    if Utils.checkExtension(filename, "txt") then
-      local code = filename:sub(1, #filename - 4)
-      if Lang.translations[code] == nil then
-        Lang.translations[code] = {}
-        table.insert(Lang.languages, code)
-      end
-      for txt in love.filesystem.lines(base_folder .. "/" .. filename) do
-        if txt ~= "" and txt:sub(1, 1) ~= "#" then -- for comments
-          local t = {}
-          for str in string.gmatch(txt, "([^=]+)") do table.insert(t, str) end
-          Lang.translations[code][t[1]] = t[2]
-        end
-      end
-    end
-  end
-end
-
 --- Loads languages
 function Lang.load()
   Lang.translations = {}
@@ -132,6 +167,7 @@ function Lang.load()
   Lang.language_code = ""
   Lang.language_name = ""
   Lang.switch_callbacks = {}
+  Lang.hmr_languages = {}
 
   Lang.loadLanguages()
 end

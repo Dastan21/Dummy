@@ -1,14 +1,9 @@
 --- @class Dummy.Mask : Dummy.Drawable
-local Mask = Class:extend(Drawable)
-
---- Gets the class name
---- @return string
-function Mask.getClassName()
-  return "Dummy.Mask"
-end
+local Mask = Class(Drawable, "Dummy.Mask")
 
 --- Draws the mask
-function Mask:draw()
+--- @param camera Dummy.Camera
+function Mask:draw(camera)
   if not self:isVisible() then return end
 
   love.graphics.applyTransform(self:getTransform())
@@ -18,7 +13,7 @@ function Mask:draw()
   end
   love.graphics.setStencilTest("greater", 0)
 
-  self:drawChildren()
+  self:drawChildren(camera)
 
   love.graphics.setStencilTest()
 end

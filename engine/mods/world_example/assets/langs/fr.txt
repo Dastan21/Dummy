@@ -1,0 +1,91 @@
+WORLD_EXAMPLE_MOD_TITLE=DUMMY - Exemple de Monde
+WORLD_EXAMPLE_MOD_BATTLE_TITLE=DUMMY - En combat contre {}
+
+# Encounter
+WORLD_EXAMPLE_MOD_ENCOUNTER_DUMMY_NAME=Mannequin
+
+WORLD_EXAMPLE_MOD_ENCOUNTER_TEXT_1=* Vous rencontrez le Mannequin.
+WORLD_EXAMPLE_MOD_ENCOUNTER_TEXT_2=* Le Mannequin semble sur\n  le point de tomber.
+WORLD_EXAMPLE_MOD_ENCOUNTER_TEXT_3=* Mannequin reste là,\n  l'air absent.
+
+WORLD_EXAMPLE_MOD_ENCOUNTER_CHECK_TEXT=* Coeur de coton, oeil en bouton.\n[wait:5]* La prunelle de mes yeux.
+
+WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_ACT=Parler
+WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_TEXT_1=* Vous parlez au MANNEQUIN.\n[wait:10]* ...
+WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_TEXT_2=* Il ne semble pas vouloir\n  discuter.
+WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_TEXT_3=* Vos actions ont l'air\n  de faire plaisir à Toriel.
+
+WORLD_EXAMPLE_MOD_ENCOUNTER_TIRE=* Mannequin se lasse de\n  vos idioties sans but.
+WORLD_EXAMPLE_MOD_ENCOUNTER_BUBBLE=[wave].[wait:5].[wait:5].[wait:5].[wait:5].[wait:30][next]
+
+# World
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SIGN_TEXT_1=* "Appuyez sur \[Z] pour lire\n  les panneaux !"
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_READABLE_TEXT_1=* Que les intrépides s'avancent.\n* Les braves, les sots...\n* Ne passent pas par le centre.
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_READABLE_TEXT_2=* Restez sur le chemin.
+
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_ADVICE_TEXT_1=* Veuillez appuyer sur cet\n  interrupteur.\n             - TORIEL
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_ADVICE_TEXT_2=* Veuillez également appuyer sur\n  cet interrupteur.\n             - TORIEL
+
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_1=[portrait:toriel,talk,side]* Non non non ![wait:5][portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_2=[portrait:toriel,talk,happy]* Tu dois appuyer sur\n  l'autre interrupteur.[portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_3=[portrait:toriel,talk,side]* Je l'ai même marqué\n  pour toi...[portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_4=* Cela ne semble pas être\n  le bon interrupteur.
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_5=* (Wow ![wait:5])\n* (Tu t'es trompé super\n  rapidement.)
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_6=* Cet interrupteur ne marche même\n  pas...
+
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_1=[portrait:toriel,talk,normal]* Pour progresser ici,[wait:5] \n  il te faudra enclencher\n  plusieurs interrupteurs.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_2=[portrait:toriel,talk,normal]* Ne t'inquiète pas,[wait:5]\n  j'ai marqué ceux que\n  tu dois actionner.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_3=[portrait:toriel,talk,normal]* Le premier interrupteur\n  se trouve sur le mur.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_4=[portrait:toriel,talk,side]* As-tu besoin d'aide...?[wait:5]\n* Appuie sur l'inter-\n  rupteur sur le mur.[portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_5=[portrait:toriel,talk,happy]* Allez,[wait:5] tu peux le\n  faire ![portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_6=[portrait:toriel,talk,happy]* Superbe ![wait:10] \n* Je suis fière de toi,[wait:5]\n  mon enfant.[portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_7=[portrait:toriel,talk,happy]* Passons à la pièce\n  suivante.[portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_8=[portrait:toriel,talk,happy]* Vas-y,[wait:5] appuie sur\n  l'interrupteur de\n  gauche.[portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_9=[portrait:toriel,talk,side]* Tu sais où se trouve ta\n  gauche,[wait:5] n'est-ce pas ?[portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_10=[portrait:toriel,talk,normal]* Appuie sur l'inter-\n  rupteur que j'ai\n  marqué pour toi.[portrait:toriel,blink,normal]
+
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_TELESCOPE_USE_TORIEL_DIALOGUE_1=[portrait:toriel,talk,normal]* S'il te plaît appuie sur\n  l'interrupteur sur\n  le mur.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_TELESCOPE_USE_TORIEL_DIALOGUE_2=[portrait:toriel,talk,side]* Viens par ici, mon\n  enfant.[portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_TELESCOPE_USE=* (Regarder à travers le\n  téléscope ?)\n         Oui         Non[choice]
+
+WORLD_EXAMPLE_MOD_WORLD_RUINS2_NAME=Ruines - Entrée
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SAVEPOINT_RUINS2_1=* (L'ombre des ruines se dessine\n  au-dessus de vous,[wait:5] vous\n  emplissant de détermination.)
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SAVEPOINT_RUINS2_2=* (PV entièrement restaurés.)
+WORLD_EXAMPLE_MOD_WORLD_RUINS4_NAME=Ruines - Boutique Mannequin
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SAVEPOINT_RUINS4_1=* (Le fait que le Mannequin\n  puisse tenir une boutique,[wait:5] vous\n  remplit de détermination.)
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SAVEPOINT_RUINS4_2=* (PV entièrement restaurés.)
+
+WORLD_EXAMPLE_MOD_PLAYER_PHONECALL_TORIEL_NAME=Téléphone de Toriel
+WORLD_EXAMPLE_MOD_PLAYER_PHONECALL_TORIEL_CALL_1=* Appel en cours...
+WORLD_EXAMPLE_MOD_PLAYER_PHONECALL_TORIEL_CALL_2=[portrait:toriel,talk,normal]* Bonjour, mon enfant.\n* C'est moi,[wait:5] Toriel.[wait:5]\n* Je suis là pour t'aider.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_PLAYER_PHONECALL_TORIEL_CALL_3=[portrait:none]* Clic...
+
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_ENTER_TEXT=* ...\n* (Le Mannequin reste\n  immobile, en silence.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_MAIN_TEXT=* ...\n* (Vous vous demandez\n  ce que le Mannequin\n  va faire de son\n  argent.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_EXIT_TEXT=* ...\n* (Vous faites coucou au Mannequin\n  en partant.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_SELL_TEXT=* ...\n* (Il semble que vous ne pouvez rien\n  vendre...)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_SELL_NO_ITEMS_TEXT=* ...\n* (Vous n'avez rien à vendre...)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_SELL_CONFIRM_TEXT=(Donner l'objet et prendre l'argent ?)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_SIDE_TEXT=. . .
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_SIDE_CANCEL_TEXT=. . .\n(Finalement\nnon.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_SOLD_OUT_TEXT=. . .\n(Plus de\nstock.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_NOT_ENOUGH_GOLD_TEXT=. . .\n(Pas assez\nd'argent.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_INVENTORY_FULL_TEXT=. . .\n(Pas assez\nde place.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_SUCCESS_TEXT=. . .\n(Belle\naffaire.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SAY_HELLO_NAME=Dire bonjour
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SAY_HELLO_TEXT_1=* (Vous dites bonjour au\n  Mannequin[wait:5].[wait:5].[wait:5].)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SAY_HELLO_TEXT_2=* (...mais il ne répond pas.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_PAT_NAME=Caresser
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_PAT_TEXT_1=* (Vous caressez la tête du\n  Mannequin[wait:5].[wait:5].[wait:5].)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_PAT_TEXT_2=* (...mais il ne répond pas.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SIDE_TEXT=. . .
+
+# Items
+WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_NAME=Bonbon Monstre
+WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_SHORTNAME=BnbnM
+WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_DESCRIPTION=* "Bonbon Monstre" - Soigne 10 PV\n* A un goût très prononcé\n  d'absence de réglisse.
+WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_DESCRIPTION_SHOP=Soigne 10 PV\n(Garanti sans\nréglisse.)
+WORLD_EXAMPLE_MOD_ITEM_BLANKET_NAME=Couverture
+WORLD_EXAMPLE_MOD_ITEM_BLANKET_SHORTNAME=Couvtur
+WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION=* "Couverture" - Armure DF 1\n* Le tissu est très doux.
+WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION_SHOP=Armure: 1DF\n({} DF)\n(Ça donne\nsommeil...)

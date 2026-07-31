@@ -1,7 +1,12 @@
 --- @class Dummy.Scene.MainMenu : Dummy.Scene.Scene
 ---
+--- @field protected camera Dummy.GameCamera
 --- @field protected options Dummy.Menu.Options
 --- @field protected current_menu Dummy.MainMenu
+--- @field protected settings_menu Dummy.MainMenu
+--- @field protected reset_save_menu Dummy.MainMenu
+--- @field protected reset_selected_save_menu Dummy.MainMenu
+--- @field protected reset_selected_save_mod string
 --- @field protected mod_list_menu Dummy.MainMenu
 --- @field protected logo_sprite Dummy.Sprite
 --- @field protected credits_text Dummy.Text
@@ -10,12 +15,15 @@
 --- @field protected was_fullscreen boolean
 --- @field protected input_hold_time number
 --- @field protected input_hold_delay number
-local main_menu = {}
+local MainMenuScene = {}
 
 --- Loads the main menu
-function main_menu.load()
+function MainMenuScene.load()
+  MainMenuScene.camera = GameCamera:new()
+
   Config.save()
   ModList.load()
+  Scene.release("WORLD")
 
   local standalone = ModList.getStandalone()
   if standalone ~= nil then
@@ -24,32 +32,39 @@ function main_menu.load()
     standalone.config = Config.loadConfig("configs/" .. standalone:getId())
   end
 
-  main_menu.logo_sprite = Sprite:new("logo")
-  main_menu.logo_sprite:setPosition(320, 120)
-  main_menu.logo_sprite:setScale(6)
+  MainMenuScene.logo_sprite = Sprite:new("logo")
+  MainMenuScene.logo_sprite:setPosition(320, 120)
+  MainMenuScene.logo_sprite:setScale(6)
 
-  main_menu.credits_text = Text:new(Constants.CREDITS.NAME ..
+  MainMenuScene.credits_text = Text:new(Constants.CREDITS.NAME ..
     " v" .. Constants.CREDITS.VERSION .. " " .. Constants.CREDITS.AUTHOR .. " " .. Constants.CREDITS.YEAR)
-  main_menu.credits_text:setFont("small")
-  main_menu.credits_text:setAlpha(0.707)
-  main_menu.credits_text:setPosition(320, 476)
-  main_menu.credits_text:setOrigin(0.5, 1)
-  main_menu.credits_text:setScale(2)
+  MainMenuScene.credits_text:setFont("small")
+  MainMenuScene.credits_text:setAlpha(0.707)
+  MainMenuScene.credits_text:setPosition(320, 476)
+  MainMenuScene.credits_text:setOrigin(0.5, 1)
+  MainMenuScene.credits_text:setScale(2)
 
-  main_menu.background_sprite = Sprite:new("background")
-  main_menu.background_sprite:setOrigin(0, 0)
-  main_menu.background_sprite:setLayer(Constants.LAYERS.BOTTOM)
+  MainMenuScene.reset_save_title = Text:new("MAIN_MENU_SETTINGS_RESET_SAVE_TITLE")
+  MainMenuScene.reset_save_title["debug"] = true
+  MainMenuScene.reset_save_title:setPosition(320, 240)
+  MainMenuScene.reset_save_title:setWrapLimit(600)
+  MainMenuScene.reset_save_title:setAlign("center")
+  MainMenuScene.reset_save_title:setVisible(false)
 
-  main_menu.loadMenus()
-  main_menu.changeMenu(main_menu.main_menu)
+  MainMenuScene.background_sprite = Sprite:new("background")
+  MainMenuScene.background_sprite:setOrigin(0, 0)
+  MainMenuScene.background_sprite:setLayer(Constants.LAYERS.BOTTOM)
 
-  main_menu.menu_music = Assets.playMusic("main_menu")
-  main_menu.menu_music:setVolume(0.5)
+  MainMenuScene.loadMenus()
+  MainMenuScene.changeMenu(MainMenuScene.main_menu)
 
-  main_menu.was_fullscreen = love.window.getFullscreen()
+  MainMenuScene.menu_music = Assets.playMusic("main_menu")
+  MainMenuScene.menu_music:setVolume(0.5)
 
-  main_menu.input_hold_time = 0
-  main_menu.input_hold_delay = 0.1
+  MainMenuScene.was_fullscreen = love.window.getFullscreen()
+
+  MainMenuScene.input_hold_time = 0
+  MainMenuScene.input_hold_delay = 0.1
 
   if standalone ~= nil then
     if type(standalone.preview) == "function" then
@@ -61,23 +76,25 @@ function main_menu.load()
 end
 
 --- Loads menus
-function main_menu.loadMenus()
-  main_menu.loadMainMenu()
-  main_menu.loadSettingsMenu()
+function MainMenuScene.loadMenus()
+  MainMenuScene.loadMainMenu()
+  MainMenuScene.loadSettingsMenu()
+  MainMenuScene.loadResetSelectedSaveMenu()
+  MainMenuScene.loadResetSavesMenu()
 end
 
 --- Loads main menu
-function main_menu.loadMainMenu()
+function MainMenuScene.loadMainMenu()
   --- @type Dummy.Menu.Options
   local options = {}
 
   local standalone = ModList.getStandalone()
-  if not standalone then
+  if standalone == nil then
     table.insert(options, {
       text = Text:new("MAIN_MENU_PLAY"),
       action = function()
-        main_menu.loadModListMenu()
-        main_menu.changeMenu(main_menu.mod_list_menu, 1)
+        MainMenuScene.loadModListMenu()
+        MainMenuScene.changeMenu(MainMenuScene.mod_list_menu, 1)
       end
     })
 
@@ -93,7 +110,7 @@ function main_menu.loadMainMenu()
     table.insert(options, {
       text = Text:new("MAIN_MENU_PLAY"),
       action = function()
-        Scene.change("ENCOUNTER", standalone)
+        Scene.change("WORLD", ModList.getStandalone())
       end
     })
   end
@@ -101,7 +118,7 @@ function main_menu.loadMainMenu()
   table.insert(options, {
     text = Text:new("MAIN_MENU_SETTINGS"),
     action = function()
-      main_menu.changeMenu(main_menu.settings_menu)
+      MainMenuScene.changeMenu(MainMenuScene.settings_menu)
     end
   })
 
@@ -114,11 +131,11 @@ function main_menu.loadMainMenu()
     })
   end
 
-  main_menu.main_menu = MainMenu:new(options)
+  MainMenuScene.main_menu = MainMenu:new(options)
 end
 
 --- Loads settings menu
-function main_menu.loadSettingsMenu()
+function MainMenuScene.loadSettingsMenu()
   --- @type Dummy.Menu.Options
   local options = {
     {
@@ -128,16 +145,18 @@ function main_menu.loadSettingsMenu()
         Lang.switchLanguage()
         ModList.setWindowTitleAndIcon()
 
-        main_menu.current_menu:show()
+        MainMenuScene.current_menu:show()
         option.text:setText({ "MAIN_MENU_SETTINGS_LANGUAGE", Lang.getLanguageName() })
+        MainMenuScene.reset_save_title:setText("MAIN_MENU_SETTINGS_RESET_SAVE_TITLE", true)
       end,
     },
     {
       id = "FPS_SETTING",
-      text = Text:new({ "MAIN_MENU_SETTINGS_FPS", Config.getSettings()["fps"] }),
+      text = Text:new({ "MAIN_MENU_SETTINGS_FPS", Config.getSettings()["fps"] ~= -1 and Config.getSettings()["fps"] or
+      "MAIN_MENU_SETTINGS_FPS_UNLIMITED" }),
       action = function(option)
         local settings = Config.getSettings()
-        local fps = { 30, 60, 120, 144, 240 }
+        local fps = { 30, 60, 120, 144, 240, -1 }
         local fps_index = 1
         for i, v in ipairs(fps) do
           if v == settings.fps then
@@ -146,7 +165,24 @@ function main_menu.loadSettingsMenu()
           end
         end
         settings.fps = fps[(fps_index % #fps) + 1]
-        option.text:setText({ "MAIN_MENU_SETTINGS_FPS", settings.fps })
+        local fps_text = tostring(settings.fps)
+        if settings.fps == -1 then
+          fps_text = "MAIN_MENU_SETTINGS_FPS_UNLIMITED"
+        end
+        option.text:setText({ "MAIN_MENU_SETTINGS_FPS", fps_text })
+      end,
+    },
+    {
+      id = "VSYNC_SETTING",
+      text = Text:new({ "MAIN_MENU_SETTINGS_VSYNC", Config.getSettings()["vsync"] and
+      "MAIN_MENU_SETTINGS_SWITCH_ON" or "MAIN_MENU_SETTINGS_SWITCH_OFF" }),
+      action = function(option)
+        local vsync = not Config.getSettings()["vsync"]
+        option.text:setText({ "MAIN_MENU_SETTINGS_VSYNC", vsync and "MAIN_MENU_SETTINGS_SWITCH_ON" or
+        "MAIN_MENU_SETTINGS_SWITCH_OFF" })
+
+        Config.getSettings()["vsync"] = vsync
+        love.scale()
       end,
     },
     {
@@ -171,7 +207,8 @@ function main_menu.loadSettingsMenu()
   }
 
   if love.system.getOS() ~= "Web" then
-    table.insert(options, {
+    --- @type Dummy.Menu.Option
+    local window_scale_option = {
       id = "WINDOW_SCALE_SETTING",
       text = Text:new({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", Config.getSettings()["window_scale"] }),
       action = function(option)
@@ -187,7 +224,7 @@ function main_menu.loadSettingsMenu()
         settings["window_scale"] = scales[(scale_index % #scales) + 1]
         option.text:setText({ "MAIN_MENU_SETTINGS_WINDOW_SCALE", settings["window_scale"] })
 
-        local opt = main_menu.settings_menu:getOptionById("FULLSCREEN_SETTING")
+        local opt = MainMenuScene.settings_menu:getOptionById("FULLSCREEN_SETTING")
         if opt ~= nil then
           opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", "MAIN_MENU_SETTINGS_SWITCH_OFF" })
         end
@@ -195,16 +232,110 @@ function main_menu.loadSettingsMenu()
         Config.getSettings()["fullscreen"] = false
         love.scale()
       end,
-    })
+    }
+    table.insert(options, window_scale_option)
   end
 
-  main_menu.settings_menu = MainMenu:new(options, function()
-    main_menu.changeMenu(main_menu.main_menu)
+  --- @type Dummy.Menu.Option
+  local reset_save_option = {
+    id = "RESET_SAVE_SETTING",
+    text = Text:new("MAIN_MENU_SETTINGS_RESET_SAVE"),
+    action = function()
+      if ModList.getStandalone() ~= nil then
+        MainMenuScene.reset_selected_save_mod = ModList.getStandalone():getId()
+        MainMenuScene.changeMenu(MainMenuScene.reset_selected_save_menu, 2)
+      else
+        MainMenuScene.changeMenu(MainMenuScene.reset_save_menu)
+      end
+    end
+  }
+  table.insert(options, reset_save_option)
+
+  MainMenuScene.settings_menu = MainMenu:new(options, function()
+    Config.save()
+    MainMenuScene.changeMenu(MainMenuScene.main_menu)
   end)
 end
 
+--- Loads reset save menu
+function MainMenuScene.loadResetSavesMenu()
+  --- @type Dummy.Menu.Options
+  local options = {}
+
+  local mods_savepoints = MainMenuScene.getModsSavepoints()
+  if #mods_savepoints >= 1 then
+    for _, mod_info in ipairs(mods_savepoints) do
+      table.insert(options, {
+        text = Text:new(mod_info.name),
+        action = function()
+          MainMenuScene.reset_selected_save_mod = mod_info.id
+          MainMenuScene.changeMenu(MainMenuScene.reset_selected_save_menu, 2)
+        end
+      })
+    end
+  else
+    table.insert(options, {
+      text = Text:new("MAIN_MENU_SETTINGS_RESET_SAVE_EMPTY")
+    })
+  end
+
+  if MainMenuScene.reset_save_menu ~= nil then
+    MainMenuScene.reset_save_menu:setOptions(options)
+  else
+    MainMenuScene.reset_save_menu = MainMenu:new(options, function()
+      MainMenuScene.changeMenu(MainMenuScene.settings_menu)
+    end)
+  end
+end
+
+--- Loads reset selected save menu
+function MainMenuScene.loadResetSelectedSaveMenu()
+  --- @type Dummy.Menu.Options
+  local options = {
+    {
+      id = "RESET_SELECTED_SAVE_YES",
+      text = Text:new("MAIN_MENU_SETTINGS_RESET_SAVE_YES"),
+      action = function()
+        if MainMenuScene.reset_selected_save_mod == nil then return end
+
+        local config = Config.loadConfig("configs/" .. MainMenuScene.reset_selected_save_mod)
+        config.savepoint = nil
+        Config.save()
+        Scene.fullReload()
+      end
+    },
+    {
+      id = "RESET_SELECTED_SAVE_NO",
+      text = Text:new("MAIN_MENU_SETTINGS_RESET_SAVE_NO"),
+      action = function()
+        if ModList.getStandalone() ~= nil then
+          MainMenuScene.changeMenu(MainMenuScene.settings_menu)
+        else
+          MainMenuScene.changeMenu(MainMenuScene.reset_save_menu)
+        end
+      end
+    },
+  }
+
+  if MainMenuScene.reset_selected_save_menu ~= nil then
+    MainMenuScene.reset_selected_save_menu:setOptions(options)
+  else
+    MainMenuScene.reset_selected_save_menu = MainMenu:new(options, function()
+      if ModList.getStandalone() ~= nil then
+        MainMenuScene.changeMenu(MainMenuScene.settings_menu)
+      else
+        MainMenuScene.changeMenu(MainMenuScene.reset_save_menu)
+      end
+    end)
+    MainMenuScene.reset_selected_save_menu:setControlInputs(Input.Left, Input.Right)
+  end
+
+  options[1].text:setPosition(220, 360)
+  options[2].text:setPosition(420, 360)
+end
+
 --- Loads mod list menu
-function main_menu.loadModListMenu()
+function MainMenuScene.loadModListMenu()
   ModList.load()
 
   --- @type Dummy.Menu.Options
@@ -215,7 +346,7 @@ function main_menu.loadModListMenu()
       table.insert(options, {
         text = Text:new(mod:getName()),
         action = function()
-          Scene.change("ENCOUNTER", mod)
+          Scene.change("WORLD", mod)
         end,
         disabled = mod["error"] ~= nil
       })
@@ -226,72 +357,95 @@ function main_menu.loadModListMenu()
     })
   end
 
-  if main_menu.mod_list_menu ~= nil then
-    main_menu.mod_list_menu:setOptions(options)
+  if MainMenuScene.mod_list_menu ~= nil then
+    MainMenuScene.mod_list_menu:setOptions(options)
   else
-    main_menu.mod_list_menu = MainMenu:new(options, function()
-      main_menu.changeMenu(main_menu.main_menu)
+    MainMenuScene.mod_list_menu = MainMenu:new(options, function()
+      MainMenuScene.changeMenu(MainMenuScene.main_menu)
     end)
   end
+end
+
+--- Gets the mods savepoints
+--- @return { id: string, name: string }[]
+function MainMenuScene.getModsSavepoints()
+  ModList.load()
+
+  --- @type { id: string, name: string }[]
+  local savepoints = {}
+  for _, mod in ipairs(ModList.getMods()) do
+    if mod["error"] == nil then
+      local config = Config.loadConfig("configs/" .. mod:getId()) --[[@as Dummy.Mod.Config]]
+      if config ~= nil and config.savepoint ~= nil then
+        table.insert(savepoints, {
+          id = mod:getId(),
+          name = mod:getName()
+        })
+      end
+    end
+  end
+
+  return savepoints
 end
 
 --- Changes menu
 --- @param new_menu Dummy.MainMenu
 --- @param index? integer
-function main_menu.changeMenu(new_menu, index)
-  if main_menu.current_menu ~= nil then
-    main_menu.current_menu:hide()
+function MainMenuScene.changeMenu(new_menu, index)
+  if MainMenuScene.current_menu ~= nil then
+    MainMenuScene.current_menu:hide()
   end
-  main_menu.current_menu = new_menu
-  main_menu.current_menu:show()
+  MainMenuScene.current_menu = new_menu
+  MainMenuScene.current_menu:show()
 
   if index ~= nil then
-    main_menu.current_menu:select(index, true)
+    MainMenuScene.current_menu:select(index, true)
   end
 end
 
 --- Sets the logo sprite
 --- @param sprite_name string
-function main_menu.setLogo(sprite_name)
-  main_menu.logo_sprite:setSprite(sprite_name)
+function MainMenuScene.setLogo(sprite_name)
+  MainMenuScene.logo_sprite:setSprite(sprite_name)
 end
 
 --- Sets the background sprite
 --- @param sprite_name string
-function main_menu.setBackground(sprite_name)
-  main_menu.background_sprite:setSprite(sprite_name)
+function MainMenuScene.setBackground(sprite_name)
+  MainMenuScene.background_sprite:setSprite(sprite_name)
 end
 
 --- Sets the menu music
 --- @param music_name string
-function main_menu.setMenuMusic(music_name)
-  main_menu.menu_music = Assets.playMusic(music_name)
-  main_menu.menu_music:setVolume(0.5)
+function MainMenuScene.setMenuMusic(music_name)
+  MainMenuScene.menu_music = Assets.playMusic(music_name)
+  MainMenuScene.menu_music:setVolume(0.5)
 end
 
---- Updates the main menu
-function main_menu.update(dt)
-  if main_menu.current_menu ~= nil then
-    main_menu.current_menu:update()
+--- Updates the main menu, called on every game update
+--- @param dt number
+function MainMenuScene.update(dt)
+  if MainMenuScene.current_menu ~= nil then
+    MainMenuScene.current_menu:update()
   end
 
-  if main_menu.current_menu == main_menu.settings_menu then
-    local option = main_menu.settings_menu:getSelectedOption()
+  if MainMenuScene.current_menu == MainMenuScene.settings_menu then
+    local option = MainMenuScene.settings_menu:getSelectedOption()
     if option ~= nil and option.text:getText()[1] == "MAIN_MENU_SETTINGS_VOLUME" then
       local settings = Config.getSettings()
       local volume = settings["volume"]
       local old_volume = volume
       if Input.isDown(Input.Right) or Input.isDown(Input.Left) then
-        main_menu.input_hold_time = main_menu.input_hold_time + dt
+        MainMenuScene.input_hold_time = MainMenuScene.input_hold_time + dt
       else
-        main_menu.input_hold_time = 0
+        MainMenuScene.input_hold_time = 0
       end
-      if Input.isPressed(Input.Right) or (Input.isDown(Input.Right) and main_menu.input_hold_time >= main_menu.input_hold_delay) then
+      if Input.isPressed(Input.Right) or (Input.isDown(Input.Right) and MainMenuScene.input_hold_time >= MainMenuScene.input_hold_delay) then
         volume = math.min(volume + 5, 100)
-        main_menu.input_hold_time = 0
-      elseif Input.isPressed(Input.Left) or (Input.isDown(Input.Left) and main_menu.input_hold_time >= main_menu.input_hold_delay) then
+        MainMenuScene.input_hold_time = 0
+      elseif Input.isPressed(Input.Left) or (Input.isDown(Input.Left) and MainMenuScene.input_hold_time >= MainMenuScene.input_hold_delay) then
         volume = math.max(volume - 5, 0)
-        main_menu.input_hold_time = 0
+        MainMenuScene.input_hold_time = 0
       end
       if old_volume ~= volume then
         love.audio.setVolume(volume / 100)
@@ -301,15 +455,17 @@ function main_menu.update(dt)
       end
     end
 
-    if main_menu.was_fullscreen ~= love.window.getFullscreen() then
-      main_menu.was_fullscreen = love.window.getFullscreen()
-      local opt = main_menu.settings_menu:getOptionById("FULLSCREEN_SETTING")
+    if MainMenuScene.was_fullscreen ~= love.window.getFullscreen() then
+      MainMenuScene.was_fullscreen = love.window.getFullscreen()
+      local opt = MainMenuScene.settings_menu:getOptionById("FULLSCREEN_SETTING")
       if opt ~= nil then
-        opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", main_menu.was_fullscreen and
+        opt.text:setText({ "MAIN_MENU_SETTINGS_FULLSCREEN", MainMenuScene.was_fullscreen and
         "MAIN_MENU_SETTINGS_SWITCH_ON" or "MAIN_MENU_SETTINGS_SWITCH_OFF" })
       end
     end
   end
+
+  MainMenuScene.reset_save_title:setVisible(MainMenuScene.current_menu == MainMenuScene.reset_selected_save_menu)
 end
 
-return main_menu
+return MainMenuScene

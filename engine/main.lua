@@ -9,9 +9,13 @@ require "lib.stable_sort"
 Utils = require "utils.utils"
 Config = require "config"
 Class = require "class"
+Signal = require "signal"
 Assets = require "assets"
 Input = require "input"
 Lang = require "lang"
+Camera = require "camera.camera"
+GameCamera = require "camera.game_camera"
+WorldCamera = require "camera.world_camera"
 Timer = require "utils.timer"
 Drawable = require "drawable.drawable"
 Sprite = require "drawable.sprite"
@@ -19,36 +23,62 @@ Text = require "drawable.text"
 Mask = require "drawable.mask"
 DialogueText = require "drawable.dialogue_text"
 DialogueBubble = require "drawable.dialogue_bubble"
+Textbox = require "drawable.textbox"
+Player = require "player"
 Fader = require "utils.fader"
 Shaker = require "utils.shaker"
-Shader = require "utils.shader"
 Debug = require "utils.debug"
+Shader = require "shader"
 Scene = require "scene"
 MainMenu = require "main_menu"
 ModList = require "mod.mod_list"
 Mod = require "mod.mod"
 
--- encounter
-Arena = require "encounter.arena"
-Player = require "encounter.player"
-ActionMenu = require "encounter.action_menu"
-Encounter = require "encounter.encounter"
-Enemy = require "encounter.enemy"
-ACT = require "encounter.act"
-Wave = require "encounter.wave"
-Bullet = require "encounter.bullet"
--- encounter item
-Item = require "encounter.item"
-ItemConsumable = require "encounter.item.consumable"
-ItemEquipment = require "encounter.item.equipment"
+-- world
+World = require "world.world"
+Room = require "world.room"
+Shop = require "world.shop"
+Cutscene = require "world.cutscene"
+PlayerMenu = require "world.menu.player_menu"
+SaveMenu = require "world.menu.save_menu"
+ChestboxMenu = require "world.menu.chestbox_menu"
+Tileset = require "world.tileset"
+Object = require "world.object.object"
+SolidObject = require "world.object.obj_solid"
+SolidTriangleObject = require "world.object.obj_solid_triangle"
+RoomTransitionObject = require "world.object.obj_room_transition"
+ShopTransitionObject = require "world.object.obj_shop_transition"
+NPCObject = require "world.object.obj_npc"
+PlayerObject = require "world.object.obj_player"
+SavepointObject = require "world.object.obj_savepoint"
+ChestboxObject = require "world.object.obj_chestbox"
+
+-- item
+Item = require "item.item"
+ItemConsumable = require "item.consumable"
+ItemEquipment = require "item.equipment"
+
+-- battle
+Arena = require "battle.arena"
+Soul = require "battle.soul"
+ActionMenu = require "battle.action_menu"
+Battle = require "battle.battle"
+Encounter = require "battle.encounter"
+Enemy = require "battle.enemy"
+ACT = require "battle.act"
+Wave = require "battle.wave"
+Bullet = require "battle.bullet"
 
 local engine = {
   time = 0,
+  hmr_time = 0,
   canvas = nil
 }
 
 function love.load()
   Constants.DEBUG = os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1"
+  Constants.HOT_RELOAD = love.system.getOS() ~= "Web"
+
   love.graphics.setDefaultFilter("nearest", "nearest")
 
   love.audio.stop()
@@ -59,7 +89,10 @@ function love.load()
 
   love.joystick.loadGamepadMappings("gamecontrollerdb.txt")
 
-  engine.canvas = love.graphics.newCanvas(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT)
+  Constants.INIT_GAME_WIDTH = Constants.GAME_WIDTH
+  Constants.INIT_GAME_HEIGHT = Constants.GAME_HEIGHT
+
+  engine.canvas = love.graphics.newCanvas()
   engine.canvas:setFilter("nearest", "nearest")
 
   Config.load()
@@ -76,7 +109,9 @@ function love.load()
   love.audio.setVolume(Config.getSettings()["volume"] / 100)
 
   Scene.addScene("MAIN_MENU", require "scene.main_menu_scene")
-  Scene.addScene("ENCOUNTER", require "scene.encounter_scene")
+  Scene.addScene("WORLD", require "scene.world_scene")
+  Scene.addScene("SHOP", require "scene.shop_scene")
+  Scene.addScene("BATTLE", require "scene.battle_scene")
   Scene.addScene("GAME_OVER", require "scene.game_over_scene")
   Scene.addScene("ERROR", require "scene.error_scene")
   Scene.change("MAIN_MENU")
@@ -86,17 +121,28 @@ end
 
 function love.scale()
   local settings = Config.getSettings()
-  if settings.fullscreen == true then
-    love.window.setFullscreen(true)
-  else
-    local width = Constants.SCREEN_WIDTH * settings["window_scale"]
-    local height = Constants.SCREEN_HEIGHT * settings["window_scale"]
-    love.window.setMode(width, height)
-  end
+  local window_width = Constants.INIT_GAME_WIDTH * settings["window_scale"]
+  local window_height = Constants.INIT_GAME_HEIGHT * settings["window_scale"]
+  love.window.updateMode(window_width, window_height, {
+    fullscreen = settings.fullscreen,
+    vsync = settings.vsync
+  })
+
+  love.resize(love.window.getMode())
 end
 
 function love.filedropped(file)
   ModList.copyModZip(file)
+end
+
+function love.resize(width, height)
+  Constants.WINDOW_WIDTH = width
+  Constants.WINDOW_HEIGHT = height
+
+  engine.canvas:release()
+  engine.canvas = love.graphics.newCanvas()
+
+  Signal.emit("window_resize", Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT)
 end
 
 function engine.updateFullscreen()
@@ -110,7 +156,7 @@ end
 
 function engine.limitFPS()
   local time = love.timer.getTime()
-  if engine.time <= time then
+  if engine.time <= time or not Config.getSettings()["fps"] == -1 then
     engine.time = time
     return
   end
@@ -124,7 +170,7 @@ function engine.error_handler(err)
     err = debug.traceback(err)
   end
   print(err)
-  if Scene.getCurrentSceneName() ~= "ERROR" then
+  if Scene.getCurrentSceneId() ~= "ERROR" then
     Scene.change("ERROR", err)
   end
 end
@@ -133,11 +179,25 @@ function love.update(dt)
   xpcall(function()
     if dt > 2 / 30 then return end
 
-    engine.time = engine.time + (1 / Config.getSettings()["fps"])
+    local fps = Config.getSettings()["fps"]
+    if fps > 0 then
+      engine.time = engine.time + (1 / fps)
+    end
 
     dt = Debug.update(dt or love.timer.getDelta())
 
     Input.update()
+
+    if Constants.HOT_RELOAD then
+      if engine.hmr_time >= Constants.HOT_RELOAD_DELAY then
+        engine.hmr_time = 0
+        Lang.hotReload()
+        Sprite.hotReload()
+      end
+
+      engine.hmr_time = engine.hmr_time + dt
+    end
+
     Scene.update(dt)
     Timer.update(dt)
 
@@ -153,16 +213,14 @@ function love.draw()
     love.graphics.clear()
 
     Scene.draw()
-    Shaker.draw()
+    Fader.draw()
 
     love.graphics.setCanvas()
 
     love.graphics.setColor(1, 1, 1, 1)
-    love.graphics.translate(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
-    local width, height = love.window.getMode()
-    local scale = math.min(width / Constants.SCREEN_WIDTH, height / Constants.SCREEN_HEIGHT)
-    love.graphics.scale(scale)
-    love.graphics.draw(engine.canvas, -Constants.SCREEN_WIDTH / 2, -Constants.SCREEN_HEIGHT / 2)
+    love.graphics.setBlendMode("alpha", "premultiplied")
+    love.graphics.draw(engine.canvas)
+    love.graphics.setBlendMode("alpha", "alphamultiply")
   end, engine.error_handler)
 end
 

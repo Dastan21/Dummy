@@ -10,9 +10,17 @@
 ---
 --- @field protected options Dummy.Menu.Options
 --- @field protected onBack fun()|nil
+--- @field protected inputs Dummy.MainMenu.Inputs
 MainMenu = {}
 
 --- @alias Dummy.Menu.Options Dummy.Menu.Option[]
+
+--- @class Dummy.MainMenu.Inputs
+---
+--- @field next string|string[]
+--- @field previous string|string[]
+--- @field confirm string|string[]
+--- @field cancel string|string[]
 
 --- @class Dummy.Menu.Option
 ---
@@ -25,10 +33,6 @@ MainMenu = {}
 --- @field silent boolean|nil wether the option is silent
 --- @field selected boolean|nil wether the option is selected
 --- @field menu Dummy.MainMenu|nil sub menu
-
---- Gets the class name
---- @return string
-function MainMenu.getClassName() end
 
 --- Select a menu option
 --- @param index number options index
@@ -58,10 +62,21 @@ function MainMenu:getSelectedOption() end
 --- @return Dummy.Menu.Option|nil
 function MainMenu:getOptionById(id) end
 
+--- Gets the control inputs
+--- @return Dummy.MainMenu.Inputs
+function MainMenu:getControlInputs() end
+
+--- Sets the control inputs
+--- @param next? string|string[]
+--- @param previous? string|string[]
+--- @param confirm? string|string[]
+--- @param cancel? string|string[]
+function MainMenu:setControlInputs(next, previous, confirm, cancel) end
+
 --- Initializes the menu options
 function MainMenu:init() end
 
---- Updates the menu
+--- Updates the menu, called on every game update
 function MainMenu:update() end
 
 --- Creates a menu

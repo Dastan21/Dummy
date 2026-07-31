@@ -1,5 +1,6 @@
 --- @alias Dummy.Text.Text string|table
 --- @alias Dummy.Text.Align "left" | "center" | "right"
+--- @alias Dummy.Text.Overflow "clip" | "ellipsis"
 
 --- @class Dummy.Text.Node
 ---
@@ -13,25 +14,26 @@
 ---
 --- @field protected text love.Text
 --- @field protected value Dummy.Text.Text
+--- @field protected no_translation boolean
 --- @field protected font love.Font
 --- @field protected align Dummy.Text.Align
 --- @field protected width number
 --- @field protected height number
+--- @field protected wrap_limit number|nil
+--- @field protected max_width number
+--- @field protected overflow Dummy.Text.Overflow
+--- @field protected is_clipping boolean
+--- @field protected char_width number
+--- @field protected char_height number
 --- @field protected nodes Dummy.Text.Node[]
---- @field protected timer number
+--- @field protected time number
 --- @field protected state table<string, any>
 --- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
 --- @field protected custom_commands_called table<Dummy.Text.Node, boolean>
-local Text = Class:extend(Drawable)
+local Text = Class(Drawable, "Dummy.Text")
 
 --- Text commands
 Text.COMMANDS = { "color", "scale", "font", "shake", "twitch", "wave", "spacing" }
-
---- Gets the class name
---- @return string
-function Text.getClassName()
-  return "Dummy.Text"
-end
 
 --- Gets the text's value
 --- @return Dummy.Text.Text
@@ -42,11 +44,16 @@ end
 --- Sets the text's value
 --- @param value Dummy.Text.Text text value
 --- @param force? boolean wether to force the text to be updated
-function Text:setText(value, force)
+--- @param no_command? boolean wether to force plain text
+function Text:setText(value, force, no_command)
   if self.value == value and not force then return end
 
+  local translated_value = self.no_translation and tostring(value) or Lang.translate(value)
+
   -- text has no command
-  if Lang.translate(value):find("%b[]") == nil then
+  local char_width = self:getCharacterWidth()
+  local char_height = self:getCharacterHeight()
+  if (no_command == true or translated_value:find("%b[]") == nil and char_width == 0 and char_height == 0) then
     self.value = value
     self.nodes = {}
 
@@ -54,21 +61,64 @@ function Text:setText(value, force)
       self.text = love.graphics.newText(self.font, "")
     end
     self:updateText()
-    self.width = self.text:getWidth()
-    self.height = self.text:getHeight()
   else
     self.value = value
     self.text = nil
     self.nodes = self:parseNodes(value)
-    self:updateNodes(0)
+
+    local has_command = false
+    for _, node in ipairs(self.nodes) do
+      if node.command ~= nil then
+        has_command = true
+        break
+      end
+    end
+
+    if has_command or char_width ~= 0 or char_height ~= 0 then
+      self:updateNodes(0)
+    else
+      self:setText(value, true, true)
+    end
   end
 end
 
---- Updates the text
+--- Updates the render text or its nodes
 function Text:updateText()
   if self.text ~= nil then
-    self.text:setf(Text.getFormattedValue(self.value, self.color, self.alpha), Constants.SCREEN_WIDTH / self.scale_x,
-      self.align)
+    self.text:setFont(self.font)
+
+    local max_width = self:getMaxWidth()
+    local wrap_limit = self:getWrapLimit()
+    local value = self.no_translation and tostring(self.value) or Lang.translate(self.value)
+    if value:find("%b[]") ~= nil then
+      value = value:gsub("\\%[", "[")
+    end
+    local pre_overflow_value = value
+    local trimmed = value:match("^(.-)%s*$")
+    if max_width > 0 then
+      if self:getOverflow() == "ellipsis" then
+        value = Text.ellipse(trimmed, max_width, self.font)
+      else
+        value = Text.clip(trimmed, max_width, self.font)
+      end
+    end
+    self.is_clipping = value ~= pre_overflow_value
+    local trailing_spaces = UTF8.len(value) - UTF8.len(trimmed)
+    local width = self.font:getWidth(trimmed) + trailing_spaces * self.font:getWidth(" ")
+    if wrap_limit ~= nil then
+      local align = "left"
+      if width > wrap_limit then
+        align = self:getAlign()
+      end
+      self.text:setf(Text.getFormattedValue(value, self:getColor()), wrap_limit, align)
+      width = math.min(wrap_limit, width)
+    else
+      self.text:set(Text.getFormattedValue(value, self:getColor()))
+    end
+    self.width = width
+    self.height = self.text:getHeight()
+  else
+    self.nodes = self:parseNodes(self.value)
   end
 end
 
@@ -112,14 +162,7 @@ function Text:setFont(font)
   end
   self.font = font
 
-  if self.text ~= nil then
-    self.text:setFont(font)
-    self:updateText()
-    self.width = self.text:getWidth()
-    self.height = self.text:getHeight()
-  else
-    self.nodes = self:parseNodes(self.value)
-  end
+  self:updateText()
 end
 
 --- Gets the text's align
@@ -133,13 +176,89 @@ end
 function Text:setAlign(align)
   self.align = align
 
-  if self.text ~= nil then
-    self:updateText()
-    self.width = self.text:getWidth()
-    self.height = self.text:getHeight()
-  else
-    self.nodes = self:parseNodes(self.value)
-  end
+  self:updateText()
+end
+
+--- Gets the text's wrap limit
+--- @return number|nil
+function Text:getWrapLimit()
+  return self.wrap_limit
+end
+
+--- Sets the text's wrap limit
+--- @param wrap_limit number|nil
+function Text:setWrapLimit(wrap_limit)
+  self.wrap_limit = wrap_limit
+
+  self:updateText()
+end
+
+--- Gets the text's max width
+--- @return number
+function Text:getMaxWidth()
+  return self.max_width
+end
+
+--- Sets the text's max width
+--- @param max_width number
+function Text:setMaxWidth(max_width)
+  self.max_width = max_width
+
+  self:updateText()
+end
+
+--- Gets the text's overflow
+--- @return Dummy.Text.Overflow
+function Text:getOverflow()
+  return self.overflow
+end
+
+--- Sets the text's overflow
+--- @param overflow Dummy.Text.Overflow
+function Text:setOverflow(overflow)
+  self.overflow = overflow
+
+  self:updateText()
+end
+
+--- Wether the text is clipping
+--- @return boolean
+function Text:isClipping()
+  return self.is_clipping
+end
+
+--- Gets the text's characters width
+--- @return number
+function Text:getCharacterWidth()
+  return self.char_width
+end
+
+--- Sets the text's characters width
+--- @param char_width number
+function Text:setCharacterWidth(char_width)
+  char_width = math.max(math.round(char_width), 0)
+  if self.char_width == char_width then return end
+
+  self.char_width = char_width
+
+  self:setText(self:getText(), true)
+end
+
+--- Gets the text's characters height
+--- @return number
+function Text:getCharacterHeight()
+  return self.char_height
+end
+
+--- Sets the text's characters height
+--- @param char_height number
+function Text:setCharacterHeight(char_height)
+  char_height = math.max(math.round(char_height), 0)
+  if self.char_height == char_height then return end
+
+  self.char_height = char_height
+
+  self:setText(self:getText(), true)
 end
 
 --- Sets the text's scale
@@ -149,11 +268,48 @@ end
 function Text:setScale(scale_x, scale_y)
   Drawable.setScale(self, scale_x, scale_y)
 
-  if self.text ~= nil then
-    self:updateText()
-    self.width = self.text:getWidth()
-    self.height = self.text:getHeight()
+  self:updateText()
+end
+
+--- Ellipsizes a text
+--- @param text string
+--- @param max_width number
+--- @param font love.Font
+function Text.ellipse(text, max_width, font)
+  if font:getWidth(text) <= max_width then return text end
+
+  local ellipsis = "..."
+  local ellipsis_width = font:getWidth(ellipsis)
+  if ellipsis_width > max_width then return "" end
+
+  return Text.clip(text, max_width - ellipsis_width, font) .. ellipsis
+end
+
+--- Clips a text
+--- @param text string
+--- @param max_width number
+--- @param font love.Font
+function Text.clip(text, max_width, font)
+  if font:getWidth(text) <= max_width then return text end
+
+  local length = UTF8.len(text)
+  if length == nil or length == 0 then return "" end
+
+  local left, right = 0, length
+  local result = ""
+
+  while left <= right do
+    local mid = math.floor((left + right) / 2)
+    local candidate = UTF8.sub(text, 1, mid)
+    if font:getWidth(candidate) <= max_width then
+      result = candidate
+      left = mid + 1
+    else
+      right = mid - 1
+    end
   end
+
+  return result
 end
 
 --- Gets the formatted text's value
@@ -182,7 +338,11 @@ function Text:getLineWidth(line)
       if current_line == line then
         local font = node.state.font or self.font
         local scale_x = node.state.scale_x or 1
-        width = width + font:getWidth(node.character) * scale_x + (self.state.spacing or 0)
+        local char_width = self:getCharacterWidth()
+        if char_width <= 0 then
+          char_width = font:getWidth(node.character)
+        end
+        width = width + char_width * scale_x + (self.state.spacing or 0)
       elseif current_line > line then
         return width
       end
@@ -217,11 +377,12 @@ function Text:registerCommand(command, func)
   self.custom_commands[command] = func
 end
 
---- Updates the text
+--- Updates the text, called on every game update
+--- @param dt number
 function Text:update(dt)
   if not self:isVisible() or self.text ~= nil then return end
 
-  self.timer = self.timer + dt * 30
+  self.time = self.time + dt * 30
 
   for _, node in ipairs(self.nodes) do
     if node.state ~= nil and (node.state.wave_speed or 0) > 0 then
@@ -233,54 +394,69 @@ function Text:update(dt)
 end
 
 --- Draws the text
-function Text:draw()
+--- @param camera Dummy.Camera
+function Text:draw(camera)
   if not self:isVisible() then return end
 
   love.graphics.applyTransform(self:getTransform())
-  love.graphics.setColor(1, 1, 1, self.alpha)
+
+  local alpha = self:getAlpha()
+  love.graphics.setColor(1, 1, 1, alpha)
   if self.text ~= nil then
-    local align_offset = 0
-    if self.align == "right" then
-      align_offset = Constants.SCREEN_WIDTH / self.scale_x - self.text:getWidth()
-    elseif self.align == "center" then
-      align_offset = (Constants.SCREEN_WIDTH / self.scale_x - self.text:getWidth()) / 2
-    end
+    self.text:setFont(self.font)
     local origin_x, origin_y = self:getOrigin()
     local width, height = self:getWidth(), self:getHeight()
-    love.graphics.draw(self.text, -width * origin_x - align_offset, -height * origin_y)
+    local text_x, text_y = math.ceil(-width * origin_x), math.ceil(-height * origin_y)
+    if self["debug"] then
+      if Input.isPressed("kp9") then
+        if self:getAlign() == "center" then
+          self:setAlign("left")
+        elseif self:getAlign() == "left" then
+          self:setAlign("right")
+        else
+          self:setAlign("center")
+        end
+      end
+    end
+    love.graphics.draw(self.text, text_x, text_y)
   else
     for _, node in ipairs(self.nodes) do
       if node.type == "character" and node.state.text ~= nil then
         local scale_x, scale_y = node.state.scale_x or 1, node.state.scale_y or 1
-        love.graphics.print(node.state.text or node.character, node.state.font or self.font, node.state.x, node.state.y,
-          0, scale_x, scale_y)
+        local font = node.state.font or self.font
+        love.graphics.print(node.state.text or node.character, font, node.state.x, node.state.y, 0, scale_x, scale_y)
       end
     end
   end
 
-  self:debugDraw()
-  self:drawChildren()
+  self:drawChildren(camera)
+  self:drawDebug(camera)
 end
 
---- Draws for debugging
-function Text:debugDraw()
-  if not Debug.shouldDisplayHitbox() then return end
+--- Draws the text's bounding box for debugging
+--- @param camera Dummy.Camera
+function Text:drawDebug(camera)
+  if not Debug.shouldDisplayHitbox() or not self:isVisibleOnScreen() then return end
 
   local width, height = self:getWidth(), self:getHeight()
   if width == 0 and height == 0 then return end
 
   love.graphics.push()
   love.graphics.origin()
-  local absolute_transform = self:getAbsoluteTransform()
-  local origin_x, origin_y = self:getOrigin()
-  local x, y = -width * origin_x, -height * origin_y
-  local x1, y1 = absolute_transform:transformPoint(x, y)
-  local x2, y2 = absolute_transform:transformPoint(x + width, y)
-  local x3, y3 = absolute_transform:transformPoint(x + width, y + height)
-  local x4, y4 = absolute_transform:transformPoint(x, y + height)
+
+  camera:apply()
+
   love.graphics.setColor(0, 0, 1, 1)
+  love.graphics.setLineWidth(1)
   love.graphics.setLineStyle("rough")
-  love.graphics.polygon("line", x1 + 0.5, y1 + 0.5, x2 - 0.5, y2 + 0.5, x3 - 0.5, y3 - 0.5, x4 + 0.5, y4 - 0.5)
+  local bb = self:getBoundingBox()
+  love.graphics.polygon("line",
+    bb[1] + 0.5, bb[2] + 0.5,
+    bb[3] - 0.5, bb[4] + 0.5,
+    bb[5] - 0.5, bb[6] - 0.5,
+    bb[7] + 0.5, bb[8] - 0.5
+  )
+
   love.graphics.pop()
 end
 
@@ -296,21 +472,24 @@ function Text:updateNodes(dt)
       characters = characters + 1
 
       local color = node.state.color or self.color
-      local alpha = (color[4] or 1) * self.alpha
+      local alpha = (color[4] or 1) * self:getAlpha()
       node.state.text = Text.getFormattedValue(node.character, color, alpha)
 
       local spacing = node.state.spacing or 0
       local scale_x = node.state.scale_x or 1
       local scale_y = node.state.scale_y or 1
       local font = node.state.font or self.font
-      local char_height = font:getHeight() * scale_y
-      line_height = math.max(line_height, char_height)
-      local line_diff = (line_height - char_height) / 2
+      local char_height = self:getCharacterHeight()
+      if char_height <= 0 then
+        char_height = math.round(font:getHeight() * font:getLineHeight())
+      end
+      line_height = math.max(line_height, char_height * scale_y)
+      local line_diff = (line_height - char_height * scale_y) / 2
 
       if node.state.shake ~= nil and node.state.shake > 0 and dt > 0 then
         if node.state == nil then node.state = {} end
-        if self.timer - (node.state.last_shake or 0) >= 1 then
-          node.state.last_shake = self.timer
+        if self.time - (node.state.last_shake or 0) >= 1 then
+          node.state.last_shake = self.time
           node.state.offset_x = math.round(love.math.random() * (2 * node.state.shake) - node.state.shake)
           node.state.offset_y = math.round(love.math.random() * (2 * node.state.shake) - node.state.shake)
         end
@@ -327,7 +506,11 @@ function Text:updateNodes(dt)
       node.state.x = char_x + (node.state.offset_x or 0) - self:getWidth() * origin_x
       node.state.y = char_y + line_diff + (node.state.offset_y or 0) - self:getHeight() * origin_y
 
-      char_x = char_x + font:getWidth(node.character) * scale_x + spacing
+      local char_width = self:getCharacterWidth()
+      if char_width <= 0 then
+        char_width = font:getWidth(node.character)
+      end
+      char_x = char_x + char_width * scale_x + spacing
       if node.character == "\n" then
         line = line + 1
         char_x = self:getCharOffset(line)
@@ -447,7 +630,7 @@ end
 --- @param value Dummy.Text.Text
 --- @return Dummy.Text.Node[]
 function Text:parseNodes(value)
-  value = Lang.translate(value)
+  value = self.no_translation and tostring(value) or Lang.translate(value)
 
   self.state = {}
   local nodes = {}
@@ -461,7 +644,7 @@ function Text:parseNodes(value)
   local i = 1
   while i <= length do
     local char = UTF8.sub(value, i, i)
-    local next_char = i < #value and UTF8.sub(value, i + 1, i + 1)
+    local next_char = UTF8.sub(value, i + 1, i + 1)
     if char == "\\" and (next_char == "[" or next_char == "]") then
       escaping = true
     elseif char == "[" and not escaping then
@@ -472,7 +655,7 @@ function Text:parseNodes(value)
         self:processNode(node)
         table.insert(nodes, node)
       else
-        i = i - #command - 2
+        i = i - UTF8.len(command) - 2
         escaping = true
       end
       command = nil
@@ -485,9 +668,17 @@ function Text:parseNodes(value)
       local scale_x = self.state.scale_x or 1
       local scale_y = self.state.scale_y or 1
       local spacing = self.state.spacing or 0
-      line_width = line_width + font:getWidth(char) * scale_x + spacing
+      local char_width = self:getCharacterWidth()
+      if char_width <= 0 then
+        char_width = math.round(font:getWidth(char))
+      end
+      line_width = line_width + char_width * scale_x + spacing
       width = math.max(width, line_width)
-      line_height = math.max(line_height, font:getHeight() * scale_y)
+      local char_height = self:getCharacterHeight()
+      if char_height <= 0 then
+        char_height = math.round(font:getHeight() * font:getLineHeight())
+      end
+      line_height = math.max(line_height, char_height * scale_y)
       lines_heights[line_count] = line_height
       if char == "\n" then
         line_width, line_height = 0, 0
@@ -497,7 +688,7 @@ function Text:parseNodes(value)
       table.insert(nodes, {
         type = "character",
         character = char,
-        state = table.clone(self.state)
+        state = table.copy(self.state)
       })
     end
 
@@ -505,26 +696,43 @@ function Text:parseNodes(value)
   end
 
   self.width = width
-  self.height = math.sum(table.unpack(lines_heights))
+  self.height = table.sum(lines_heights)
   self.custom_commands_called = {}
   self.state = {}
 
   return nodes
 end
 
+--- Reloads the text
+function Text:reload()
+  self:setText(self:getText(), true)
+end
+
 --- Creates a text
---- @param value Dummy.Text.Text
+--- @param value? Dummy.Text.Text
+--- @param no_translation? boolean wether the value should not be translated (Defaults to `false`)
 --- @return Dummy.Text
-function Text:new(value)
+function Text:new(value, no_translation)
   self = Class:new(Text)
-  self.color = { 1, 1, 1 }
+
+  self.no_translation = Utils.getOrDefault(no_translation, false)
+  self.color = { 1, 1, 1, 1 }
   self.font = love.graphics.getFont()
   self.align = "left"
-  self.timer = 0
+  self.max_width = 0
+  self.overflow = "clip"
+  self.is_clipping = false
+  self.char_width = 0
+  self.char_height = 0
+  self.time = 0
   self.custom_commands = {}
   self.custom_commands_called = {}
 
-  self:setText(value)
+  Signal.on("hot_reload_language", function()
+    self:reload()
+  end)
+
+  self:setText(Utils.getOrDefault(value, ""))
 
   return self
 end

@@ -27,11 +27,11 @@
 --- @field protected auto_next boolean
 DialogueText = {}
 
---- Gets the class name
---- @return string
-function DialogueText.getClassName() end
+--- Gets the dialogue's text values
+--- @return Dummy.Text.Text[]
+function DialogueText:getText() end
 
---- Sets the dialogue's text value
+--- Sets the dialogue's text values
 --- @param value Dummy.Text.Text
 --- @param ... Dummy.Text.Text
 function DialogueText:setText(value, ...) end
@@ -52,7 +52,6 @@ function DialogueText:isDone() end
 
 --- Wether the dialogue's current text is done
 --- @return boolean
---- @private
 function DialogueText:isCurrentDone() end
 
 --- Gets the dialogue's speed
@@ -75,6 +74,14 @@ function DialogueText:setVoice(voice) end
 --- @param font love.Font|Dummy.Assets.Font|string
 function DialogueText:setFont(font) end
 
+--- Sets the dialogue text's characters width
+--- @param char_width number
+function DialogueText:setCharacterWidth(char_width) end
+
+--- Sets the dialogue text's characters height
+--- @param char_height number
+function DialogueText:setCharacterHeight(char_height) end
+
 --- Applies the node state
 --- @param node Dummy.Text.Node
 function DialogueText:processNode(node) end
@@ -89,9 +96,15 @@ function DialogueText:parseCommand(text) end
 --- @return Dummy.Text.Node[]
 function DialogueText:parseNodes(value) end
 
---- Updates the dialogue
+--- Updates the dialogue, called on every game update
 --- @param dt number
 function DialogueText:update(dt) end
+
+--- Reloads the dialogue text
+function DialogueText:reload() end
+
+--- Called when the dialogue current text is done
+function DialogueText:onCurrentDone() end
 
 --- Called when the dialogue is done
 function DialogueText:onDone() end

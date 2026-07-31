@@ -35,15 +35,18 @@ function Assets.addFont(font_name, font) end
 --- @return string|nil
 function Assets.checkFilenameExt(name, exts) end
 
---- Plays an audio
+--- Gets an audio source
 --- @param folder string
 --- @param audio_name string
 --- @param mode "queue" | "static" | "stream"
---- @param play boolean
---- @param loop boolean
---- @return love.Source|string
+--- @return love.Source
 --- @protected
-function Assets.playAudio(folder, audio_name, mode, play, loop) end
+function Assets.getAudio(folder, audio_name, mode) end
+
+--- Gets a music
+--- @param music_name string
+--- @return love.Source
+function Assets.getMusic(music_name) end
 
 --- Plays a music
 --- @param music_name string the music name to play
@@ -53,6 +56,11 @@ function Assets.playAudio(folder, audio_name, mode, play, loop) end
 --- @return love.Source
 function Assets.playMusic(music_name, play, loop, replace) end
 
+--- Gets a sound
+--- @param sound_name string
+--- @return love.Source
+function Assets.getSound(sound_name) end
+
 --- Plays a sound
 --- @param sound_name string the sound name to play
 --- @param play? boolean wether the sound should play instantly (Defaults to `true`)
@@ -61,13 +69,31 @@ function Assets.playMusic(music_name, play, loop, replace) end
 --- @return love.Source
 function Assets.playSound(sound_name, play, loop, replace) end
 
+--- Gets the current music name
+--- @return string|nil
+function Assets.getCurrentMusicName() end
+
 --- Gets the current music
 --- @return love.Source|nil
 function Assets.getCurrentMusic() end
 
+--- Gets the current sound name
+--- @return string|nil
+function Assets.getCurrentSoundName() end
+
 --- Gets the current sound
 --- @return love.Source|nil
 function Assets.getCurrentSound() end
+
+--- Fades the music
+--- @param fade_in number
+--- @param music love.Source
+function Assets.fadeInMusic(fade_in, music) end
+
+--- Fades the music
+--- @param fade_out number
+--- @param music love.Source
+function Assets.fadeOutMusic(fade_out, music) end
 
 --- Clears the cache
 function Assets.clear() end

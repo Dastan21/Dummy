@@ -1,0 +1,91 @@
+WORLD_EXAMPLE_MOD_TITLE=DUMMY - World Example
+WORLD_EXAMPLE_MOD_BATTLE_TITLE=DUMMY - In battle against {}
+
+# Encounter
+WORLD_EXAMPLE_MOD_ENCOUNTER_DUMMY_NAME=Dummy
+
+WORLD_EXAMPLE_MOD_ENCOUNTER_TEXT_1=* You encountered the Dummy.
+WORLD_EXAMPLE_MOD_ENCOUNTER_TEXT_2=* Dummy looks like it's\n  going to fall over.
+WORLD_EXAMPLE_MOD_ENCOUNTER_TEXT_3=* Dummy stands around\n  absentmindedly.
+
+WORLD_EXAMPLE_MOD_ENCOUNTER_CHECK_TEXT=* A cotton heart and a button eye\n[wait:5]* You are the apple of my eye
+
+WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_ACT=Talk
+WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_TEXT_1=* You talk to the DUMMY.\n[wait:10]* ...
+WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_TEXT_2=* It doesn't seem much for\n  conversation.
+WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_TEXT_3=* TORIEL seems happy with you.
+
+WORLD_EXAMPLE_MOD_ENCOUNTER_TIRE=* Dummy tires of your\n  aimless shenanigans.
+WORLD_EXAMPLE_MOD_ENCOUNTER_BUBBLE=[wave].[wait:5].[wait:5].[wait:5].[wait:5].[wait:30][next]
+
+# World
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SIGN_TEXT_1=* "Press \[Z\] to read signs!"
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_READABLE_TEXT_1=* Only the fearless may proceed.\n* Brave ones, foolish ones.\n* Both walk not the middle road.
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_READABLE_TEXT_2=* Stay on the path.
+
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_ADVICE_TEXT_1=* Please press this switch.\n \n            - TORIEL
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_ADVICE_TEXT_2=* Please press this switch\n  too.\n             - TORIEL
+
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_1=[portrait:toriel,talk,side]* No no no![wait:5][portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_2=[portrait:toriel,talk,happy]* You want to press the\n  other switch.[portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_3=[portrait:toriel,talk,side]* I even labelled it for\n  you...[portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_4=* It seems that is not\n  the correct switch.
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_5=* (Wow![wait:5])\n* (You are superfast at being\n  wrong.)
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_TEXT_6=* This switch doesn't even\n  work...
+
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_1=[portrait:toriel,talk,normal]* To make progress here,[wait:5] \n  you will need to trigger\n  several switches.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_2=[portrait:toriel,talk,normal]* Do not worry,[wait:5] I have \n  labelled the ones that\n  you need to flip.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_3=[portrait:toriel,talk,normal]* The first switch is over\n  on the wall.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_4=[portrait:toriel,talk,side]* Do you need some help..?[wait:5]\n* Press the switch on the\n  wall.[portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_5=[portrait:toriel,talk,happy]* Come on,[wait:5] you can do it![portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_6=[portrait:toriel,talk,happy]* Splendid![wait:10] \n* I am proud of you,[wait:5] \n  little one.[portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_7=[portrait:toriel,talk,happy]* Let us move to the\n  next room.[portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_8=[portrait:toriel,talk,happy]* Go on,[wait:5] press the switch\n  on the left.[portrait:toriel,blink,happy]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_9=[portrait:toriel,talk,side]* You do know which way\n  left is,[wait:5] do you not?[portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_WALL_SWITCH_TORIEL_DIALOGUE_10=[portrait:toriel,talk,normal]* Press the switch that I\n  labelled for you.[portrait:toriel,blink,normal]
+
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_TELESCOPE_USE_TORIEL_DIALOGUE_1=[portrait:toriel,talk,normal]* Please press the switch\n  on the wall.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_TELESCOPE_USE_TORIEL_DIALOGUE_2=[portrait:toriel,talk,side]* Come over here, my child.[portrait:toriel,blink,side]
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_TELESCOPE_USE=* (Look through the telescope?)\n \n         Yes         No[choice]
+
+WORLD_EXAMPLE_MOD_WORLD_RUINS2_NAME=Ruins - Entrance
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SAVEPOINT_RUINS2_1=* (The shadow of the ruins\n  looms above,[wait:5] filling you with\n  determination.)
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SAVEPOINT_RUINS2_2=* (HP fully restored.)
+WORLD_EXAMPLE_MOD_WORLD_RUINS4_NAME=Ruins - Dummy Shop
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SAVEPOINT_RUINS4_1=* (The fact that the Dummy can\n  run a shop,[wait:5] is filling you with\n  determination.)
+WORLD_EXAMPLE_MOD_WORLD_OBJECT_SAVEPOINT_RUINS4_2=* (HP fully restored.)
+
+WORLD_EXAMPLE_MOD_PLAYER_PHONECALL_TORIEL_NAME=Toriel's Phone
+WORLD_EXAMPLE_MOD_PLAYER_PHONECALL_TORIEL_CALL_1=* Dialing...
+WORLD_EXAMPLE_MOD_PLAYER_PHONECALL_TORIEL_CALL_2=[portrait:toriel,talk,normal][voice:voice_toriel]* Hello, my child.\n* It's me,[wait:5] Toriel.[wait:5]\n* I'm here to help you.[portrait:toriel,blink,normal]
+WORLD_EXAMPLE_MOD_PLAYER_PHONECALL_TORIEL_CALL_3=[portrait:none]* Click...
+
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_ENTER_TEXT=* ...\n* (The Dummy is\n  standing still\n  silently.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_MAIN_TEXT=* ...\n* (You wonder what\n  the Dummy is going\n  to do with its money.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_EXIT_TEXT=* ...\n* (You give the Dummy a little wave\n  as you leave.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_SELL_TEXT=* ...\n* (Doesn't seem like you can sell\n  anything...)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_SELL_NO_ITEMS_TEXT=* ...\n* (You don't have anything to\n  sell...)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_SELL_CONFIRM_TEXT=(Give item and take money?)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_SIDE_TEXT=. . .
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_SIDE_CANCEL_TEXT=. . .\n(Actually\nno.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_SOLD_OUT_TEXT=. . .\n(Out of\nstock.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_NOT_ENOUGH_GOLD_TEXT=. . .\n(Not enough\nmoney.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_INVENTORY_FULL_TEXT=. . .\n(Not enough\nspace.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_SUCCESS_TEXT=. . .\n(Great deal.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SAY_HELLO_NAME=Say hello
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SAY_HELLO_TEXT_1=* (You say hello to the Dummy...)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SAY_HELLO_TEXT_2=* (...but it doesn't respond.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_PAT_NAME=Pat
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_PAT_TEXT_1=* (You pat the Dummy's head...)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_PAT_TEXT_2=* (...but it doesn't respond.)
+WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SIDE_TEXT=. . .
+
+# Items
+WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_NAME=Monster Candy
+WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_SHORTNAME=MnstrCndy
+WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_DESCRIPTION=* "Monster Candy" - Heals 10 HP\n* Has a distinct,[wait:5] \n  non-licorice flavor.
+WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_DESCRIPTION_SHOP=Heals 10 HP\n(Licorice-\nfree\nguaranteed.)
+WORLD_EXAMPLE_MOD_ITEM_BLANKET_NAME=Blanket
+WORLD_EXAMPLE_MOD_ITEM_BLANKET_SHORTNAME=Blanket
+WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION=* "Couverture" - Armor DF 1\n* The fabric is very soft.
+WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION_SHOP=Armor: 1DF\n({} DF)\n(It makes\nyou sleepy...)

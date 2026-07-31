@@ -90,7 +90,11 @@ function Timer:cancel(handle)
 end
 
 function Timer:clear()
-	self.functions = {}
+	for handle in pairs(self.functions) do
+		if not handle.persistent then
+			self:cancel(handle)
+		end
+	end
 end
 
 function Timer:script(f)

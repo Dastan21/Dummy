@@ -14,17 +14,9 @@ DialogueBubble = {}
 
 --- @alias Dummy.DialogueBubble.Type "left" | "left_short" | "left_wide_short" | "right" | "right_large" | "right_short" | "right_thin" | "right_wide" | "right_wide_short" | "top" | "bottom" | "tiny" | "tiny_top" | "shock"
 
---- Gets the class name
---- @return string
-function DialogueBubble.getClassName() end
-
 --- Gets the dialogue bubble's dialogue text
 --- @return Dummy.DialogueText
 function DialogueBubble:getDialogue() end
-
---- Sets the dialogue bubble's alpha
---- @param alpha number
-function DialogueBubble:setAlpha(alpha) end
 
 --- Initializes the dialogue bubble
 function DialogueBubble:init() end

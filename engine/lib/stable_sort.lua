@@ -91,7 +91,6 @@ function _sort_core.merge( array, workspace, low, middle, high, less )
 	end
 end
 
-
 function _sort_core.merge_sort_impl(array, workspace, low, high, less)
 	if high - low <= _sort_core.max_chunk_size then
 		_sort_core.insertion_sort_impl( array, low, high, less )

@@ -1,11 +1,11 @@
---- @class FrogBullet : Dummy.Bullet
+--- @class FroggitMod.Bullet.Frog : Dummy.Battle.Bullet
 ---
---- @field leap_timer table|nil
---- @field vel_x number
---- @field vel_y number
---- @field acc_x number
---- @field acc_y number
-local FrogBullet = Class:extend(Bullet)
+--- @field protected leap_timer Dummy.Timer.Handle|nil
+--- @field protected vel_x number
+--- @field protected vel_y number
+--- @field protected acc_x number
+--- @field protected acc_y number
+local FrogBullet = Class(Bullet, "FroggitMod.Bullet.Frog")
 
 --- Initializes the bullet
 function FrogBullet:new()
@@ -13,7 +13,7 @@ function FrogBullet:new()
   self:setSprite("waves/frog/frog_bullet_1")
   self:setOrigin(0, 0)
   self:setHitbox({ 5, 18, 32, 20 })
-  self:setDamage(Encounter.getEnemies()[1]:getAT() * 1.8)
+  self:setDamage(Battle.getEncounter():getEnemies()[1]:getAT() * 1.8)
 
   local arena_x, arena_y = Arena.getPosition()
   self:setPosition(arena_x + Arena.getWidth() / 2 - self:getWidth(), arena_y - self:getHeight())
@@ -25,7 +25,7 @@ end
 
 --- Called when the bullet is spawned
 function FrogBullet:onSpawned()
-  local leap_delay = 1 + math.random()
+  local leap_delay = 1 + love.math.random()
   self.leap_timer = Timer.after(leap_delay, function()
     self:leap()
   end)
@@ -37,7 +37,7 @@ function FrogBullet:leap()
   self.acc_x = 200 * math.cos(gravity_direction)
   self.acc_y = -200 * math.sin(gravity_direction)
 
-  local leap_direction = math.rad(145 - (math.random() * 20))
+  local leap_direction = math.rad(145 - (love.math.random() * 20))
   self.vel_x = 200 * math.cos(leap_direction)
   self.vel_y = -200 * math.sin(leap_direction)
   self.is_jumping = true
@@ -55,7 +55,8 @@ function FrogBullet:onRemoved()
   self:getWave():done()
 end
 
---- Called on every game update
+--- Updates the bullet, called on every game update
+--- @param dt number
 function FrogBullet:update(dt)
   if not self.is_jumping then return end
 

@@ -6,10 +6,28 @@
 --- @field Right string[]
 --- @field Confirm string[]
 --- @field Cancel string[]
+--- @field Menu string[]
 ---
 --- @field protected keys_pressed table<string, number>
 --- @field protected keys_released table<string, number>
 local Input = {}
+
+--- Flattens a list of inputs
+--- @param ... string|string[]
+--- @return string[]
+function Input.group(...)
+  local inputs = {}
+  for _, input in ipairs({ ... }) do
+    if type(input) == "string" then
+      table.insert(inputs, input)
+    else
+      for _, i in ipairs(input) do
+        table.insert(inputs, i)
+      end
+    end
+  end
+  return inputs
+end
 
 --- Wether a key is down, using a predicate function
 --- @param keys string|string[]
@@ -30,6 +48,9 @@ function Input.hasAnyKey(keys, predicate)
     elseif key == "shift" then
       table.insert(tmp_keys, "lshift")
       table.insert(tmp_keys, "rshift")
+    elseif key == "alt" then
+      table.insert(tmp_keys, "lalt")
+      table.insert(tmp_keys, "ralt")
     else
       table.insert(tmp_keys, key)
     end
@@ -100,10 +121,11 @@ function Input.load()
   Input.Right = { "d", "right", "gamepad:dpright", "joystick:lsright" }
   Input.Confirm = { "z", "e", "return", "kpenter", "gamepad:a" }
   Input.Cancel = { "x", "q", "shift", "gamepad:b" }
+  Input.Menu = { "c", "ctrl", "gamepad:y" }
   Input.Escape = { "escape", "gamepad:start" }
 end
 
---- Updates the input
+--- Updates the input, called on every game update
 function Input.update()
   for key, value in pairs(Input.keys_pressed) do
     if not Input.isDown(key) and Input.keys_pressed[key] == 2 then

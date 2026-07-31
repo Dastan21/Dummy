@@ -13,7 +13,14 @@
 --- @field protected language_code string
 --- @field protected language_name string
 --- @field protected switch_callbacks function[]
+--- @field protected hmr_languages table<string, Dummy.Lang.Language>
 Lang = {}
+
+--- @class Dummy.Lang.Language
+---
+--- @field language_base string
+--- @field language_code string
+--- @field timestamp number
 
 --- Gets the current language name
 --- @return string
@@ -28,7 +35,8 @@ function Lang.getLanguage() end
 function Lang.setLanguage(code) end
 
 --- Switches current language
-function Lang.switchLanguage() end
+--- @param delta? integer
+function Lang.switchLanguage(delta) end
 
 --- Add a callback to be called when switching language
 function Lang.onSwitchLanguage(func) end
@@ -39,16 +47,26 @@ function Lang.onSwitchLanguage(func) end
 --- @return string
 function Lang.translate(key, ...) end
 
+--- Reloads the translations if they have changed
+function Lang.hotReload() end
+
+--- Loads a language
+--- @param base_folder string
+--- @param language_code string
+function Lang.loadLanguage(base_folder, language_code) end
+
 --- Adds a translation to the current language
 --- @param key string key to translate
 --- @param value string translation
 --- @param lang? string language code to use
 function Lang.addTranslation(key, value, lang) end
 
+--- Loads languages from a folder
+--- @param base_folder string
+function Lang.loadLanguagesFromFolder(base_folder) end
+
 --- Loads languages from the lang folder
 function Lang.loadLanguages() end
-
-function Lang.loadLanguagesFromFolder(base_folder) end
 
 --- Loads languages
 function Lang.load() end

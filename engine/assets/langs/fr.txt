@@ -1,56 +1,130 @@
 LANGUAGE_FR=Français
 
+# Main menu
 MAIN_MENU_PLAY=Jouer
 MAIN_MENU_OPEN_MOD_FOLDER=Ouvrir le dossier des mods
 MAIN_MENU_SETTINGS=Paramètres
-MAIN_MENU_SETTINGS_FPS=FPS : {}
 MAIN_MENU_SETTINGS_LANGUAGE=Langue : {}
+MAIN_MENU_SETTINGS_FPS=FPS : {}
+MAIN_MENU_SETTINGS_FPS_UNLIMITED=Illimité
+MAIN_MENU_SETTINGS_VSYNC=Synchronisation verticale : {}
 MAIN_MENU_SETTINGS_VOLUME=Volume : {}%
 MAIN_MENU_SETTINGS_FULLSCREEN=Plein écran : {}
 MAIN_MENU_SETTINGS_WINDOW_SCALE=Échelle de la fenêtre : {}x
 MAIN_MENU_SETTINGS_SWITCH_ON=ACTIVÉ
 MAIN_MENU_SETTINGS_SWITCH_OFF=DÉSACTIVÉ
+MAIN_MENU_SETTINGS_RESET_SAVE=Réinitialiser la sauvegarde
+MAIN_MENU_SETTINGS_RESET_SAVE_EMPTY=Aucune sauvegarde trouvée.
+MAIN_MENU_SETTINGS_RESET_SAVE_TITLE=Voulez-vous vraiment réinitialiser la sauvegarde ?
+MAIN_MENU_SETTINGS_RESET_SAVE_YES=Oui
+MAIN_MENU_SETTINGS_RESET_SAVE_NO=Non
 MAIN_MENU_BACK=Retour
 MAIN_MENU_QUIT=Quitter
 MAIN_MENU_MODLIST_EMPTY=Aucun mod trouvé !
 MAIN_MENU_MODLIST_MOD_ERROR=ERREUR : {}
 
-ENCOUNTER_STAT_LV=LV
-ENCOUNTER_STAT_AT=ATQ
-ENCOUNTER_STAT_DF=DÉF
-ENCOUNTER_MENU_ACT_CHECK=Examiner
-ENCOUNTER_MENU_ITEM_PAGE=PAGE {}
-ENCOUNTER_MENU_MERCY_SPARE=* Épargner
-ENCOUNTER_MENU_MERCY_FLEE=* Fuir
-ENCOUNTER_ATTACK_MISS=RATE
-ENCOUNTER_FLEE_1=   * J'me casse d'ici.
-ENCOUNTER_FLEE_2=   * J'ai mieux à faire.
-ENCOUNTER_FLEE_3=   * Ne me ralentissez pas.
-ENCOUNTER_FLEE_4=   * Vous avez fui...
-ENCOUNTER_FLEE_REWARD=   * Vous fuyez avec {} EXP\n     et {} PIÈCES D'OR.
-ENCOUNTER_WIN_REWARD=* VICTOIRE !\n* Vous obtenez {} EXP et {} PO.
-ENCOUNTER_WIN_LEVEL_UP=* Votre LOVE augmente.
+# Battle
+BATTLE_STAT_LV=LV
+BATTLE_STAT_AT=ATQ
+BATTLE_STAT_DF=DÉF
+BATTLE_MENU_ACT_CHECK=Examiner
+BATTLE_MENU_ITEM_PAGE=PAGE {}
+BATTLE_MENU_MERCY_SPARE=* Épargner
+BATTLE_MENU_MERCY_FLEE=* Fuir
+BATTLE_ATTACK_MISS=RATE
+BATTLE_FLEE_1=   * J'me casse d'ici.
+BATTLE_FLEE_2=   * J'ai mieux à faire.
+BATTLE_FLEE_3=   * Ne me ralentissez pas.
+BATTLE_FLEE_4=   * Vous avez fui...
+BATTLE_FLEE_REWARD=   * Vous fuyez avec {} EXP\n     et {} PIÈCES D'OR.
+BATTLE_WIN_REWARD=* VICTOIRE !\n* Vous obtenez {} EXP et {} PO.
+BATTLE_WIN_LEVEL_UP=* Votre LOVE augmente.
+BATTLE_ITEM_HEAL=* Vous récupérez {} PV !
+BATTLE_ITEM_HEAL_MAX=* PV entièrement restaurés.
+BATTLE_ITEM_FOOD_USE=* Vous mangez le {}.
+BATTLE_ITEM_DRINK_USE=* Vous buvez le {}.
+BATTLE_ITEM_EQUIPMENT_USE=* Vous vous équipez de\n  {}.
 
-ENCOUNTER_ITEM_HEAL=* Vous récupérez {} PV !
-ENCOUNTER_ITEM_HEAL_MAX=* PV entièrement restaurés.
-ENCOUNTER_ITEM_FOOD_USE=* Vous mangez le {}.
-ENCOUNTER_ITEM_DRINK_USE=* Vous buvez le {}.
-ENCOUNTER_ITEM_EQUIPMENT_USE=* Vous vous équipez de {}.
-ENCOUNTER_ITEM_NAME_BANDAGE=Pansement
-ENCOUNTER_ITEM_SHORTNAME_BANDAGE=Pansement
-ENCOUNTER_ITEM_USE_BANDAGE=* Vous remettez le pansement.\n* Il colle encore un peu.
-ENCOUNTER_ITEM_NAME_STICK=Bâton
-ENCOUNTER_ITEM_SHORTNAME_STICK=Bâton
-ENCOUNTER_ITEM_USE_STICK=* Vous lancez le bâton.\n* Pour le ramasser juste après.
-
+# Game over
 GAME_OVER_TITLE_GAME=FIN DE
 GAME_OVER_TITLE_OVER=PARTIE
 GAME_OVER_TEXT_1=[noskip]  Tu ne peux pas\n  abandonner\n  maintenant...
-GAME_OVER_TEXT_2=[noskip]  {}!\n  Garde ta\n  détermination...
+GAME_OVER_TEXT_2=[noskip]  {}![wait:5]\n  Garde ta\n  détermination...
 
+# World player menu
+WORLD_PLAYER_MENU_LV=LV
+WORLD_PLAYER_MENU_HP=PV
+WORLD_PLAYER_MENU_GOLD=P
+WORLD_PLAYER_MENU_ACTION_ITEM=OBJET
+WORLD_PLAYER_MENU_ACTION_STAT=STATS
+WORLD_PLAYER_MENU_ACTION_CELL=TÉL
+WORLD_PLAYER_MENU_STAT_LV=LV  {}
+WORLD_PLAYER_MENU_STAT_HP=PV  {} / {}
+WORLD_PLAYER_MENU_STAT_AT=AT  {} ({})
+WORLD_PLAYER_MENU_STAT_DF=DF  {} ({})
+WORLD_PLAYER_MENU_STAT_WEAPON=ARME: {}
+WORLD_PLAYER_MENU_STAT_ARMOR=ARMURE: {}
+WORLD_PLAYER_MENU_STAT_GOLD=P. D'OR: {}
+WORLD_PLAYER_MENU_STAT_EXP=EXP: {}
+WORLD_PLAYER_MENU_STAT_NEXT=SUIV.: {}
+WORLD_PLAYER_MENU_ACTION_USE=UTIL.
+WORLD_PLAYER_MENU_ACTION_INFO=INFO
+WORLD_PLAYER_MENU_ACTION_DROP=JETER
+
+# World save menu
+WORLD_SAVE_MENU_EMPTY=VIDE
+WORLD_SAVE_MENU_LV=LV {}
+WORLD_SAVE_MENU_TIME={}:{}
+WORLD_SAVE_MENU_ACTION_SAVE=Sauver
+WORLD_SAVE_MENU_ACTION_RETURN=Retour
+WORLD_SAVE_MENU_SAVED=Progression sauvegardée.
+
+# World chestbox
+WORLD_CHESTBOX_USE=* Utiliser la boîte ?\n \n         Oui         Non[choice]
+WORLD_CHESTBOX_MENU_INVENTORY=INVENTAIRE
+WORLD_CHESTBOX_MENU_BOX=BOÎTE
+WORLD_CHESTBOX_MENU_HINT_CLOSE=Appuyez sur [X] pour quitter
+WORLD_CHESTBOX_USE_EMPTY_1=* Vous n'avez pas d'objets.[wait:5]\n* Vous mettez un peu de votre\n  temps dans la boîte.
+WORLD_CHESTBOX_USE_EMPTY_2=* Vous n'avez pas d'objets.[wait:5]\n* Vous mettez un peu de vos\n  efforts dans la boîte.
+WORLD_CHESTBOX_USE_EMPTY_3=* Vous n'avez pas d'objets.[wait:5]\n* Vous mettez un peu de vos\n  sentiments dans la boîte.
+
+# Items
+WORLD_ITEM_DROP_1=* Vous faites calmement vos\n  adieux au {}.
+WORLD_ITEM_DROP_2=* Vous mettez le {}\n  par terre et le tapotez\n  brièvement.
+WORLD_ITEM_DROP_3=* Vous jetez le {}\n  par terre comme un vieux\n  détritus. Bon débarras.
+WORLD_ITEM_DROP_4=* Vous abandonnez le\n  {}.
+WORLD_ITEM_DROP_5=* Vous vous débarrassez du\n  {}.
+ITEM_BANDAGE_NAME=Pansement
+ITEM_BANDAGE_SHORTNAME=Pansement
+ITEM_BANDAGE_DESCRIPTION=* "Pansement" - Soigne 10 PV\n* Il a déjà été utilisé\n  plusieurs fois.
+ITEM_BANDAGE_USE=* Vous remettez le pansement.\n* Il colle encore un peu.
+ITEM_STICK_NAME=Bâton
+ITEM_STICK_SHORTNAME=Bâton
+ITEM_STICK_DESCRIPTION=* "Bâton" - Arme AT 0\n* En bois, mais ne mord\n  pas.
+ITEM_STICK_USE=* Vous lancez le bâton.[wait:5]\n* Pour le ramasser juste après.
+
+# World shop
+WORLD_SHOP_ACTION_BUY=Acheter
+WORLD_SHOP_ACTION_SELL=Vendre
+WORLD_SHOP_ACTION_TALK=Parler
+WORLD_SHOP_ACTION_EXIT=Retour
+WORLD_SHOP_ACTION_BUY_YES=Oui
+WORLD_SHOP_ACTION_BUY_NO=Non
+WORLD_SHOP_ACTION_SELL_YES=Oui
+WORLD_SHOP_ACTION_SELL_NO=Non
+WORLD_SHOP_INFO_GOLD={}P
+WORLD_SHOP_SELL_INFO_GOLD=({} P)
+WORLD_SHOP_ITEM_NAME={}P - {}
+WORLD_SHOP_ITEM_BUY_SOLD_OUT=--- VENDU ---
+WORLD_SHOP_ITEM_BUY_DESCRIPTION_SOLD_OUT=VENDU
+WORLD_SHOP_ITEM_BUY_SIDE=Acheter pour\n{}PO ?
+WORLD_SHOP_ITEM_SELL_SOLD_OUT=--- VENDU ---
+
+# Errors
 ERROR_LABEL=ERREUR :
 ERROR_BACK_MAIN_MENU=Appuyez sur ÉCHAP pour retourner au menu principal
 ERROR_COPY_TRACEBACK=Appuyez sur CTRL+C pour copier la trace d'appels dans le presse-papier
 ERROR_MOD_INFO=Mod : {}
 
+# Miscellaneous
 SCREENSHOT_TEXT=Capture d'écran enregistrée !\nAppuyez sur F10 pour ouvrir le dossier.

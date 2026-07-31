@@ -3,15 +3,6 @@ require "constants"
 if os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1" then
   require("lldebugger").start()
 
-  lick = require "lib.lick"
-  lick.reset = true
-  lick.updateAllFiles = true
-  lick.clearPackages = true
-  lick.chunkLoadMessage = "[RELOADED]"
-  lick.beforeReload = function()
-    require("mod.mod_list").unloadMods()
-  end
-
   function love.errorhandler(msg)
     error(msg, 2)
   end
@@ -32,8 +23,8 @@ function love.conf(t)
 
   t.window.title          = Constants.CREDITS.NAME
   t.window.icon           = "assets/icon.png"
-  t.window.width          = Constants.SCREEN_WIDTH
-  t.window.height         = Constants.SCREEN_HEIGHT
+  t.window.width          = Constants.GAME_WIDTH
+  t.window.height         = Constants.GAME_HEIGHT
   t.window.borderless     = false
   t.window.resizable      = false
   t.window.minwidth       = 1

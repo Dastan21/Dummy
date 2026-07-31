@@ -1,20 +1,20 @@
---- @class FlyBullet : Dummy.Bullet
+--- @class FroggitMod.Bullet.Fly : Dummy.Battle.Bullet
 ---
---- @field target_angle number
---- @field fly_speed number
---- @field move_timer table|nil
---- @field stop_timer table|nil
-local FlyBullet = Class:extend(Bullet)
+--- @field protected target_angle number
+--- @field protected fly_speed number
+--- @field protected move_timer Dummy.Timer.Handle|nil
+--- @field protected stop_timer Dummy.Timer.Handle|nil
+local FlyBullet = Class(Bullet, "FroggitMod.Bullet.Fly")
 
 --- Initializes the bullet
 function FlyBullet:new()
   self = Class:new(FlyBullet)
   self:setSprite({ "waves/fly/fly_bullet_1", "waves/fly/fly_bullet_2" }, 2 / 30)
   self:setHitbox({ 4, 4, 4, 4 })
-  self:setDamage(Encounter.getEnemies()[1]:getAT())
+  self:setDamage(Battle.getEncounter():getEnemies()[1]:getAT())
 
   local arena_x, arena_y = Arena.getPosition()
-  self:setPosition(arena_x + math.round((math.random() - 0.5) * Arena.getWidth()), arena_y - Arena.getHeight())
+  self:setPosition(arena_x + math.round((love.math.random() - 0.5) * Arena.getWidth()), arena_y - Arena.getHeight())
 
   self.target_angle = 0
 
@@ -23,15 +23,15 @@ end
 
 --- Called when the bullet is spawned
 function FlyBullet:onSpawned()
-  self:targetPlayer()
+  self:targetSoul()
 end
 
---- Targets the player
-function FlyBullet:targetPlayer()
-  local player_x, player_y = Player.getPosition()
+--- Targets the soul
+function FlyBullet:targetSoul()
+  local soul_x, soul_y = Soul.getPosition()
   local x, y = self:getPosition()
-  local dx = player_x - x
-  local dy = player_y - y
+  local dx = soul_x - x
+  local dy = soul_y - y
   self.target_angle = math.atan(dy / dx)
   if dx < 0 then self.target_angle = self.target_angle + math.pi end
 
@@ -45,7 +45,7 @@ end
 function FlyBullet:halt()
   self.fly_speed = 0
   self.move_timer = Timer.after(0.5, function()
-    self:targetPlayer()
+    self:targetSoul()
   end)
 end
 
@@ -59,7 +59,8 @@ function FlyBullet:onRemoved()
   end
 end
 
---- Called on every game update
+--- Updates the bullet, called on every game update
+--- @param dt number
 function FlyBullet:update(dt)
   local x, y = self:getPosition()
   x = x + math.cos(self.target_angle) * self.fly_speed * dt * 30

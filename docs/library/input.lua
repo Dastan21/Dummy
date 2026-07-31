@@ -14,10 +14,16 @@
 --- @field Right string[]
 --- @field Confirm string[]
 --- @field Cancel string[]
+--- @field Menu string[]
 ---
 --- @field protected keys_pressed table<string, number>
 --- @field protected keys_released table<string, number>
 Input = {}
+
+--- Flattens a list of inputs
+--- @param ... string|string[]
+--- @return string[]
+function Input.group(...) end
 
 --- Wether a key is down, using a predicate function
 --- @param keys string|string[]
@@ -48,6 +54,6 @@ function Input.isReleased(keybind) end
 --- Loads the input
 function Input.load() end
 
---- Updates the input
+--- Updates the input, called on every game update
 function Input.update() end
 

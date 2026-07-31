@@ -10,34 +10,50 @@ Constants = {
   CREDITS = {
     NAME    = "DUMMY",
     AUTHOR  = "Dastan",
-    YEAR    = "2025",
-    VERSION = "1.0.0"
+    YEAR    = "2025-2026",
+    VERSION = "1.0.1"
   },
 
-  SCREEN_WIDTH = 640,
-  SCREEN_HEIGHT = 480,
+  GAME_WIDTH = 640,
+  GAME_HEIGHT = 480,
+
+  WORLD_WIDTH = 320,
+  WORLD_HEIGHT = 240,
 
   DEBUG = false,
+  HOT_RELOAD = true,
+  HOT_RELOAD_DELAY = 1,
 
   LAYERS = {
-    BOTTOM       = -1000,
-    BELOW_ARENA  = 0,
-    ARENA        = 1,
-    ABOVE_ARENA  = 2,
-    BELOW_UI     = 3,
-    UI           = 4,
-    ABOVE_UI     = 5,
-    BELOW_SOUL   = 6,
-    SOUL         = 7,
-    ABOVE_SOUL   = 8,
-    BELOW_BULLET = 9,
-    BULLET       = 10,
-    ABOVE_BULLET = 11,
-    TOP          = 1000,
-    DEBUG        = 9999999
+    BOTTOM           = -1000,
+
+    -- encounter
+    BELOW_ARENA      = 0,
+    ARENA            = 1,
+    ABOVE_ARENA      = 2,
+    BELOW_UI         = 3,
+    UI               = 4,
+    ABOVE_UI         = 5,
+    BELOW_SOUL       = 6,
+    SOUL             = 7,
+    ABOVE_SOUL       = 8,
+    BELOW_BULLET     = 9,
+    BULLET           = 10,
+    ABOVE_BULLET     = 11,
+
+    -- overworld
+    WORLD_BACKGROUND = 12,
+    WORLD_SOLID      = 13,
+    WORLD_OBJECT     = 14,
+    WORLD_FOREGROUND = 15,
+    WORLD_DIALOGUE   = 16,
+    WORLD_MENU       = 17,
+
+    TOP              = 1000,
+    DEBUG            = 9999999
   },
 
-  ENCOUNTER_STATES = {
+  BATTLE_STATES = {
     --- Used for example for custom introductions
     NONE             = "NONE",
     --- Action selection menu
@@ -64,7 +80,7 @@ Constants = {
     DONE             = "DONE",
   },
 
-  ENCOUNTER_ACTIONS = {
+  BATTLE_ACTIONS = {
     --- FIGHT action
     FIGHT = 1,
     --- ACT action
@@ -84,5 +100,7 @@ Constants = {
     BORDER_WIDTH   = 5,
     DEFAULT_X      = 320,
     DEFAULT_Y      = 385,
-  }
+  },
+
+  TILE_SIZE = 20
 }

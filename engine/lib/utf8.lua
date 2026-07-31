@@ -267,7 +267,6 @@ local function utf8replace (s, mapping)
 	return newstr
 end
 
-
 -- identical to string.upper except it knows about unicode simple case conversions
 local function utf8upper (s)
 	return utf8replace(s, utf8data.utf8_lc_uc)
