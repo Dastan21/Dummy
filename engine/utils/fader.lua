@@ -1,22 +1,15 @@
 --- @class Dummy.Fader
 ---
---- @field protected background Dummy.Sprite
---- @field protected fade_timer table|nil
+--- @field protected color love.Color
+--- @field protected alpha number
+--- @field protected fade_timer Dummy.Timer.Handle|nil
 local Fader = {}
 
 --- Loads the fader
 function Fader.load()
-  Fader.background = Sprite:new("pixel")
-  Fader.background:setPosition(-Constants.SCREEN_WIDTH / 2, -Constants.SCREEN_HEIGHT / 2)
-  Fader.background:setOrigin(0, 0)
-  Fader.background:setVisible(false)
-  Fader.background:setPersistent(true)
-  Fader.background:setAlpha(0)
-  Fader.background:setLayer(Constants.LAYERS.TOP)
-  Fader.background:setScale(Constants.SCREEN_WIDTH * 2, Constants.SCREEN_HEIGHT * 2)
-  Fader.background:setColor(0, 0, 0)
-
   Fader.fade_timer = nil
+  Fader.alpha = 0
+  Fader.color = { 0, 0, 0 }
 end
 
 --- Fades in or out
@@ -32,10 +25,8 @@ function Fader.fade(fade_in, duration, method, fade_callback)
   method = Utils.getOrDefault(method, "linear")
 
   local alpha = fade_in and 0 or 1
-  Fader.background:setAlpha(alpha)
-  Fader.background:setVisible(true)
-
-  Fader.fade_timer = Timer.tween(duration, Fader.background, { alpha = math.abs(1 - alpha) }, method, function()
+  Fader.alpha = alpha
+  Fader.fade_timer = Timer.tween(duration, Fader, { alpha = math.abs(1 - alpha) }, method, function()
     if type(fade_callback) == "function" then
       fade_callback()
     end
@@ -58,14 +49,38 @@ function Fader.fadeOut(duration, method, fade_callback)
   Fader.fade(false, duration, method, fade_callback)
 end
 
+--- Sets the fader color
+--- @overload fun(color: love.Color)
+--- @param r number
+--- @param g number
+--- @param b number
+function Fader.setColor(r, g, b)
+  if type(r) == "table" then
+    b = r[3]
+    g = r[2]
+    r = r[1]
+  end
+
+  Fader.color[1] = math.clamp(r, 0, 1)
+  Fader.color[2] = math.clamp(g, 0, 1)
+  Fader.color[3] = math.clamp(b, 0, 1)
+end
+
 --- Resets the currently playing fader
 function Fader.reset()
   if Fader.fade_timer ~= nil then
     Timer.cancel(Fader.fade_timer)
     Fader.fade_timer = nil
   end
+  Fader.alpha = 0
+end
 
-  Fader.background:setVisible(false)
+--- Draws the fader
+function Fader.draw()
+  if Fader.alpha <= 0 then return end
+
+  love.graphics.setColor(Fader.color[1], Fader.color[2], Fader.color[3], Fader.alpha)
+  love.graphics.rectangle("fill", 0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT)
 end
 
 return Fader

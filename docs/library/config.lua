@@ -15,6 +15,8 @@ Config = {}
 ---
 --- @field language string
 --- @field fps number
+--- @field vsync boolean
+--- @field volume number
 --- @field window_scale number
 --- @field fullscreen boolean
 
@@ -29,11 +31,20 @@ function Config.load() end
 function Config.save() end
 
 --- Loads a config
+--- @generic T : table<string, any>
 --- @param config_path string
+--- @return T
 function Config.loadConfig(config_path) end
 
 --- Wether a config is empty
---- @param config table<string, any>
+--- @generic T : table<string, any>
+--- @param config T
 --- @return boolean
 function Config.isEmpty(config) end
+
+--- Gets a config
+--- @generic T : table<string, any>
+--- @param key string
+--- @return T
+function Config.get(key) end
 

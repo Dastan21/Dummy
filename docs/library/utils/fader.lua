@@ -8,8 +8,9 @@
 
 --- @class Dummy.Fader
 ---
---- @field protected background Dummy.Sprite
---- @field protected fade_timer table|nil
+--- @field protected color love.Color
+--- @field protected alpha number
+--- @field protected fade_timer Dummy.Timer.Handle|nil
 Fader = {}
 
 --- Loads the fader
@@ -35,6 +36,16 @@ function Fader.fadeIn(duration, method, fade_callback) end
 --- @param fade_callback? fun() called when the fade is done
 function Fader.fadeOut(duration, method, fade_callback) end
 
+--- Sets the fader color
+--- @overload fun(color: love.Color)
+--- @param r number
+--- @param g number
+--- @param b number
+function Fader.setColor(r, g, b) end
+
 --- Resets the currently playing fader
 function Fader.reset() end
+
+--- Draws the fader
+function Fader.draw() end
 

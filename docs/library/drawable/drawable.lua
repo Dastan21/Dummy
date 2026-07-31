@@ -10,6 +10,10 @@
 ---
 --- @field protected parent Dummy.Drawable|nil
 --- @field protected children Dummy.Drawable[]
+--- @field protected children_to_add Dummy.Drawable[]
+--- @field protected children_to_remove Dummy.Drawable[]
+--- @field protected width number
+--- @field protected height number
 --- @field protected x number
 --- @field protected y number
 --- @field protected angle number
@@ -18,23 +22,35 @@
 --- @field protected origin_x number
 --- @field protected origin_y number
 --- @field protected color love.Color
---- @field protected alpha number
 --- @field protected layer number
 --- @field protected visible boolean
+--- @field protected visible_on_screen boolean
 --- @field protected sprite love.Image|love.Text
 --- @field protected persistent boolean
+--- @field protected tag string
 --- @field protected removed boolean
 Drawable = {}
 
 --- @alias love.Color [ number, number, number ]
 
---- Gets the class's name
---- @return string
-function Drawable.getClassName() end
+--- @class Dummy.Drawable.BoundingBox
+---
+--- @field x1 number
+--- @field y1 number
+--- @field x2 number
+--- @field y2 number
+--- @field x3 number
+--- @field y3 number
+--- @field x4 number
+--- @field y4 number
 
---- Gets the drawable's absolute position
---- @return number, number
-function Drawable:getAbsolutePosition() end
+--- Gets the drawable's width
+--- @return number
+function Drawable:getWidth() end
+
+--- Gets the drawable's height
+--- @return number
+function Drawable:getHeight() end
 
 --- Gets the drawable's relative position
 --- @return number, number
@@ -44,6 +60,10 @@ function Drawable:getPosition() end
 --- @param x number
 --- @param y number
 function Drawable:setPosition(x, y) end
+
+--- Gets the drawable's absolute position
+--- @return number, number
+function Drawable:getAbsolutePosition() end
 
 --- Gets the drawable's angle, in degrees
 --- @return number
@@ -67,9 +87,19 @@ function Drawable:setScale(scale_x, scale_y) end
 --- @return love.Transform
 function Drawable:getTransform() end
 
+--- Updates the drawable's transform
+function Drawable:updateTransform() end
+
 --- Gets the drawable's absolute transform
 --- @return love.Transform
 function Drawable:getAbsoluteTransform() end
+
+--- Updates the drawable's absolute transform
+function Drawable:updateAbsoluteTransform() end
+
+--- Gets the drawable's bounding box
+--- @return Dummy.Drawable.BoundingBox
+function Drawable:getBoundingBox() end
 
 --- Gets the drawable's origin
 --- @return number, number
@@ -90,7 +120,7 @@ function Drawable:getColor() end
 --- @param r number red
 --- @param g number green
 --- @param b number blue
---- @param a number alpha
+--- @param a? number alpha
 function Drawable:setColor(r, g, b, a) end
 
 --- Gets the drawable's alpha
@@ -128,6 +158,14 @@ function Drawable:isPersistent() end
 --- Sets wether the drawable is persistent between scenes
 --- @param persistent boolean
 function Drawable:setPersistent(persistent) end
+
+--- Gets the drawable's tag
+--- @return string
+function Drawable:getTag() end
+
+--- Sets the drawable's tag
+--- @param tag string
+function Drawable:setTag(tag) end
 
 --- Wether the drawable has been removed
 --- @return boolean
@@ -174,10 +212,23 @@ function Drawable:update(dt) end
 function Drawable:updateChildren(dt) end
 
 --- Draws the drawable
-function Drawable:draw() end
+--- @param camera Dummy.Camera
+function Drawable:draw(camera) end
 
 --- Draws the drawable's children
-function Drawable:drawChildren() end
+--- @param camera Dummy.Camera
+function Drawable:drawChildren(camera) end
+
+--- Draws anything for debugging
+--- @param camera Dummy.Camera
+function Drawable:drawDebug(camera) end
+
+--- Wether the drawable is visible on screen
+--- @return boolean
+function Drawable:isVisibleOnScreen() end
+
+--- Updates the drawable's visibility on screen
+function Drawable:updateVisibleOnScreen() end
 
 --- Creates a drawable
 --- @return Dummy.Drawable

@@ -74,15 +74,13 @@ end
 --- @type table<string, love.FileData>
 local audio_cache = {}
 
---- Plays an audio
+--- Gets an audio source
 --- @param folder string
 --- @param audio_name string
 --- @param mode "queue" | "static" | "stream"
---- @param play boolean
---- @param loop boolean
---- @return love.Source|string
+--- @return love.Source
 --- @protected
-function Assets.playAudio(folder, audio_name, mode, play, loop)
+function Assets.getAudio(folder, audio_name, mode)
   local filename = nil
   local audio_path = folder .. audio_name
 
@@ -102,24 +100,25 @@ function Assets.playAudio(folder, audio_name, mode, play, loop)
 
   if file_data == nil then
     success, file_data = pcall(love.filesystem.newFileData, filename)
-    if not success then
-      return "Audio \"" .. audio_name .. "\" not found"
-    end
+    assert(success, "Audio \"" .. audio_name .. "\" not found")
   end
 
   success, source = pcall(love.audio.newSource, file_data, mode)
-  if not success then
-    return "Audio \"" .. audio_name .. "\" not found"
-  end
+  assert(success, "Audio \"" .. audio_name .. "\" not found")
 
   if audio_cache[filename] == nil then
     audio_cache[filename] = file_data
   end
 
-  if loop then source:setLooping(loop) end
-  if play then source:play() end
-
   return source
+end
+
+--- Gets a music
+--- @param music_name string
+--- @return love.Source
+function Assets.getMusic(music_name)
+  local music_mode = love.system.getOS() == "Web" and "static" or "stream"
+  return Assets.getAudio("assets/musics/", music_name, music_mode)
 end
 
 --- Plays a music
@@ -133,9 +132,7 @@ function Assets.playMusic(music_name, play, loop, replace)
   loop = Utils.getOrDefault(loop, true)
   replace = Utils.getOrDefault(replace, true)
 
-  local music_mode = love.system.getOS() == "Web" and "static" or "stream"
-  local source = Assets.playAudio("assets/musics/", music_name, music_mode, play, loop)
-  assert(source ~= nil and type(source) ~= "string", source)
+  local source = Assets.getMusic(music_name)
 
   if replace then
     if Assets.current_music ~= nil then
@@ -143,11 +140,22 @@ function Assets.playMusic(music_name, play, loop, replace)
     end
 
     Assets.current_music = source
+    Assets.current_music_name = music_name
   end
 
   Assets.current_musics[source] = true
 
+  if loop then source:setLooping(loop) end
+  if play then source:play() end
+
   return source
+end
+
+--- Gets a sound
+--- @param sound_name string
+--- @return love.Source
+function Assets.getSound(sound_name)
+  return Assets.getAudio("assets/sounds/", sound_name, "static")
 end
 
 --- Plays a sound
@@ -160,8 +168,7 @@ function Assets.playSound(sound_name, play, loop, replace)
   play = Utils.getOrDefault(play, true)
   loop = Utils.getOrDefault(loop, false)
 
-  local source = Assets.playAudio("assets/sounds/", sound_name, "static", play, loop)
-  assert(source ~= nil and type(source) ~= "string", source)
+  local source = Assets.getSound(sound_name)
 
   if replace == true then
     if Assets.current_sound ~= nil then
@@ -169,11 +176,21 @@ function Assets.playSound(sound_name, play, loop, replace)
     end
 
     Assets.current_sound = source
+    Assets.current_sound_name = sound_name
   end
 
   Assets.current_sounds[source] = true
 
+  if loop then source:setLooping(loop) end
+  if play then source:play() end
+
   return source
+end
+
+--- Gets the current music name
+--- @return string|nil
+function Assets.getCurrentMusicName()
+  return Assets.current_music_name
 end
 
 --- Gets the current music
@@ -182,10 +199,44 @@ function Assets.getCurrentMusic()
   return Assets.current_music
 end
 
+--- Gets the current sound name
+--- @return string|nil
+function Assets.getCurrentSoundName()
+  return Assets.current_sound_name
+end
+
 --- Gets the current sound
 --- @return love.Source|nil
 function Assets.getCurrentSound()
   return Assets.current_sound
+end
+
+--- Fades the music
+--- @param fade_in number
+--- @param music love.Source
+function Assets.fadeInMusic(fade_in, music)
+  if music == nil then return end
+
+  music:setVolume(0)
+  Timer.during(fade_in, function(dt, left)
+    music:setVolume(1 - left / fade_in)
+  end, function()
+    music:setVolume(1)
+  end)
+end
+
+--- Fades the music
+--- @param fade_out number
+--- @param music love.Source
+function Assets.fadeOutMusic(fade_out, music)
+  if music == nil then return end
+
+  music:setVolume(1)
+  Timer.during(fade_out, function(dt, left)
+    music:setVolume(left / fade_out)
+  end, function()
+    music:setVolume(0)
+  end)
 end
 
 --- Clears the cache

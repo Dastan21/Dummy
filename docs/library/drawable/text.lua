@@ -10,12 +10,19 @@
 ---
 --- @field protected text love.Text
 --- @field protected value Dummy.Text.Text
+--- @field protected no_translation boolean
 --- @field protected font love.Font
 --- @field protected align Dummy.Text.Align
 --- @field protected width number
 --- @field protected height number
+--- @field protected wrap_limit number|nil
+--- @field protected max_width number
+--- @field protected overflow Dummy.Text.Overflow
+--- @field protected is_clipping boolean
+--- @field protected char_width number
+--- @field protected char_height number
 --- @field protected nodes Dummy.Text.Node[]
---- @field protected timer number
+--- @field protected time number
 --- @field protected state table<string, any>
 --- @field protected custom_commands table<string, fun(node: Dummy.Text.Node)>
 --- @field protected custom_commands_called table<Dummy.Text.Node, boolean>
@@ -23,6 +30,7 @@ Text = {}
 
 --- @alias Dummy.Text.Text string|table
 --- @alias Dummy.Text.Align "left" | "center" | "right"
+--- @alias Dummy.Text.Overflow "clip" | "ellipsis"
 
 --- @class Dummy.Text.Node
 ---
@@ -32,10 +40,6 @@ Text = {}
 --- @field arguments string[]|nil
 --- @field state table<string, any>|nil
 
---- Gets the class name
---- @return string
-function Text.getClassName() end
-
 --- Gets the text's value
 --- @return Dummy.Text.Text
 function Text:getText() end
@@ -43,9 +47,10 @@ function Text:getText() end
 --- Sets the text's value
 --- @param value Dummy.Text.Text text value
 --- @param force? boolean wether to force the text to be updated
-function Text:setText(value, force) end
+--- @param no_command? boolean wether to force plain text
+function Text:setText(value, force, no_command) end
 
---- Updates the text
+--- Updates the render text or its nodes
 function Text:updateText() end
 
 --- Gets the text's width
@@ -80,11 +85,67 @@ function Text:getAlign() end
 --- @param align Dummy.Text.Align
 function Text:setAlign(align) end
 
+--- Gets the text's wrap limit
+--- @return number|nil
+function Text:getWrapLimit() end
+
+--- Sets the text's wrap limit
+--- @param wrap_limit number|nil
+function Text:setWrapLimit(wrap_limit) end
+
+--- Gets the text's max width
+--- @return number
+function Text:getMaxWidth() end
+
+--- Sets the text's max width
+--- @param max_width number
+function Text:setMaxWidth(max_width) end
+
+--- Gets the text's overflow
+--- @return Dummy.Text.Overflow
+function Text:getOverflow() end
+
+--- Sets the text's overflow
+--- @param overflow Dummy.Text.Overflow
+function Text:setOverflow(overflow) end
+
+--- Wether the text is clipping
+--- @return boolean
+function Text:isClipping() end
+
+--- Gets the text's characters width
+--- @return number
+function Text:getCharacterWidth() end
+
+--- Sets the text's characters width
+--- @param char_width number
+function Text:setCharacterWidth(char_width) end
+
+--- Gets the text's characters height
+--- @return number
+function Text:getCharacterHeight() end
+
+--- Sets the text's characters height
+--- @param char_height number
+function Text:setCharacterHeight(char_height) end
+
 --- Sets the text's scale
 --- @overload fun(self: Dummy.Drawable, scale: number)
 --- @param scale_x number
 --- @param scale_y number
 function Text:setScale(scale_x, scale_y) end
+
+--- Ellipsizes a text
+--- @param text string
+--- @param max_width number
+--- @param font love.Font
+function Text.ellipse(text, max_width, font) end
+
+--- Clips a text
+--- @param text string
+--- @param max_width number
+--- @param font love.Font
+function Text.clip(text, max_width, font) end
 
 --- Gets the formatted text's value
 --- @param value Dummy.Text.Text
@@ -112,14 +173,17 @@ function Text:getCharOffset(line) end
 --- @param func fun(node: Dummy.Text.Node)
 function Text:registerCommand(command, func) end
 
---- Updates the text
+--- Updates the text, called on every game update
+--- @param dt number
 function Text:update(dt) end
 
 --- Draws the text
-function Text:draw() end
+--- @param camera Dummy.Camera
+function Text:draw(camera) end
 
---- Draws for debugging
-function Text:debugDraw() end
+--- Draws the text's bounding box for debugging
+--- @param camera Dummy.Camera
+function Text:drawDebug(camera) end
 
 --- Updates text nodes
 --- @param dt number
@@ -139,8 +203,12 @@ function Text:processNode(node) end
 --- @return Dummy.Text.Node[]
 function Text:parseNodes(value) end
 
+--- Reloads the text
+function Text:reload() end
+
 --- Creates a text
---- @param value Dummy.Text.Text
+--- @param value? Dummy.Text.Text
+--- @param no_translation? boolean wether the value should not be translated (Defaults to `false`)
 --- @return Dummy.Text
-function Text:new(value) end
+function Text:new(value, no_translation) end
 

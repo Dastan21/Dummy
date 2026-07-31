@@ -1,10 +1,10 @@
---- @class Talk : Dummy.ACT
+--- @class DummyMod.ACT.Talk : Dummy.Battle.ACT
 local Talk = ACT:new("DUMMY_MOD_ENCOUNTER_TALK_ACT")
 
 --- Called when the ACT is used
 function Talk:onUse()
   -- you can play multiples dialogues one after the other
-  Encounter.playDialogueText(
+  Battle.playDialogueText(
     "DUMMY_MOD_ENCOUNTER_TALK_TEXT_1",
     "DUMMY_MOD_ENCOUNTER_TALK_TEXT_2",
     "DUMMY_MOD_ENCOUNTER_TALK_TEXT_3"

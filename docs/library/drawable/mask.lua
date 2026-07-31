@@ -9,12 +9,9 @@
 --- @class Dummy.Mask : Dummy.Drawable
 Mask = {}
 
---- Gets the class name
---- @return string
-function Mask.getClassName() end
-
 --- Draws the mask
-function Mask:draw() end
+--- @param camera Dummy.Camera
+function Mask:draw(camera) end
 
 --- Draws to the mask
 function Mask:drawMask() end

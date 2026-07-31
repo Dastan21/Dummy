@@ -15,4 +15,8 @@
     "**/*.code-search": true,
     "docs": true,
   },
+  "Lua.completion.autoRequire": false,
+  "Lua.diagnostics.globals": [
+    "modRequire"
+  ],
 }

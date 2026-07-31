@@ -1,13 +1,14 @@
---- @class FlyWave : Dummy.Wave
+--- @class FroggitMod.Wave.Fly : Dummy.Battle.Wave
 ---
---- @field spawn_timer table|nil
-local FlyWave = Class:extend(Wave)
+--- @field protected spawn_timer Dummy.Timer.Handle|nil
+local FlyWave = Class(Wave, "FroggitMod.Wave.Fly")
 
 local FlyBullet = modRequire "scripts.enemies.froggit.bullets.fly"
 
 --- Initializes the wave
 function FlyWave:new()
   self = Class:new(FlyWave)
+
   self:setDuration(10 / 3)
   self:setArenaSize(155, 130)
 
@@ -32,14 +33,15 @@ function FlyWave:spawnFly()
   fly_dust:setPosition(fly:getPosition())
 end
 
---- Called on every game update
-function FlyWave:update(dt) end
-
 --- Called when the wave ends
 function FlyWave:onEnd()
   if self.spawn_timer ~= nil then
     Timer.cancel(self.spawn_timer)
   end
 end
+
+--- Updates the wave, called on every game update
+--- @param dt number
+function FlyWave:update(dt) end
 
 return FlyWave

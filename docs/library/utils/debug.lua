@@ -8,6 +8,7 @@
 
 --- @class Dummy.Debug
 ---
+--- @field protected debug_camera Dummy.DebugCamera
 --- @field protected logs string[]
 --- @field protected margin number
 --- @field protected scale number
@@ -19,7 +20,7 @@
 --- @field protected screenshot_text Dummy.Text
 --- @field protected screenshot_fade_delay number
 --- @field protected screenshot_fade_time number
---- @field protected screenshot_fade_timer table|nil
+--- @field protected screenshot_fade_timer Dummy.Timer.Handle|nil
 Debug = {}
 
 --- Wether the hitboxes should be displayed
@@ -45,7 +46,7 @@ function Debug.saveLogs() end
 --- Clears the logs
 function Debug.clearLogs() end
 
---- Updates the debugger
+--- Updates the debugger, called on every game update
 --- @param dt number
 --- @return number
 function Debug.update(dt) end

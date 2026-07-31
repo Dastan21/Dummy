@@ -2,8 +2,8 @@
 ---
 --- @field protected dx number
 --- @field protected dy number
---- @field protected duration_timer table|nil
---- @field protected interval_timer table|nil
+--- @field protected duration_timer Dummy.Timer.Handle|nil
+--- @field protected interval_timer Dummy.Timer.Handle|nil
 local Shaker = {}
 
 --- Loads the shaker
@@ -12,6 +12,12 @@ function Shaker.load()
   Shaker.dy = 0
   Shaker.duration_timer = nil
   Shaker.interval_timer = nil
+end
+
+--- Gets the shaker's offset
+--- @return number, number
+function Shaker.getOffset()
+  return Shaker.dx, Shaker.dy
 end
 
 --- Shakes the screen
@@ -37,7 +43,7 @@ function Shaker.shake(duration, interval, shake_function, shake_callback)
   end)
 end
 
---- Shakes the screen
+--- Shakes the screen in random directions
 --- @param duration number duration of the shake, in seconds
 --- @param interval number interval between shakes
 --- @param horizontal_strength number horizontal shake strength
@@ -46,6 +52,31 @@ end
 function Shaker.shakeRandom(duration, interval, horizontal_strength, vertical_strength, shake_callback)
   Shaker.shake(duration, interval, function()
     return (love.math.random() - 0.5) * horizontal_strength, (love.math.random() - 0.5) * vertical_strength
+  end, shake_callback)
+end
+
+--- Shakes the screen, decreasing the strength each shake
+--- @param duration number duration of the shake, in seconds
+--- @param interval number interval between shakes
+--- @param horizontal_strength number horizontal shake strength
+--- @param vertical_strength number vertical shake strength
+--- @param shake_callback? fun() called when the shake is done
+function Shaker.shakeDecrease(duration, interval, horizontal_strength, vertical_strength, shake_callback)
+  Shaker.shake(duration, interval, function()
+    if horizontal_strength ~= 0 then
+      if horizontal_strength < 0 then
+        horizontal_strength = horizontal_strength + 1
+      end
+      horizontal_strength = -horizontal_strength
+    end
+    if vertical_strength ~= 0 then
+      if vertical_strength < 0 then
+        vertical_strength = vertical_strength + 1
+      end
+      vertical_strength = -vertical_strength
+    end
+
+    return horizontal_strength, vertical_strength
   end, shake_callback)
 end
 

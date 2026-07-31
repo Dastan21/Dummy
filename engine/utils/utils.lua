@@ -97,21 +97,22 @@ function table.tostring(node)
   return output_str
 end
 
--- https://gist.github.com/tylerneylon/81333721109155b2d244
-function table.clone(obj, seen)
-  -- Handle non-tables and previously-seen tables.
-  if type(obj) ~= 'table' then return obj end
-  if seen and seen[obj] then return seen[obj] end
-
-  -- New table; mark it as seen and copy recursively.
-  local s = seen or {}
-  local res = {}
-  s[obj] = res
-  for k, v in pairs(obj) do res[table.clone(k, s)] = table.clone(v, s) end
-  return setmetatable(res, getmetatable(obj))
+--- @generic T : table
+--- @param t T
+--- @return T
+function table.copy(t)
+  local c = {}
+  for k, v in pairs(t) do
+    if type(v) == "table" and getmetatable(v) == nil then
+      c[k] = table.copy(v)
+    else
+      c[k] = v
+    end
+  end
+  return c
 end
 
-function table.isArray(t)
+function table.isarray(t)
   for k in pairs(t) do
     if type(k) ~= "number" then
       return false
@@ -123,11 +124,15 @@ end
 --- @generic T
 --- @param t1 T[]
 --- @param t2 T[]
+--- @param replace_arrays? boolean
 --- @return T[]
-function table.merge(t1, t2)
-  if table.isArray(t2) then
-    for _, v in ipairs(t2) do
-      table.insert(t1, v)
+function table.merge(t1, t2, replace_arrays)
+  if table.isarray(t2) then
+    if replace_arrays then
+      t1 = {}
+      for _, v in ipairs(t2) do
+        table.insert(t1, v)
+      end
     end
   else
     for k, v in pairs(t2) do
@@ -139,6 +144,28 @@ function table.merge(t1, t2)
     end
   end
   return t1
+end
+
+--- @generic number
+--- @param t number[]
+--- @return number
+function table.sum(t)
+  local s = 0
+  for _, v in ipairs(t) do
+    s = s + v
+  end
+  return s
+end
+
+--- @generic T
+--- @param t T[]
+--- @param value T
+--- @param ... T
+function table.insertall(t, value, ...)
+  table.insert(t, value)
+  for _, v in ipairs({ ... }) do
+    table.insert(t, v)
+  end
 end
 
 if table.unpack == nil then
@@ -177,16 +204,41 @@ end
 
 --- Removes from `list` the element with value `value`, returning the value of the removed element.
 --- @generic T
---- @param list table
+--- @param list T[]
 --- @param value T
 ---@return T|nil
-function table.removeByValue(list, value)
+function table.removebyvalue(list, value)
   if type(list) ~= "table" then return end
   for i, v in ipairs(list) do
     if v == value then
       return table.remove(list, i)
     end
   end
+end
+
+--- Finds an element in a table
+---@generic T
+---@param list T[]
+---@param f fun(v: T, k: integer): boolean
+---@return T|nil, integer|nil
+function table.find(list, f)
+  for k, v in pairs(list) do
+    if f(v, k) then
+      return v, k
+    end
+  end
+end
+
+--- Returns the number of elements in a table
+--- @generic T : table
+--- @param t T
+--- @return integer
+function table.len(t)
+  local c = 0
+  for _ in pairs(t) do
+    c = c + 1
+  end
+  return c
 end
 
 -- string --
@@ -264,6 +316,18 @@ function math.sum(...)
   return s
 end
 
+--- Gets the distance between two points
+--- @param x1 number
+--- @param y1 number
+--- @param x2 number
+--- @param y2 number
+--- @return number
+function math.dist(x1, y1, x2, y2)
+  local dx = x2 - x1
+  local dy = y2 - y1
+  return math.sqrt(dx * dx + dy * dy)
+end
+
 -- other --
 
 --- @class Dummy.Utils
@@ -295,6 +359,54 @@ end
 --- @param filename string
 function Utils.getFilenameWithoutExt(filename)
   return (filename:gsub("%.[^.]*$", ""))
+end
+
+--- Whether a point is in a triangle
+--- @param x number
+--- @param y number
+--- @param ax number
+--- @param ay number
+--- @param bx number
+--- @param by number
+--- @param cx number
+--- @param cy number
+--- @return boolean
+function Utils.pointInTriangle(x, y, ax, ay, bx, by, cx, cy)
+  local function sign(x1, y1, x2, y2, x3, y3)
+    return (x1 - x3) * (y2 - y3) - (x2 - x3) * (y1 - y3)
+  end
+
+  local d1 = sign(x, y, ax, ay, bx, by)
+  local d2 = sign(x, y, bx, by, cx, cy)
+  local d3 = sign(x, y, cx, cy, ax, ay)
+
+  local has_negative = (d1 < 0) or (d2 < 0) or (d3 < 0)
+  local has_positive = (d1 > 0) or (d2 > 0) or (d3 > 0)
+
+  return not (has_negative and has_positive)
+end
+
+--- Wether a point is in a rectangle
+--- @param x number point x
+--- @param y number point y
+--- @param rx number rect x
+--- @param ry number rect y
+--- @param rw number rect width
+--- @param rh number rect height
+--- @return boolean
+function Utils.isPointInRect(x, y, rx, ry, rw, rh)
+  return x >= rx and x <= rx + rw and y >= ry and y <= ry + rh
+end
+
+--- Wether a rectangle collides another rectangle, using AABB collision detection
+--- @param rect1 [number, number, number, number] [x, y, width, height]
+--- @param rect2 [number, number, number, number] [x, y, width, height]
+--- @return boolean
+function Utils.checkCollisionAABB(rect1, rect2)
+  return rect1[1] < rect2[1] + rect2[3] and
+      rect2[1] < rect1[1] + rect1[3] and
+      rect1[2] < rect2[2] + rect2[4] and
+      rect2[2] < rect1[2] + rect1[4]
 end
 
 --- Checks if two rectangles collide, using SAT-based rectangle collision

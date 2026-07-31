@@ -17,7 +17,7 @@
 --- @field protected force_skip boolean
 --- @field protected no_skip boolean
 --- @field protected auto_next boolean
-local DialogueText = Class:extend(Text)
+local DialogueText = Class(Text, "Dummy.DialogueText")
 
 --- Dialogue text commands
 DialogueText.COMMANDS = { "wait", "speed", "voice", "noskip", "instant", "stopinstant", "next" }
@@ -25,19 +25,20 @@ DialogueText.COMMANDS = { "wait", "speed", "voice", "noskip", "instant", "stopin
 --- Silent characters
 DialogueText.SILENT_CHARACTERS = { " ", "\n" }
 
---- Gets the class name
---- @return string
-function DialogueText.getClassName()
-  return "Dummy.DialogueText"
+--- Gets the dialogue's text values
+--- @return Dummy.Text.Text[]
+function DialogueText:getText()
+  return self.text_values
 end
 
---- Sets the dialogue's text value
+--- Sets the dialogue's text values
 --- @param value Dummy.Text.Text
 --- @param ... Dummy.Text.Text
 function DialogueText:setText(value, ...)
   self.text_values = { value, ... }
   self.text_value_index = 1
   self.text_value = self.text_values[1] or ""
+  self.done = false
 
   self:reset()
 end
@@ -50,7 +51,6 @@ end
 
 --- Resets the dialogue's current text
 function DialogueText:reset()
-  self.done = false
   self.dialogue_timer = 0
   self.text_index = 0
   self.skipping = false
@@ -83,7 +83,6 @@ end
 
 --- Wether the dialogue's current text is done
 --- @return boolean
---- @private
 function DialogueText:isCurrentDone()
   return not self:isVisible() or self.text_index >= #self.total_nodes and self.wait <= 0
 end
@@ -120,6 +119,28 @@ function DialogueText:setFont(font)
   end
   self.font = font
   self:parseNodes(self.text_value)
+end
+
+--- Sets the dialogue text's characters width
+--- @param char_width number
+function DialogueText:setCharacterWidth(char_width)
+  char_width = math.max(math.round(char_width), 0)
+  if self.char_width == char_width then return end
+
+  self.char_width = char_width
+
+  self:setText(table.unpack(self.text_values))
+end
+
+--- Sets the dialogue text's characters height
+--- @param char_height number
+function DialogueText:setCharacterHeight(char_height)
+  char_height = math.max(math.round(char_height), 0)
+  if self.char_height == char_height then return end
+
+  self.char_height = char_height
+
+  self:setText(table.unpack(self.text_values))
 end
 
 --- Applies the node state
@@ -163,7 +184,7 @@ function DialogueText:processNode(node)
     self.auto_next = true
   end
 
-  node.state = table.merge(table.clone(self.state), node.state or {})
+  node.state = table.merge(table.copy(self.state), node.state or {})
 end
 
 --- Parses the dialogue text command
@@ -195,7 +216,7 @@ function DialogueText:parseNodes(value)
   return {}
 end
 
---- Updates the dialogue
+--- Updates the dialogue, called on every game update
 --- @param dt number
 function DialogueText:update(dt)
   Text.update(self, dt)
@@ -213,8 +234,8 @@ function DialogueText:update(dt)
     self.dialogue_timer = #self.total_nodes
   end
 
-  if self:isCurrentDone() then
-    if Input.isPressed(Input.Confirm) or (self.auto_next and not self.skipping) then
+  if self:isCurrentDone() and not self:isDone() then
+    if (Input.isPressed(Input.Confirm) and not Input.isDown("alt")) or (self.auto_next and not self.skipping) then
       self.text_value_index = self.text_value_index + 1
       self.text_value = self.text_values[self.text_value_index] or ""
 
@@ -226,6 +247,9 @@ function DialogueText:update(dt)
         end
       elseif self.text_index >= #self.total_nodes then
         self:reset()
+        if type(self.onCurrentDone) == "function" then
+          self:onCurrentDone()
+        end
       end
     end
     return
@@ -257,9 +281,11 @@ function DialogueText:update(dt)
       end
 
       node = self.total_nodes[math.min(self.text_index, #self.total_nodes)]
+      self:updateDialogue()
+      Text.updateNodes(self, 0)
     end
 
-    local voice = node.state.voice or self.voice
+    local voice = node.state.voice or self:getVoice()
     if voice ~= nil and node.state.voice ~= "none" and node.character ~= nil and not table.contains(DialogueText.SILENT_CHARACTERS, node.character) and not self.skipping then
       Assets.playSound(voice)
     end
@@ -273,6 +299,14 @@ function DialogueText:update(dt)
 
   self:updateDialogue()
 end
+
+--- Reloads the dialogue text
+function DialogueText:reload()
+  self:setText(table.unpack(self:getText()))
+end
+
+--- Called when the dialogue current text is done
+function DialogueText:onCurrentDone() end
 
 --- Called when the dialogue is done
 function DialogueText:onDone() end

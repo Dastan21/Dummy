@@ -1,21 +1,22 @@
 --- @alias Path [ number, number ]
 
---- @class FroggitMonster : Dummy.Enemy
+--- @class FroggitMod.Enemy.Froggit : Dummy.Battle.Enemy
 ---
---- @field legs Dummy.Sprite
---- @field head Dummy.Sprite
---- @field private head_paths Path[]
---- @field private current_head_path Path
---- @field private head_paths_index number
---- @field private head_orig_x number
---- @field private head_orig_y number
---- @field private target_angle number
-local Froggit = Class:extend(Enemy)
+--- @field protected legs Dummy.Sprite
+--- @field protected head Dummy.Sprite
+--- @field protected head_paths Path[]
+--- @field protected current_head_path Path
+--- @field protected head_paths_index number
+--- @field protected head_orig_x number
+--- @field protected head_orig_y number
+--- @field protected target_angle number
+--- @field protected encounter FroggitMod.Encounter.Froggit
+local FroggitEnemy = Class(Enemy, "FroggitMod.Enemy.Froggit")
 
 --- Initializes the Froggit
-function Froggit:new()
+function FroggitEnemy:new()
   -- create the base enemy
-  self = Class:new(Froggit, { "FROGGIT_MOD_ENCOUNTER_FROGGIT_NAME", "froggit_empty" })
+  self = Class:new(FroggitEnemy, { "FROGGIT_MOD_ENCOUNTER_FROGGIT_NAME", "froggit_empty" })
 
   -- set HP after max HP to heal
   self:setMaxHP(30)
@@ -52,7 +53,6 @@ function Froggit:new()
     { 0,  -4 },
   }
   self.head_paths_index = 0
-  -- self.current_head_path = table.clone(self.head_paths[1])
   self.target_angle = 0
   self:nextHeadPath()
 
@@ -61,37 +61,36 @@ function Froggit:new()
 end
 
 --- Called when the enemy should dialogue
-function Froggit:onDialogue()
-  local mod = ModList.getCurrentMod() --[[@as FroggitMod]]
-  mod.command = math.random()
+function FroggitEnemy:onDialogue()
+  self.encounter.command = love.math.random()
   local bubble_text = "FROGGIT_MOD_ENCOUNTER_BUBBLE_4"
-  if mod.command < 0.3 then
+  if self.encounter.command < 0.3 then
     bubble_text = "FROGGIT_MOD_ENCOUNTER_BUBBLE_1"
-  elseif mod.command < 0.5 then
+  elseif self.encounter.command < 0.5 then
     bubble_text = "FROGGIT_MOD_ENCOUNTER_BUBBLE_2"
-  elseif mod.command < 0.8 then
+  elseif self.encounter.command < 0.8 then
     bubble_text = "FROGGIT_MOD_ENCOUNTER_BUBBLE_3"
   end
 
   -- play the dialogue bubble
-  local dialogue = Encounter.playDialogueBubble("right", bubble_text)
+  local dialogue = Battle.playDialogueBubble("right", bubble_text)
   -- position it to the right of the Froggit
   local x, y = self:getPosition()
   local dialogue_x = x + self:getWidth() / 2
   local dialogue_y = y - self:getHeight() / 2
   dialogue:setPosition(dialogue_x, dialogue_y)
 
-  if mod.command <= 0.4 then
+  if self.encounter.command <= 0.4 then
     local FrogWave = modRequire "scripts.enemies.froggit.waves.frog"
-    Encounter.setWave(FrogWave:new())
+    self.encounter:setWave(FrogWave:new())
   else
     local FlyWave = modRequire "scripts.enemies.froggit.waves.fly"
-    Encounter.setWave(FlyWave:new())
+    self.encounter:setWave(FlyWave:new())
   end
 end
 
 --- Called when trying to spare an enemy
-function Froggit:onSpared(spared)
+function FroggitEnemy:onSpared(spared)
   if not spared then return end
 
   self.legs:setVisible(false)
@@ -100,28 +99,28 @@ function Froggit:onSpared(spared)
 end
 
 --- Called before the enemy is damaged
-function Froggit:onBeforeDamage(damage) end
+function FroggitEnemy:onBeforeDamage(damage) end
 
 --- Called when the enemy is damaged
-function Froggit:onDamage(damage)
+function FroggitEnemy:onDamage(damage)
   self.legs:setVisible(false)
   self.head:setVisible(false)
   self:setSprite("froggit_idle")
 end
 
 --- Called after when the enemy is damaged
-function Froggit:onAfterDamage()
+function FroggitEnemy:onAfterDamage()
   self.legs:setVisible(true)
   self.head:setVisible(true)
   self:setSprite("froggit_empty")
 end
 
 --- Called when the enemy is killed
-function Froggit:onKilled() end
+function FroggitEnemy:onKilled() end
 
-function Froggit:nextHeadPath()
+function FroggitEnemy:nextHeadPath()
   self.head_paths_index = (self.head_paths_index % #self.head_paths) + 1
-  self.current_head_path = table.clone(self.head_paths[self.head_paths_index])
+  self.current_head_path = table.copy(self.head_paths[self.head_paths_index])
 
   local x, y = self.head:getPosition()
   local target_x, target_y = self.current_head_path[1], self.current_head_path[2]
@@ -131,8 +130,15 @@ function Froggit:nextHeadPath()
   if dx < 0 then self.target_angle = self.target_angle + math.pi end
 end
 
---- Called on every game update
-function Froggit:update(dt)
+--- Updates the enemy, called on every game update
+--- @param dt number
+function FroggitEnemy:update(dt)
+  if not self:isVisible() then return end
+
+  -- update the base enemy
+  Enemy.update(self, dt)
+
+  -- update the Froggit's head
   local x, y = self.head:getPosition()
   local target_x, target_y = self.current_head_path[1], self.current_head_path[2]
   local dx = target_x - (x - self.head_orig_x)
@@ -141,10 +147,9 @@ function Froggit:update(dt)
   if math.abs(distance) < 0.5 then
     self:nextHeadPath()
   end
-
   x = x + math.cos(self.target_angle) * dt * 9
   y = y + math.sin(self.target_angle) * dt * 9
   self.head:setPosition(x, y)
 end
 
-return Froggit
+return FroggitEnemy

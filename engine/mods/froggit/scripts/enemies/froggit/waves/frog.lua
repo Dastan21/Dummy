@@ -1,5 +1,5 @@
---- @class FrogWave : Dummy.Wave
-local FrogWave = Class:extend(Wave)
+--- @class FroggitMod.Wave.Frog : Dummy.Battle.Wave
+local FrogWave = Class(Wave, "FroggitMod.Wave.Frog")
 
 local FrogBullet = modRequire "scripts.enemies.froggit.bullets.frog"
 
@@ -18,10 +18,11 @@ function FrogWave:onStart()
   self:spawnBullet(frog)
 end
 
---- Called on every game update
-function FrogWave:update(dt) end
-
 --- Called when the wave ends
 function FrogWave:onEnd() end
+
+--- Updates the wave, called on every game update
+--- @param dt number
+function FrogWave:update(dt) end
 
 return FrogWave

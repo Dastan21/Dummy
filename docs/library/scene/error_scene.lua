@@ -8,17 +8,18 @@
 
 --- @class Dummy.Scene.Error : Dummy.Scene.Scene
 ---
+--- @field protected camera Dummy.GameCamera
 --- @field protected traceback string
 --- @field protected error_text Dummy.Text
 --- @field protected back_main_menu_text Dummy.Text
 --- @field protected copy_traceback_text Dummy.Text
 --- @field protected copied_data table<string, number>
 --- @field protected escape boolean
-error = {}
+ErrorScene = {}
 
 --- Loads the error scene
-function error.load(err) end
+function ErrorScene.load(err) end
 
---- Updates the error scene
-function error.update() end
+--- Updates the error scene, called on every game update
+function ErrorScene.update() end
 

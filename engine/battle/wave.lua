@@ -1,0 +1,153 @@
+--- @class Dummy.Battle.Wave : Dummy.Class
+---
+--- @field protected duration number
+--- @field protected time number
+--- @field protected is_done boolean
+--- @field protected bullets table<Dummy.Battle.Bullet, boolean>
+--- @field protected arena_width number
+--- @field protected arena_height number
+local Wave = Class("Dummy.Wave")
+
+--- Gets the wave's elapsed time
+--- @return number
+function Wave:getTime()
+  return self.time
+end
+
+--- Gets the wave's duration
+--- @return number
+function Wave:getDuration()
+  return self.duration
+end
+
+--- Sets the wave's duration
+---
+--- Note: Set `-1` for infinite wave duration, call `done()` to end the wave
+--- @param duration number
+function Wave:setDuration(duration)
+  self.duration = duration
+end
+
+--- Wether the wave is done
+--- @return boolean
+function Wave:isDone()
+  return self.is_done
+end
+
+--- Ends the wave
+function Wave:done()
+  self.is_done = true
+  self:__end()
+end
+
+--- Spawns a bullet
+--- @param bullet Dummy.Battle.Bullet the bullet to spawn
+function Wave:spawnBullet(bullet)
+  --- @diagnostic disable-next-line: invisible
+  bullet.wave = self
+  self.bullets[bullet] = true
+
+  if type(bullet.onSpawned) == "function" then
+    bullet:onSpawned()
+  end
+end
+
+--- Gets the wave's bullets
+--- @return Dummy.Battle.Bullet[]
+function Wave:getBullets()
+  local bullets = {}
+  for bullet in pairs(self.bullets) do
+    table.insert(bullets, bullet)
+  end
+  return bullets
+end
+
+--- Sets the wave's arena size
+--- @param width number
+--- @param height number
+function Wave:setArenaSize(width, height)
+  self.arena_width = width
+  self.arena_height = height
+end
+
+--- Gets the wave's arena size
+--- @return number, number
+function Wave:getArenaSize()
+  return self.arena_width, self.arena_height
+end
+
+--- [INTERNAL] Starts the wave
+--- @private
+function Wave:__start()
+  self.bullets = {}
+  self.time = 0
+  self.is_done = false
+
+  if type(self.onStart) == "function" then
+    self:onStart()
+  end
+end
+
+--- [INTERNAL] Updates the wave
+--- @private
+function Wave:__update(dt)
+  if self.is_done then return end
+
+  self.time = self.time + dt
+  if self.duration >= 0 and self.time >= self.duration then
+    self:done()
+    return
+  end
+
+  for _, bullet in ipairs(self:getBullets()) do
+    if bullet:isRemoved() then
+      self.bullets[bullet] = nil
+    elseif not Soul.isInvincible() and Soul.isColliding(bullet) then
+      if type(bullet.onHit) == "function" then
+        bullet:onHit()
+      end
+    end
+  end
+
+  self:update(dt)
+end
+
+--- [INTERNAL] Ends the wave
+--- @private
+function Wave:__end()
+  for bullet in pairs(self.bullets) do
+    if not bullet:isPersistent() then
+      bullet:remove()
+      self.bullets[bullet] = nil
+    end
+  end
+
+  if type(self.onEnd) == "function" then
+    self:onEnd()
+  end
+end
+
+--- Called when the wave starts
+function Wave:onStart() end
+
+--- Called when the wave updates
+--- @param dt number
+function Wave:update(dt) end
+
+--- Called when the wave ends
+function Wave:onEnd() end
+
+--- Creates an enemy wave
+--- @return Dummy.Battle.Wave
+function Wave:new()
+  self = Class:new(Wave)
+  self.duration = 8
+  self.time = 0
+  self.is_done = false
+  self.arena_width = Constants.ARENA.DEFAULT_WIDTH
+  self.arena_height = Constants.ARENA.DEFAULT_HEIGHT
+
+  return self
+end
+
+return Wave

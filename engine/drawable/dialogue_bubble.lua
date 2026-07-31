@@ -4,25 +4,12 @@
 ---
 --- @field protected type Dummy.DialogueBubble.Type
 --- @field protected dialogue Dummy.DialogueText
-local DialogueBubble = Class:extend(Sprite)
-
---- Gets the class name
---- @return string
-function DialogueBubble.getClassName()
-  return "Dummy.DialogueBubble"
-end
+local DialogueBubble = Class(Sprite, "Dummy.DialogueBubble")
 
 --- Gets the dialogue bubble's dialogue text
 --- @return Dummy.DialogueText
 function DialogueBubble:getDialogue()
   return self.dialogue
-end
-
---- Sets the dialogue bubble's alpha
---- @param alpha number
-function DialogueBubble:setAlpha(alpha)
-  self.alpha = alpha
-  self.dialogue:setAlpha(alpha)
 end
 
 --- Initializes the dialogue bubble
@@ -84,7 +71,7 @@ function DialogueBubble:new(type, value, ...)
   self.dialogue = DialogueText:new(value, ...)
   self.dialogue:setOrigin(0, 0)
   self.dialogue:setColor(type ~= "shock" and { 0, 0, 0 } or { 1, 1, 1 })
-  self.dialogue:setVoice("voice_bubble")
+  self.dialogue:setVoice("voice_dialogue")
   self.dialogue:setFont("plain")
   self.dialogue:setParent(self)
 

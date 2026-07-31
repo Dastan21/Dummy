@@ -1,9 +1,24 @@
 --- @alias love.Color [ number, number, number ]
 
+--- @class Dummy.Drawable.BoundingBox
+---
+--- @field x1 number
+--- @field y1 number
+--- @field x2 number
+--- @field y2 number
+--- @field x3 number
+--- @field y3 number
+--- @field x4 number
+--- @field y4 number
+
 --- @class Dummy.Drawable : Dummy.Class
 ---
 --- @field protected parent Dummy.Drawable|nil
 --- @field protected children Dummy.Drawable[]
+--- @field protected children_to_add Dummy.Drawable[]
+--- @field protected children_to_remove Dummy.Drawable[]
+--- @field protected width number
+--- @field protected height number
 --- @field protected x number
 --- @field protected y number
 --- @field protected angle number
@@ -12,24 +27,25 @@
 --- @field protected origin_x number
 --- @field protected origin_y number
 --- @field protected color love.Color
---- @field protected alpha number
 --- @field protected layer number
 --- @field protected visible boolean
+--- @field protected visible_on_screen boolean
 --- @field protected sprite love.Image|love.Text
 --- @field protected persistent boolean
+--- @field protected tag string
 --- @field protected removed boolean
-local Drawable = Class()
+local Drawable = Class("Dummy.Drawable")
 
---- Gets the class's name
---- @return string
-function Drawable.getClassName()
-  return "Dummy.Drawable"
+--- Gets the drawable's width
+--- @return number
+function Drawable:getWidth()
+  return self.width
 end
 
---- Gets the drawable's absolute position
---- @return number, number
-function Drawable:getAbsolutePosition()
-  return self:getAbsoluteTransform():apply(self:getTransform():inverse()):transformPoint(self.x, self.y)
+--- Gets the drawable's height
+--- @return number
+function Drawable:getHeight()
+  return self.height
 end
 
 --- Gets the drawable's relative position
@@ -42,8 +58,20 @@ end
 --- @param x number
 --- @param y number
 function Drawable:setPosition(x, y)
+  if self.x == x and self.y == y then return end
+
   self.x = x
   self.y = y
+
+  self:updateTransform()
+end
+
+--- Gets the drawable's absolute position
+--- @return number, number
+function Drawable:getAbsolutePosition()
+  local width, height = self:getWidth(), self:getHeight()
+  local origin_x, origin_y = self:getOrigin()
+  return self:getAbsoluteTransform():transformPoint(-width * origin_x, -height * origin_y)
 end
 
 --- Gets the drawable's angle, in degrees
@@ -55,7 +83,11 @@ end
 --- Sets the drawable's angle, in degrees
 --- @param angle number
 function Drawable:setAngle(angle)
+  if self.angle == angle then return end
+
   self.angle = math.rad(angle)
+
+  self:updateTransform()
 end
 
 --- Gets the drawable's scale
@@ -69,23 +101,65 @@ end
 --- @param scale_x number
 --- @param scale_y number
 function Drawable:setScale(scale_x, scale_y)
+  scale_y = Utils.getOrDefault(scale_y, scale_x)
+  if self.scale_x == scale_x and self.scale_y == scale_y then return end
+
   self.scale_x = scale_x
-  self.scale_y = Utils.getOrDefault(scale_y, scale_x)
+  self.scale_y = scale_y
+
+  self:updateTransform()
 end
 
 --- Gets the drawable's transform
 --- @return love.Transform
 function Drawable:getTransform()
-  return love.math.newTransform(self.x, self.y, self.angle, self.scale_x, self.scale_y)
+  return self.transform
+end
+
+--- Updates the drawable's transform
+function Drawable:updateTransform()
+  self.transform:setTransformation(self.x, self.y, self.angle, self.scale_x, self.scale_y)
+
+  self:updateAbsoluteTransform()
 end
 
 --- Gets the drawable's absolute transform
 --- @return love.Transform
 function Drawable:getAbsoluteTransform()
-  local parent = self:getParent()
-  if parent == nil then return self:getTransform() end
+  return self.absolute_transform
+end
 
-  return parent:getAbsoluteTransform():apply(self:getTransform())
+--- Updates the drawable's absolute transform
+function Drawable:updateAbsoluteTransform()
+  local parent = self:getParent()
+  if parent ~= nil then
+    self.absolute_transform:reset()
+    self.absolute_transform:apply(parent:getAbsoluteTransform()):apply(self:getTransform())
+  else
+    self.absolute_transform:setTransformation(self.x, self.y, self.angle, self.scale_x, self.scale_y)
+  end
+
+  for _, child in ipairs(self.children) do
+    child:updateAbsoluteTransform()
+  end
+end
+
+--- Gets the drawable's bounding box
+--- @return Dummy.Drawable.BoundingBox
+function Drawable:getBoundingBox()
+  local width, height = self:getWidth(), self:getHeight()
+  local absolute_transform = self:getAbsoluteTransform()
+  local origin_x, origin_y = self:getOrigin()
+  local x, y = -width * origin_x, -height * origin_y
+  local x1, y1 = absolute_transform:transformPoint(x, y)
+  local x2, y2 = absolute_transform:transformPoint(x + width, y)
+  local x3, y3 = absolute_transform:transformPoint(x + width, y + height)
+  local x4, y4 = absolute_transform:transformPoint(x, y + height)
+  local min_x = math.min(x1, x2, x3, x4)
+  local min_y = math.min(y1, y2, y3, y4)
+  local max_x = math.max(x1, x2, x3, x4)
+  local max_y = math.max(y1, y2, y3, y4)
+  return { min_x, min_y, max_x, min_y, max_x, max_y, min_x, max_y }
 end
 
 --- Gets the drawable's origin
@@ -106,7 +180,7 @@ end
 --- Gets the drawable's color
 --- @return love.Color
 function Drawable:getColor()
-  return self.color
+  return table.copy(self.color)
 end
 
 --- Sets the drawable's color
@@ -114,7 +188,7 @@ end
 --- @param r number red
 --- @param g number green
 --- @param b number blue
---- @param a number alpha
+--- @param a? number alpha
 function Drawable:setColor(r, g, b, a)
   if type(r) == "table" then
     a = r[4]
@@ -123,27 +197,22 @@ function Drawable:setColor(r, g, b, a)
     r = r[1]
   end
 
-  self.color = {
-    math.clamp(r, 0, 1),
-    math.clamp(g, 0, 1),
-    math.clamp(b, 0, 1)
-  }
-
-  if a ~= nil then
-    self:setAlpha(a)
-  end
+  self.color[1] = math.clamp(r, 0, 1)
+  self.color[2] = math.clamp(g, 0, 1)
+  self.color[3] = math.clamp(b, 0, 1)
+  self.color[4] = math.clamp(Utils.getOrDefault(a, 1), 0, 1)
 end
 
 --- Gets the drawable's alpha
 --- @return number
 function Drawable:getAlpha()
-  return self.alpha
+  return self.color[4]
 end
 
 --- Sets the drawable's alpha
 --- @param alpha number
 function Drawable:setAlpha(alpha)
-  self.alpha = math.clamp(alpha, 0, 1)
+  self.color[4] = math.clamp(alpha, 0, 1)
 end
 
 --- Gets the drawable's layer
@@ -155,7 +224,9 @@ end
 --- Sets the drawable's layer
 --- @param layer number
 function Drawable:setLayer(layer)
-  self.layer = layer
+  if self.layer == layer then return end
+
+  self.layer = Utils.getOrDefault(layer, 0)
 
   Scene.removeDrawable(self)
   Scene.addDrawable(self)
@@ -164,7 +235,10 @@ end
 --- Wether the drawable is visible
 --- @return boolean
 function Drawable:isVisible()
-  return self.visible and not self.removed
+  if not self.visible then return false end
+  if self:isRemoved() then return false end
+
+  return true
 end
 
 --- Sets wether the drawable is visible
@@ -191,6 +265,24 @@ function Drawable:setPersistent(persistent)
   self.persistent = persistent
 end
 
+--- Gets the drawable's tag
+--- @return string
+function Drawable:getTag()
+  return self.tag
+end
+
+--- Sets the drawable's tag
+--- @param tag string
+function Drawable:setTag(tag)
+  self.tag = tag
+
+  if #self.children > 0 then
+    for _, child in ipairs(self.children) do
+      child:setTag(tag)
+    end
+  end
+end
+
 --- Wether the drawable has been removed
 --- @return boolean
 function Drawable:isRemoved()
@@ -207,6 +299,16 @@ function Drawable:remove()
       child:remove()
     end
   end
+  if #self.children_to_add > 0 then
+    for _, child in ipairs(self.children_to_add) do
+      child:remove()
+    end
+  end
+  if #self.children_to_remove > 0 then
+    for _, child in ipairs(self.children_to_remove) do
+      child:remove()
+    end
+  end
 
   Scene.removeDrawable(self)
 
@@ -214,7 +316,7 @@ function Drawable:remove()
     self.parent:removeChild(self)
   end
 
-  if self.onRemoved ~= nil then
+  if type(self.onRemoved) == "function" then
     self:onRemoved()
   end
 end
@@ -264,18 +366,19 @@ function Drawable:addChild(child)
     child.parent = self
   end
 
-  table.insert(self.children, child)
+  child:updateAbsoluteTransform()
 
-  self:sortChildren()
+  table.insert(self.children_to_add, child)
 end
 
 --- Removes a child from the drawable
 --- @param child Dummy.Drawable
 function Drawable:removeChild(child)
-  table.removeByValue(self.children, child)
   child.parent = nil
 
-  self:sortChildren()
+  child:updateAbsoluteTransform()
+
+  table.insert(self.children_to_remove, child)
 end
 
 --- Sorts drawable's children by layer
@@ -290,6 +393,22 @@ end
 --- Updates the drawable, called on every game update
 --- @param dt number
 function Drawable:update(dt)
+  if #self.children_to_remove > 0 or #self.children_to_add > 0 then
+    for _, child in ipairs(self.children_to_remove) do
+      table.removebyvalue(self.children, child)
+      child:updateAbsoluteTransform()
+    end
+    self.children_to_remove = {}
+
+    for _, child in ipairs(self.children_to_add) do
+      table.insert(self.children, child)
+      child:updateAbsoluteTransform()
+    end
+    self.children_to_add = {}
+
+    self:sortChildren()
+  end
+
   self:updateChildren(dt)
 end
 
@@ -297,8 +416,7 @@ end
 function Drawable:updateChildren(dt)
   if #self.children <= 0 then return end
 
-  local children = { table.unpack(self.children) }
-  for _, child in ipairs(children) do
+  for _, child in ipairs(self.children) do
     if type(child.update) == "function" then
       child:update(dt)
     end
@@ -306,24 +424,41 @@ function Drawable:updateChildren(dt)
 end
 
 --- Draws the drawable
-function Drawable:draw()
+--- @param camera Dummy.Camera
+function Drawable:draw(camera)
+  if not self:isVisible() then return end
+
   love.graphics.applyTransform(self:getTransform())
-  self:drawChildren()
+  self:drawChildren(camera)
+  self:drawDebug(camera)
 end
 
 --- Draws the drawable's children
-function Drawable:drawChildren()
+--- @param camera Dummy.Camera
+function Drawable:drawChildren(camera)
   if #self.children <= 0 then return end
 
-  local children = { table.unpack(self.children) }
-  for _, child in ipairs(children) do
+  for _, child in ipairs(self.children) do
     if type(child.draw) == "function" then
       love.graphics.push()
-      child:draw()
+      child:draw(camera)
       love.graphics.pop()
     end
   end
 end
+
+--- Draws anything for debugging
+--- @param camera Dummy.Camera
+function Drawable:drawDebug(camera) end
+
+--- Wether the drawable is visible on screen
+--- @return boolean
+function Drawable:isVisibleOnScreen()
+  return self.visible_on_screen
+end
+
+--- Updates the drawable's visibility on screen
+function Drawable:updateVisibleOnScreen() end
 
 --- Creates a drawable
 --- @return Dummy.Drawable
@@ -331,6 +466,10 @@ function Drawable:new()
   self = Class:new(Drawable)
   self.parent = nil
   self.children = {}
+  self.children_to_add = {}
+  self.children_to_remove = {}
+  self.width = 0
+  self.height = 0
   self.x = 0
   self.y = 0
   self.angle = 0
@@ -338,13 +477,16 @@ function Drawable:new()
   self.scale_y = 1
   self.origin_x = 0.5
   self.origin_y = 0.5
-  self.color = { 1, 1, 1 }
-  self.alpha = 1
+  self.color = { 1, 1, 1, 1 }
   self.layer = Constants.LAYERS.UI
   self.visible = true
+  self.visible_on_screen = true
   self.persistent = false
+  self.tag = "GAME"
   self.sprite = nil
   self.removed = false
+  self.transform = love.math.newTransform(self.x, self.y, self.angle, self.scale_x, self.scale_y)
+  self.absolute_transform = self.transform:clone()
 
   Scene.addDrawable(self)
 

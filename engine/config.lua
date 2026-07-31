@@ -2,6 +2,8 @@
 ---
 --- @field language string
 --- @field fps number
+--- @field vsync boolean
+--- @field volume number
 --- @field window_scale number
 --- @field fullscreen boolean
 
@@ -19,10 +21,12 @@ end
 --- Loads the main config
 function Config.load()
   Config.configs = {
+    --- @type Dummy.Config.Settings
     settings = {
       language = "en",
       fps = 30,
-      volume = 100,
+      vsync = true,
+      volume = 30,
       fullscreen = false,
       window_scale = 1
     }
@@ -44,26 +48,38 @@ function Config.save()
 end
 
 --- Loads a config
+--- @generic T : table<string, any>
 --- @param config_path string
+--- @return T
 function Config.loadConfig(config_path)
   local config_file = config_path .. ".json"
 
   Config.configs[config_path] = Config.configs[config_path] or {}
   if love.filesystem.getInfo(config_file) ~= nil then
-    table.merge(Config.configs[config_path], JSON.decode(love.filesystem.read(config_file)))
+    local config = JSON.decode(love.filesystem.read(config_file))
+    table.merge(Config.configs[config_path], config, true)
   end
 
   return Config.configs[config_path]
 end
 
 --- Wether a config is empty
---- @param config table<string, any>
+--- @generic T : table<string, any>
+--- @param config T
 --- @return boolean
 function Config.isEmpty(config)
   for _, value in pairs(config) do
     if value ~= nil then return false end
   end
   return true
+end
+
+--- Gets a config
+--- @generic T : table<string, any>
+--- @param key string
+--- @return T
+function Config.get(key)
+  return Config.configs[key]
 end
 
 return Config

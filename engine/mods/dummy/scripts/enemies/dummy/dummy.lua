@@ -1,10 +1,11 @@
---- @class DummyMonster : Dummy.Enemy
-local Dummy = Class:extend(Enemy)
+--- @class DummyMod.Enemy.Dummy : Dummy.Battle.Enemy
+local DummyEnemy = Class(Enemy, "DummyMonster")
 
 --- Initializes the Dummy
-function Dummy:new()
+--- @return DummyMod.Enemy.Dummy
+function DummyEnemy:new()
   -- create the base enemy
-  self = Class:new(Dummy, { "DUMMY_MOD_ENCOUNTER_DUMMY_NAME", "dummy" })
+  self = Class:new(DummyEnemy, { "DUMMY_MOD_ENCOUNTER_DUMMY_NAME", "dummy" })
 
   -- set HP after max HP to heal
   self:setMaxHP(15)
@@ -23,9 +24,9 @@ function Dummy:new()
 end
 
 --- Called when the enemy should dialogue
-function Dummy:onDialogue()
+function DummyEnemy:onDialogue()
   -- play the dialogue bubble
-  local dialogue = Encounter.playDialogueBubble("right", "DUMMY_MOD_ENCOUNTER_BUBBLE")
+  local dialogue = Battle.playDialogueBubble("right", "DUMMY_MOD_ENCOUNTER_BUBBLE")
   -- position it to the right of the Dummy
   local x, y = self:getPosition()
   local dialogue_x = x + self:getWidth() / 2
@@ -34,25 +35,30 @@ function Dummy:onDialogue()
 end
 
 --- Called when trying to spare an enemy
-function Dummy:onSpared(spared) end
+function DummyEnemy:onSpared(spared) end
 
 --- Called before the enemy is damaged
-function Dummy:onBeforeDamage(damage) end
+function DummyEnemy:onBeforeDamage(damage) end
 
 --- Called when the enemy is damaged
-function Dummy:onDamage(damage)
+function DummyEnemy:onDamage(damage)
   self:setSprite("dummy_hurt")
 end
 
 --- Called after when the enemy is damaged
-function Dummy:onAfterDamage()
+function DummyEnemy:onAfterDamage()
   self:setSprite("dummy")
 end
 
 --- Called when the enemy is killed
-function Dummy:onKilled() end
+function DummyEnemy:onKilled() end
 
---- Called on every game update
-function Dummy:update(dt) end
+--- Updates the enemy, called on every game update
+--- @param dt number
+function DummyEnemy:update(dt)
+  Enemy.update(self, dt)
 
-return Dummy
+  -- your code here
+end
+
+return DummyEnemy
