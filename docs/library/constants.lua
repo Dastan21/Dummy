@@ -11,7 +11,7 @@ Constants = {
     NAME    = "DUMMY",
     AUTHOR  = "Dastan",
     YEAR    = "2025-2026",
-    VERSION = "1.0.1"
+    VERSION = "2.0.0"
   },
 
   GAME_WIDTH = 640,

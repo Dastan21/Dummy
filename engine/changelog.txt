@@ -1,3 +1,23 @@
+DUMMY v2.0.0 (30/07/2026)
+-------------------
+
+* Added World
+  - Added rooms
+  - Added objects/NPCs
+  - Added textbox
+  - Added cutscenes
+  - Added shops
+  - Added player menu (item, stat, cell)
+  - Added chestbox
+  - Added save progress
+* Added HMR (Hot Reload) for Text, DialogueText, Textbox, Sprite and Tileset
+* Added VSync setting and "Unlimited" option for FPS
+
+* Renamed Encounter to Battle
+* Moved mod encounter functions to Encounter class
+* Encounters must now be started with World.startEncounter(encounter)
+
+
 DUMMY v1.0.1 (13/06/2026)
 -------------------
 
