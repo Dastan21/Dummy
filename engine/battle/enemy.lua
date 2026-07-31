@@ -194,6 +194,10 @@ function Enemy:spare()
 
   local x, y = self:getPosition()
   local width, height = self:getWidth(), self:getHeight()
+  local origin_x, origin_y = self:getOrigin()
+  local scale_x, scale_y = self:getScale()
+  local cx = x + width * scale_x * (0.5 - origin_x)
+  local cy = y + height * scale_y * (0.5 - origin_y)
 
   --- @type Dummy.Sprite[]
   local dustclouds = {}
@@ -202,8 +206,7 @@ function Enemy:spare()
     dustcloud:setScale(love.math.random() + 0.7)
     local dust_x = (love.math.random() * width / 2) + width / 4 + x - 8
     local dust_y = (love.math.random() * height / 2) + height / 4 + y - 8
-    dustcloud:setPosition(0, -height / 2)
-    dustcloud:setParent(self)
+    dustcloud:setPosition(cx, cy)
 
     local rightside = (8 + dust_x - x) / (width / 2)
     local topside = (8 + dust_y - y) / (height / 2)
