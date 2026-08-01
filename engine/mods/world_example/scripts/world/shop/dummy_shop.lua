@@ -41,11 +41,15 @@ end
 
 --- Prepares the shop items
 function DummyShop:prepareItems()
-  local MonsterCandy = modRequire("scripts.items.monster_candy")
+  local MonsterCandy = require("items.monster_candy")
+  local SpiderDonut = require("items.spider_donut")
+  local bisicle2 = modRequire("scripts.items.bisicle2")
   -- amount `-1` for infinite stock
   self:addItem(MonsterCandy, -1)
+  self:addItem(SpiderDonut, -1)
+  self:addItem(bisicle2, -1)
 
-  local BlanketItem = modRequire("scripts.items.blanket")
+  local BlanketItem = require("items.blanket")
   local blanket_amount = 1
   -- track wether the blanket has been bought
   if WorldExampleMod.flag["dummy_shop_blanket"] == 1 then

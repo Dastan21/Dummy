@@ -7,6 +7,19 @@ function modRequire(modname)
   return require("mods." .. mod:getId() .. "." .. modname)
 end
 
+--- Tries to require a module from the current mod, or the base game if it fails.
+--- @param modname string
+--- @param altname string
+--- @return unknown
+function tryRequire(modname, altname)
+  local mod = ModList.getCurrentMod()
+  local success, result = pcall(modRequire, modname)
+  if success then
+    return result
+  else
+    return require(altname)
+  end
+end
 -- table --
 
 -- https://gist.github.com/revolucas/dd1ecccfca32d558fddf70ddb39eb8a6

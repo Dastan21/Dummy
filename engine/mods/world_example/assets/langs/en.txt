@@ -81,11 +81,15 @@ WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_PAT_TEXT_2=* (...but it doesn't respond.
 WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_TALK_SIDE_TEXT=. . .
 
 # Items
-WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_NAME=Monster Candy
-WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_SHORTNAME=MnstrCndy
-WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_DESCRIPTION=* "Monster Candy" - Heals 10 HP\n* Has a distinct,[wait:5] \n  non-licorice flavor.
-WORLD_EXAMPLE_MOD_ITEM_MONSTER_CANDY_DESCRIPTION_SHOP=Heals 10 HP\n(Licorice-\nfree\nguaranteed.)
 WORLD_EXAMPLE_MOD_ITEM_BLANKET_NAME=Blanket
 WORLD_EXAMPLE_MOD_ITEM_BLANKET_SHORTNAME=Blanket
 WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION=* "Blanket" - Armor DF 1\n* The fabric is very soft.
 WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION_SHOP=Armor: 1DF\n({} DF)\n(It makes\nyou sleepy...)
+
+# This overrides engine content
+ITEM_BISICLE_NAME=Bisicle SP
+ITEM_BISICLE_SHORTNAME=BscleSP
+ITEM_BISICLE_SHORTNAME2=BscleSP
+ITEM_BISICLE_DESCRIPTION=* "Bisicle SP" - Heals 11 HP\n* It's like a regular bisicle,[wait:5]\n  but local to a mod!
+ITEM_BISICLE_DESCRIPTION_SHOP=Heals 11HP x 2\nspecil
+BATTLE_BISICLE_USE=* You eat one half of it.[wait:5]\n* You feel special.

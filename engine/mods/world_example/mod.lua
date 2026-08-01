@@ -85,14 +85,14 @@ function WorldExampleMod:loadSaveData()
   -- equipped weapon
   if save_data.weapon ~= nil then
     if save_data.weapon ~= "stick" then
-      Player.setWeapon(modRequire("scripts.items." .. save_data.weapon):new())
+      Player.setWeapon(tryRequire("scripts.items." .. save_data.weapon, "items." .. save_data.weapon):new())
     end
   end
 
   -- equipped armor
   if save_data.armor ~= nil then
     if save_data.armor ~= "bandage" then
-      Player.setArmor(modRequire("scripts.items." .. save_data.armor):new())
+      Player.setArmor(tryRequire("scripts.items." .. save_data.armor, "items." .. save_data.armor):new())
     end
   end
 
@@ -134,7 +134,7 @@ function WorldExampleMod:loadItem(item_id)
       item = bandage
     end
   else
-    item = modRequire("scripts.items." .. item_id):new()
+    item = tryRequire("scripts.items." .. item_id, "items." .. item_id):new()
   end
   return item
 end
