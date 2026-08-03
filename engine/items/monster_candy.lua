@@ -19,32 +19,30 @@ function MonsterCandyItem:new()
   self:setSellPrice(25)
   -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_MONSTER_CANDY_DESCRIPTION_SHOP")
-
-  self.use_texts = {
-    "BATTLE_ITEM_FOOD_USE"
-  }
-
-  -- Use Comments. Randomly selected. Discarded if empty.
-
+  -- Random comments on use
   self.use_comments = {
-    "BATTLE_MONSTER_CANDY_USE",
-    "BATTLE_MONSTER_CANDY_USE_2"
+    "ITEM_MONSTER_CANDY_USE",
+    "ITEM_MONSTER_CANDY_USE_2"
   }
 
   return self
 end
 
 function MonsterCandyItem:getDialogueTexts()
-  local rand = love.math.random(1, 15)
+  -- Generate a random number
+  local rand = love.math.random(0, 15)
+  -- Set the comment to initially be empty
   local usecomment = ""
+  -- Set Default Dialogue Text
   local dialogue_text = { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) ..
   "\n" .. self:getHealText() }
-  -- Random comments on use
+  -- Change use comment based on random number
   if rand <= 2 then
     usecomment = self.use_comments[1]
   elseif rand == 15 then
     usecomment = self.use_comments[2]
   end
+  -- If the use comment is not empty, change the dialogue text to include the use comment
   if usecomment ~= "" then
     dialogue_text = { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. Lang.translate(usecomment) .. "\n" .. self:getHealText() }
   end

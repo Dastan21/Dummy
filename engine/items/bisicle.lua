@@ -19,15 +19,16 @@ function BisicleItem:new()
   self:setSellPrice(5)
   -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_BISICLE_DESCRIPTION_SHOP")
-
+  -- the main text that will appear when the item is used.
   self.use_texts = {
-    "BATTLE_BISICLE_USE"
+    "ITEM_BISICLE_USE"
   }
 
   return self
 end
 
 function BisicleItem:onUse()
+  -- Add a unisicle to the player's inventory when the bisicle is used.
   local unisicle = require("items.unisicle"):new()
   Player.addItem(unisicle)
 end

@@ -20,24 +20,20 @@ function SpiderDonutItem:new()
   -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_SPIDER_DONUT_DESCRIPTION_SHOP")
 
-  self.use_texts = {
-    "BATTLE_ITEM_FOOD_USE"
-  }
-
-  -- Use Comments. Randomly selected. Discarded if empty.
-
-  self.use_comments = {
-    "BATTLE_SPIDER_DONUT_USE"
-  }
-
   return self
 end
 
 function SpiderDonutItem:getDialogueTexts()
-  local rand = love.math.random(10)
+  -- Set Default Dialogue Text
   local dialogue_text = Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. "\n" .. self:getHealText()
-  if rand > 9 then
-    dialogue_text = Lang.translate(self.use_comments[1])
+  -- Check if the player is in a battle
+  if World.isInBattle() then
+    -- Generate a random number
+    local rand = love.math.random(0, 10)
+    -- Override dialogue text with a comment based on the random number
+    if rand > 9 then
+      dialogue_text = Lang.translate("ITEM_SPIDER_DONUT_USE")
+    end
   end
   return { dialogue_text, table.unpack(self:getUseTexts(), 2) }
 end
