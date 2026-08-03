@@ -34,54 +34,21 @@ function MonsterCandyItem:new()
   return self
 end
 
-function MonsterCandyItem:use()
+function MonsterCandyItem:getDialogueTexts()
   local rand = love.math.random(1, 15)
+  local usecomment = ""
+  local dialogue_text = { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) ..
+  "\n" .. self:getHealText() }
   -- Random comments on use
-  local usecomment = "" -- Default
-  if #self.use_comments > 0 then -- Check nil
-    if rand <= 2 then
-      usecomment = self.use_comments[1]
-    elseif rand == 15 then
-      usecomment = self.use_comments[2]
-    end
+  if rand <= 2 then
+    usecomment = self.use_comments[1]
+  elseif rand == 15 then
+    usecomment = self.use_comments[2]
   end
-
-  if type(self.onBeforeUse) == "function" then
-    self:onBeforeUse()
+  if usecomment ~= "" then
+    dialogue_text = { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. Lang.translate(usecomment) .. "\n" .. self:getHealText() }
   end
-
-  local heal_text = Lang.translate("BATTLE_ITEM_HEAL", self:getHeal())
-  if self:getHeal() + Player.getHP() >= Player.getMaxHP() then
-    heal_text = Lang.translate("BATTLE_ITEM_HEAL_MAX")
-  end
-
-  local dialogue_text = heal_text
-  local use_texts = self:getUseTexts()
-  if #use_texts > 0 then
-    if usecomment ~= "" then
-      dialogue_text = Lang.translate(use_texts[1], Lang.translate(self:getName())) .. Lang.translate(usecomment) .. "\n" .. heal_text
-    else
-      dialogue_text = Lang.translate(use_texts[1], Lang.translate(self:getName())) .. "\n" .. heal_text
-    end
-  end
-
-  local texts = { dialogue_text, table.unpack(use_texts, 2) }
-  if World.isInBattle() then
-    Battle.playDialogueText(table.unpack(texts))
-  else
-    World.playDialogue(texts)
-  end
-  Player.removeItem(self)
-  Assets.playSound("swallow")
-
-  Soul.heal(self:getHeal(), true)
-  Timer.after(0.5, function()
-    Assets.playSound("heal")
-  end)
-
-  if type(self.onUse) == "function" then
-    self:onUse()
-  end
+  return { dialogue_text, table.unpack(self:getUseTexts(), 2) }
 end
 
 return MonsterCandyItem

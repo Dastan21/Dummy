@@ -19,14 +19,7 @@ function mod:load()
   Player.setLV(1)
 
   -- add items
-  Player.addItem(ItemConsumable:new(
-    "monster_candy",
-    "FROGGIT_MOD_MONSTER_CANDY_NAME",
-    "FROGGIT_MOD_MONSTER_CANDY_SHORTNAME",
-    "",
-    50,
-    "food"
-  ))
+  Player.addItem(require("items.monster_candy"):new())
   Player.addItem(ItemEquipment:new(
     "toy_knife",
     "FROGGIT_MOD_TOY_KNIFE_NAME",

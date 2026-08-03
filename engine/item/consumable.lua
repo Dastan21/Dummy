@@ -28,16 +28,20 @@ function ItemConsumable:setType(type)
   self.type = type
 end
 
---- Uses the consumable item
-function ItemConsumable:use()
-  if type(self.onBeforeUse) == "function" then
-    self:onBeforeUse()
-  end
-
+--- Gets the item's heal text
+--- @return Dummy.Text.Text
+function ItemConsumable:getHealText()
   local heal_text = Lang.translate("BATTLE_ITEM_HEAL", self:getHeal())
   if self:getHeal() + Player.getHP() >= Player.getMaxHP() then
     heal_text = Lang.translate("BATTLE_ITEM_HEAL_MAX")
   end
+  return heal_text
+end
+
+--- (Override) Gets the item's final dialogue text when used
+--- @return Dummy.Text.Text[]
+function ItemConsumable:getDialogueTexts()
+  local heal_text = self:getHealText()
 
   local dialogue_text = heal_text
   local use_texts = self:getUseTexts()
@@ -46,6 +50,16 @@ function ItemConsumable:use()
   end
 
   local texts = { dialogue_text, table.unpack(use_texts, 2) }
+  return texts
+end
+
+--- Uses the consumable item
+function ItemConsumable:use()
+  if type(self.onBeforeUse) == "function" then
+    self:onBeforeUse()
+  end
+
+  local texts = self:getDialogueTexts()
   if World.isInBattle() then
     Battle.playDialogueText(table.unpack(texts))
   else

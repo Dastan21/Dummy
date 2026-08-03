@@ -1,7 +1,7 @@
 --- @class Item.NiceCream : Dummy.Item.Consumable
 local NiceCreamItem = Class(ItemConsumable, "Item.NiceCream")
 
---- Creates a spider donut
+--- Creates a nice cream
 --- @return Item.NiceCream
 function NiceCreamItem:new()
   self = Class:new(NiceCreamItem, {
@@ -40,69 +40,35 @@ function NiceCreamItem:new()
   return self
 end
 
-function NiceCreamItem:use()
-
-  if type(self.onBeforeUse) == "function" then
-    self:onBeforeUse()
-  end
-
-  local heal_text = Lang.translate("BATTLE_ITEM_HEAL", self:getHeal())
-  if self:getHeal() + Player.getHP() >= Player.getMaxHP() then
-    heal_text = Lang.translate("BATTLE_ITEM_HEAL_MAX")
-  end
-
-  local dialogue_text = heal_text
-  local use_texts = self:getUseTexts()
-  if #use_texts > 0 then
-    dialogue_text = Lang.translate(use_texts[1], Lang.translate(self:getName())) .. "\n" .. heal_text
-  end
-
+function NiceCreamItem:getDialogueTexts()
   local rand = love.math.random(8)
+  local dialogue_text = Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. "\n" .. self:getHealText()
   -- Random comments on use
-  if #self.use_comments > 0 then -- Check nil
-    if rand == 0 then
-      dialogue_text = Lang.translate(self.use_comments[1])
-    end
-    if rand == 1 then
-      dialogue_text = Lang.translate(self.use_comments[2])
-    end
-    if rand == 2 then
-      dialogue_text = Lang.translate(self.use_comments[3])
-    end
-    if rand == 3 then
-      dialogue_text = Lang.translate(self.use_comments[4])
-    end
-    if rand == 4 then
-      dialogue_text = Lang.translate(self.use_comments[5])
-    end
-    if rand == 5 then
-      dialogue_text = Lang.translate(self.use_comments[6])
-    end
-    if rand == 6 then
-      dialogue_text = Lang.translate(self.use_comments[7])
-    end
-    if rand == 7 then
-      dialogue_text = Lang.translate(self.use_comments[8])
-    end
+  if rand == 0 then
+    dialogue_text = Lang.translate(self.use_comments[1])
   end
-
-  local texts = { dialogue_text, table.unpack(use_texts, 2) }
-  if World.isInBattle() then
-    Battle.playDialogueText(table.unpack(texts))
-  else
-    World.playDialogue(texts)
+  if rand == 1 then
+    dialogue_text = Lang.translate(self.use_comments[2])
   end
-  Player.removeItem(self)
-  Assets.playSound("swallow")
-
-  Soul.heal(self:getHeal(), true)
-  Timer.after(0.5, function()
-    Assets.playSound("heal")
-  end)
-
-  if type(self.onUse) == "function" then
-    self:onUse()
+  if rand == 2 then
+    dialogue_text = Lang.translate(self.use_comments[3])
   end
+  if rand == 3 then
+    dialogue_text = Lang.translate(self.use_comments[4])
+  end
+  if rand == 4 then
+    dialogue_text = Lang.translate(self.use_comments[5])
+  end
+  if rand == 5 then
+    dialogue_text = Lang.translate(self.use_comments[6])
+  end
+  if rand == 6 then
+    dialogue_text = Lang.translate(self.use_comments[7])
+  end
+  if rand == 7 then
+    dialogue_text = Lang.translate(self.use_comments[8])
+  end
+  return { dialogue_text, table.unpack(self:getUseTexts(), 2) }
 end
 
 return NiceCreamItem

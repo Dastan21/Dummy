@@ -5,8 +5,8 @@ local BisicleItem = Class(ItemConsumable, "Item.Bisicle")
 --- @return Item.Bisicle
 function BisicleItem:new()
   self = Class:new(BisicleItem, {
-    "bisicle",                                     -- item identifier
-    "ITEM_BISICLE_NAME",         -- item name
+    "bisicle",                                    -- item identifier
+    "ITEM_BISICLE_NAME",        -- item name
     "ITEM_BISICLE_SHORTNAME",    -- item short name
     "ITEM_BISICLE_DESCRIPTION",  -- item description
     11,

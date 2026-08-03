@@ -1,7 +1,7 @@
 --- @class Item.TemmieFlakes : Dummy.Item.Consumable
 local TemmieFlakesItem = Class(ItemConsumable, "Item.TemmieFlakes")
 
---- Creates a spider Cider
+--- Creates a temmie flakes
 --- @return Item.TemmieFlakes
 function TemmieFlakesItem:new()
   self = Class:new(TemmieFlakesItem, {

@@ -1,7 +1,7 @@
 --- @class Item.ButterScotchPie : Dummy.Item.Consumable
 local ButterScotchPieItem = Class(ItemConsumable, "Item.ButterScotchPie")
 
---- Creates a spider donut
+--- Creates a butterscotch pie
 --- @return Item.ButterScotchPie
 function ButterScotchPieItem:new()
   self = Class:new(ButterScotchPieItem, {

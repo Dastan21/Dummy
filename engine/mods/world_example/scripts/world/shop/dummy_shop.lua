@@ -43,11 +43,13 @@ end
 function DummyShop:prepareItems()
   local MonsterCandy = require("items.monster_candy")
   local SpiderDonut = require("items.spider_donut")
-  local bisicle2 = modRequire("scripts.items.bisicle2")
+  local bisicle = tryRequire("scripts.items.bisicle", "items.bisicle")
+  local nice_cream = require("items.nice_cream")
   -- amount `-1` for infinite stock
   self:addItem(MonsterCandy, -1)
   self:addItem(SpiderDonut, -1)
-  self:addItem(bisicle2, -1)
+  self:addItem(bisicle, -1)
+  self:addItem(nice_cream, -1)
 
   local BlanketItem = require("items.blanket")
   local blanket_amount = 1

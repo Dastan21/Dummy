@@ -1,7 +1,7 @@
 --- @class Item.Unisicle : Dummy.Item.Consumable
 local UnisicleItem = Class(ItemConsumable, "Item.Unisicle")
 
---- Creates a spider Cider
+--- Creates a unisicle
 --- @return Item.Unisicle
 function UnisicleItem:new()
   self = Class:new(UnisicleItem, {

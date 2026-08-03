@@ -1,7 +1,7 @@
 --- @class Item.SnowManPiece : Dummy.Item.Consumable
 local SnowManPieceItem = Class(ItemConsumable, "Item.SnowManPiece")
 
---- Creates a spider donut
+--- Creates a snowman piece
 --- @return Item.SnowManPiece
 function SnowManPieceItem:new()
   self = Class:new(SnowManPieceItem, {

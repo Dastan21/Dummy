@@ -1,7 +1,7 @@
 --- @class Item.Blanket : Dummy.Item.Consumable
 local BlanketItem = Class(ItemEquipment, "Item.Blanket")
 
---- Creates a monster candy
+--- Creates a blanket
 --- @return Item.Blanket
 function BlanketItem:new()
   self = Class:new(BlanketItem, {
