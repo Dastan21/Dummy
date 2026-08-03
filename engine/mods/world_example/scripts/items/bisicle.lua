@@ -21,7 +21,7 @@ function BisicleItem:new()
   self:setShopDescription("ITEM_BISICLE_DESCRIPTION_SHOP")
 
   self.use_texts = {
-    "BATTLE_BISICLE_USE"
+    "ITEM_BISICLE_USE"
   }
 
   return self

@@ -37,7 +37,6 @@ end
 function NiceCreamItem:getDialogueTexts()
   -- Generate a random number
   local rand = love.math.random(9)
-  print(rand)
   -- Set Default Dialogue Text
   local dialogue_text = Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) ..
       "\n" .. self:getHealText()

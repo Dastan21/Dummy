@@ -174,6 +174,30 @@ ITEM_TEMMIE_FLAKES_SHORTNAME2=TemFlakes
 ITEM_TEMMIE_FLAKES_DESCRIPTION=* "Temmie Flakes" - Heals 2 HP\n* It's just torn up pieces\n  of colored construction paper.
 ITEM_TEMMIE_FLAKES_DESCRIPTION_SHOP=Heals 2HP\nfood of\ntem
 
+ITEM_ABANDONED_QUICHE_NAME=Abandoned Quiche
+ITEM_ABANDONED_QUICHE_SHORTNAME=Ab Quiche
+ITEM_ABANDONED_QUICHE_SHORTNAME2=Quiche
+ITEM_ABANDONED_QUICHE_DESCRIPTION=* "Abandoned Quiche" Heals 34 HP\n* A psychologically damaged\n  spinach egg pie.
+ITEM_ABANDONED_QUICHE_DESCRIPTION_SHOP=undefined
+ITEM_ABANDONED_QUICHE_DROP=* You leave the Quiche on the\n  ground and tell it you'll\n  be right back.
+ITEM_ABANDONED_QUICHE_USE=* You eat the quiche.
+
+ITEM_DOG_RESIDUE_NAME=Dog Residue
+ITEM_DOG_RESIDUE_SHORTNAME=DogResidu
+ITEM_DOG_RESIDUE_SHORTNAME2=D.Residue
+ITEM_DOG_RESIDUE_DESCRIPTION=* "Dog Residue" - Dog Item\n* Shiny trail left\n  behind by a dog.
+ITEM_DOG_RESIDUE_DESCRIPTION_2=* "Dog Residue" - Dog Item\n* Dog-shaped husk shed\n  from a dog's carapace.
+ITEM_DOG_RESIDUE_DESCRIPTION_3=* "Dog Residue" - Dog Item\n* Dirty dishes left\n  unwashed by a dog.
+ITEM_DOG_RESIDUE_DESCRIPTION_4=* "Dog Residue" - Dog Item\n* Glowing crystals secreted\n  by a dog.
+ITEM_DOG_RESIDUE_DESCRIPTION_5=* "Dog Residue" - Dog Item\n* Jigsaw puzzle left\n  unfinished by a dog.
+ITEM_DOG_RESIDUE_DESCRIPTION_6=* "Dog Residue" - Dog Item\n* Web spun by a dog\n  to ensnare prey.
+ITEM_DOG_RESIDUE_DESCRIPTION_SHOP=undefined
+ITEM_DOG_RESIDUE_USE=* You used the Dog Residue.
+ITEM_DOG_RESIDUE_USE_SUCCESS=* The rest of your inventory\n  filled up with Dog Residue.
+ITEM_DOG_RESIDUE_USE_FAIL=* ...
+ITEM_DOG_RESIDUE_USE_FAIL_2=* You finished using it.
+ITEM_DOG_RESIDUE_USE_FAIL_3=* An uneasy atmosphere fills\n  the room.
+
 # World shop
 WORLD_SHOP_ACTION_BUY=Buy
 WORLD_SHOP_ACTION_SELL=Sell
