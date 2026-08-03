@@ -9,7 +9,7 @@ function AbandonedQuicheItem:new()
     "ITEM_ABANDONED_QUICHE_NAME",         -- item name
     "ITEM_ABANDONED_QUICHE_SHORTNAME",    -- item short name
     "ITEM_ABANDONED_QUICHE_DESCRIPTION",  -- item description
-    Player.getMaxHP(),
+    34,
     "food"
   })
 

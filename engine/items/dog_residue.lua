@@ -14,7 +14,7 @@ function DogResidueItem:new()
   -- the price the player will pay to buy the item in the shop
   self:setBuyPrice(1)
   -- the price at which the item will be sold in the shop
-  self:setSellPrice(180)
+  self:setSellPrice(love.math.random(4))
   -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_DOG_RESIDUE_DESCRIPTION_SHOP")
   -- the text that will appear when the item is used
