@@ -42,22 +42,8 @@ end
 --- Prepares the shop items
 function DummyShop:prepareItems()
   local MonsterCandy = require("items.monster_candy")
-  local SpiderDonut = require("items.spider_donut")
-  local bisicle = tryRequire("scripts.items.bisicle", "items.bisicle")
-  local nice_cream = require("items.nice_cream")
-  local quiche = require("items.abandoned_quiche")
-  local dog_residue = require("items.dog_residue")
-  local instant_noodles = require("items.instant_noodles")
-  local hot_dog = require("items.hot_dog")
-  local hot_cat = require("items.hot_cat")
-  local sea_tea = require("items.sea_tea")
-  local bad_memory = require("items.bad_memory")
-  -- amount `-1` for infinite stock
-  self:addItem(bad_memory, -1)
-  self:addItem(sea_tea, -1)
-  self:addItem(instant_noodles, -1)
-  self:addItem(dog_residue, -1)
-  self:addItem(hot_dog, -1)
+  -- amount `-1` for infinite stocks
+  self:addItem(MonsterCandy, -1)
 
   local BlanketItem = require("items.blanket")
   local blanket_amount = 1

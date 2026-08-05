@@ -96,6 +96,7 @@ end
 function Item:getDialogueTexts()
   return self:getUseTexts()
 end
+
 --- Gets the item's buy price
 --- @return integer
 function Item:getBuyPrice()
@@ -126,6 +127,7 @@ function Item:use()
   if type(self.onBeforeUse) == "function" then
     can_use = self:onBeforeUse()
   end
+
   if not can_use then return end
 
   local dialogue_texts = self:getDialogueTexts()

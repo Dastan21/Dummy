@@ -300,6 +300,33 @@ ITEM_BAD_MEMORY_DESCRIPTION=* "Bad Memory" Hurts 1 HP\n* ?????
 ITEM_BAD_MEMORY_DESCRIPTION_SHOP=undefined
 ITEM_BAD_MEMORY_USE=* You consume the Bad Memory.[wait:5]
 
+ITEM_JUNK_FOOD_NAME=Junk Food
+ITEM_JUNK_FOOD_SHORTNAME=Junk Food
+ITEM_JUNK_FOOD_SHORTNAME2=Junk Food
+ITEM_JUNK_FOOD_DESCRIPTION=* "Junk Food" Heals 17 HP\n* Food that was probably\n  once thrown away.
+ITEM_JUNK_FOOD_DESCRIPTION_SHOP=Heals 17HP\nHas a big\nbite out of\nit.
+
+ITEM_HUSH_PUPPY_NAME=Hush Puppy
+ITEM_HUSH_PUPPY_SHORTNAME=HushPupe
+ITEM_HUSH_PUPPY_SHORTNAME2=HushPuppy
+ITEM_HUSH_PUPPY_DESCRIPTION=* "Hush Puppy" Heals 65 HP\n* This wonderful spell will stop\n  a dog from casting magic.
+ITEM_HUSH_PUPPY_DESCRIPTION_SHOP=undefined
+ITEM_HUSH_PUPPY_USE=\n* Dog-magic is neutralized.
+
+ITEM_SNAIL_PIE_NAME=Snail Pie
+ITEM_SNAIL_PIE_SHORTNAME=Snail Pie
+ITEM_SNAIL_PIE_SHORTNAME2=Snail Pie
+ITEM_SNAIL_PIE_DESCRIPTION=* "Snail Pie" - Heals Some HP\n* An acquired taste.
+ITEM_SNAIL_PIE_DESCRIPTION_SHOP=undefined
+ITEM_SNAIL_PIE_HEAL=* Your HP was maxed out.
+
+ITEM_LAST_DREAM_NAME=Last Dream
+ITEM_LAST_DREAM_SHORTNAME="Dream"
+ITEM_LAST_DREAM_SHORTNAME2="Dream"
+ITEM_LAST_DREAM_DESCRIPTION=* "Dream" Heals 12 HP\n* The goal of "Determination."
+ITEM_LAST_DREAM_DESCRIPTION_SHOP=undefined
+ITEM_LAST_DREAM_USE=* Through DETERMINATION,[wait:5] the\n  dream became true.
+
 # World shop
 WORLD_SHOP_ACTION_BUY=Buy
 WORLD_SHOP_ACTION_SELL=Sell
