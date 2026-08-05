@@ -35,10 +35,14 @@ function ItemConsumable:getHealText()
   if self:getHeal() + Player.getHP() >= Player.getMaxHP() then
     heal_text = Lang.translate("BATTLE_ITEM_HEAL_MAX")
   end
+  -- Hurt the player for some reason
+  if self:getHeal() < 0 then
+    heal_text = Lang.translate("BATTLE_ITEM_HURT", math.abs(self:getHeal()))
+  end
   return heal_text
 end
 
---- (Override) Gets the item's final dialogue text when used
+--- (Override) Gets the item's final dialogue text
 --- @return Dummy.Text.Text[]
 function ItemConsumable:getDialogueTexts()
   local heal_text = self:getHealText()

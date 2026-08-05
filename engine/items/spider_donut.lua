@@ -35,7 +35,7 @@ function SpiderDonutItem:getDialogueTexts()
       dialogue_text = Lang.translate("ITEM_SPIDER_DONUT_USE")
     end
   end
-  return { dialogue_text, table.unpack(self:getUseTexts(), 2) }
+  return { dialogue_text }
 end
 
 return SpiderDonutItem

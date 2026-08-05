@@ -46,7 +46,7 @@ function MonsterCandyItem:getDialogueTexts()
   if usecomment ~= "" then
     dialogue_text = { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. Lang.translate(usecomment) .. "\n" .. self:getHealText() }
   end
-  return { dialogue_text, table.unpack(self:getUseTexts(), 2) }
+  return { dialogue_text }
 end
 
 return MonsterCandyItem

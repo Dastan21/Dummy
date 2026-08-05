@@ -36,15 +36,13 @@ end
 
 function NiceCreamItem:getDialogueTexts()
   -- Generate a random number
-  local rand = love.math.random(9)
+  local rand = love.math.random(8)
   -- Set Default Dialogue Text
   local dialogue_text = Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) ..
       "\n" .. self:getHealText()
   -- Override dialogue text with a random comment based on the random number
-  if rand < 9 then
-    dialogue_text = Lang.translate(self.use_comments[rand])
-  end
-  return { dialogue_text, table.unpack(self:getUseTexts(), 2) }
+  dialogue_text = Lang.translate(self.use_comments[rand])
+  return { dialogue_text }
 end
 
 return NiceCreamItem

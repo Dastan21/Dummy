@@ -40,6 +40,7 @@ BATTLE_FLEE_REWARD=   * Ran away with {} EXP\n     and {} GOLD.
 BATTLE_WIN_REWARD=* YOU WON!\n* You earned {} EXP and {} gold.
 BATTLE_WIN_LEVEL_UP=* Your LOVE increased.
 BATTLE_ITEM_HEAL=* You recovered {} HP!
+BATTLE_ITEM_HURT=* You lost {} HP!
 BATTLE_ITEM_HEAL_MAX=* Your HP was maxed out.
 BATTLE_ITEM_FOOD_USE=* You eat the {}.
 BATTLE_ITEM_DRINK_USE=* You drink the {}.
@@ -197,6 +198,107 @@ ITEM_DOG_RESIDUE_USE_SUCCESS=* The rest of your inventory\n  filled up with Dog 
 ITEM_DOG_RESIDUE_USE_FAIL=* ...
 ITEM_DOG_RESIDUE_USE_FAIL_2=* You finished using it.
 ITEM_DOG_RESIDUE_USE_FAIL_3=* An uneasy atmosphere fills\n  the room.
+
+ITEM_DOG_SALAD_NAME=Dog Salad
+ITEM_DOG_SALAD_SHORTNAME=Dog Salad
+ITEM_DOG_SALAD_SHORTNAME2=Dog Salad
+ITEM_DOG_SALAD_DESCRIPTION=* "Dog Salad" - Heals ?? HP\n* Recovers HP.\n* (Hit Poodles.)
+ITEM_DOG_SALAD_DESCRIPTION_SHOP=undefined
+ITEM_DOG_SALAD_USE=* Oh.[wait:5] Tastes yappy...
+ITEM_DOG_SALAD_USE_2=* Oh.[wait:5] Fried tennis ball...
+ITEM_DOG_SALAD_USE_3=* Oh.[wait:5] There are bones...
+ITEM_DOG_SALAD_USE_4=* It's literally garbage???
+
+ITEM_ASTRONAUT_FOOD_NAME=Astronaut Food
+ITEM_ASTRONAUT_FOOD_SHORTNAME=AstroFood
+ITEM_ASTRONAUT_FOOD_SHORTNAME2=Astr.Food
+ITEM_ASTRONAUT_FOOD_DESCRIPTION=* "Astronaut Food" Heals 21 HP\n* For feeding a pet\n  astronaut.
+ITEM_ASTRONAUT_FOOD_DESCRIPTION_SHOP=undefined
+
+ITEM_INSTANT_NOODLES_NAME=Instant Noodles
+ITEM_INSTANT_NOODLES_SHORTNAME=InstaNood
+ITEM_INSTANT_NOODLES_SHORTNAME2=I.Noodles
+ITEM_INSTANT_NOODLES_DESCRIPTION=* "Instant Noodles" Heals HP\n* Comes with everything you\n  need for a quick meal!
+ITEM_INSTANT_NOODLES_DESCRIPTION_SHOP=undefined
+ITEM_INSTANT_NOODLES_USE=* You remove the Instant\n  Noodles from their\n  packaging.
+ITEM_INSTANT_NOODLES_USE_1=[noskip]* You put some water in\n  the pot and place it on\n  the heat.
+ITEM_INSTANT_NOODLES_USE_2=[noskip]* You wait for the water\n  to boil...
+ITEM_INSTANT_NOODLES_USE_3=[noskip]* ...[wait:20]\n* ...[wait:20]\n* ...
+ITEM_INSTANT_NOODLES_USE_4=[noskip]* It's[wait:10] boiling.
+ITEM_INSTANT_NOODLES_USE_5=[noskip]* You place the noodles[wait:5]\n  into the pot.
+ITEM_INSTANT_NOODLES_USE_6=[noskip]* 4[wait:15] minutes left[wait:15] until\n  the noodles[wait:10] are finished.
+ITEM_INSTANT_NOODLES_USE_7=[noskip]* 3[wait:15] minutes left[wait:15] until\n  the noodles[wait:10] are finished.
+ITEM_INSTANT_NOODLES_USE_8=[noskip]* 2[wait:15] minutes left[wait:15] until\n  the noodles[wait:10] are finished.
+ITEM_INSTANT_NOODLES_USE_9=[noskip]* 1[wait:15] minute left[wait:15] until\n  the noodles[wait:10] are finished.
+ITEM_INSTANT_NOODLES_USE_10=[noskip]* The noodles[wait:15] are finished.
+ITEM_INSTANT_NOODLES_USE_11=[noskip]* ... they don't taste very\n  good.
+ITEM_INSTANT_NOODLES_USE_12=[noskip]* You add the flavor packet.
+ITEM_INSTANT_NOODLES_USE_13=[noskip]* That's better.
+ITEM_INSTANT_NOODLES_USE_14=[noskip]* Not great,[wait:5] but better.
+
+ITEM_CRAB_APPLE_NAME=Crab Apple
+ITEM_CRAB_APPLE_SHORTNAME=CrabApple
+ITEM_CRAB_APPLE_SHORTNAME2=CrabApple
+ITEM_CRAB_APPLE_DESCRIPTION=* "Crab Apple" Heals 18 HP\n* An aquatic fruit that\n  resembles a crustacean.
+ITEM_CRAB_APPLE_DESCRIPTION_SHOP=Heals 18HP\n(Looks\nlike a\ncrab.)
+
+ITEM_HOT_DOG_NAME=Hot Dog...?
+ITEM_HOT_DOG_SHORTNAME=Hot Dog
+ITEM_HOT_DOG_SHORTNAME2=Hot Dog
+ITEM_HOT_DOG_DESCRIPTION=* "Hot Dog...?" Heals 20 HP\n* The "meat" is made of something\n  called a "water sausage."
+ITEM_HOT_DOG_DESCRIPTION_SHOP=undefined
+
+ITEM_HOT_CAT_NAME=Hot Cat
+ITEM_HOT_CAT_SHORTNAME=Hot Cat
+ITEM_HOT_CAT_SHORTNAME2=Hot Cat
+ITEM_HOT_CAT_DESCRIPTION=* "Hot Cat" Heals 21 HP\n* Like a hot dog,[wait:5] but with\n  little cat ears on the end.
+ITEM_HOT_CAT_DESCRIPTION_SHOP=undefined
+
+ITEM_GLAMBURGER_NAME=Glamburger
+ITEM_GLAMBURGER_SHORTNAME=GlamBurg
+ITEM_GLAMBURGER_SHORTNAME2=G.Burger
+ITEM_GLAMBURGER_DESCRIPTION=* "Glamburger" Heals 27 HP\n* A hamburger made of edible\n  glitter and sequins.
+ITEM_GLAMBURGER_DESCRIPTION_SHOP=Heals 27HP\nVery popular\nfood.
+
+ITEM_STARFAIT_NAME=Starfait
+ITEM_STARFAIT_SHORTNAME=Starfait
+ITEM_STARFAIT_SHORTNAME2=Starfait
+ITEM_STARFAIT_DESCRIPTION=* "Starfait" Heals 14 HP\n* A sweet treat made of\n  sparkling stars.
+ITEM_STARFAIT_DESCRIPTION_SHOP=Heals 14HP\nVery popular\nfood.
+
+ITEM_SEATEA_NAME=Sea Tea
+ITEM_SEATEA_SHORTNAME=Sea Tea
+ITEM_SEATEA_SHORTNAME2=Sea Tea
+ITEM_SEATEA_DESCRIPTION=* "Sea Tea" Heals 10 HP\n* Made from glowing marshwater.\n* Increases SPEED for one battle.
+ITEM_SEATEA_DESCRIPTION_SHOP=Heals 10HP\nSPEED\nup in\nbattle.
+ITEM_SEATEA_USE=* Your SPEED boosts!
+
+ITEM_LEGENDARY_HERO_NAME=Legendary Hero
+ITEM_LEGENDARY_HERO_SHORTNAME=Leg.Hero
+ITEM_LEGENDARY_HERO_SHORTNAME2=L. Hero
+ITEM_LEGENDARY_HERO_DESCRIPTION=* "Legendary Hero" Heals 40 HP\n* Sandwich shaped like a sword.\n* Increases ATTACK when eaten.
+ITEM_LEGENDARY_HERO_DESCRIPTION_SHOP=Heals 40HP\nHero Sandwich.\nATTACK UP\nin battle.
+ITEM_LEGENDARY_HERO_USE=* ATTACK increased by 4!
+
+ITEM_FACE_STEAK_NAME=Steak in the Shape of Mettaton's Face
+ITEM_FACE_STEAK_SHORTNAME=FaceSteak
+ITEM_FACE_STEAK_SHORTNAME2=Steak
+ITEM_FACE_STEAK_DESCRIPTION=* "Face Steak" Heals 60 HP\n* Huge steak in the shape\n  of Mettaton's face.
+ITEM_FACE_STEAK_DESCRIPTION_SHOP=Heals 60HP\nDon't ask.\nPlease.
+ITEM_FACE_STEAK_USE=* You eat the Face Steak.
+
+ITEM_POPATO_CHISPS_NAME=Popato Chisps
+ITEM_POPATO_CHISPS_SHORTNAME=PT Chisps
+ITEM_POPATO_CHISPS_SHORTNAME2=Chips
+ITEM_POPATO_CHISPS_DESCRIPTION=* "Popato Chisps" Heals 13 HP\n* Regular old popato chisps.
+ITEM_POPATO_CHISPS_DESCRIPTION_SHOP=undefined
+
+ITEM_BAD_MEMORY_NAME=Bad Memory
+ITEM_BAD_MEMORY_SHORTNAME=BadMemory
+ITEM_BAD_MEMORY_SHORTNAME2=BadMemory
+ITEM_BAD_MEMORY_DESCRIPTION=* "Bad Memory" Hurts 1 HP\n* ?????
+ITEM_BAD_MEMORY_DESCRIPTION_SHOP=undefined
+ITEM_BAD_MEMORY_USE=* You consume the Bad Memory.[wait:5]
 
 # World shop
 WORLD_SHOP_ACTION_BUY=Buy

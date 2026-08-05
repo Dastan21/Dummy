@@ -20,6 +20,11 @@ function mod:load()
 
   -- add items
   Player.addItem(require("items.monster_candy"):new())
+  Player.addItem(require("items.sea_tea"):new())
+  Player.addItem(require("items.sea_tea"):new())
+  Player.addItem(require("items.sea_tea"):new())
+  Player.addItem(require("items.sea_tea"):new())
+  Player.addItem(require("items.sea_tea"):new())
   Player.addItem(ItemEquipment:new(
     "toy_knife",
     "FROGGIT_MOD_TOY_KNIFE_NAME",

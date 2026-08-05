@@ -29,7 +29,8 @@ function DogResidueItem:new()
     "ITEM_DOG_RESIDUE_DESCRIPTION_6"
   }
   -- Random description when a new version of the object is added (copies will retain the same description)
-  self.random_description = love.math.random(6)
+  local rand = love.math.random(6)
+  self:setDescription(self.descriptions[rand])
 
   return self
 end
@@ -53,13 +54,15 @@ function DogResidueItem:onUse()
   -- Clone the item to all empty slots in the player's inventory
   Assets.playSound("dogresidue")
   for i = 1, Player.getMaxItems() - #Player.getItems() do
+    local rand = love.math.random(8)
+    local dog_salad = require("items.dog_salad"):new()
     local dog_residue = require("items.dog_residue"):new()
-    Player.addItem(dog_residue)
+    if rand == 1 then
+      Player.addItem(dog_salad)
+    else
+      Player.addItem(dog_residue)
+    end
   end
-end
-
-function DogResidueItem:getDescription()
-  return Lang.translate(self.descriptions[self.random_description])
 end
 
 return DogResidueItem
