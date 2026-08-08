@@ -28,6 +28,7 @@ Player = require "player"
 Fader = require "utils.fader"
 Shaker = require "utils.shaker"
 Debug = require "utils.debug"
+Cursor = require "utils.cursor"
 Shader = require "shader"
 Scene = require "scene"
 MainMenu = require "main_menu"
@@ -52,6 +53,7 @@ NPCObject = require "world.object.obj_npc"
 PlayerObject = require "world.object.obj_player"
 SavepointObject = require "world.object.obj_savepoint"
 ChestboxObject = require "world.object.obj_chestbox"
+ReadableObject = require "world.object.obj_readable"
 
 -- item
 Item = require "item.item"
@@ -69,13 +71,21 @@ ACT = require "battle.act"
 Wave = require "battle.wave"
 Bullet = require "battle.bullet"
 
+--- @class Dummy.Engine
+---
+--- @field private time number
+--- @field private hmr_time number
+--- @field private canvas love.Canvas|nil
 local engine = {
   time = 0,
   hmr_time = 0,
   canvas = nil
 }
 
-function love.load()
+--- This function is called exactly once at the beginning of the game.
+--- @param arg table
+--- @param unfilteredArg table
+function love.load(arg, unfilteredArg)
   Constants.DEBUG = os.getenv("LOCAL_LUA_DEBUGGER_VSCODE") == "1"
   Constants.HOT_RELOAD = love.system.getOS() ~= "Web"
 
@@ -102,6 +112,7 @@ function love.load()
   Lang.load()
   Assets.load()
   Scene.load()
+  Cursor.load()
   Fader.load()
   Shaker.load()
   Debug.load()
@@ -112,6 +123,7 @@ function love.load()
   Scene.addScene("WORLD", require "scene.world_scene")
   Scene.addScene("SHOP", require "scene.shop_scene")
   Scene.addScene("BATTLE", require "scene.battle_scene")
+  Scene.addScene("EDITOR", require "scene.editor_scene")
   Scene.addScene("GAME_OVER", require "scene.game_over_scene")
   Scene.addScene("ERROR", require "scene.error_scene")
   Scene.change("MAIN_MENU")
@@ -119,6 +131,16 @@ function love.load()
   engine.time = love.timer.getTime()
 end
 
+--- Sets the window title
+--- @param title string
+function love.setTitle(title)
+  if Debug.isDebugMode() then
+    title = string.format("%s (%s)", title, "DEBUG")
+  end
+  love.window.setTitle(title)
+end
+
+--- Called to scale the game window
 function love.scale()
   local settings = Config.getSettings()
   local window_width = Constants.INIT_GAME_WIDTH * settings["window_scale"]
@@ -131,10 +153,9 @@ function love.scale()
   love.resize(love.window.getMode())
 end
 
-function love.filedropped(file)
-  ModList.copyModZip(file)
-end
-
+--- Called when the window is resized, for example if the user resizes the window, or if love.window.setMode is called with an unsupported width or height in fullscreen and the window chooses the closest appropriate size.
+--- @param width number
+--- @param height number
 function love.resize(width, height)
   Constants.WINDOW_WIDTH = width
   Constants.WINDOW_HEIGHT = height
@@ -145,15 +166,22 @@ function love.resize(width, height)
   Signal.emit("window_resize", Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT)
 end
 
+--- Updates the fullscreen state
 function engine.updateFullscreen()
   local settings = Config.getSettings()
-  if Input.isPressed("f4") or (Input.isDown("lalt") and Input.isPressed("return")) then
+  if (Input.isPressed("f4") and not Input.isDown("lalt")) or (Input.isPressed("return") and Input.isDown("lalt")) then
     local fullscreen = not love.window.getFullscreen()
     settings.fullscreen = fullscreen
     love.scale()
   end
 end
 
+--- Called when a file is dragged and dropped onto the window
+function love.filedropped(file)
+  ModList.copyModZip(file)
+end
+
+--- Limits the framerate
 function engine.limitFPS()
   local time = love.timer.getTime()
   if engine.time <= time or not Config.getSettings()["fps"] == -1 then
@@ -163,6 +191,8 @@ function engine.limitFPS()
   love.timer.sleep(engine.time - time)
 end
 
+--- Engine error handler function
+--- @param err any
 function engine.error_handler(err)
   if err == "stack overflow" then
     err = "Stack overflow!"
@@ -175,6 +205,8 @@ function engine.error_handler(err)
   end
 end
 
+--- Callback function used to update the state of the game every frame.
+--- @param dt number
 function love.update(dt)
   xpcall(function()
     if dt > 2 / 30 then return end
@@ -205,6 +237,7 @@ function love.update(dt)
   end, engine.error_handler, dt)
 end
 
+--- Callback function used to draw on the screen every frame.
 function love.draw()
   xpcall(function()
     engine.limitFPS()
@@ -224,9 +257,13 @@ function love.draw()
   end, engine.error_handler)
 end
 
+--- Callback function triggered when the game is closed.
+--- @return boolean abort
 function love.quit()
   if love.system.getOS() == "Web" then return true end
 
   Config.save()
   Debug.saveLogs()
+
+  return not Scene.canQuit()
 end

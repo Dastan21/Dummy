@@ -1,5 +1,6 @@
 --- @class Dummy.World
 ---
+--- @field protected from_editor boolean
 --- @field protected current_room Dummy.Room|nil
 --- @field protected rooms table<number, Dummy.Room>
 --- @field protected shops table<number, Dummy.Shop>
@@ -17,7 +18,8 @@
 local World = {}
 
 --- Loads the world
-function World.load()
+--- @param from_editor? boolean
+function World.load(from_editor)
   World.current_room = nil
   World.rooms = {}
   World.shops = {}
@@ -44,6 +46,18 @@ function World.load()
   World.chestbox_menu = ChestboxMenu:new()
 
   World.playtime = 0
+
+  local DefaultRoom = Class(Room, "Dummy.Room.DefaultRoom")
+  function DefaultRoom:new() return Class:new(DefaultRoom, { "default", "--", 320, 240 }) end
+
+  World.rooms["default"] = DefaultRoom
+
+  if from_editor == true then
+    Player.setCellphone(true)
+    Player.addPhoneCall("MAIN_MENU_EDITOR_TITLE", function()
+      Scene.change("EDITOR", ModList.getCurrentMod():getId(), World.getCurrentRoom():getId())
+    end)
+  end
 end
 
 --- Wether the player is in an encounter
@@ -66,14 +80,13 @@ end
 --- @param room_id string
 --- @return T
 function World.getRoom(room_id)
-  return World.rooms[room_id]
-end
-
---- Adds a room
---- @param room_id string
---- @param room Dummy.Room
-function World.addRoom(room_id, room)
-  World.rooms[room_id] = room
+  local room = World.rooms[room_id]
+  if room == nil then
+    room = modRequire("scripts.world.room." .. room_id)
+    assert(room ~= nil, "Room \"" .. room_id .. "\" not found")
+    World.rooms[room_id] = room
+  end
+  return room
 end
 
 --- Transitions to a room
@@ -319,14 +332,13 @@ end
 --- @param shop_id string
 --- @return Dummy.Shop
 function World.getShop(shop_id)
-  return World.shops[shop_id]
-end
-
---- Adds a shop
---- @param shop_id string
---- @param shop Dummy.Shop
-function World.addShop(shop_id, shop)
-  World.shops[shop_id] = shop
+  local shop = World.shops[shop_id]
+  if shop == nil then
+    shop = modRequire("scripts.world.shop." .. shop_id)
+    assert(shop ~= nil, "Shop \"" .. shop_id .. "\" not found")
+    World.shops[shop_id] = shop
+  end
+  return shop
 end
 
 --- Transitions to a shop
@@ -365,10 +377,10 @@ function World.removeItemFromChestbox(index)
 end
 
 --- Wether an object collide another in the world
----@param object Dummy.Object
----@param x? number
----@param y? number
----@return boolean, Dummy.Object|nil
+--- @param object Dummy.Object
+--- @param x? number
+--- @param y? number
+--- @return boolean, Dummy.Object|nil
 function World.checkCollision(object, x, y)
   local room = World.getCurrentRoom()
   if room == nil or not object:isVisible() or not object:isCollisionEnabled() then return false end

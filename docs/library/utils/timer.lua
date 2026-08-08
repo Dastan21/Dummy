@@ -83,7 +83,7 @@ function Timer.update(dt) end
 --- Updates the timer, called on every game update
 --- @overload fun(delay: number, fn: fun())
 --- @param dt number
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:update(dt) end
 
 --- Schedules a function to be called the next update.
@@ -94,7 +94,7 @@ function Timer.next(func) end
 --- Schedules a function to be called the next update.
 --- @param func fun()
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:next(func) end
 
 --- Schedules a function. The function will be executed after `delay` seconds have elapsed.
@@ -111,7 +111,7 @@ function Timer.after(delay, func) end
 --- @param delay number
 --- @param func fun(func?: fun())
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:after(delay, func) end
 
 --- Executes a function that can be paused without causing the rest of the program to be suspended.
@@ -122,7 +122,7 @@ function Timer.script(func) end
 --- Executes a function that can be paused without causing the rest of the program to be suspended.
 --- @param func fun(wait: fun(delay: number)) script to execute
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:script(func) end
 
 --- Adds a function that will be called `count` times every `delay` seconds.
@@ -141,7 +141,7 @@ function Timer.every(delay, func, count) end
 --- @param func fun() the function to be called periodically
 --- @param count? number number of times the function is to be called
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:every(delay, func, count) end
 
 --- Runs `func(dt)` for the next delay seconds.
@@ -160,7 +160,7 @@ function Timer.during(delay, func, after) end
 --- @param func fun(dt: number, left: number) the function to be called
 --- @param after? fun() a function to be called after `delay` seconds
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:during(delay, func, after) end
 
 --- [Tweening](http://en.wikipedia.org/wiki/Inbetweening) (short for in-betweening) is the process that happens between two defined states.
@@ -185,7 +185,7 @@ function Timer.tween(duration, subject, target, method, after, ...) end
 --- @param after? fun() function to execute after the tween has finished
 --- @param ... any additional arguments to the tweening function
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:tween(duration, subject, target, method, after, ...) end
 
 --- Creates a custom interpolation method
@@ -199,14 +199,14 @@ function Timer.cancel(handle) end
 
 --- Prevent a timer from being executed in the future.
 --- @param handle Dummy.Timer.Handle|nil the function to be canceled
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:cancel(handle) end
 
 --- Remove all timed and periodic functions. Functions that have not yet been executed will discarded.
 function Timer.clear() end
 
 --- Remove all timed and periodic functions. Functions that have not yet been executed will discarded.
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:clear() end
 
 --- Creates a new timer

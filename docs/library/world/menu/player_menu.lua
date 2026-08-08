@@ -35,7 +35,7 @@ function PlayerMenu:open() end
 function PlayerMenu:close() end
 
 --- Wether the player menu has focus
----@return boolean
+--- @return boolean
 function PlayerMenu:hasFocus() end
 
 --- Draws the player menu

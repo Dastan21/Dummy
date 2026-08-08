@@ -15,6 +15,12 @@
 --- @field protected screenshot_fade_timer Dummy.Timer.Handle|nil
 local Debug = {}
 
+--- Wether the debug mode is enabled
+--- @return boolean
+function Debug.isDebugMode()
+  return Debug.debug_mode
+end
+
 --- Wether the hitboxes should be displayed
 --- @return boolean
 function Debug.shouldDisplayHitbox()
@@ -218,7 +224,7 @@ local _print = print
 ---
 ---[View documents](command:extension.lua.doc?["en-us/54/manual.html/pdf-print"])
 ---
----@param ... any
+--- @param ... any
 function print(...)
   local t = {}
   for _, v in pairs({ ... }) do

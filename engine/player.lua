@@ -46,7 +46,8 @@ Player.LV_EXP = {
   [17] = 15000,
   [18] = 25000,
   [19] = 50000,
-  [20] = 99999
+  [20] = 99999,
+  [21] = math.huge
 }
 
 --- Initializes the player
@@ -209,7 +210,7 @@ function Player.setEXP(exp)
   Player.exp = exp
 
   local lv = 0
-  for level, experience in pairs(Player.LV_EXP) do
+  for level, experience in ipairs(Player.LV_EXP) do
     if Player.exp < experience then
       lv = level - 1
       break

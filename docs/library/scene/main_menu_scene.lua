@@ -11,11 +11,13 @@
 --- @field protected camera Dummy.GameCamera
 --- @field protected options Dummy.Menu.Options
 --- @field protected current_menu Dummy.MainMenu
+--- @field protected mod_list_menu Dummy.MainMenu
+--- @field protected editor_menu Dummy.MainMenu
 --- @field protected settings_menu Dummy.MainMenu
 --- @field protected reset_save_menu Dummy.MainMenu
 --- @field protected reset_selected_save_menu Dummy.MainMenu
---- @field protected reset_selected_save_mod string
---- @field protected mod_list_menu Dummy.MainMenu
+--- @field protected reset_selected_save_mod { id: string, name: string }|nil
+--- @field protected reset_selected_save_text Dummy.Text
 --- @field protected logo_sprite Dummy.Sprite
 --- @field protected credits_text Dummy.Text
 --- @field protected background_sprite Dummy.Sprite
@@ -33,6 +35,9 @@ function MainMenuScene.loadMenus() end
 
 --- Loads main menu
 function MainMenuScene.loadMainMenu() end
+
+--- Loads editor menu
+function MainMenuScene.loadEditorMenu() end
 
 --- Loads settings menu
 function MainMenuScene.loadSettingsMenu() end

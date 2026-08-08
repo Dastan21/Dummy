@@ -34,17 +34,22 @@ end
 --- Loads a sprite
 --- @param sprite_path string
 --- @param force? boolean
+--- @param base_folder? string
 --- @return Dummy.Sprite.Image
-function Sprite.loadImage(sprite_path, force)
+function Sprite.loadImage(sprite_path, force, base_folder)
   local image = nil
 
-  local mod = ModList.getCurrentMod()
-  if mod ~= nil then
-    image = Sprite.loadImageFromFolder("mods/" .. mod:getId() .. "/assets/sprites/", sprite_path, force)
-  end
+  if base_folder == nil then
+    local mod = ModList.getCurrentMod()
+    if mod ~= nil then
+      image = Sprite.loadImageFromFolder("mods/" .. mod:getId() .. "/assets/sprites/", sprite_path, force)
+    end
 
-  if image == nil or type(image) == "string" then
-    image = Sprite.loadImageFromFolder("assets/sprites/", sprite_path, force)
+    if image == nil or type(image) == "string" then
+      image = Sprite.loadImageFromFolder("assets/sprites/", sprite_path, force)
+    end
+  else
+    image = Sprite.loadImageFromFolder(base_folder, sprite_path, force)
   end
 
   assert(image ~= nil and type(image) ~= "string", image)
@@ -94,7 +99,11 @@ function Sprite.loadImageFromFolder(base_sprites_path, sprite_path, force)
       end
 
       if not success then
-        return "Sprite \"" .. sprite_path .. "\" not found: " .. tostring(love_image_data)
+        local reason = ""
+        if info ~= nil then
+          reason = ": " .. tostring(love_image_data)
+        end
+        return "Sprite \"" .. sprite_path .. "\" not found" .. reason
       end
     end
 

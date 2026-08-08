@@ -61,15 +61,21 @@ function table.contains(t, value) end
 --- @generic T
 --- @param list T[]
 --- @param value T
----@return T|nil
+--- @return T|nil
 function table.removebyvalue(list, value) end
 
 --- Finds an element in a table
----@generic T
----@param list T[]
----@param f fun(v: T, k: integer): boolean
----@return T|nil, integer|nil
+--- @generic T
+--- @param list T[]
+--- @param f fun(v: T, k: integer): boolean
+--- @return T|nil, integer|nil
 function table.find(list, f) end
+
+--- Deeply compares two values (supports nested tables)
+--- @param a any
+--- @param b any
+--- @return boolean
+function table.equal(a, b) end
 
 --- Returns the number of elements in a table
 --- @generic T : table
@@ -113,6 +119,11 @@ function math.lerp(a, b, t) end
 --- @return number
 function math.sum(...) end
 
+--- Checks if a number is an integer.
+--- @param n number
+--- @return boolean
+function math.isinteger(n) end
+
 --- Gets the distance between two points
 --- @param x1 number
 --- @param y1 number
@@ -136,6 +147,11 @@ function Utils.checkExtension(path, ...) end
 --- Gets a filename without extension
 --- @param filename string
 function Utils.getFilenameWithoutExt(filename) end
+
+--- Sanitizes a filename
+--- @param name string
+--- @return string
+function Utils.sanitizeFilename(name) end
 
 --- Whether a point is in a triangle
 --- @param x number

@@ -41,9 +41,9 @@ end
 
 --- Prepares the shop items
 function DummyShop:prepareItems()
-  local MonsterCandy = modRequire("scripts.items.monster_candy")
+  local SmallCandy = modRequire("scripts.items.small_candy")
   -- amount `-1` for infinite stock
-  self:addItem(MonsterCandy, -1)
+  self:addItem(SmallCandy, -1)
 
   local BlanketItem = modRequire("scripts.items.blanket")
   local blanket_amount = 1

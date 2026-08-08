@@ -41,6 +41,8 @@ Constants = {
     WORLD_DIALOGUE   = 16,
     WORLD_MENU       = 17,
 
+    WINDOW           = 500,
+    CURSOR           = 999,
     TOP              = 1000,
     DEBUG            = 9999999
   },

@@ -169,7 +169,7 @@ function table.insertall(t, value, ...)
 end
 
 if table.unpack == nil then
-  --- @diagnostic disable-next-line: deprecated
+  ---@diagnostic disable-next-line: deprecated
   table.unpack = unpack
 end
 
@@ -206,7 +206,7 @@ end
 --- @generic T
 --- @param list T[]
 --- @param value T
----@return T|nil
+--- @return T|nil
 function table.removebyvalue(list, value)
   if type(list) ~= "table" then return end
   for i, v in ipairs(list) do
@@ -217,16 +217,40 @@ function table.removebyvalue(list, value)
 end
 
 --- Finds an element in a table
----@generic T
----@param list T[]
----@param f fun(v: T, k: integer): boolean
----@return T|nil, integer|nil
+--- @generic T
+--- @param list T[]
+--- @param f fun(v: T, k: integer): boolean
+--- @return T|nil, integer|nil
 function table.find(list, f)
   for k, v in pairs(list) do
     if f(v, k) then
       return v, k
     end
   end
+end
+
+--- Deeply compares two values (supports nested tables)
+--- @param a any
+--- @param b any
+--- @return boolean
+function table.equal(a, b)
+  if a == b then return true end
+  if type(a) ~= "table" or type(b) ~= "table" then return false end
+
+  -- Check that every key in `a` exists in `b` with the same value
+  for k, v in pairs(a) do
+    if not table.equal(v, b[k]) then
+      return false
+    end
+  end
+
+  -- Check that `b` has no extra keys
+  for k in pairs(b) do
+    if a[k] == nil then
+      return false
+    end
+  end
+  return true
 end
 
 --- Returns the number of elements in a table
@@ -316,6 +340,13 @@ function math.sum(...)
   return s
 end
 
+--- Checks if a number is an integer.
+--- @param n number
+--- @return boolean
+function math.isinteger(n)
+  return n == math.floor(n)
+end
+
 --- Gets the distance between two points
 --- @param x1 number
 --- @param y1 number
@@ -359,6 +390,64 @@ end
 --- @param filename string
 function Utils.getFilenameWithoutExt(filename)
   return (filename:gsub("%.[^.]*$", ""))
+end
+
+--- Sanitizes a filename
+--- @param name string
+--- @return string
+function Utils.sanitizeFilename(name)
+  if type(name) ~= "string" or name == "" then return "untitled" end
+
+  -- Remove control characters (ASCII 0-31)
+  name = name:gsub("[%z\1-\31]", "")
+
+  -- Remove Windows-invalid characters
+  name = name:gsub("[\\/:*?\"<>|]", "")
+
+  -- Trim leading/trailing whitespace
+  name = name:trim()
+
+  -- Replace remaining spaces with underscores
+  name = name:gsub("%s+", "_")
+
+  -- Remove trailing dots (Windows restriction)
+  name = name:gsub("%.+$", "")
+
+  -- Prevent empty result
+  if name == "" then name = "untitled" end
+
+  -- Windows reserved names
+  local reserved = {
+    CON = true,
+    PRN = true,
+    AUX = true,
+    NUL = true,
+    COM1 = true,
+    COM2 = true,
+    COM3 = true,
+    COM4 = true,
+    COM5 = true,
+    COM6 = true,
+    COM7 = true,
+    COM8 = true,
+    COM9 = true,
+    LPT1 = true,
+    LPT2 = true,
+    LPT3 = true,
+    LPT4 = true,
+    LPT5 = true,
+    LPT6 = true,
+    LPT7 = true,
+    LPT8 = true,
+    LPT9 = true
+  }
+
+  local base = name:match("^(.-)%.") or name
+  if reserved[string.upper(base)] then
+    name = "_" .. name
+  end
+
+  return name
 end
 
 --- Whether a point is in a triangle

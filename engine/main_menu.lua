@@ -23,10 +23,10 @@
 ---
 --- @field protected options Dummy.Menu.Options
 --- @field protected onBack fun()|nil
---- @field protected inputs Dummy.MainMenu.Inputs
+--- @field protected max_displayed_options number
+--- @field protected title_text Dummy.Text
+--- @field protected control_inputs Dummy.MainMenu.Inputs
 local MainMenu = Class("Dummy.MainMenu")
-
-local MAX_DISPLAYED_OPTIONS = 4
 
 --- Select a menu option
 --- @param index number options index
@@ -48,15 +48,15 @@ function MainMenu:select(index, silent)
     menu_item.text:setColor(color, color, 0)
   end
 
+  local max_options = self:getMaxDisplayedOptions()
   for i, option in ipairs(self.options) do
-    local visible = math.floor((self.selected_index - 1) / MAX_DISPLAYED_OPTIONS) ==
-        math.floor((i - 1) / MAX_DISPLAYED_OPTIONS)
+    local visible = math.floor((self.selected_index - 1) / max_options) == math.floor((i - 1) / max_options)
     option.text:setVisible(visible)
   end
 
-  local page = math.floor((self.selected_index - 1) / MAX_DISPLAYED_OPTIONS) + 1
+  local page = math.floor((self.selected_index - 1) / max_options) + 1
   self.arrow_up:setVisible(page > 1)
-  self.arrow_down:setVisible(page < math.ceil(#self.options / MAX_DISPLAYED_OPTIONS))
+  self.arrow_down:setVisible(page < math.ceil(#self.options / max_options))
 
   if not silent then
     Assets.playSound("menu_move")
@@ -65,10 +65,13 @@ end
 
 --- Shows the menu
 function MainMenu:show()
+  local max_options = self:getMaxDisplayedOptions()
   for i, option in ipairs(self.options) do
-    option.text:setVisible((i - 1) < MAX_DISPLAYED_OPTIONS)
+    option.text:setVisible((i - 1) < max_options)
     option.text:setText(option.text:getText(), true)
   end
+
+  self.title_text:setVisible(true)
 
   self:select(self.selected_index, true)
 end
@@ -79,8 +82,22 @@ function MainMenu:hide()
     option.text:setVisible(false)
   end
 
+  self.title_text:setVisible(false)
+
   self.arrow_up:setVisible(false)
   self.arrow_down:setVisible(false)
+end
+
+--- Gets the menu title
+--- @return Dummy.Text.Text
+function MainMenu:getTitle()
+  return self.title_text:getText()
+end
+
+--- Sets the menu title
+--- @param title Dummy.Text.Text
+function MainMenu:setTitle(title)
+  self.title_text:setText(title)
 end
 
 --- Sets the menu options
@@ -120,10 +137,24 @@ function MainMenu:getOptionById(id)
   end
 end
 
+--- Gets the maximum number of displayed options
+--- @return number
+function MainMenu:getMaxDisplayedOptions()
+  return self.max_displayed_options
+end
+
+--- Sets the maximum number of displayed options
+--- @param max number
+function MainMenu:setMaxDisplayedOptions(max)
+  self.max_displayed_options = max
+
+  self:init()
+end
+
 --- Gets the control inputs
 --- @return Dummy.MainMenu.Inputs
 function MainMenu:getControlInputs()
-  return self.inputs
+  return self.control_inputs
 end
 
 --- Sets the control inputs
@@ -132,33 +163,40 @@ end
 --- @param confirm? string|string[]
 --- @param cancel? string|string[]
 function MainMenu:setControlInputs(next, previous, confirm, cancel)
-  self.inputs = {
-    next = Utils.getOrDefault(next, Input.Down),
-    previous = Utils.getOrDefault(previous, Input.Up),
-    confirm = Utils.getOrDefault(confirm, Input.Confirm),
-    cancel = Utils.getOrDefault(cancel, Input.Cancel)
-  }
+  if next ~= nil then
+    self.control_inputs.next = next
+  end
+  if previous ~= nil then
+    self.control_inputs.previous = previous
+  end
+  if confirm ~= nil then
+    self.control_inputs.confirm = confirm
+  end
+  if cancel ~= nil then
+    self.control_inputs.cancel = cancel
+  end
 end
 
 --- Initializes the menu options
 function MainMenu:init()
+  local max_options = self:getMaxDisplayedOptions()
   for i, menu_item in ipairs(self.options) do
     if menu_item.text ~= nil then
       local is_selected = i == self.selected_index and (menu_item.action ~= nil or menu_item.menu ~= nil)
       local color = menu_item.disabled == true and 0.5 or 1
       menu_item.text:setColor(color, color, is_selected and 0 or color)
-      menu_item.text:setPosition(320, 260 + ((i - 1) % MAX_DISPLAYED_OPTIONS * 40))
+      menu_item.text:setPosition(320, 230 + ((i - 1) % max_options * 40))
       menu_item.text:setVisible(false)
     end
   end
 
   -- pagination
   self.arrow_up = Text:new("<")
-  self.arrow_up:setPosition(320, 220)
+  self.arrow_up:setPosition(320, 200)
   self.arrow_up:setVisible(false)
   self.arrow_up:setAngle(90)
   self.arrow_down = Text:new(">")
-  self.arrow_down:setPosition(320, 260 + MAX_DISPLAYED_OPTIONS * 40)
+  self.arrow_down:setPosition(320, 230 + max_options * 40)
   self.arrow_down:setAngle(90)
   self.arrow_down:setVisible(false)
 end
@@ -166,19 +204,22 @@ end
 --- Updates the menu, called on every game update
 function MainMenu:update()
   local inputs = self:getControlInputs()
-  if Input.isPressed(inputs.previous) then
-    if self.selected_index <= 1 then
-      self:select(#self.options)
-    else
-      self:select(self.selected_index - 1)
+  if #self.options > 1 then
+    if Input.isPressed(inputs.previous) then
+      if self.selected_index <= 1 then
+        self:select(#self.options)
+      else
+        self:select(self.selected_index - 1)
+      end
+    elseif Input.isPressed(inputs.next) then
+      if self.selected_index >= #self.options then
+        self:select(1)
+      else
+        self:select(self.selected_index + 1)
+      end
     end
-  elseif Input.isPressed(inputs.next) then
-    if self.selected_index >= #self.options then
-      self:select(1)
-    else
-      self:select(self.selected_index + 1)
-    end
-  elseif Input.isPressed(inputs.confirm) then
+  end
+  if Input.isPressed(inputs.confirm) then
     local selected_menu_item = self:getSelectedOption()
     if type(selected_menu_item.action) == "function" then
       if selected_menu_item.disabled == true then
@@ -199,14 +240,24 @@ end
 
 --- Creates a menu
 --- @param options Dummy.Menu.Options
+--- @param title Dummy.Text.Text
 --- @param onBack? fun()
-function MainMenu:new(options, onBack)
+function MainMenu:new(options, title, onBack)
   self = Class:new(MainMenu)
-  self.options = Utils.getOrDefault(options, {})
-  self.selected_index = 1
-  self.onBack = onBack
 
-  self.inputs = {
+  self.options = Utils.getOrDefault(options, {})
+  self.onBack = onBack
+  self.max_displayed_options = 5
+  self.selected_index = 1
+
+  self.title_text = Text:new(title)
+  self.title_text:setPosition(320, 160)
+  self.title_text:setWrapLimit(600)
+  self.title_text:setAlign("center")
+  self.title_text:setScale(1.25)
+  self.title_text:setVisible(false)
+
+  self.control_inputs = {
     next = Input.Down,
     previous = Input.Up,
     confirm = Input.Confirm,

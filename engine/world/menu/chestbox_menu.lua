@@ -18,6 +18,10 @@ local ChestboxMenu = Class(Drawable, "Dummy.ChestboxMenu")
 ChestboxMenu.MENU_X = 11
 ChestboxMenu.MENU_Y = 11
 
+ChestboxMenu.STORAGE_MAX = 10
+
+-- TODO: fix overflow items
+
 --- Creates a chestbox menu
 --- @return Dummy.ChestboxMenu
 function ChestboxMenu:new()
@@ -63,13 +67,15 @@ function ChestboxMenu:new()
     love.graphics.line(322, 94, 322, 394)
     love.graphics.line(324, 94, 324, 394)
 
-    if #Player.getItems() < 8 then
-      love.graphics.setColor(1, 0, 0)
-      for i = 8, #Player.getItems() + 1, -1 do
+    love.graphics.setColor(1, 0, 0)
+    if #Player.getItems() < Player.getMaxItems() then
+      for i = Player.getMaxItems(), #Player.getItems() + 1, -1 do
         local y = 94 + 32 * (i - 1)
         love.graphics.line(80, y, 260, y)
       end
-      for i = 10, #self.list + 1, -1 do
+    end
+    if #self.list < ChestboxMenu.STORAGE_MAX then
+      for i = ChestboxMenu.STORAGE_MAX, #self.list + 1, -1 do
         local y = 94 + 32 * (i - 1)
         love.graphics.line(382, y, 562, y)
       end
@@ -77,7 +83,7 @@ function ChestboxMenu:new()
   end
 
   self.player_items_texts = {}
-  for i = 1, 8 do
+  for i = 1, Player.getMaxItems() do
     local text = Text:new()
     text:setOrigin(0, 0.5)
     local y = 33 + 16 * (i - 1)
@@ -90,7 +96,7 @@ function ChestboxMenu:new()
   end
 
   self.box_items_texts = {}
-  for i = 1, 10 do
+  for i = 1, ChestboxMenu.STORAGE_MAX do
     local text = Text:new()
     text:setOrigin(0, 0.5)
     local y = 33 + 16 * (i - 1)
@@ -125,7 +131,7 @@ end
 --- Updates the chestbox menu's texts
 function ChestboxMenu:updateTexts()
   local player_items = Player.getItems()
-  for i = 1, 8 do
+  for i = 1, Player.getMaxItems() do
     local item = player_items[i]
     if item ~= nil then
       self.player_items_texts[i]:setText(item:getName())
@@ -136,7 +142,7 @@ function ChestboxMenu:updateTexts()
   end
 
   local box_items = self.list
-  for i = 1, 10 do
+  for i = 1, ChestboxMenu.STORAGE_MAX do
     local item = box_items[i]
     if item ~= nil then
       self.box_items_texts[i]:setText(item:getName())
@@ -152,8 +158,8 @@ end
 --- @param delta_y integer
 function ChestboxMenu:changeCursor(delta_x, delta_y)
   self.cursor_j = math.clamp(self.cursor_j + delta_y, 0, 1)
-  local max_i = 7
-  if self.cursor_j == 1 then max_i = 9 end
+  local max_i = Player.getMaxItems() - 1
+  if self.cursor_j == 1 then max_i = ChestboxMenu.STORAGE_MAX - 1 end
   self.cursor_i = math.clamp(self.cursor_i + delta_x, 0, max_i)
 
   self:updateHeartPosition()
@@ -162,9 +168,13 @@ end
 --- Swaps the item in the chestbox
 function ChestboxMenu:swapItem()
   if self.cursor_j == 0 then
+    if #self.list >= ChestboxMenu.STORAGE_MAX then return end
+
     self:onAdd(Player.getItems()[self.cursor_i + 1])
     Player.removeItem(self.cursor_i + 1)
   elseif self.cursor_j == 1 then
+    if #Player.getItems() >= Player.getMaxItems() then return end
+
     Player.addItem(self.list[self.cursor_i + 1])
     self:onRemove(self.cursor_i + 1)
   end

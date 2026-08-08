@@ -36,7 +36,7 @@ function Class:new(c, p)
   local o = {}
   ---@diagnostic disable-next-line: inject-field
   c.__address = tostring(o):sub(8)
-  --- @diagnostic disable-next-line: undefined-field
+  ---@diagnostic disable-next-line: undefined-field
   if c.__extend ~= nil then o = c.__extend:new(table.unpack(p or {})) end
   for k, v in pairs(c) do o[k] = v end
   setmetatable(o, {

@@ -3,6 +3,10 @@
 --- @field protected open boolean
 local RuinsDoorObject = Class(Object, "WorldExample.Object.RuinsDoor")
 
+RuinsDoorObject.ALLOW_EDITOR = true
+
+RuinsDoorObject.EDITOR_SPRITE = "world/object/ruins_door"
+
 --- Creates a ruins door
 --- @param x number
 --- @param y number
@@ -13,9 +17,13 @@ function RuinsDoorObject:new(x, y)
   self:setStatic(true)
   self:setCollisionEnabled(true)
   self:setCollisionSolid(true)
-  self:setOrigin(0, 0)
   self:setPosition(x, y)
   self:setHitbox(0, 40, 40, 20)
+
+  if WorldExampleMod.flag["dummy_battle"] == 2 then
+    self:remove()
+    return
+  end
 
   return self
 end

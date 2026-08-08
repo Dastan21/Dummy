@@ -76,12 +76,12 @@ function PlayerObject:handleInteration() end
 function PlayerObject:handleCollisions() end
 
 --- Wether the player collides with an object
----@param x number
----@param y number
----@param width number
----@param height number
----@param objects? Dummy.Object[]
----@return boolean, Dummy.Object|nil
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- @param objects? Dummy.Object[]
+--- @return boolean, Dummy.Object|nil
 function PlayerObject:collides(x, y, width, height, objects) end
 
 --- Called when the player collides with a solid object

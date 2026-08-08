@@ -14,7 +14,8 @@ Mask = {}
 function Mask:draw(camera) end
 
 --- Draws to the mask
-function Mask:drawMask() end
+--- @param camera Dummy.Camera
+function Mask:drawMask(camera) end
 
 --- Creates a mask
 --- @return Dummy.Mask

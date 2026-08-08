@@ -1,8 +1,16 @@
+--- @class Dummy.Object.WallSwitch.Data : Dummy.Object.Data
+---
+--- @field switch_id string
+
 --- @class WorldExample.Object.WallSwitch : Dummy.Object
 ---
 --- @field protected id string
 --- @field protected active boolean
 local WallSwitchObject = Class(Object, "WorldExample.Object.WallSwitch")
+
+WallSwitchObject.ALLOW_EDITOR = true
+
+WallSwitchObject.EDITOR_SPRITE = "world/object/wall_switch_1"
 
 --- Creates a wall switch
 --- @param x number
@@ -31,6 +39,25 @@ function WallSwitchObject:new(x, y, id)
   end
 
   return self
+end
+
+--- Initializes the wall switch's arguments before creating it
+--- @param data Dummy.Object.WallSwitch.Data
+function WallSwitchObject.initArgs(data)
+  return data.x, data.y, data.switch_id
+end
+
+--- Gets the wall switch metadata
+--- @return Dummy.Editor.Metadata[]
+function WallSwitchObject.getMetadata()
+  --- @type Dummy.Editor.Metadata[]
+  return {
+    {
+      id = "switch_id",
+      label = "WORLD_OBJECT_WALL_SWITCH_METADATA_ID",
+      type = "string",
+    }
+  }
 end
 
 --- Wether the wall switch is active

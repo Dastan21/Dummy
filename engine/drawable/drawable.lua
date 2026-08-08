@@ -177,6 +177,38 @@ function Drawable:setOrigin(origin_x, origin_y)
   self.origin_y = Utils.getOrDefault(origin_y, origin_x)
 end
 
+--- Gets the drawable's left position
+--- @return number
+function Drawable:getLeft()
+  local x = self:getPosition()
+  local origin_x = self:getOrigin()
+  local scale_x = self:getScale()
+  return x - origin_x * self:getWidth() * scale_x
+end
+
+--- Gets the drawable's right position
+--- @return number
+function Drawable:getRight()
+  local scale_x = self:getScale()
+  return self:getLeft() + self:getWidth() * scale_x
+end
+
+--- Gets the drawable's left position
+--- @return number
+function Drawable:getTop()
+  local _, y = self:getPosition()
+  local _, origin_y = self:getOrigin()
+  local _, scale_y = self:getScale()
+  return y - origin_y * self:getHeight() * scale_y
+end
+
+--- Gets the drawable's right position
+--- @return number
+function Drawable:getBottom()
+  local _, scale_y = self:getScale()
+  return self:getTop() + self:getHeight() * scale_y
+end
+
 --- Gets the drawable's color
 --- @return love.Color
 function Drawable:getColor()
@@ -377,6 +409,8 @@ function Drawable:removeChild(child)
   child.parent = nil
 
   child:updateAbsoluteTransform()
+
+  table.removebyvalue(self.children_to_add, child)
 
   table.insert(self.children_to_remove, child)
 end

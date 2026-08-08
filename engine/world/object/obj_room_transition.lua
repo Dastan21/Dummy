@@ -1,3 +1,12 @@
+Editor = require "editor.editor"
+
+--- @class Dummy.Object.RoomTransition.Data : Dummy.Object.Data
+---
+--- @field room_id string
+--- @field spawn_x number
+--- @field spawn_y number
+--- @field instant boolean
+
 --- @class Dummy.Object.RoomTransition : Dummy.Object
 ---
 --- @field protected room_id string
@@ -6,6 +15,8 @@
 --- @field protected instant boolean
 --- @field protected enabled boolean
 local RoomTransitionObject = Class(Object, "Dummy.Object.RoomTransition")
+
+RoomTransitionObject.ALLOW_EDITOR = true
 
 --- Creates a room transition
 --- @param room_id string
@@ -35,6 +46,76 @@ function RoomTransitionObject:new(room_id, spawn_x, spawn_y, x, y, width, height
   self:setAlpha(0)
 
   return self
+end
+
+--- Initializes the room transition's arguments before creating it
+--- @param data Dummy.Object.RoomTransition.Data
+function RoomTransitionObject.initArgs(data)
+  return data.room_id, data.spawn_x, data.spawn_y, data.x, data.y, data.width, data.height, data.instant
+end
+
+--- Gets the room transition metadata
+--- @return Dummy.Editor.Metadata[]
+function RoomTransitionObject.getMetadata()
+  --- @type Dummy.Editor.Select.Option[]
+  local room_options = {}
+  for _, room in ipairs(love.filesystem.getDirectoryItems("mods/" .. Editor.getModId() .. "/scripts/world/room")) do
+    if Utils.checkExtension(room, "lua") then
+      local room_id = Utils.getFilenameWithoutExt(room)
+      --- @type Dummy.Editor.Select.Option
+      local option = {
+        value = room_id,
+        label = room_id
+      }
+      table.insert(room_options, option)
+    end
+  end
+
+  --- @type Dummy.Editor.Metadata[]
+  return {
+    {
+      id = "room_id",
+      label = "WORLD_OBJECT_ROOM_TRANSITION_METADATA_ROOM_ID",
+      type = "string",
+      options = room_options,
+    },
+    {
+      id = "spawn_x",
+      label = "WORLD_OBJECT_ROOM_TRANSITION_METADATA_SPAWN_X",
+      type = "integer",
+      default = 160,
+    },
+    {
+      id = "spawn_y",
+      label = "WORLD_OBJECT_ROOM_TRANSITION_METADATA_SPAWN_Y",
+      type = "integer",
+      default = 120,
+    },
+    {
+      id = "width",
+      label = "WORLD_OBJECT_ROOM_TRANSITION_METADATA_WIDTH",
+      type = "integer",
+      default = 20,
+      validate = function(value)
+        return value > 0
+      end
+    },
+    {
+      id = "height",
+      label = "WORLD_OBJECT_ROOM_TRANSITION_METADATA_HEIGHT",
+      type = "integer",
+      default = 20,
+      validate = function(value)
+        return value > 0
+      end
+    },
+    {
+      id = "instant",
+      label = "WORLD_OBJECT_ROOM_TRANSITION_METADATA_INSTANT",
+      type = "boolean",
+      default = false
+    }
+  }
 end
 
 --- Gets wether the room transition is enabled
@@ -88,10 +169,17 @@ function RoomTransitionObject:drawDebug(camera)
   local x2, y2 = absolute_transform:transformPoint(x + hitbox_width, y)
   local x3, y3 = absolute_transform:transformPoint(x + hitbox_width, y + hitbox_height)
   local x4, y4 = absolute_transform:transformPoint(x, y + hitbox_height)
-  love.graphics.setColor(1, 0, 1, 1)
+  love.graphics.setColor(1, 0, 1)
   love.graphics.polygon("line", x1 + 0.5, y1 + 0.5, x2 - 0.5, y2 + 0.5, x3 - 0.5, y3 - 0.5, x4 + 0.5, y4 - 0.5)
 
   love.graphics.pop()
+end
+
+--- Draws the room transition for the editor
+--- @param data Dummy.Object.Solid.Data
+function RoomTransitionObject.drawEditor(data)
+  love.graphics.setColor(1, 0, 1)
+  love.graphics.rectangle("line", data.x + 0.5, data.y + 0.5, data.width - 1, data.height - 1)
 end
 
 return RoomTransitionObject

@@ -15,6 +15,9 @@ local MARGIN_INFO = 5
 --- Loads the error scene
 function ErrorScene.load(err)
   ErrorScene.camera = GameCamera:new()
+
+  Cursor.setVisible(false)
+
   ErrorScene.traceback = Lang.translate("ERROR_LABEL") .. " " .. err
 
   local main_text_font = Assets.getFont("main")

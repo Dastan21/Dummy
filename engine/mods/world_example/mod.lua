@@ -20,6 +20,7 @@
 --- @field flag table<string, number>
 --- @field save_data WorldExampleMod.SaveData
 --- @field portrait WorldExampleMod.Portrait
+--- @field ruins3_enter_count integer
 WorldExampleMod = Mod:new({
   name = "World Example",            -- displayed name, in the mods list
   title = "WORLD_EXAMPLE_MOD_TITLE", -- window title
@@ -42,13 +43,7 @@ function WorldExampleMod:load()
   WorldExampleMod.portrait = modRequire("scripts.portrait")
   WorldExampleMod.portrait.load()
 
-  -- add a custom shop
-  World.addShop("dummy_shop", modRequire("scripts.world.shop.dummy_shop"))
-
-  -- add custom rooms
-  World.addRoom("ruins1", modRequire("scripts.world.room.ruins1"))
-  World.addRoom("ruins2", modRequire("scripts.world.room.ruins2"))
-  World.addRoom("ruins3", modRequire("scripts.world.room.ruins3"))
+  WorldExampleMod.ruins3_enter_count = 0
 
   -- loads the room
   local save_data = Utils.getOrDefault(self:getConfig().savepoint, {}) --[[@as WorldExampleMod.SaveData]]

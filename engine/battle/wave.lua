@@ -43,7 +43,7 @@ end
 --- Spawns a bullet
 --- @param bullet Dummy.Battle.Bullet the bullet to spawn
 function Wave:spawnBullet(bullet)
-  --- @diagnostic disable-next-line: invisible
+  ---@diagnostic disable-next-line: invisible
   bullet.wave = self
   self.bullets[bullet] = true
 
