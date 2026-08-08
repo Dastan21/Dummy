@@ -42,8 +42,10 @@ end
 --- Prepares the shop items
 function DummyShop:prepareItems()
   local MonsterCandy = require("items.monster_candy")
+  local ToyKnife = require("items.toy_knife")
   -- amount `-1` for infinite stocks
   self:addItem(MonsterCandy, -1)
+  self:addItem(ToyKnife, -1)
 
   local BlanketItem = require("items.blanket")
   local blanket_amount = 1

@@ -953,6 +953,13 @@ function Battle.startAttacking()
   Battle.target_sprite:setScale(1)
 
   Battle.is_attacking = false
+  -- Determine if the standard attack function can continue, otherwise run a weapon's custom attack
+  local override = false
+  if type(Player.getWeapon().GetAttackEffect) == "function" then
+    override = Player.getWeapon():GetAttackEffect()
+  end
+
+  if override then return end
   local attack_speed = 11
 
   Battle.target_bar_sprite:setPosition(22, 320)
