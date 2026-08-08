@@ -357,7 +357,7 @@ end
 
 --- Draws the camera's bounding box for debugging
 function Camera:drawDebug()
-  if not Debug.shouldDisplayHitbox() or not self:isActive() then return end
+  if not Debug.shouldShowDebug() or not self:isActive() then return end
 
   love.graphics.setColor(1, 1, 0)
   local width, height = self:getDimensions()

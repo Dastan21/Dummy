@@ -323,7 +323,7 @@ end
 --- Draws the object's hitbox for debugging
 --- @param camera Dummy.Camera
 function Object:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() then return end
+  if not Debug.shouldShowDebug() then return end
 
   local width, height = self:getWidth(), self:getHeight()
   local hitbox_left, hitbox_top, hitbox_width, hitbox_height = self:getHitbox()

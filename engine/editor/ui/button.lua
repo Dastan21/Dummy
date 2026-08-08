@@ -395,7 +395,7 @@ end
 --- Draws the button's bounding box for debugging
 --- @param camera Dummy.Camera
 function Button:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() or not self:isVisibleOnScreen() then return end
+  if not Debug.shouldShowDebug() or not self:isVisibleOnScreen() then return end
 
   love.graphics.push()
   love.graphics.origin()

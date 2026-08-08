@@ -461,7 +461,7 @@ end
 --- Draws the player's hitbox for debugging
 --- @param camera Dummy.Camera
 function PlayerObject:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() then return end
+  if not Debug.shouldShowDebug() then return end
 
   NPCObject.drawDebug(self, camera)
 
@@ -495,7 +495,7 @@ function PlayerObject:update(dt)
   if Debug.isDebugMode() then
     local x, y = self:getPosition()
     self.debug_text:setPosition(x, y - self:getHeight() / 2)
-    self.debug_text:setVisible(Debug.shouldDisplayHitbox())
+    self.debug_text:setVisible(Debug.shouldShowDebug())
     local debug_text = ""
     debug_text = debug_text .. string.format("%s, %s\n", math.floor(x), math.floor(y))
     self.debug_text:setText(debug_text)

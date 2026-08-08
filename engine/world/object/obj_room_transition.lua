@@ -148,7 +148,7 @@ end
 --- Draws the room transition's hitbox for debugging
 --- @param camera Dummy.Camera
 function RoomTransitionObject:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() or not self:isCollisionEnabled() then return end
+  if not Debug.shouldShowDebug() or not self:isCollisionEnabled() then return end
 
   local hitbox_left, hitbox_top, hitbox_width, hitbox_height = self:getHitbox()
   if hitbox_width == 0 and hitbox_height == 0 then return end

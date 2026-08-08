@@ -48,7 +48,6 @@ end
 --- Initializes the object add modal
 function ObjectAddModal:initObjectAddWindow()
   self:setVisible(false)
-  self:setLayer(Constants.LAYERS.WINDOW + 1)
 
   self:setWidth(ObjectAddModal.WINDOW_WIDTH)
   self:setHeight(ObjectAddModal.WINDOW_HEIGHT)

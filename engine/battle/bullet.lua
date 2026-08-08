@@ -70,7 +70,7 @@ end
 --- Draws for debugging
 --- @param camera Dummy.Camera
 function Bullet:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() then return end
+  if not Debug.shouldShowDebug() then return end
 
   Sprite.drawDebug(self, camera)
 

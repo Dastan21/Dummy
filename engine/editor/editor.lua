@@ -60,6 +60,7 @@ local Confirm = require "editor.ui.confirm"
 --- @field protected tileset Dummy.Tileset
 --- @field protected grip_pos [number, number]
 --- @field protected prev_map_pos [number, number]
+--- @field protected actions Dummy.Editor.Action[]
 --- @field protected action_hovered Dummy.Editor.Action
 --- @field protected action_selected string|nil
 --- @field protected cell_hovered [number, number]
@@ -92,6 +93,7 @@ local Confirm = require "editor.ui.confirm"
 --- @field protected render_objects_draw Dummy.Drawable
 --- @field protected object_form Editor.ObjectForm
 --- @field protected missing_image Dummy.Sprite.Image
+--- @field protected keybinds_window Dummy.Editor.KeybindsWindow
 --- @field protected main_controller "keyboard" | "gamepad"
 local Editor = {}
 
@@ -304,6 +306,12 @@ function Editor.initMenu()
       action = Editor.playRoom
     },
     {
+      id = "KEYBINDS",
+      text = "EDITOR_MENU_KEYBINDS",
+      button = Button:new(),
+      action = Editor.openKeybindsMenu
+    },
+    {
       id = "QUIT",
       text = "EDITOR_MENU_QUIT",
       button = Button:new(),
@@ -385,6 +393,21 @@ function Editor.initMenu()
   end
 
   function Editor.room_form.onClose()
+    Editor.selectAction("pointer")
+    Editor.toggleEditorButtons(true)
+
+    Cursor.setIcon("default")
+    Editor.updateMainController()
+    if Editor.main_controller == "gamepad" then
+      Editor.centerCursor()
+    end
+  end
+
+  -- keybinds window
+  local KeybindsWindow = require "editor.ui.keybinds_window"
+  Editor.keybinds_window = KeybindsWindow:new()
+
+  function Editor.keybinds_window.onClose()
     Editor.selectAction("pointer")
     Editor.toggleEditorButtons(true)
 
@@ -951,6 +974,20 @@ function Editor.openRoomForm()
   Editor.menu_btn:setDisabled(true)
 end
 
+--- Opens the keybinds menu
+function Editor.openKeybindsMenu()
+  Editor.updateMainController()
+  if Editor.main_controller == "gamepad" then
+    Cursor.setPosition(320, 240)
+  end
+
+  Editor.selectAction("pointer")
+  Editor.toggleMenu(false)
+  Editor.toggleEditorButtons(false)
+  Editor.menu_btn:setDisabled(true)
+  Editor.keybinds_window:setVisible(true)
+end
+
 --- Opens the object add modal
 function Editor.openObjectAddModal()
   Editor.updateMainController()
@@ -1186,7 +1223,7 @@ function Editor.setHoveredCell(x, y)
   Editor.cell_hovered_text:setText(x .. "," .. y)
 end
 
---- Snaps a value to the grid
+--- Snaps a value to the map
 --- @param v number
 --- @return number
 function Editor.snapToGrid(v)
@@ -1519,6 +1556,7 @@ end
 function Editor.canUseEditor()
   if Editor.menu_window:isVisible() then return false end
   if Editor.confirm_modal:isVisible() then return false end
+  if Editor.keybinds_window:isVisible() then return false end
   if Editor.room_form:isOpen() then return false end
   if Editor.object_add_modal:isVisible() then return false end
   if Editor.object_form:isOpen() then return false end
@@ -1531,6 +1569,7 @@ end
 --- @return boolean
 function Editor.canToggleMenu()
   return not Editor.confirm_modal:isVisible() and
+      not Editor.keybinds_window:isVisible() and
       not Editor.object_add_modal:isVisible() and
       not Editor.object_form:isVisible()
 end

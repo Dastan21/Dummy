@@ -65,7 +65,7 @@ function Room:initContainer()
   end
 
   function self.objects_container.drawDebug(_, camera)
-    if not Debug.shouldDisplayHitbox() then return end
+    if not Debug.shouldShowDebug() then return end
 
     love.graphics.push()
     love.graphics.origin()

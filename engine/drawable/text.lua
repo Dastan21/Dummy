@@ -424,7 +424,7 @@ end
 --- Draws the text's bounding box for debugging
 --- @param camera Dummy.Camera
 function Text:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() or not self:isVisibleOnScreen() then return end
+  if not Debug.shouldShowDebug() or not self:isVisibleOnScreen() then return end
 
   local width, height = self:getWidth(), self:getHeight()
   if width == 0 and height == 0 then return end
