@@ -18,7 +18,6 @@ function NPCObject:new(id)
   self:setCollisionEnabled(true)
   self:setCollisionSolid(true)
   self:setCanInteract(true)
-  self:setOrigin(0, 0)
 
   self.id = id
   self.moving = false

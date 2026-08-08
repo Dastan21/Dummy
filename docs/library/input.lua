@@ -18,12 +18,19 @@
 ---
 --- @field protected keys_pressed table<string, number>
 --- @field protected keys_released table<string, number>
+--- @field protected gamepad_axis table<string, number>
+--- @field protected gamepad_axis_deadzone number
+--- @field protected gamepad_trigger_treshold number
+--- @field protected text_input_callbacks table<fun(text: string), boolean>
+--- @field protected mouse_focus boolean
 Input = {}
 
---- Flattens a list of inputs
---- @param ... string|string[]
---- @return string[]
-function Input.group(...) end
+--- Loads the input
+function Input.load() end
+
+--- Clears a key
+--- @param key string
+function Input.clear(key) end
 
 --- Wether a key is down, using a predicate function
 --- @param keys string|string[]
@@ -51,9 +58,55 @@ function Input.isPressed(keybind) end
 --- @return boolean
 function Input.isReleased(keybind) end
 
---- Loads the input
-function Input.load() end
+--- Gets the pointer position
+--- @return number, number
+function Input.getPointerPosition() end
 
---- Updates the input, called on every game update
+--- Sets the pointer position
+--- @param x number
+--- @param y number
+function Input.setPointerPosition(x, y) end
+
+--- Wether the pointer is in the window
+function Input.isPointerInWindow() end
+
+--- Gets the gamepad axis value
+--- @param axis string
+--- @return number
+function Input.getGamepadAxis(axis) end
+
+--- Gets the gamepad axis deadzone
+--- @return number
+function Input.getGamepadDeadzone() end
+
+--- Sets the gamepad axis deadzone
+--- @param deadzone number
+function Input.setGamepadDeadzone(deadzone) end
+
+--- Gets the gamepad axis treshold
+--- @return number
+function Input.getTriggerTreshold() end
+
+--- Sets the gamepad axis treshold
+--- @param treshold number
+function Input.setTriggerTreshold(treshold) end
+
+--- Gets the key pressed
+--- @return string|nil
+function Input.getKeyPressed() end
+
+--- Gets the key released
+--- @return string|nil
+function Input.getKeyReleased() end
+
+--- Adds a text input listener
+--- @param callback fun(text: string) the callback to add
+function Input.addTextInputListener(callback) end
+
+--- Removes a text input listener
+--- @param callback fun(text: string) the callback to remove
+function Input.removeTextInputListener(callback) end
+
+--- Updates the input
 function Input.update() end
 

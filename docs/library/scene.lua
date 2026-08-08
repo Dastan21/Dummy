@@ -43,6 +43,7 @@ Scene = {}
 --- @field isPersistent? fun(): boolean Wether the world scene is persistent
 --- @field onPause? fun() Called when the scene is paused
 --- @field onResume? fun() Called when the scene is resumed
+--- @field canQuit? fun(): boolean? Wether the game can quit
 
 --- Loads the scene manager
 function Scene.load() end
@@ -60,6 +61,10 @@ function Scene.updateQuitting(dt) end
 
 --- Reloads the current scene
 function Scene.reload() end
+
+--- Reloads the current scene with data
+--- @param ... any data to pass to the scene
+function Scene.reloadWithData(...) end
 
 --- Fully reloads the engine
 function Scene.fullReload() end
@@ -159,6 +164,10 @@ function Scene.sortCameras() end
 --- Gets the timer of the current scene
 --- @return table
 function Scene.getTimer() end
+
+--- Wether the game can quit
+--- @return boolean
+function Scene.canQuit() end
 
 --- Keeps only drawables that are persistent
 --- @generic T : Dummy.Drawable|Dummy.Camera

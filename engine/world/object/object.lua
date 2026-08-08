@@ -1,6 +1,21 @@
 --- @alias Dummy.Hitbox [ number, number, number, number ]
 --- @alias Dummy.Object.Facing "down" | "right" | "up" | "left"
 
+--- @class Dummy.Object.Data
+---
+--- @field id integer
+--- @field type string
+--- @field x number
+--- @field y number
+--- @field width number
+--- @field height number
+--- @field mod_id? string
+
+--- @class Dummy.Object.ExtraData
+---
+--- @field class Dummy.Object
+--- @field [string] unknown
+
 --- @class Dummy.Object.CollisionData
 ---
 --- @field collider Dummy.Object
@@ -19,6 +34,8 @@
 --- @field protected can_interact boolean
 --- @field protected depth number
 --- @field protected static boolean
+--- @field EDITOR_SPRITE string|nil
+--- @field ALLOW_EDITOR boolean|nil
 local Object = Class(Sprite, "Dummy.Object")
 
 --- Creates an object
@@ -26,11 +43,13 @@ function Object:new()
   self = Class:new(Object)
 
   self.collision_enabled = false
-  self.hitbox = { 0, 0, 0, 0 }
+  self.collision_solid = false
   self.can_interact = false
+  self.hitbox = { 0, 0, 0, 0 }
   self.depth = 0
   self.static = false
 
+  self:setOrigin(0, 0)
   self:setLayer(Constants.LAYERS.WORLD_OBJECT)
 
   local room = World.getCurrentRoom()
@@ -40,6 +59,26 @@ function Object:new()
 
   return self
 end
+
+--- Initializes the object's arguments before creating it
+---
+--- Note: This function is called for objects provided by the editor
+--- @param data Dummy.Object.Data
+function Object.initArgs(data)
+  return data.x, data.y, data.width, data.height
+end
+
+--- Gets the object's metadata
+--- @return Dummy.Editor.Metadata[]
+function Object.getMetadata()
+  return {}
+end
+
+--- Called when the object form is confirmed in the editor
+---
+--- Note: Useful for modifying the object's data before it is added to the room
+--- @param data Dummy.Object.Data
+function Object.onFormConfirm(data) end
 
 --- Updates the object's transform
 function Object:updateTransform()
@@ -254,6 +293,18 @@ function Object:onCollision(other) end
 --- Called when the object is interacted by the player
 function Object:onInteract() end
 
+--- Removes the object from the current scene
+function Object:remove()
+  if self:isRemoved() then return end
+
+  local room = World.getCurrentRoom()
+  if room ~= nil then
+    room:removeObject(self)
+  end
+
+  Sprite.remove(self)
+end
+
 --- Updates the object's depth
 function Object:updateDepth()
   if self:isStatic() then return end
@@ -272,34 +323,35 @@ end
 --- Draws the object's hitbox for debugging
 --- @param camera Dummy.Camera
 function Object:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() then return end
+  if not Debug.shouldShowDebug() then return end
 
+  local width, height = self:getWidth(), self:getHeight()
   local hitbox_left, hitbox_top, hitbox_width, hitbox_height = self:getHitbox()
-  if hitbox_width == 0 and hitbox_height == 0 then return end
-
-  local absolute_transform = self:getAbsoluteTransform()
+  if width == 0 and height == 0 and hitbox_width == 0 and hitbox_height == 0 then return end
 
   love.graphics.push()
   love.graphics.origin()
 
   camera:apply()
 
-  -- draw outline
-  love.graphics.setColor(0, 0, 1)
-  love.graphics.setLineWidth(1)
-  love.graphics.setLineStyle("rough")
-  local bb = self:getBoundingBox()
-  love.graphics.polygon("line",
-    bb[1] + 0.5, bb[2] + 0.5,
-    bb[3] - 0.5, bb[4] + 0.5,
-    bb[5] - 0.5, bb[6] - 0.5,
-    bb[7] + 0.5, bb[8] - 0.5
-  )
+  if width ~= 0 or height ~= 0 then
+    -- draw outline
+    love.graphics.setColor(0, 0, 1)
+    love.graphics.setLineWidth(1)
+    love.graphics.setLineStyle("rough")
+    local bb = self:getBoundingBox()
+    love.graphics.polygon("line",
+      bb[1] + 0.5, bb[2] + 0.5,
+      bb[3] - 0.5, bb[4] + 0.5,
+      bb[5] - 0.5, bb[6] - 0.5,
+      bb[7] + 0.5, bb[8] - 0.5
+    )
+  end
 
-  if self:isCollisionEnabled() or self:canInteract() then
+  if (hitbox_width ~= 0 or hitbox_height ~= 0) and (self:isCollisionEnabled() or self:canInteract()) then
     -- draw hitbox
+    local absolute_transform = self:getAbsoluteTransform()
     local origin_x, origin_y = self:getOrigin()
-    local width, height = self:getWidth(), self:getHeight()
     local x = hitbox_left - origin_x * width
     local y = hitbox_top - origin_y * height
     local x1, y1 = absolute_transform:transformPoint(x, y)
@@ -311,6 +363,13 @@ function Object:drawDebug(camera)
   end
 
   love.graphics.pop()
+end
+
+--- Draws the solid object for the editor
+--- @param data Dummy.Object.Data
+function Object.drawEditor(data)
+  love.graphics.setColor(1, 1, 1)
+  love.graphics.rectangle("line", data.x + 0.5, data.y + 0.5, data.width - 1, data.height - 1)
 end
 
 --- Updates the object, called on every game update

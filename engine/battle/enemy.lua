@@ -148,7 +148,7 @@ function Enemy:addACT(act, ...)
   local acts = { act, ... }
   if #act >= 1 then acts = act end
   for _, act in ipairs(acts) do
-    --- @diagnostic disable-next-line: invisible
+    ---@diagnostic disable-next-line: invisible
     act.enemy = self
     table.insert(self.acts, act)
   end

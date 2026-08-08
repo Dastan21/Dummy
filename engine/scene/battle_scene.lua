@@ -15,6 +15,8 @@ local BattleScene = {}
 function BattleScene.load(EncounterClass, previous_scene)
   BattleScene.camera = GameCamera:new()
 
+  Cursor.setVisible(false)
+
   BattleScene.previous_scene = Utils.getOrDefault(previous_scene, "MAIN_MENU")
 
   Arena.load()

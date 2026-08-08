@@ -1,7 +1,7 @@
 --- @class ExampleMod.Enemy.Dummy : Dummy.Battle.Enemy
 local DummyEnemy = Class(Enemy, "ExampleMod.Enemy.Dummy")
 
---- Initializes the ExampleModDummyMonster
+--- Initializes the Dummy
 function DummyEnemy:new()
   -- create the base enemy
   self = Class:new(DummyEnemy, { "WORLD_EXAMPLE_MOD_ENCOUNTER_DUMMY_NAME", "dummy" })
@@ -11,7 +11,7 @@ function DummyEnemy:new()
   self:setHP(15)
   -- check text below the stats text
   self:setCheck("WORLD_EXAMPLE_MOD_ENCOUNTER_CHECK_TEXT")
-  -- position of the ExampleModDummyMonster, strike animation and damage bar are positioned relative to this
+  -- position of the Dummy, strike animation and damage bar are positioned relative to this
   self:setPosition(260, 240)
 
   -- add ACTs
@@ -26,7 +26,7 @@ end
 function DummyEnemy:onDialogue()
   -- play the dialogue bubble
   local dialogue = Battle.playDialogueBubble("right", "WORLD_EXAMPLE_MOD_ENCOUNTER_BUBBLE")
-  -- position it to the right of the ExampleModDummyMonster
+  -- position it to the right of the Dummy
   local x, y = self:getPosition()
   local dialogue_x = x + self:getWidth() / 2
   local dialogue_y = y - self:getHeight() / 2
@@ -34,11 +34,7 @@ function DummyEnemy:onDialogue()
 end
 
 --- Called when trying to spare an enemy
-function DummyEnemy:onSpared(spared)
-  if spared then
-    WorldExampleMod.flag["dummy_battle"] = 2;
-  end
-end
+function DummyEnemy:onSpared(spared) end
 
 --- Called before the enemy is damaged
 function DummyEnemy:onBeforeDamage(damage) end
@@ -54,9 +50,7 @@ function DummyEnemy:onAfterDamage()
 end
 
 --- Called when the enemy is killed
-function DummyEnemy:onKilled()
-  WorldExampleMod.flag["dummy_battle"] = 1;
-end
+function DummyEnemy:onKilled() end
 
 --- Updates the enemy, called on every game update
 --- @param dt number

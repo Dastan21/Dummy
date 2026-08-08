@@ -11,11 +11,13 @@
 --- @field protected world_camera Dummy.WorldCamera
 --- @field protected ui_camera Dummy.GameCamera
 --- @field protected mod Dummy.Mod
+--- @field protected persistent boolean
 WorldScene = {}
 
 --- Loads the world scene
 --- @param mod Dummy.Mod
-function WorldScene.load(mod) end
+--- @param room_id? string
+function WorldScene.load(mod, room_id) end
 
 --- Wether the world scene is persistent
 --- @return boolean

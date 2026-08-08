@@ -21,6 +21,8 @@ function GameOverScene.load(x, y)
 
   GameOverScene.camera = GameCamera:new()
 
+  Cursor.setVisible(false)
+
   -- GAME OVER title
   GameOverScene.title_game_text = Text:new("GAME_OVER_TITLE_GAME")
   GameOverScene.title_game_text:setPosition(330, 76)

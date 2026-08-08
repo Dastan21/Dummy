@@ -12,6 +12,7 @@
 --- @field isPersistent? fun(): boolean Wether the world scene is persistent
 --- @field onPause? fun() Called when the scene is paused
 --- @field onResume? fun() Called when the scene is resumed
+--- @field canQuit? fun(): boolean? Wether the game can quit
 
 --- @class Dummy.Scene
 ---
@@ -86,7 +87,7 @@ end
 
 --- Updates the quitting timer
 function Scene.updateQuitting(dt)
-  if Scene.getCurrentSceneId() == "MAIN_MENU" and love.system.getOS() == "Web" then return end
+  if (Scene.getCurrentSceneId() == "MAIN_MENU" and love.system.getOS() == "Web") or Scene.getCurrentSceneId() == "EDITOR" then return end
 
   if Scene.quit_was_pressed and Input.isDown(Input.Escape) and Scene.quitting_time < Scene.quitting_delay then
     Scene.quitting_sprite:setVisible(true)
@@ -122,6 +123,13 @@ function Scene.reload()
   Scene.previous_scene_id = Scene.current_scene_id
   Scene.reloading = true
   Scene.change(Scene.previous_scene_id, table.unpack(Scene.current_scene_data))
+end
+
+--- Reloads the current scene with data
+--- @param ... any data to pass to the scene
+function Scene.reloadWithData(...)
+  Scene.current_scene_data = { ... }
+  Scene.reload()
 end
 
 --- Fully reloads the engine
@@ -540,6 +548,16 @@ end
 --- @return table
 function Scene.getTimer()
   return Scene.timers[Scene.current_scene_id]
+end
+
+--- Wether the game can quit
+--- @return boolean
+function Scene.canQuit()
+  if type(Scene.current_scene.canQuit) == "function" then
+    return Scene.current_scene.canQuit() ~= false
+  end
+
+  return true
 end
 
 --- Keeps only drawables that are persistent

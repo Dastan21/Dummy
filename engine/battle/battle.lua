@@ -1198,7 +1198,7 @@ function Battle.startDefending()
 
   for _, wave in ipairs(waves) do
     if type(wave.onStart) == "function" then
-      --- @diagnostic disable-next-line: invisible
+      ---@diagnostic disable-next-line: invisible
       wave:__start()
     end
   end
@@ -1210,7 +1210,7 @@ function Battle.updateDefending(dt)
 
   local all_done = true
   for _, wave in ipairs(Battle.encounter:getWaves()) do
-    --- @diagnostic disable-next-line: invisible
+    ---@diagnostic disable-next-line: invisible
     wave:__update(dt)
 
     if not wave:isDone() then

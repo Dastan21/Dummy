@@ -25,6 +25,11 @@ function ModList.getStandalone() end
 --- @return Dummy.Mod|nil
 function ModList.getCurrentMod() end
 
+--- Gets a mod by id
+--- @param mod_id string
+--- @return Dummy.Mod|nil
+function ModList.getMod(mod_id) end
+
 --- Loads the mod list
 function ModList.load() end
 

@@ -1,6 +1,11 @@
 --- @class WorldExample.Object.Chestbox : Dummy.Object.NPC
 local ChestboxObject = Class(NPCObject, "WorldExample.Object.NPC.Chestbox")
 
+ChestboxObject.ALLOW_EDITOR = true
+
+-- sprite to show in the editor
+ChestboxObject.EDITOR_SPRITE = "world/object/chestbox"
+
 --- Creates a chestbox
 --- @param x number
 --- @param y number

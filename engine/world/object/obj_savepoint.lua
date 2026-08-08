@@ -1,7 +1,16 @@
+--- @class Dummy.Object.Savepoint.Data : Dummy.Object.Data
+---
+--- @field texts string[]
+
 --- @class WorldExample.Object.Savepoint : Dummy.Object.NPC
 ---
 --- @field protected texts Dummy.Text.Text[]
 local SavepointObject = Class(NPCObject, "WorldExample.Object.Savepoint")
+
+SavepointObject.ALLOW_EDITOR = true
+
+-- sprite to show in the editor
+SavepointObject.EDITOR_SPRITE = "world/object/savepoint_1"
 
 --- Creates a savepoint
 --- @param x number
@@ -21,6 +30,26 @@ function SavepointObject:new(x, y, text, ...)
   self.texts = { text, ... }
 
   return self
+end
+
+--- Initializes the savepoint's arguments before creating it
+--- @param data Dummy.Object.Savepoint.Data
+function SavepointObject.initArgs(data)
+  return data.x, data.y, table.unpack(data.texts)
+end
+
+--- Gets the savepoint metadata
+--- @return Dummy.Editor.Metadata[]
+function SavepointObject.getMetadata()
+  --- @type Dummy.Editor.Metadata[]
+  return {
+    {
+      id = "texts",
+      label = "WORLD_OBJECT_SAVEPOINT_METADATA_DIALOGUES",
+      type = "list",
+      list_type = "string"
+    }
+  }
 end
 
 --- Called when the savepoint is interacted by the player

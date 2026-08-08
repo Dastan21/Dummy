@@ -17,7 +17,7 @@ function Dummy:new()
   self:setCanFlee(true)
 
   -- you can add custom reward per encounter
-  self:setReward(0, 150)
+  self:setReward(0, 0)
 
   return self
 end
@@ -51,6 +51,7 @@ function Dummy:onEnemyDialoguesEnd()
     Assets.playSound("slidewhist")
     Battle.playDialogueText("WORLD_EXAMPLE_MOD_ENCOUNTER_TIRE")
     self.dummy:setSpared(true)
+    Battle.getEncounter():setReward(0, 150)
   end
 end
 
@@ -64,10 +65,7 @@ function Dummy:onDefendingEnd()
 end
 
 --- Called when the player is fleeing
-function Dummy:onFlee()
-  -- do not reward anything when the player flee
-  self:setReward(0, 0)
-end
+function Dummy:onFlee() end
 
 --- Called when the encounter state changes
 function Dummy:onStateChange(current_state, previous_state) end
@@ -76,6 +74,8 @@ function Dummy:onStateChange(current_state, previous_state) end
 function Dummy:onEnd()
   if self.dummy:isSpared() then
     WorldExampleMod.flag["dummy_battle"] = 2
+  elseif self.dummy:isKilled() then
+    WorldExampleMod.flag["dummy_battle"] = 1
   end
 end
 

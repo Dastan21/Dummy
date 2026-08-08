@@ -4,6 +4,10 @@
 --- @field protected active boolean
 local GroundSwitchObject = Class(Object, "WorldExample.Object.GroundSwitch")
 
+GroundSwitchObject.ALLOW_EDITOR = true
+
+GroundSwitchObject.EDITOR_SPRITE = "world/object/ground_switch_1"
+
 --- Creates a ground switch
 --- @param x number
 --- @param y number
@@ -16,7 +20,6 @@ function GroundSwitchObject:new(x, y)
   }, 0, false, false)
   self:setStatic(true)
   self:setCollisionEnabled(true)
-  self:setOrigin(0, 0)
   self:setPosition(x, y)
   self:setHitbox(2, 5, 16, 11)
 

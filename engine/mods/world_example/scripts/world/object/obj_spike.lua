@@ -3,6 +3,9 @@
 --- @field protected active boolean
 local SpikeObject = Class(Object, "WorldExample.Object.Spike")
 
+SpikeObject.ALLOW_EDITOR = true
+
+SpikeObject.EDITOR_SPRITE = "world/object/spike_1"
 --- Creates a spike
 --- @param x number
 --- @param y number
@@ -16,7 +19,6 @@ function SpikeObject:new(x, y)
   self:setStatic(true)
   self:setCollisionEnabled(true)
   self:setCollisionSolid(true)
-  self:setOrigin(0, 0)
   self:setPosition(x, y)
   self:setHitbox(0, 0, 20, 20)
 

@@ -9,6 +9,7 @@ function TalkACT:onUse()
     "WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_TEXT_2",
     "WORLD_EXAMPLE_MOD_ENCOUNTER_TALK_TEXT_3"
   )
+  Battle.getEncounter():setReward(0, 150)
 
   -- set the Dummy as spared, to end the encounter after the dialogues are done
   self:getEnemy():setSpared(true)

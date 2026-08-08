@@ -8,6 +8,7 @@
 
 --- @class Dummy.World
 ---
+--- @field protected from_editor boolean
 --- @field protected current_room Dummy.Room|nil
 --- @field protected rooms table<number, Dummy.Room>
 --- @field protected shops table<number, Dummy.Shop>
@@ -25,7 +26,8 @@
 World = {}
 
 --- Loads the world
-function World.load() end
+--- @param from_editor? boolean
+function World.load(from_editor) end
 
 --- Wether the player is in an encounter
 --- @return boolean
@@ -40,11 +42,6 @@ function World.getCurrentRoom() end
 --- @param room_id string
 --- @return T
 function World.getRoom(room_id) end
-
---- Adds a room
---- @param room_id string
---- @param room Dummy.Room
-function World.addRoom(room_id, room) end
 
 --- Transitions to a room
 --- @param room_id string
@@ -100,11 +97,6 @@ function World.doEncounterTransitionAnimation(target_x, target_y) end
 --- @return Dummy.Shop
 function World.getShop(shop_id) end
 
---- Adds a shop
---- @param shop_id string
---- @param shop Dummy.Shop
-function World.addShop(shop_id, shop) end
-
 --- Transitions to a shop
 --- @param shop_id string
 function World.transitionShop(shop_id) end
@@ -123,10 +115,10 @@ function World.addItemIntoChestbox(item, index) end
 function World.removeItemFromChestbox(index) end
 
 --- Wether an object collide another in the world
----@param object Dummy.Object
----@param x? number
----@param y? number
----@return boolean, Dummy.Object|nil
+--- @param object Dummy.Object
+--- @param x? number
+--- @param y? number
+--- @return boolean, Dummy.Object|nil
 function World.checkCollision(object, x, y) end
 
 --- Called when the world is paused

@@ -1,7 +1,9 @@
-local ReadableObject = modRequire("scripts.world.object.obj_readable") --[[@as WorldExample.Object.Readable]]
-
 --- @class WorldExample.Object.TorielNote : WorldExample.Object.Readable
 local TorielNoteObject = Class(ReadableObject, "WorldExample.Object.TorielNote")
+
+TorielNoteObject.ALLOW_EDITOR = true
+
+TorielNoteObject.EDITOR_SPRITE = "world/object/toriel_note"
 
 --- Creates a toriel note
 --- @param x number

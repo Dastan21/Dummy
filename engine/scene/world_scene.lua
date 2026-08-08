@@ -3,22 +3,23 @@
 --- @field protected world_camera Dummy.WorldCamera
 --- @field protected ui_camera Dummy.GameCamera
 --- @field protected mod Dummy.Mod
+--- @field protected persistent boolean
 local WorldScene = {}
 
 --- Loads the world scene
 --- @param mod Dummy.Mod
-function WorldScene.load(mod)
+--- @param room_id? string
+function WorldScene.load(mod, room_id)
   WorldScene.world_camera = WorldCamera:new()
   WorldScene.ui_camera = GameCamera:new(Constants.GAME_WIDTH, Constants.GAME_HEIGHT, "UI")
+  WorldScene.persistent = room_id == nil
 
-  World.load()
+  Cursor.setVisible(false)
+
   Player.load()
+  World.load(room_id ~= nil)
 
   if World.getCurrentRoom() == nil then
-    local DefaultRoom = Class(Room, "Dummy.Room.DefaultRoom")
-    function DefaultRoom:new() return Class:new(DefaultRoom, { "default", "--", 320, 240 }) end
-
-    World.addRoom("default", DefaultRoom)
     World.transitionRoom("default", 150, 105, true)
   end
 
@@ -31,12 +32,20 @@ function WorldScene.load(mod)
     ---@diagnostic disable-next-line: invisible
     World.playtime = save_config.savepoint.time
   end
+
+  if room_id ~= nil then
+    Timer.next(function()
+      Timer.next(function()
+        World.transitionRoom(room_id, 150, 105, true)
+      end)
+    end)
+  end
 end
 
 --- Wether the world scene is persistent
 --- @return boolean
 function WorldScene.isPersistent()
-  return true
+  return WorldScene.persistent
 end
 
 --- Called when the scene is paused
@@ -64,7 +73,7 @@ function WorldScene.update(dt)
 
   if dt <= 0 then return end
 
-  if Constants.DEBUG then
+  if Debug.isDebugMode() then
     local obj_player = Player.getObject()
     if obj_player ~= nil then
       if Input.isDown("shift") and Input.isPressed("b") then
