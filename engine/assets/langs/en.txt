@@ -31,7 +31,7 @@ MAIN_MENU_MODLIST_MOD_ERROR=ERROR: {}
 
 # Editor
 EDITOR_TITLE=Room Editor
-EDITOR_MENU_FILE_NEW=New room[color:0.5,0.5,0.5][Ctrl+N]
+EDITOR_MENU_FILE_NEW=New room [color:0.5,0.5,0.5][Ctrl+N]
 EDITOR_MENU_FILE_OPEN=Open room [color:0.5,0.5,0.5][Ctrl+O]
 EDITOR_MENU_FILE_PROPERTIES=Properties [color:0.5,0.5,0.5][Ctrl+I]
 EDITOR_MENU_FILE_SAVE=Save [color:0.5,0.5,0.5][Ctrl+S]
@@ -58,7 +58,7 @@ EDITOR_CONFIRM_MODAL_CANCEL=Cancel
 EDITOR_CONFIRM_MODAL_BEFORE_QUITTING=You have unsaved changes.\nDo you want to quit without saving?
 EDITOR_CONFIRM_MODAL_BEFORE_QUITTING_QUIT=Quit
 EDITOR_CONFIRM_MODAL_DELETE_ROOM=Do you really want to delete the room "{}"?\nThis action is irreversible.
-EDITOR_CONFIRM_MODAL_DELETE_ROOM_CONFIRM=[color:0.9,0.2,0.2]Delete
+EDITOR_CONFIRM_MODAL_DELETE_ROOM_CONFIRM=[color:1,0.2,0.2]Delete
 EDITOR_FORM_SAVE=Save
 EDITOR_FORM_CANCEL=Cancel
 EDITOR_ROOM_FORM_TITLE=Room properties

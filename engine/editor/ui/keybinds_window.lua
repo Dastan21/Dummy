@@ -27,7 +27,7 @@ KeybindsWindow.KEYBIND_HEIGHT = 20
 --- Creates a keybinds window
 --- @return Dummy.Editor.KeybindsWindow
 function KeybindsWindow:new()
-  self = Class:new(KeybindsWindow, Window:new())
+  self = Class:new(KeybindsWindow)
 
   self.keybinds = {
     {

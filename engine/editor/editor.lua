@@ -864,7 +864,7 @@ end
 --- Creates a room
 function Editor.newRoom()
   Editor.confirmSaveBeforeQuitting(function()
-    Scene.reloadWithData(Editor.mod_id)
+    Scene.reloadWithData(Editor.mod_id, "")
   end)
 end
 
