@@ -1,3 +1,12 @@
+DUMMY v2.1.0 (09/08/2026)
+-------------------
+
+* Added Room Editor
+  - Change room properties
+  - Edit room tiling
+  - Add/edit objects
+  
+
 DUMMY v2.0.0 (31/07/2026)
 -------------------
 
