@@ -10,7 +10,9 @@
 ---
 --- @field protected options Dummy.Menu.Options
 --- @field protected onBack fun()|nil
---- @field protected inputs Dummy.MainMenu.Inputs
+--- @field protected max_displayed_options number
+--- @field protected title_text Dummy.Text
+--- @field protected control_inputs Dummy.MainMenu.Inputs
 MainMenu = {}
 
 --- @alias Dummy.Menu.Options Dummy.Menu.Option[]
@@ -45,6 +47,14 @@ function MainMenu:show() end
 --- Hides the menu
 function MainMenu:hide() end
 
+--- Gets the menu title
+--- @return Dummy.Text.Text
+function MainMenu:getTitle() end
+
+--- Sets the menu title
+--- @param title Dummy.Text.Text
+function MainMenu:setTitle(title) end
+
 --- Sets the menu options
 --- @param options Dummy.Menu.Option[]
 function MainMenu:setOptions(options) end
@@ -61,6 +71,14 @@ function MainMenu:getSelectedOption() end
 --- @param id string
 --- @return Dummy.Menu.Option|nil
 function MainMenu:getOptionById(id) end
+
+--- Gets the maximum number of displayed options
+--- @return number
+function MainMenu:getMaxDisplayedOptions() end
+
+--- Sets the maximum number of displayed options
+--- @param max number
+function MainMenu:setMaxDisplayedOptions(max) end
 
 --- Gets the control inputs
 --- @return Dummy.MainMenu.Inputs
@@ -81,6 +99,7 @@ function MainMenu:update() end
 
 --- Creates a menu
 --- @param options Dummy.Menu.Options
+--- @param title Dummy.Text.Text
 --- @param onBack? fun()
-function MainMenu:new(options, onBack) end
+function MainMenu:new(options, title, onBack) end
 

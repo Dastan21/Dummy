@@ -3,6 +3,10 @@
 --- @field protected zoomed boolean
 local TelescopeObject = Class(NPCObject, "WorldExample.Object.Telescope")
 
+TelescopeObject.ALLOW_EDITOR = true
+
+TelescopeObject.EDITOR_SPRITE = "world/object/telescope"
+
 --- Creates a telescope
 --- @param x number
 --- @param y number

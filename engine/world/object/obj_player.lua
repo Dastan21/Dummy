@@ -31,14 +31,12 @@ function PlayerObject:new()
   end
   Player.setObject(self)
 
-  if Constants.DEBUG then
-    self.debug_text = Text:new("", true)
-    self.debug_text:setOrigin(0.5, 1)
-    self.debug_text:setFont("small")
-    self.debug_text:setLayer(self:getLayer() + 0.1)
-    self.debug_text:setVisible(false)
-    function self.debug_text.drawDebug() end
-  end
+  self.debug_text = Text:new("", true)
+  self.debug_text:setOrigin(0.5, 1)
+  self.debug_text:setFont("small")
+  self.debug_text:setLayer(self:getLayer() + 0.1)
+  self.debug_text:setVisible(false)
+  function self.debug_text.drawDebug() end
 
   self:updateSprite()
 
@@ -194,7 +192,7 @@ function PlayerObject:handleMovement(dt)
   local new_x, new_y = x, y
   local facing = self:getFacing()
   local base_speed = 82.5
-  if Constants.DEBUG and Input.isDown("shift") then
+  if Debug.isDebugMode() and Input.isDown("shift") then
     base_speed = 256
   end
   local move_speed = base_speed * dt
@@ -364,12 +362,12 @@ function PlayerObject:handleCollisions()
 end
 
 --- Wether the player collides with an object
----@param x number
----@param y number
----@param width number
----@param height number
----@param objects? Dummy.Object[]
----@return boolean, Dummy.Object|nil
+--- @param x number
+--- @param y number
+--- @param width number
+--- @param height number
+--- @param objects? Dummy.Object[]
+--- @return boolean, Dummy.Object|nil
 function PlayerObject:collides(x, y, width, height, objects)
   if objects == nil then objects = World.getCurrentRoom():getObjects() end
   for _, obj in pairs(objects) do
@@ -453,9 +451,7 @@ end
 
 --- Removes the player from the current scene
 function PlayerObject:remove()
-  if Constants.DEBUG then
-    self.debug_text:remove()
-  end
+  self.debug_text:remove()
 
   NPCObject.remove(self)
   ---@diagnostic disable-next-line: param-type-mismatch
@@ -465,7 +461,7 @@ end
 --- Draws the player's hitbox for debugging
 --- @param camera Dummy.Camera
 function PlayerObject:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() then return end
+  if not Debug.shouldShowDebug() then return end
 
   NPCObject.drawDebug(self, camera)
 
@@ -496,10 +492,10 @@ function PlayerObject:update(dt)
 
   NPCObject.update(self, dt)
 
-  if Constants.DEBUG then
+  if Debug.isDebugMode() then
     local x, y = self:getPosition()
     self.debug_text:setPosition(x, y - self:getHeight() / 2)
-    self.debug_text:setVisible(Debug.shouldDisplayHitbox())
+    self.debug_text:setVisible(Debug.shouldShowDebug())
     local debug_text = ""
     debug_text = debug_text .. string.format("%s, %s\n", math.floor(x), math.floor(y))
     self.debug_text:setText(debug_text)

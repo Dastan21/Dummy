@@ -4,7 +4,7 @@
 --- @field protected logs string[]
 --- @field protected margin number
 --- @field protected scale number
---- @field protected display_hitbox boolean
+--- @field protected show_debug boolean
 --- @field protected paused boolean
 --- @field protected log_bg_sprite Dummy.Sprite
 --- @field protected log_text Dummy.Text
@@ -15,10 +15,16 @@
 --- @field protected screenshot_fade_timer Dummy.Timer.Handle|nil
 local Debug = {}
 
---- Wether the hitboxes should be displayed
+--- Wether the debug mode is enabled
 --- @return boolean
-function Debug.shouldDisplayHitbox()
-  return Debug.display_hitbox
+function Debug.isDebugMode()
+  return Debug.debug_mode
+end
+
+--- Wether the debugger should show debug information
+--- @return boolean
+function Debug.shouldShowDebug()
+  return Debug.show_debug
 end
 
 --- Wether the debugger is paused
@@ -47,7 +53,7 @@ function Debug.load()
   Debug.scale = 1
 
   Debug.debug_mode = Constants.DEBUG
-  Debug.display_hitbox = false
+  Debug.show_debug = false
   Debug.paused = false
 
   Debug.log_bg_sprite = Sprite:new("pixel")
@@ -128,7 +134,7 @@ function Debug.update(dt)
   end
 
   if Debug.debug_mode and Input.isPressed("f7") then
-    Debug.display_hitbox = not Debug.display_hitbox
+    Debug.show_debug = not Debug.show_debug
   end
 
   if Debug.debug_mode and Input.isPressed("f8") then
@@ -190,7 +196,7 @@ function Debug.update(dt)
   end
 
   if Debug.debug_mode and Input.isDown("ctrl") and Input.isPressed("h") then
-    if Scene.getCurrentSceneId() == "BATTLE" then
+    if Scene.getCurrentSceneId() == "BATTLE" or Scene.getCurrentSceneId() == "WORLD" then
       Soul.heal(Player.getMaxHP() * 2)
     end
   end
@@ -203,7 +209,7 @@ function Debug.update(dt)
     dt = dt * 8
   end
 
-  if Input.isDown("ctrl") and Input.isDown("shift") and Input.isDown("lalt") and Input.isPressed("d") then
+  if Input.isDown("ctrl") and Input.isDown("shift") and Input.isDown("alt") and Input.isPressed("d") then
     Debug.debug_mode = not Debug.debug_mode
   end
 
@@ -218,7 +224,7 @@ local _print = print
 ---
 ---[View documents](command:extension.lua.doc?["en-us/54/manual.html/pdf-print"])
 ---
----@param ... any
+--- @param ... any
 function print(...)
   local t = {}
   for _, v in pairs({ ... }) do

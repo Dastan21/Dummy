@@ -9,7 +9,9 @@ function Mask:draw(camera)
   love.graphics.applyTransform(self:getTransform())
 
   if type(self.drawMask) == "function" then
-    love.graphics.stencil(self.drawMask, "replace", 1)
+    love.graphics.stencil(function()
+      self:drawMask(camera)
+    end, "replace", 1)
   end
   love.graphics.setStencilTest("greater", 0)
 
@@ -19,7 +21,8 @@ function Mask:draw(camera)
 end
 
 --- Draws to the mask
-function Mask:drawMask() end
+--- @param camera Dummy.Camera
+function Mask:drawMask(camera) end
 
 --- Creates a mask
 --- @return Dummy.Mask

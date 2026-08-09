@@ -5,6 +5,10 @@
 --- @field protected solid Dummy.Object.Solid|nil
 local TorielObject = Class(NPCObject, "WorldExample.Object.NPC.Toriel")
 
+TorielObject.ALLOW_EDITOR = true
+
+TorielObject.EDITOR_SPRITE = "world/npc/toriel/talk_down_1"
+
 --- Creates a toriel
 function TorielObject:new()
   self = Class:new(TorielObject, { "toriel" })
@@ -28,6 +32,9 @@ function TorielObject:new()
     self.conversation = 3;
     self:setFacing("left")
     self:setPosition(670, 110)
+  else
+    self:remove()
+    return
   end
 
   self:updateSprite()

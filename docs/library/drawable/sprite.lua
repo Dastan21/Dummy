@@ -37,8 +37,9 @@ function Sprite.clear() end
 --- Loads a sprite
 --- @param sprite_path string
 --- @param force? boolean
+--- @param base_folder? string
 --- @return Dummy.Sprite.Image
-function Sprite.loadImage(sprite_path, force) end
+function Sprite.loadImage(sprite_path, force, base_folder) end
 
 --- Loads a sprite from a folder
 --- @param sprite_path string

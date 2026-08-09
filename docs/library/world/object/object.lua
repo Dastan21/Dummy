@@ -14,10 +14,27 @@
 --- @field protected can_interact boolean
 --- @field protected depth number
 --- @field protected static boolean
+--- @field EDITOR_SPRITE string|nil
+--- @field ALLOW_EDITOR boolean|nil
 Object = {}
 
 --- @alias Dummy.Hitbox [ number, number, number, number ]
 --- @alias Dummy.Object.Facing "down" | "right" | "up" | "left"
+
+--- @class Dummy.Object.Data
+---
+--- @field id integer
+--- @field type string
+--- @field x number
+--- @field y number
+--- @field width number
+--- @field height number
+--- @field mod_id? string
+
+--- @class Dummy.Object.ExtraData
+---
+--- @field class Dummy.Object
+--- @field [string] unknown
 
 --- @class Dummy.Object.CollisionData
 ---
@@ -31,6 +48,22 @@ Object = {}
 
 --- Creates an object
 function Object:new() end
+
+--- Initializes the object's arguments before creating it
+---
+--- Note: This function is called for objects provided by the editor
+--- @param data Dummy.Object.Data
+function Object.initArgs(data) end
+
+--- Gets the object's metadata
+--- @return Dummy.Editor.Metadata[]
+function Object.getMetadata() end
+
+--- Called when the object form is confirmed in the editor
+---
+--- Note: Useful for modifying the object's data before it is added to the room
+--- @param data Dummy.Object.Data
+function Object.onFormConfirm(data) end
 
 --- Updates the object's transform
 function Object:updateTransform() end
@@ -124,12 +157,19 @@ function Object:onCollision(other) end
 --- Called when the object is interacted by the player
 function Object:onInteract() end
 
+--- Removes the object from the current scene
+function Object:remove() end
+
 --- Updates the object's depth
 function Object:updateDepth() end
 
 --- Draws the object's hitbox for debugging
 --- @param camera Dummy.Camera
 function Object:drawDebug(camera) end
+
+--- Draws the solid object for the editor
+--- @param data Dummy.Object.Data
+function Object.drawEditor(data) end
 
 --- Updates the object, called on every game update
 --- @param dt number

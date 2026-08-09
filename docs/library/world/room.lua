@@ -14,10 +14,28 @@
 --- @field protected height number
 --- @field protected music string|nil
 --- @field protected music_seek number
---- @field protected tile_set Dummy.Tileset
+--- @field protected tileset Dummy.Tileset
+--- @field protected objects Dummy.Object.Data[]
 --- @field protected objects_container Dummy.Drawable
 --- @field protected need_to_sort_children boolean
 Room = {}
+
+--- @class Dummy.Room.Data
+---
+--- @field id string
+--- @field width number
+--- @field height number
+--- @field tileset string
+--- @field music string
+--- @field tiles table<integer, Dummy.Tileset.TileData[]>
+--- @field objects table<integer, Dummy.Object.Data[]>
+
+--- @class Dummy.Room.Data.Form
+---
+--- @field width number
+--- @field height number
+--- @field tileset string
+--- @field music string
 
 --- Creates a room
 --- @param room_id string
@@ -46,15 +64,16 @@ function Room:getWidth() end
 --- @return number
 function Room:getHeight() end
 
---- Gets the room's tile set
+--- Gets the room's tileset
 --- @return Dummy.Tileset
 function Room:getTileset() end
 
---- Sets the room's tile set
+--- Sets the room's tileset
 --- @param tileset_name string
-function Room:setTileset(tileset_name) end
+--- @param tiles? table<integer, Dummy.Tileset.TileData[]>
+function Room:setTileset(tileset_name, tiles) end
 
---- Sets the tile from a tile set at a position
+--- Sets the tile from a tileset at a position
 --- @param index integer
 --- @param x number
 --- @param y number
@@ -65,7 +84,7 @@ function Room:setTile(index, x, y) end
 function Room:getMusic() end
 
 --- Sets the room's music
---- @param music string
+--- @param music string|nil
 function Room:setMusic(music) end
 
 --- Gets the room's music seek
@@ -112,9 +131,17 @@ function Room:enter(spawn_x, spawn_y, player_facing, instant) end
 --- Leaves the room
 function Room:leave() end
 
+--- Parses a room data
+--- @param mod_id string
+--- @param room_id string
+--- @return Dummy.Room.Data|nil
+function Room.parseRoomData(mod_id, room_id) end
+
+--- Loads the room data
+--- @param room_id? string
+function Room:loadData(room_id) end
+
 --- Called when the room is entered
----
---- Note: Initialize all he room's objects here
 function Room:onEnter() end
 
 --- Called when the room is left

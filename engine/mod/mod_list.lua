@@ -23,6 +23,14 @@ function ModList.getCurrentMod()
   return ModList.standalone or ModList.current_mod
 end
 
+--- Gets a mod by id
+--- @param mod_id string
+--- @return Dummy.Mod|nil
+function ModList.getMod(mod_id)
+  if #ModList.mods <= 0 then return end
+  return table.find(ModList.mods, function(mod) return mod:getId() == mod_id end)
+end
+
 --- Loads the mod list
 function ModList.load()
   ModList.unloadMods()
@@ -170,7 +178,7 @@ function ModList.setWindowTitleAndIcon()
     end
   end
 
-  love.window.setTitle(title)
+  love.setTitle(title)
   love.window.setIcon(icon)
 end
 

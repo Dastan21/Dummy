@@ -258,7 +258,7 @@ function PlayerMenu:close()
 end
 
 --- Wether the player menu has focus
----@return boolean
+--- @return boolean
 function PlayerMenu:hasFocus()
   if Player.getObject():getInteraction() ~= "menu" then return false end
 

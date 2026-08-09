@@ -1,3 +1,20 @@
+--- @class Dummy.Room.Data
+---
+--- @field id string
+--- @field width number
+--- @field height number
+--- @field tileset string
+--- @field music string
+--- @field tiles table<integer, Dummy.Tileset.TileData[]>
+--- @field objects table<integer, Dummy.Object.Data[]>
+
+--- @class Dummy.Room.Data.Form
+---
+--- @field width number
+--- @field height number
+--- @field tileset string
+--- @field music string
+
 --- @class Dummy.Room : Dummy.Class
 ---
 --- @field protected id string
@@ -6,7 +23,8 @@
 --- @field protected height number
 --- @field protected music string|nil
 --- @field protected music_seek number
---- @field protected tile_set Dummy.Tileset
+--- @field protected tileset Dummy.Tileset
+--- @field protected objects Dummy.Object.Data[]
 --- @field protected objects_container Dummy.Drawable
 --- @field protected need_to_sort_children boolean
 local Room = Class("Dummy.Room")
@@ -27,6 +45,8 @@ function Room:new(room_id, room_name, width, height)
 
   self.music_seek = 0
 
+  self.objects = {}
+
   self.need_to_sort_children = false
 
   self:setTileset("default")
@@ -45,7 +65,7 @@ function Room:initContainer()
   end
 
   function self.objects_container.drawDebug(_, camera)
-    if not Debug.shouldDisplayHitbox() then return end
+    if not Debug.shouldShowDebug() then return end
 
     love.graphics.push()
     love.graphics.origin()
@@ -94,30 +114,34 @@ function Room:getHeight()
   return self.height
 end
 
---- Gets the room's tile set
+--- Gets the room's tileset
 --- @return Dummy.Tileset
 function Room:getTileset()
-  return self.tile_set
+  return self.tileset
 end
 
---- Sets the room's tile set
+--- Sets the room's tileset
 --- @param tileset_name string
-function Room:setTileset(tileset_name)
-  if self.tile_set ~= nil then
-    self.tile_set:remove()
+--- @param tiles? table<integer, Dummy.Tileset.TileData[]>
+function Room:setTileset(tileset_name, tiles)
+  if self.tileset ~= nil then
+    self.tileset:remove()
   end
 
-  self.tile_set = Tileset:new(tileset_name, self:getWidth(), self:getHeight())
-  self.tile_set:setLayer(Constants.LAYERS.WORLD_BACKGROUND)
-  self.tile_set:setVisible(false)
+  local image = Sprite.loadImage("world/tileset/" .. tileset_name, false)
+  assert(image.image ~= nil, "Tileset \"" .. tileset_name .. "\" not found")
+
+  self.tileset = Tileset:new(image, self:getWidth(), self:getHeight(), tiles)
+  self.tileset:setLayer(Constants.LAYERS.WORLD_BACKGROUND)
+  self.tileset:setVisible(false)
 end
 
---- Sets the tile from a tile set at a position
+--- Sets the tile from a tileset at a position
 --- @param index integer
 --- @param x number
 --- @param y number
 function Room:setTile(index, x, y)
-  self.tile_set:setTile(index, x, y)
+  self.tileset:setTile(index, x, y)
 end
 
 --- Gets the room's music
@@ -127,7 +151,7 @@ function Room:getMusic()
 end
 
 --- Sets the room's music
---- @param music string
+--- @param music string|nil
 function Room:setMusic(music)
   self.music = music
 end
@@ -207,7 +231,7 @@ function Room:enter(spawn_x, spawn_y, player_facing, instant)
     Fader.fadeOut(12 / 30, "linear")
   end
 
-  self.tile_set:setVisible(true)
+  self.tileset:setVisible(true)
 
   local obj_player = PlayerObject:new()
   obj_player:setPosition(spawn_x + obj_player:getWidth() / 2, spawn_y + obj_player:getHeight() / 2)
@@ -218,20 +242,41 @@ function Room:enter(spawn_x, spawn_y, player_facing, instant)
   local world_scene = Scene.getCurrentScene() --[[@as Dummy.Scene.World]]
   world_scene:getCamera():setTarget(obj_player)
 
-  if self.onEnter ~= nil then
-    self:onEnter()
+  for _, obj_data in ipairs(self.objects or {}) do
+    --- @type Dummy.Object
+    local Object
+    if obj_data.mod_id ~= nil then
+      Object = modRequire("scripts.world.object." .. obj_data.type)
+    else
+      Object = require("world.object." .. obj_data.type) --[[@as Dummy.Object]]
+    end
+
+    local args = {}
+    if type(Object.initArgs) == "function" then
+      args = { Object.initArgs(obj_data) }
+    end
+    ---@diagnostic disable-next-line: redundant-parameter
+    Object:new(table.unpack(args))
   end
 
-  local mod = ModList.getCurrentMod()
-  if mod ~= nil and type(mod.onRoomEnter) == "function" then
-    mod:onRoomEnter(self)
-  end
+  Timer.next(function()
+    if self.onEnter ~= nil then
+      self:onEnter()
+    end
+
+    local mod = ModList.getCurrentMod()
+    if mod ~= nil and type(mod.onRoomEnter) == "function" then
+      mod:onRoomEnter(self)
+    end
+  end)
 end
 
 --- Leaves the room
 function Room:leave()
   self.objects_container:remove()
-  self.tile_set:remove()
+  self.tileset:remove()
+
+  World.getTextbox():setVisible(false)
 
   if self.onLeave ~= nil then
     self:onLeave()
@@ -243,9 +288,49 @@ function Room:leave()
   end
 end
 
+--- Parses a room data
+--- @param mod_id string
+--- @param room_id string
+--- @return Dummy.Room.Data|nil
+function Room.parseRoomData(mod_id, room_id)
+  local success = false
+  local room_data
+
+  local filename = "mods/" .. mod_id .. "/scripts/world/room/" .. UTF8.lower(Utils.sanitizeFilename(room_id)) .. ".json"
+  success, room_data = pcall(love.filesystem.read, filename)
+  if not success or room_data == nil then return end
+
+  success, room_data = pcall(JSON.decode, room_data)
+  if not success or room_data == nil then return end
+
+  return room_data --[[@as Dummy.Room.Data]]
+end
+
+--- Loads the room data
+--- @param room_id? string
+function Room:loadData(room_id)
+  room_id = Utils.getOrDefault(room_id, self:getId())
+
+  local mod = ModList.getCurrentMod()
+  assert(mod ~= nil, "Cannot load room outside of a mod")
+
+  local room_data = Room.parseRoomData(mod:getId(), room_id)
+  assert(room_data ~= nil, "Failed to load room \"" .. room_id .. "\"")
+
+  self.width = room_data.width
+  self.height = room_data.height
+
+  --- @type string|nil
+  local music = room_data.music
+  if music == "none" then music = nil end
+  self:setMusic(music)
+
+  self:setTileset(room_data.tileset, room_data.tiles)
+
+  self.objects = room_data.objects
+end
+
 --- Called when the room is entered
----
---- Note: Initialize all he room's objects here
 function Room:onEnter() end
 
 --- Called when the room is left
@@ -261,7 +346,7 @@ function Room:onResume() end
 --- @param dt number
 function Room:update(dt)
   if self.need_to_sort_children then
-    local children = self.objects_container:getChildren()
+    local children = self.objects_container:getChildren() --[[@as table<number, Dummy.Object>]]
     if #children > 0 then
       table.stable_sort(children, function(a, b)
         local a_layer = a:getLayer() or 0

@@ -39,7 +39,7 @@ function Soul.load()
   Soul.debug_hitbox_drawable = Drawable:new()
   Soul.debug_hitbox_drawable:setLayer(Constants.LAYERS.ABOVE_SOUL)
   function Soul.debug_hitbox_drawable.draw(_self)
-    if not _self:isVisible() or not Soul.sprite:isVisible() or not Debug.shouldDisplayHitbox() then return end
+    if not _self:isVisible() or not Soul.sprite:isVisible() or not Debug.shouldShowDebug() then return end
     if Soul.hitbox[3] == 0 and Soul.hitbox[4] == 0 then return end
 
     local absolute_transform = Soul.sprite:getAbsoluteTransform()

@@ -9,6 +9,8 @@ local ShopScene = {}
 function ShopScene.load(shop_id)
   ShopScene.camera = WorldCamera:new()
 
+  Cursor.setVisible(false)
+
   local ShopClass = World.getShop(shop_id)
   assert(ShopClass ~= nil, "Shop \"" .. shop_id .. "\" not found")
 

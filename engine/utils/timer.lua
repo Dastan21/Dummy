@@ -80,7 +80,7 @@ end
 --- Updates the timer, called on every game update
 --- @overload fun(delay: number, fn: fun())
 --- @param dt number
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:update(dt)
   if getmetatable(self) == Timer then
     self:update(dt)
@@ -99,7 +99,7 @@ end
 --- Schedules a function to be called the next update.
 --- @param func fun()
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:next(func)
   if getmetatable(self) == Timer then
     return self:after(0, func)
@@ -124,7 +124,7 @@ end
 --- @param delay number
 --- @param func fun(func?: fun())
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:after(delay, func)
   if getmetatable(self) == Timer then
     return self:after(delay, func)
@@ -143,7 +143,7 @@ end
 --- Executes a function that can be paused without causing the rest of the program to be suspended.
 --- @param func fun(wait: fun(delay: number)) script to execute
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:script(func)
   if getmetatable(self) == Timer then
     return self:script(func)
@@ -170,7 +170,7 @@ end
 --- @param func fun() the function to be called periodically
 --- @param count? number number of times the function is to be called
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:every(delay, func, count)
   if getmetatable(self) == Timer then
     return self:every(delay, func, count)
@@ -197,7 +197,7 @@ end
 --- @param func fun(dt: number, left: number) the function to be called
 --- @param after? fun() a function to be called after `delay` seconds
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:during(delay, func, after)
   if getmetatable(self) == Timer then
     return self:during(delay, func, after)
@@ -230,7 +230,7 @@ end
 --- @param after? fun() function to execute after the tween has finished
 --- @param ... any additional arguments to the tweening function
 --- @return Dummy.Timer.Handle
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:tween(duration, subject, target, method, after, ...)
   if getmetatable(self) == Timer then
     return self:tween(duration, subject, target, method, after, ...)
@@ -254,7 +254,7 @@ end
 
 --- Prevent a timer from being executed in the future.
 --- @param handle Dummy.Timer.Handle|nil the function to be canceled
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:cancel(handle)
   if getmetatable(self) == Timer then
     self:cancel(handle)
@@ -269,7 +269,7 @@ function Timer.clear()
 end
 
 --- Remove all timed and periodic functions. Functions that have not yet been executed will discarded.
---- @diagnostic disable-next-line: duplicate-set-field
+---@diagnostic disable-next-line: duplicate-set-field
 function Timer:clear()
   if getmetatable(self) == Timer then
     self:clear()

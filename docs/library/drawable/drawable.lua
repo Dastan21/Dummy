@@ -111,6 +111,22 @@ function Drawable:getOrigin() end
 --- @param origin_y number
 function Drawable:setOrigin(origin_x, origin_y) end
 
+--- Gets the drawable's left position
+--- @return number
+function Drawable:getLeft() end
+
+--- Gets the drawable's right position
+--- @return number
+function Drawable:getRight() end
+
+--- Gets the drawable's left position
+--- @return number
+function Drawable:getTop() end
+
+--- Gets the drawable's right position
+--- @return number
+function Drawable:getBottom() end
+
 --- Gets the drawable's color
 --- @return love.Color
 function Drawable:getColor() end

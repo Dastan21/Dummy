@@ -103,8 +103,7 @@ function Text:updateText()
       end
     end
     self.is_clipping = value ~= pre_overflow_value
-    local trailing_spaces = UTF8.len(value) - UTF8.len(trimmed)
-    local width = self.font:getWidth(trimmed) + trailing_spaces * self.font:getWidth(" ")
+    local width = self.font:getWidth(value)
     if wrap_limit ~= nil then
       local align = "left"
       if width > wrap_limit then
@@ -407,17 +406,6 @@ function Text:draw(camera)
     local origin_x, origin_y = self:getOrigin()
     local width, height = self:getWidth(), self:getHeight()
     local text_x, text_y = math.ceil(-width * origin_x), math.ceil(-height * origin_y)
-    if self["debug"] then
-      if Input.isPressed("kp9") then
-        if self:getAlign() == "center" then
-          self:setAlign("left")
-        elseif self:getAlign() == "left" then
-          self:setAlign("right")
-        else
-          self:setAlign("center")
-        end
-      end
-    end
     love.graphics.draw(self.text, text_x, text_y)
   else
     for _, node in ipairs(self.nodes) do
@@ -436,7 +424,7 @@ end
 --- Draws the text's bounding box for debugging
 --- @param camera Dummy.Camera
 function Text:drawDebug(camera)
-  if not Debug.shouldDisplayHitbox() or not self:isVisibleOnScreen() then return end
+  if not Debug.shouldShowDebug() or not self:isVisibleOnScreen() then return end
 
   local width, height = self:getWidth(), self:getHeight()
   if width == 0 and height == 0 then return end

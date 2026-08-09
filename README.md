@@ -4,8 +4,11 @@ DUMMY is an [UNDERTALE](https://undertale.com) fangame engine, made with [LÖVE]
 
 You can make custom UNDERTALE worlds and battles.
 
-![Screenshot of the main menu](preview.png)
+![Screenshot of the main menu](screenshots/main_menu.png)
 <sup>DUMMY's main menu</sup>
+
+![Screenshot of the room editor](screenshots/room_editor.png)
+<sup>DUMMY's room editor</sup>
 
 ## Download
 
