@@ -1018,7 +1018,7 @@ function Battle.attack(miss)
     local stretch = (target_width - bonus_factor) / target_width
     local damage = math.max(0, Player.getAT() - enemy:getDF() + (love.math.random() * 2))
     if bonus_factor <= 12 then
-      damage = math.round(damage * 2.2)
+      damage = math.round(damage * Player.getWeapon():GetWeaponCrit())
     else
       damage = math.round(damage * 2 * stretch)
     end

@@ -33,6 +33,9 @@ end
 --- Note: Setting this to true will override the standard Battle attack function.
 --- @return boolean
 function ItemEquipment:GetAttackEffect() return false end
+--- Gets the currently equipped weapon's crit rate
+--- @return number
+function ItemEquipment:GetWeaponCrit() return 2.2 end
 --- (Override) Gets the item's final dialogue text when used
 --- @return Dummy.Text.Text[]
 function ItemEquipment:getDialogueTexts()
