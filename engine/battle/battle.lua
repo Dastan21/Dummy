@@ -46,7 +46,6 @@
 --- @field protected action_mercy_hover_sprite Dummy.Sprite
 --- @field protected is_attacking boolean
 --- @field protected attack_window_timer Dummy.Timer.Handle|nil
---- @field num_bolts number
 --- @field target_bars table
 local Battle = {}
 
@@ -86,7 +85,6 @@ function Battle.load()
   Battle.target_bar_sprite:setVisible(false)
   Battle.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
   Battle.target_bars = {}
-  table.insert(Battle.target_bars, Battle.target_bar_sprite)
 
   -- miss
   Battle.miss_text = Text:new("BATTLE_ATTACK_MISS")
@@ -962,30 +960,54 @@ function Battle.startAttacking()
   if type(Player.getWeapon().GetAttackEffect) == "function" then
     override = Player.getWeapon():GetAttackEffect()
   end
-
   if override then return end
   local attack_speed = 11
-  Battle.num_bolts = Player.getWeapon():GetWeaponBolts()
-
-  Battle.target_bars[1]:setPosition(22, 320)
-  Battle.target_bars[1]:setVisible(true)
-  Battle.target_bars[1]:stop()
-  Battle.target_bars[1]:setFrame(1)
+  -- Get the number of bolts we'll spawn
+  --local num_bolts = Player.getWeapon():GetWeaponBolts()
+  local num_bolts = 5
+  -- Clear the target bar table
+  Battle.target_bars = {}
+  -- Create bolts based on how many we have
+  for i = 1, num_bolts do
+    table.insert(Battle.target_bars, Sprite:new({ "target_bar1", "target_bar2" }, 0.1, nil, false))
+  end
+  -- Initialize individual bolts
+  for i, bar in ipairs(Battle.target_bars) do
+    bar:setPosition(22 * (i * 3), 320)
+    bar:setVisible(true)
+    bar:stop()
+    bar:setFrame(1)
+  end
 
   local bar_speed = attack_speed + (love.math.random() * 2)
   Battle.attack_window_timer = Timer.during(2, function(dt)
-    local x, y = Battle.target_bars[1]:getPosition()
-    local target_bar_x = x + bar_speed * dt * 30
-    Battle.target_bars[1]:setPosition(target_bar_x, y)
-
     local target_x = Battle.target_sprite:getPosition()
     local width = Battle.target_sprite:getWidth()
-    if target_bar_x > target_x + width / 2 then
-      Battle.attack(true)
+    local target_bar_x = {}
+    -- Continuously move each individual bolt
+    for i, bar in ipairs(Battle.target_bars) do
+      local x, y = bar:getPosition()
+      target_bar_x[i] = x + bar_speed * dt * 30
+      bar:setPosition(target_bar_x[i], y)
+    end
+    -- Despawn bolts if they get too far from the battle sprite
+    for i, bar in ipairs(Battle.target_bars) do
+      if target_bar_x[i] > target_x + width / 2 then
+        -- Remove them from the table and despawn it as an element.
+        Battle.target_bars[i]:remove()
+        table.remove(Battle.target_bars, i)
+        -- If we have no bolts, miss an attack.
+        if #Battle.target_bars == 0 then Battle.attack(true) end
+      end
     end
 
     if Input.isPressed(Input.Confirm) then
-      Battle.attack()
+      if #Battle.target_bars == 1 then
+        Battle.attack()
+      else
+        Battle.target_bars[#Battle.target_bars]:remove()
+        table.remove(Battle.target_bars, #Battle.target_bars)
+      end
     end
   end)
 end
@@ -1196,8 +1218,10 @@ function Battle.endAttack(enemy)
       Battle.target_sprite:setVisible(false)
     end
   end)
-
-  Battle.target_bars[1]:setVisible(false)
+  
+  for i, bar in ipairs(Battle.target_bars) do
+    bar:setVisible(false)
+  end
 
   Battle.checkEncounterEnd()
 end

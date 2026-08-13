@@ -25,7 +25,7 @@ function ToyKnifeItem:new()
   return self
 end
 
-function ToyKnifeItem:GetAttackEffect()
+--[[ function ToyKnifeItem:GetAttackEffect()
 
   local attack_speed = 11 * 1.25
   local style = "left_to_right"
@@ -68,6 +68,6 @@ function ToyKnifeItem:GetAttackEffect()
   end)
 
   return true
-end
+end ]]
 
 return ToyKnifeItem
