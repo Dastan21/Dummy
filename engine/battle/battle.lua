@@ -46,6 +46,8 @@
 --- @field protected action_mercy_hover_sprite Dummy.Sprite
 --- @field protected is_attacking boolean
 --- @field protected attack_window_timer Dummy.Timer.Handle|nil
+--- @field num_bolts number
+--- @field target_bars table
 local Battle = {}
 
 --- Loads the encounter
@@ -83,6 +85,8 @@ function Battle.load()
   Battle.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1, nil, false)
   Battle.target_bar_sprite:setVisible(false)
   Battle.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
+  Battle.target_bars = {}
+  table.insert(Battle.target_bars, Battle.target_bar_sprite)
 
   -- miss
   Battle.miss_text = Text:new("BATTLE_ATTACK_MISS")
@@ -961,17 +965,18 @@ function Battle.startAttacking()
 
   if override then return end
   local attack_speed = 11
+  Battle.num_bolts = Player.getWeapon():GetWeaponBolts()
 
-  Battle.target_bar_sprite:setPosition(22, 320)
-  Battle.target_bar_sprite:setVisible(true)
-  Battle.target_bar_sprite:stop()
-  Battle.target_bar_sprite:setFrame(1)
+  Battle.target_bars[1]:setPosition(22, 320)
+  Battle.target_bars[1]:setVisible(true)
+  Battle.target_bars[1]:stop()
+  Battle.target_bars[1]:setFrame(1)
 
   local bar_speed = attack_speed + (love.math.random() * 2)
   Battle.attack_window_timer = Timer.during(2, function(dt)
-    local x, y = Battle.target_bar_sprite:getPosition()
+    local x, y = Battle.target_bars[1]:getPosition()
     local target_bar_x = x + bar_speed * dt * 30
-    Battle.target_bar_sprite:setPosition(target_bar_x, y)
+    Battle.target_bars[1]:setPosition(target_bar_x, y)
 
     local target_x = Battle.target_sprite:getPosition()
     local width = Battle.target_sprite:getWidth()
@@ -1013,7 +1018,7 @@ function Battle.attack(miss)
 
     local target_x = Battle.target_sprite:getPosition()
     local target_width = Battle.target_sprite:getWidth()
-    local target_bar_x = Battle.target_bar_sprite:getPosition()
+    local target_bar_x = Battle.target_bars[1]:getPosition()
     local bonus_factor = math.abs(target_x - target_bar_x)
     local stretch = (target_width - bonus_factor) / target_width
     local damage = math.max(0, Player.getAT() - enemy:getDF() + (love.math.random() * 2))
@@ -1029,7 +1034,7 @@ function Battle.attack(miss)
     local strike_speed = 1 / (strike_speed_base * 30)
     Battle.strike_sprite:setSpeed(strike_speed)
     Battle.strike_sprite:play()
-    Battle.target_bar_sprite:play()
+    Battle.target_bars[1]:play()
     Assets.playSound("strike")
     local damage_delay = (1 / strike_speed_base * 6 + 3) / 30
     Timer.after(damage_delay, function()
@@ -1192,7 +1197,7 @@ function Battle.endAttack(enemy)
     end
   end)
 
-  Battle.target_bar_sprite:setVisible(false)
+  Battle.target_bars[1]:setVisible(false)
 
   Battle.checkEncounterEnd()
 end

@@ -28,14 +28,18 @@ function ItemEquipment:setType(type)
   self.type = type
 end
 
+-- Weapon Functions (Do we really want weapons and armor in the same class if we're doing this?)
 --- (Override) Do something when attacking in a battle with the currently equipped weapon.
 ---
 --- Note: Setting this to true will override the standard Battle attack function.
 --- @return boolean
 function ItemEquipment:GetAttackEffect() return false end
---- Gets the currently equipped weapon's crit rate
+--- (Override) Gets the currently equipped weapon's crit rate
 --- @return number
 function ItemEquipment:GetWeaponCrit() return 2.2 end
+--- (Override) Gets the currently equipped weapon's bolt count (the number of attack bars)
+--- @return number
+function ItemEquipment:GetWeaponBolts() return 1 end
 --- (Override) Gets the item's final dialogue text when used
 --- @return Dummy.Text.Text[]
 function ItemEquipment:getDialogueTexts()
