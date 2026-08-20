@@ -236,6 +236,12 @@ WORLD_ITEM_DROP_2=* Vous mettez le {}\n  par terre et le tapotez\n  brièvement.
 WORLD_ITEM_DROP_3=* Vous jetez le {}\n  par terre comme un vieux\n  détritus. Bon débarras.
 WORLD_ITEM_DROP_4=* Vous abandonnez le\n  {}.
 WORLD_ITEM_DROP_5=* Vous vous débarrassez du\n  {}.
+
+ITEM_BLANKET_NAME=Couverture
+ITEM_BLANKET_SHORTNAME=Couvtur
+ITEM_BLANKET_DESCRIPTION=* "Couverture" - Armure DF 1\n* Le tissu est très doux.
+ITEM_BLANKET_DESCRIPTION_SHOP=Armure: 1DF\n({} DF)\n(Ça donne\nsommeil...)
+
 ITEM_BANDAGE_NAME=Pansement
 ITEM_BANDAGE_SHORTNAME=Pansement
 ITEM_BANDAGE_DESCRIPTION=* "Pansement" - Soigne 10 PV\n* Il a déjà été utilisé\n  plusieurs fois.

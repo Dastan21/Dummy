@@ -6,9 +6,9 @@ local BlanketItem = Class(ItemEquipment, "Item.Blanket")
 function BlanketItem:new()
   self = Class:new(BlanketItem, {
     "blanket",                                    -- item identifier
-    "WORLD_EXAMPLE_MOD_ITEM_BLANKET_NAME",        -- item name
-    "WORLD_EXAMPLE_MOD_ITEM_BLANKET_SHORTNAME",   -- item short name
-    "WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION", -- item description
+    "ITEM_BLANKET_NAME",        -- item name
+    "ITEM_BLANKET_SHORTNAME",   -- item short name
+    "ITEM_BLANKET_DESCRIPTION", -- item description
     1,
     "armor"
   })
@@ -18,7 +18,7 @@ function BlanketItem:new()
   -- the price at which the item will be sold in the shop
   self:setSellPrice(1)
   -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
-  self:setShopDescription("WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION_SHOP")
+  self:setShopDescription("ITEM_BLANKET_DESCRIPTION_SHOP")
 
   return self
 end
