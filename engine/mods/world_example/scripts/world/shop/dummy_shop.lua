@@ -45,7 +45,7 @@ function DummyShop:prepareItems()
   -- amount `-1` for infinite stock
   self:addItem(SmallCandy, -1)
 
-  local BlanketItem = require("items.blanket")
+  local BlanketItem = modRequire("scripts.items.blanket")
   local blanket_amount = 1
   -- track wether the blanket has been bought
   if WorldExampleMod.flag["dummy_shop_blanket"] == 1 then

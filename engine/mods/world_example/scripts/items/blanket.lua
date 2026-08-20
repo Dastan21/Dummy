@@ -1,8 +1,8 @@
---- @class Item.Blanket : Dummy.Item.Consumable
-local BlanketItem = Class(ItemEquipment, "Item.Blanket")
+--- @class WorldExample.Item.Blanket : Dummy.Item.Consumable
+local BlanketItem = Class(ItemEquipment, "WorldExample.Item.Blanket")
 
 --- Creates a blanket
---- @return Item.Blanket
+--- @return WorldExample.Item.Blanket
 function BlanketItem:new()
   self = Class:new(BlanketItem, {
     "blanket",                                    -- item identifier
