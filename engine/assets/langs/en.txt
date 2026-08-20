@@ -237,12 +237,6 @@ WORLD_ITEM_DROP_2=* You put the {}\n  on the ground and gave it a\n  little pat.
 WORLD_ITEM_DROP_3=* You threw the {}\n  on the ground like the piece\n  of trash it is.
 WORLD_ITEM_DROP_4=* You abandoned the \n  {}.
 WORLD_ITEM_DROP_5=* The {} was\n  thrown away.
-
-ITEM_BLANKET_NAME=Blanket
-ITEM_BLANKET_SHORTNAME=Blanket
-ITEM_BLANKET_DESCRIPTION=* "Blanket" - Armor DF 1\n* The fabric is very soft.
-ITEM_BLANKET_DESCRIPTION_SHOP=Armor: 1DF\n({} DF)\n(It makes\nyou sleepy...)
-
 ITEM_BANDAGE_NAME=Bandage
 ITEM_BANDAGE_SHORTNAME=Bandage
 ITEM_BANDAGE_DESCRIPTION=* "Bandage" - Heals 10 HP\n* It has already been used\n  several times.
