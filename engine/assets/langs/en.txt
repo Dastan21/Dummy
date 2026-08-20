@@ -232,7 +232,6 @@ WORLD_OBJECT_SAVEPOINT_METADATA_DIALOGUES=Dialogues
 WORLD_OBJECT_READABLE_METADATA_DIALOGUES=Dialogues
 
 # Items
-# Consumables
 WORLD_ITEM_DROP_1=* You bid a quiet farewell\n  to the {}.
 WORLD_ITEM_DROP_2=* You put the {}\n  on the ground and gave it a\n  little pat.
 WORLD_ITEM_DROP_3=* You threw the {}\n  on the ground like the piece\n  of trash it is.
@@ -469,13 +468,6 @@ ITEM_LAST_DREAM_SHORTNAME2="Dream"
 ITEM_LAST_DREAM_DESCRIPTION=* "Dream" Heals 12 HP\n* The goal of "Determination."
 ITEM_LAST_DREAM_DESCRIPTION_SHOP=undefined
 ITEM_LAST_DREAM_USE=* Through DETERMINATION,[wait:5] the\n  dream became true.
-
-# Weapons
-ITEM_TOY_KNIFE_NAME=Toy Knife
-ITEM_TOY_KNIFE_SHORTNAME=Toy Knife
-ITEM_TOY_KNIFE_SHORTNAME2=Toy Knife
-ITEM_TOY_KNIFE_DESCRIPTION=* "Toy Knife" - Weapon AT 3\n* Made of plastic.\n* A rarity nowadays.
-ITEM_TOY_KNIFE_DESCRIPTION_SHOP=undefined
 
 # World shop
 WORLD_SHOP_ACTION_BUY=Buy

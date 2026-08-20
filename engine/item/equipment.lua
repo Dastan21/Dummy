@@ -28,11 +28,6 @@ function ItemEquipment:setType(type)
   self.type = type
 end
 
---- (Override) Do something when attacking in a battle with the currently equipped weapon.
----
---- Note: Setting this to true will override the standard Battle attack function.
---- @return boolean
-function ItemEquipment:GetAttackEffect() return false end
 --- (Override) Gets the item's final dialogue text when used
 --- @return Dummy.Text.Text[]
 function ItemEquipment:getDialogueTexts()
@@ -42,7 +37,6 @@ function ItemEquipment:getDialogueTexts()
   end
   return texts
 end
-
 --- Uses the equipment item
 function ItemEquipment:use()
   if type(self.onBeforeUse) == "function" then
