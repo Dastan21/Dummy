@@ -1,5 +1,5 @@
 --- @class WorldExample.Item.Blanket : Dummy.Item.Consumable
-local BlanketItem = Class(ItemEquipment, "WorldExample.Item.Blanket")
+local BlanketItem = Class(ArmorItem, "WorldExample.Item.Blanket")
 
 --- Creates a blanket
 --- @return WorldExample.Item.Blanket

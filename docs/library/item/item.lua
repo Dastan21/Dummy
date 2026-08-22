@@ -11,13 +11,21 @@
 --- @field protected id string
 --- @field protected name Dummy.Text.Text
 --- @field protected short_name Dummy.Text.Text
---- @field protected description Dummy.Text.Text
+--- @field protected descriptions Dummy.Text.Text[]
 --- @field protected shop_description Dummy.Text.Text|nil
 --- @field protected use_texts Dummy.Text.Text[]
 --- @field protected drop_texts Dummy.Text.Text[]
 --- @field protected buy_price integer
 --- @field protected sell_price integer
 Item = {}
+
+--- Creates an item
+--- @param id string
+--- @param name Dummy.Text.Text
+--- @param short_name Dummy.Text.Text
+--- @param description Dummy.Text.Text
+--- @return Dummy.Item
+function Item:new(id, name, short_name, description) end
 
 --- Gets the item's id
 --- @return string
@@ -39,13 +47,14 @@ function Item:getShortName() end
 --- @param short_name Dummy.Text.Text
 function Item:setShortName(short_name) end
 
---- Gets the item's dialogue description
---- @return Dummy.Text.Text
-function Item:getDescription() end
+--- Gets the item's dialogue descriptions
+--- @return Dummy.Text.Text[]
+function Item:getDescriptions() end
 
---- Sets the item's dialogue description
+--- Sets the item's dialogue descriptions
 --- @param description Dummy.Text.Text
-function Item:setDescription(description) end
+--- @param ... Dummy.Text.Text
+function Item:setDescriptions(description, ...) end
 
 --- Gets the item's shop dialogue description
 --- @return Dummy.Text.Text|nil
@@ -72,6 +81,10 @@ function Item:getDropTexts() end
 --- @param text Dummy.Text.Text
 --- @param ... Dummy.Text.Text
 function Item:setDropText(text, ...) end
+
+--- Gets the item's dialogue texts
+--- @return Dummy.Text.Text[]
+function Item:getDialogueTexts() end
 
 --- Gets the item's buy price
 --- @return integer
@@ -116,12 +129,4 @@ function Item:onBeforeDrop() end
 ---
 --- Note: You can change the item dialogue text here
 function Item:onDrop() end
-
---- Creates an item
---- @param id string
---- @param name Dummy.Text.Text
---- @param short_name Dummy.Text.Text
---- @param description Dummy.Text.Text
---- @return Dummy.Item
-function Item:new(id, name, short_name, description) end
 

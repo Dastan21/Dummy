@@ -11,10 +11,11 @@
 --- @field private __hooks table<table, boolean>
 Utils = {}
 
---- Requires a module from the current mod
+--- Requires a module from the current mod, or the engine as a fallback if provided
 --- @param modname string
+--- @param altname? string
 --- @return unknown, unknown
-function modRequire(modname) end
+function modRequire(modname, altname) end
 
 function table.tostring(node) end
 

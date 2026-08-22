@@ -60,7 +60,7 @@ function World.load(from_editor)
   end
 end
 
---- Wether the player is in an encounter
+--- Wether the player is in a battle
 --- @return boolean
 function World.isInBattle()
   if Scene.getCurrentSceneId() ~= "BATTLE" then return false end

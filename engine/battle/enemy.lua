@@ -16,6 +16,7 @@
 --- @field protected can_be_spared boolean
 --- @field protected is_spared boolean
 --- @field protected spare_dust_timer Dummy.Timer.Handle|nil
+--- @field protected hurt_sound string|nil
 --- @field protected encounter Dummy.Battle.Encounter
 local Enemy = Class(Sprite, "Dummy.Enemy")
 
@@ -275,7 +276,7 @@ function Enemy:isKilled()
 end
 
 --- Gets the enemy's hurt sound
---- @return love.Source|nil
+--- @return string|nil
 function Enemy:getHurtSound()
   return self.hurt_sound
 end
@@ -283,15 +284,7 @@ end
 --- Sets the enemy's hurt sound
 --- @param hurt_sound string|nil
 function Enemy:setHurtSound(hurt_sound)
-  if self.hurt_sound ~= nil then
-    self.hurt_sound:stop()
-  end
-
-  if hurt_sound == nil then
-    self.hurt_sound = nil
-  else
-    self.hurt_sound = Assets.playSound(hurt_sound, false)
-  end
+  self.hurt_sound = hurt_sound
 end
 
 --- Removes the drawable from the current scene

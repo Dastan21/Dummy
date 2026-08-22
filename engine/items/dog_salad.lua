@@ -1,64 +1,40 @@
---- @class Item.DogSalad : Dummy.Item.Consumable
-local DogSaladItem = Class(ItemConsumable, "Item.DogSalad")
+--- @class Dummy.Item.DogSalad : Dummy.Item.Consumable
+---
+--- @field protected rand number
+local DogSaladItem = Class(ConsumableItem, "Dummy.Item.DogSalad")
 
 --- Creates a dog salad
---- @return Item.DogSalad
+--- @return Dummy.Item.DogSalad
 function DogSaladItem:new()
   self = Class:new(DogSaladItem, {
-    "dog_salad",                                     -- item identifier
-    "ITEM_DOG_SALAD_NAME",         -- item name
-    "ITEM_DOG_SALAD_SHORTNAME",    -- item short name
-    "ITEM_DOG_SALAD_DESCRIPTION", -- item description
-    15,
+    "dog_salad",
+    "ITEM_DOG_SALAD_NAME",
+    "ITEM_DOG_SALAD_SHORTNAME",
+    "ITEM_DOG_SALAD_DESCRIPTION",
+    2,
     "food"
   })
 
-  -- the price the player will pay to buy the item in the shop
   self:setBuyPrice(15)
-  -- the price at which the item will be sold in the shop
   self:setSellPrice(2)
-  -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_DOG_SALAD_DESCRIPTION_SHOP")
-  -- Random comments on use
-  self.use_comments = {
-    "ITEM_DOG_SALAD_USE",
-    "ITEM_DOG_SALAD_USE_2",
-    "ITEM_DOG_SALAD_USE_3",
-    "ITEM_DOG_SALAD_USE_4"
-  }
-  -- Random comments on use
+  self:setHealSound("dogresidue")
+
   self.rand = love.math.random(4)
 
-  return self
-end
+  self:setUseText("ITEM_DOG_SALAD_USE_" .. self.rand)
 
-function DogSaladItem:getDialogueTexts()
-  -- Select a random comment when getting dialogue text
-  local dialogue_text = Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. "\n" ..
-  Lang.translate(self.use_comments[self.rand]) .. "\n" .. self:getHealText()
-
-  return {dialogue_text}
-end
-
-function DogSaladItem:onUse()
-  Assets.playSound("dogresidue")
-end
-
-function DogSaladItem:getHeal()
-  local val
   if self.rand == 1 then
-    val = 2
+    self:setHeal(30)
+  elseif self.rand == 2 then
+    self:setHeal(10)
+  elseif self.rand == 3 then
+    self:setHeal(2)
+  elseif self.rand == 4 then
+    self:setHeal(Player.getMaxHP())
   end
-  if self.rand == 2 then
-    val = 10
-  end
-  if self.rand == 3 then
-    val = 30
-  end
-  if self.rand == 4 then
-    val = Player.getMaxHP()
-  end
-  return val
+
+  return self
 end
 
 return DogSaladItem

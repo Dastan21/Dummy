@@ -17,8 +17,8 @@
 --- @field protected gold number
 --- @field protected object Dummy.Object.Player
 --- @field protected name string
---- @field protected weapon Dummy.Item.Equipment
---- @field protected armor Dummy.Item.Equipment
+--- @field protected weapon Dummy.Item.Weapon
+--- @field protected armor Dummy.Item.Armor
 --- @field protected items Dummy.Item[]
 --- @field protected has_cellphone boolean
 --- @field protected phone_calls Dummy.Player.Phonecall[]
@@ -90,6 +90,9 @@ function Player.getDF() end
 --- @param df number defense point
 function Player.setDF(df) end
 
+--- Resets the player's AT and DF to their default values
+function Player.resetATDF() end
+
 --- Gets the player's EXP
 --- @return number
 function Player.getEXP(exp) end
@@ -107,19 +110,19 @@ function Player.getGold() end
 function Player.setGold(gold) end
 
 --- Gets the player's weapon
---- @return Dummy.Item.Equipment
+--- @return Dummy.Item.Weapon
 function Player.getWeapon() end
 
 --- Sets the player's weapon
---- @param weapon Dummy.Item.Equipment
+--- @param weapon Dummy.Item.Weapon
 function Player.setWeapon(weapon) end
 
 --- Gets the player's armor
---- @return Dummy.Item.Equipment
+--- @return Dummy.Item.Armor
 function Player.getArmor() end
 
 --- Sets the player's armor
---- @param armor Dummy.Item.Equipment
+--- @param armor Dummy.Item.Armor
 function Player.setArmor(armor) end
 
 --- Gets the player's max items

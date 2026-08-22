@@ -103,6 +103,9 @@ function Editor.playRoom() end
 --- Opens the room form
 function Editor.openRoomForm() end
 
+--- Opens the keybinds menu
+function Editor.openKeybindsMenu() end
+
 --- Opens the object add modal
 function Editor.openObjectAddModal() end
 
@@ -157,7 +160,7 @@ function Editor.getHoveredCell() end
 --- @param y number
 function Editor.setHoveredCell(x, y) end
 
---- Snaps a value to the grid
+--- Snaps a value to the map
 --- @param v number
 --- @return number
 function Editor.snapToGrid(v) end

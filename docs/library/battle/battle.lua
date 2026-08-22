@@ -56,8 +56,10 @@ Battle = {}
 --- @field x? number target position x of the heart
 --- @field y? number target position y of the heart
 
---- Loads the encounter
+--- Loads the battle
 function Battle.load() end
+
+function Battle.unload() end
 
 --- Starts the encounter
 --- @param encounter Dummy.Battle.Encounter
@@ -140,35 +142,35 @@ function Battle.win(exp, gold) end
 --- @return Dummy.Battle.Enemy|nil
 function Battle.getSelectedEnemy() end
 
---- Gets the encounter's fight enemy menu
+--- Gets the battle's fight enemy menu
 --- @return Dummy.Battle.ActionMenu
 function Battle.getFightEnemyMenu() end
 
 --- Loads fight enemy menu
 function Battle.loadFightEnemyMenu() end
 
---- Gets the encounter's act enemy menu
+--- Gets the battle's act enemy menu
 --- @return Dummy.Battle.ActionMenu
 function Battle.getActEnemyMenu() end
 
 --- Loads act enemy menu
 function Battle.loadActEnemyMenu() end
 
---- Gets the encounter's act menus
+--- Gets the battle's act menus
 --- @return Dummy.Battle.ActionMenu[]
 function Battle.getActMenus() end
 
 --- Loads act menus
 function Battle.loadActMenus() end
 
---- Gets the encounter's item menu
+--- Gets the battle's item menu
 --- @return Dummy.Battle.ActionMenu
 function Battle.getItemMenu() end
 
 --- Loads item menu
 function Battle.loadItemMenu() end
 
---- Gets the encounter's mercy menu
+--- Gets the battle's mercy menu
 --- @return Dummy.Battle.ActionMenu
 function Battle.getMercyMenu() end
 
@@ -178,11 +180,11 @@ function Battle.loadMercyMenu() end
 --- Flees the encounter
 function Battle.flee() end
 
---- Gets the current encounter state
+--- Gets the current battle state
 --- @return string
 function Battle.getCurrentState() end
 
---- Sets current encounter state
+--- Sets current battle state
 --- @param state string
 function Battle.setState(state) end
 
@@ -208,7 +210,7 @@ function Battle.startActionSelect() end
 --- Updates action select
 function Battle.updateActionSelect() end
 
---- Loads encounter actions
+--- Loads battle actions
 function Battle.loadActions() end
 
 --- Wether an action menu can be entered
@@ -268,7 +270,7 @@ function Battle.updateDefending(dt) end
 --- Updates the player UI
 function Battle.updatePlayerUI() end
 
---- Updates the encounter
+--- Updates the battle
 --- @param dt number
 function Battle.update(dt) end
 

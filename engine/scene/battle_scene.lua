@@ -41,6 +41,11 @@ function BattleScene.load(EncounterClass, previous_scene)
   BattleScene.fadeOut()
 end
 
+--- Unloads the battle scene
+function BattleScene.unload()
+  Battle.unload()
+end
+
 --- Fades out the battle scene
 --- @private
 function BattleScene.fadeOut()

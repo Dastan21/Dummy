@@ -376,6 +376,12 @@ function Text:registerCommand(command, func)
   self.custom_commands[command] = func
 end
 
+--- Unregisters a custom text command
+--- @param command string
+function Text:unregisterCommand(command)
+  self.custom_commands[command] = nil
+end
+
 --- Updates the text, called on every game update
 --- @param dt number
 function Text:update(dt)

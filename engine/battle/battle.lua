@@ -48,7 +48,7 @@
 --- @field protected attack_window_timer Dummy.Timer.Handle|nil
 local Battle = {}
 
---- Loads the encounter
+--- Loads the battle
 function Battle.load()
   -- background
   Battle.bg_sprite = Sprite:new("battle_bg")
@@ -170,6 +170,11 @@ function Battle.load()
   if music ~= nil then
     music:stop()
   end
+end
+
+function Battle.unload()
+  Player.resetATDF()
+  Soul.resetSpeed()
 end
 
 --- Starts the encounter
@@ -356,7 +361,7 @@ function Battle.getSelectedEnemy()
   return Battle.encounter:getEnemies()[Battle.enemy_selected_index]
 end
 
---- Gets the encounter's fight enemy menu
+--- Gets the battle's fight enemy menu
 --- @return Dummy.Battle.ActionMenu
 function Battle.getFightEnemyMenu()
   return Battle.fight_enemy_menu
@@ -405,7 +410,7 @@ function Battle.loadFightEnemyMenu()
   end
 end
 
---- Gets the encounter's act enemy menu
+--- Gets the battle's act enemy menu
 --- @return Dummy.Battle.ActionMenu
 function Battle.getActEnemyMenu()
   return Battle.act_enemy_menu
@@ -445,7 +450,7 @@ function Battle.loadActEnemyMenu()
   end
 end
 
---- Gets the encounter's act menus
+--- Gets the battle's act menus
 --- @return Dummy.Battle.ActionMenu[]
 function Battle.getActMenus()
   return Battle.act_menus
@@ -491,7 +496,7 @@ function Battle.loadActMenus()
   end
 end
 
---- Gets the encounter's item menu
+--- Gets the battle's item menu
 --- @return Dummy.Battle.ActionMenu
 function Battle.getItemMenu()
   return Battle.item_menu
@@ -522,7 +527,7 @@ function Battle.loadItemMenu()
   end
 end
 
---- Gets the encounter's mercy menu
+--- Gets the battle's mercy menu
 --- @return Dummy.Battle.ActionMenu
 function Battle.getMercyMenu()
   return Battle.mercy_menu
@@ -643,13 +648,13 @@ function Battle.flee()
   Battle.dialogue_text:skip()
 end
 
---- Gets the current encounter state
+--- Gets the current battle state
 --- @return string
 function Battle.getCurrentState()
   return Battle.current_state
 end
 
---- Sets current encounter state
+--- Sets current battle state
 --- @param state string
 function Battle.setState(state)
   Battle.current_state = state
@@ -742,7 +747,7 @@ function Battle.updateActionSelect()
   end
 end
 
---- Loads encounter actions
+--- Loads battle actions
 function Battle.loadActions()
   Battle.action = {}
   Battle.action_index = Constants.BATTLE_ACTIONS.FIGHT
@@ -1119,11 +1124,10 @@ function Battle.proceedAttack(enemy, damage, miss)
 
     enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
 
-    if enemy:getHurtSound() ~= nil then
+    local hurt_sound = enemy:getHurtSound()
+    if hurt_sound ~= nil then
       Timer.after(0.37, function()
-        if enemy:getHurtSound() ~= nil then
-          enemy:getHurtSound():play()
-        end
+        Assets.playSound(hurt_sound)
       end)
     end
 
@@ -1232,7 +1236,7 @@ function Battle.updatePlayerUI()
   Battle.player_hp_value_text:setText(string.format("%02d", Player.getHP()) .. " / " .. tostring(Player.getMaxHP()))
 end
 
---- Updates the encounter
+--- Updates the battle
 --- @param dt number
 function Battle.update(dt)
   -- start

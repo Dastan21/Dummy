@@ -12,7 +12,7 @@
 --- @field protected logs string[]
 --- @field protected margin number
 --- @field protected scale number
---- @field protected display_hitbox boolean
+--- @field protected show_debug boolean
 --- @field protected paused boolean
 --- @field protected log_bg_sprite Dummy.Sprite
 --- @field protected log_text Dummy.Text
@@ -27,9 +27,9 @@ Debug = {}
 --- @return boolean
 function Debug.isDebugMode() end
 
---- Wether the hitboxes should be displayed
+--- Wether the debugger should show debug information
 --- @return boolean
-function Debug.shouldDisplayHitbox() end
+function Debug.shouldShowDebug() end
 
 --- Wether the debugger is paused
 --- @return boolean

@@ -1,43 +1,41 @@
---- @class Item.SeaTea : Dummy.Item.Consumable
-local SeaTeaItem = Class(ItemConsumable, "Item.SeaTea")
+--- @class Dummy.Item.SeaTea : Dummy.Item.Consumable
+local SeaTeaItem = Class(ConsumableItem, "Dummy.Item.SeaTea")
 
 --- Creates a sea tea
---- @return Item.SeaTea
+--- @return Dummy.Item.SeaTea
 function SeaTeaItem:new()
   self = Class:new(SeaTeaItem, {
-    "seatea",                                     -- item identifier
-    "ITEM_SEATEA_NAME",         -- item name
-    "ITEM_SEATEA_SHORTNAME",   -- item short name
-    "ITEM_SEATEA_DESCRIPTION", -- item description
+    "sea_tea",
+    "ITEM_SEA_TEA_NAME",
+    "ITEM_SEA_TEA_SHORTNAME",
+    "ITEM_SEA_TEA_DESCRIPTION",
     10,
     "drink"
   })
 
-  -- the price the player will pay to buy the item in the shop
   self:setBuyPrice(18)
-  -- the price at which the item will be sold in the shop
   self:setSellPrice(5)
-  -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
-  self:setShopDescription("ITEM_SEATEA_DESCRIPTION_SHOP")
+  self:setShopDescription("ITEM_SEA_TEA_DESCRIPTION_SHOP")
 
   return self
 end
 
+--- Called when the sea tea is used
 function SeaTeaItem:onUse()
-  if Soul.getSpeed() < 2 then
-  Soul.setSpeed(Soul.getSpeed() + 0.25)
-  print(Soul.getSpeed())
+  if World.isInBattle() and Soul.getSpeed() < 8 then
+    Soul.setSpeed(Soul.getSpeed() + 1)
   end
 end
 
+--- Gets the sea tea's dialogue texts
+--- @return Dummy.Text.Text[]
 function SeaTeaItem:getDialogueTexts()
-  local usecomment = "ITEM_SEATEA_USE"
-  if Soul.getSpeed() < 2 then
-  return { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. "\n" ..
-  Lang.translate(usecomment) .. "\n" .. self:getHealText() }
-  else
-    return { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. "\n" .. self:getHealText() }
+  local dialogue_text = Lang.translate("ITEM_SEA_TEA_USE")
+  if World.isInBattle() and Soul.getSpeed() < 8 then
+    dialogue_text = dialogue_text .. "\n" .. Lang.translate("ITEM_SEA_TEA_USE_EFFECT")
   end
+  dialogue_text = dialogue_text .. "\n" .. self:getHealText()
+  return { dialogue_text }
 end
 
 return SeaTeaItem

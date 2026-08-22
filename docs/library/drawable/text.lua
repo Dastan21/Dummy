@@ -173,6 +173,10 @@ function Text:getCharOffset(line) end
 --- @param func fun(node: Dummy.Text.Node)
 function Text:registerCommand(command, func) end
 
+--- Unregisters a custom text command
+--- @param command string
+function Text:unregisterCommand(command) end
+
 --- Updates the text, called on every game update
 --- @param dt number
 function Text:update(dt) end

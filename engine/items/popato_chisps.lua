@@ -1,24 +1,22 @@
---- @class Item.PopatoChisps : Dummy.Item.Consumable
-local PopatoChispsItem = Class(ItemConsumable, "Item.PopatoChisps")
+--- @class Dummy.Item.PopatoChisps : Dummy.Item.Consumable
+local PopatoChispsItem = Class(ConsumableItem, "Dummy.Item.PopatoChisps")
 
 --- Creates a popato chisps
---- @return Item.PopatoChisps
+--- @return Dummy.Item.PopatoChisps
 function PopatoChispsItem:new()
   self = Class:new(PopatoChispsItem, {
-    "popato_chisps",                                     -- item identifier
-    "ITEM_POPATO_CHISPS_NAME",         -- item name
-    "ITEM_POPATO_CHISPS_SHORTNAME", -- item short name
-    "ITEM_POPATO_CHISPS_DESCRIPTION", -- item description
+    "popato_chisps",
+    "ITEM_POPATO_CHISPS_NAME",
+    "ITEM_POPATO_CHISPS_SHORTNAME",
+    "ITEM_POPATO_CHISPS_DESCRIPTION",
     13,
     "food"
   })
 
-  -- the price the player will pay to buy the item in the shop
   self:setBuyPrice(25)
-  -- the price at which the item will be sold in the shop
   self:setSellPrice(35)
-  -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_POPATO_CHISPS_DESCRIPTION_SHOP")
+  self:setUseText("ITEM_POPATO_CHISPS_USE")
 
   return self
 end

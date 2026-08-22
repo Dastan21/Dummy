@@ -149,7 +149,7 @@ function PlayerItemMenu:doActionOnSelectItem()
     item:use()
   elseif self.item_action_index == 1 then
     self:close()
-    World.playDialogue({ item:getDescription() })
+    World.playDialogue(item:getDescriptions())
   elseif self.item_action_index == 2 then
     self:close()
     item:drop()

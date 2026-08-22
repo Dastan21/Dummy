@@ -1,7 +1,7 @@
 --- @class Dummy.Battle.Soul
 ---
+--- @field protected init_speed number
 --- @field protected speed number
---- @field protected speed_factor number
 --- @field protected is_invincible boolean
 --- @field protected invincible boolean
 --- @field protected invincible_duration number
@@ -13,10 +13,11 @@
 --- @field protected debug_hitbox_drawable Dummy.Drawable
 local Soul = {}
 
+
 --- Initializes the soul
 function Soul.load()
-  Soul.speed = 4
-  Soul.speed_factor = 1
+  Soul.init_speed = 4
+  Soul.speed = Soul.init_speed
   Soul.is_invincible = false
   Soul.invincible = false
   Soul.invincible_duration = 1
@@ -91,13 +92,18 @@ end
 --- Gets the player soul's speed
 --- @return number
 function Soul.getSpeed()
-  return Soul.speed_factor
+  return Soul.speed
 end
 
 --- Sets the player soul's speeds
 --- @param speed number
 function Soul.setSpeed(speed)
-  Soul.speed_factor = speed
+  Soul.speed = speed
+end
+
+--- Resets the player soul's speed to its default value
+function Soul.resetSpeed()
+  Soul.speed = Soul.init_speed
 end
 
 --- Wether the player is invincible
@@ -241,8 +247,8 @@ function Soul.update(dt)
     if Input.isDown(Input.Right) then dir_x = dir_x + 1 end
 
     local slow = Input.isDown(Input.Cancel) and 0.5 or 1
-    local s = Soul.speed * Soul:getSpeed() * slow * dt * 30
-    local x, y = Soul.sprite:getPosition()
+    local s = Soul:getSpeed() * slow * dt * 30
+    local x, y = Soul:getSprite():getPosition()
     Soul.setPosition(x + dir_x * s, y + dir_y * s)
   end
 end

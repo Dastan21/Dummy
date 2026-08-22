@@ -20,13 +20,12 @@ function mod:load()
 
   -- add items
   Player.addItem(require("items.monster_candy"):new())
-  Player.addItem(ItemEquipment:new(
+  Player.addItem(ArmorItem:new(
     "toy_knife",
     "FROGGIT_MOD_TOY_KNIFE_NAME",
     "FROGGIT_MOD_TOY_KNIFE_SHORTNAME",
     "",
-    3,
-    "weapon"
+    3
   ))
 
   local encounter = modRequire("scripts.encounters.froggit")

@@ -8,8 +8,8 @@
 
 --- @class Dummy.Battle.Soul
 ---
+--- @field protected init_speed number
 --- @field protected speed number
---- @field protected speed_factor number
 --- @field protected is_invincible boolean
 --- @field protected invincible boolean
 --- @field protected invincible_duration number
@@ -46,6 +46,9 @@ function Soul.getSpeed() end
 --- Sets the player soul's speeds
 --- @param speed number
 function Soul.setSpeed(speed) end
+
+--- Resets the player soul's speed to its default value
+function Soul.resetSpeed() end
 
 --- Wether the player is invincible
 --- @return boolean

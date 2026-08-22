@@ -1,42 +1,42 @@
---- @class Item.LegendaryHero : Dummy.Item.Consumable
-local LegendaryHeroItem = Class(ItemConsumable, "Item.LegendaryHero")
+--- @class Dummy.Item.LegendaryHero : Dummy.Item.Consumable
+local LegendaryHeroItem = Class(ConsumableItem, "Dummy.Item.LegendaryHero")
 
 --- Creates a legendary hero
---- @return Item.LegendaryHero
+--- @return Dummy.Item.LegendaryHero
 function LegendaryHeroItem:new()
   self = Class:new(LegendaryHeroItem, {
-    "legendary_hero",                                     -- item identifier
-    "ITEM_LEGENDARY_HERO_NAME",         -- item name
-    "ITEM_LEGENDARY_HERO_SHORTNAME",  -- item short name
-    "ITEM_LEGENDARY_HERO_DESCRIPTION", -- item description
+    "legendary_hero",
+    "ITEM_LEGENDARY_HERO_NAME",
+    "ITEM_LEGENDARY_HERO_SHORTNAME",
+    "ITEM_LEGENDARY_HERO_DESCRIPTION",
     40,
     "food"
   })
 
-  -- the price the player will pay to buy the item in the shop
   self:setBuyPrice(300)
-  -- the price at which the item will be sold in the shop
   self:setSellPrice(40)
-  -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_LEGENDARY_HERO_DESCRIPTION_SHOP")
+  self:setHealSound("hero")
 
   return self
 end
 
+--- Called when the legendary hero is used
 function LegendaryHeroItem:onUse()
-  if Player.getAT() < 150 then
+  if World.isInBattle() and Player.getAT() < 150 then
     Player.setAT(Player.getAT() + 4)
   end
 end
 
+--- Gets the legendary hero's dialogue texts
+--- @return Dummy.Text.Text[]
 function LegendaryHeroItem:getDialogueTexts()
-  local usecomment = "ITEM_LEGENDARY_HERO_USE"
-  if Player.getAT() < 150 then
-  return { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. "\n" ..
-  Lang.translate(usecomment) .. "\n" .. self:getHealText() }
-  else
-    return { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) .. "\n" .. self:getHealText() }
+  local dialogue_text = Lang.translate("ITEM_LEGENDARY_HERO_USE")
+  if World.isInBattle() and Player.getAT() < 150 then
+    dialogue_text = dialogue_text .. "\n" .. Lang.translate("ITEM_LEGENDARY_HERO_USE_EFFECT")
   end
+  dialogue_text = dialogue_text .. "\n" .. self:getHealText()
+  return { dialogue_text }
 end
 
 return LegendaryHeroItem

@@ -22,6 +22,9 @@ BattleScene = {}
 --- @param previous_scene? string
 function BattleScene.load(EncounterClass, previous_scene) end
 
+--- Unloads the battle scene
+function BattleScene.unload() end
+
 --- Fades out the battle scene
 --- @private
 function BattleScene.fadeOut() end

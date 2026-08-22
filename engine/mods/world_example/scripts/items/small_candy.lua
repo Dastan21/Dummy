@@ -1,5 +1,5 @@
 --- @class WorldExample.Item.SmallCandy : Dummy.Item.Consumable
-local SmallCandyItem = Class(ItemConsumable, "WorldExample.Item.SmallCandy")
+local SmallCandyItem = Class(ConsumableItem, "WorldExample.Item.SmallCandy")
 
 --- Creates a small candy
 --- @return WorldExample.Item.SmallCandy

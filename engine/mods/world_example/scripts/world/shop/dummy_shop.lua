@@ -45,6 +45,10 @@ function DummyShop:prepareItems()
   -- amount `-1` for infinite stock
   self:addItem(SmallCandy, -1)
 
+  local Bisicle = modRequire("scripts.items.bisicle")
+  local bisicle_amount = math.max(0, 2 - (WorldExampleMod.flag["dummy_shop_bisicle"] or 0))
+  self:addItem(Bisicle, bisicle_amount)
+
   local BlanketItem = modRequire("scripts.items.blanket")
   local blanket_amount = 1
   -- track wether the blanket has been bought
@@ -112,7 +116,9 @@ function DummyShop:onBuyItem(item, not_enough_gold, inventory_full, sold_out)
   elseif inventory_full then
     self:playSideDialogue("WORLD_EXAMPLE_MOD_WORLD_SHOP_DUMMY_BUY_INVENTORY_FULL_TEXT")
   else
-    if item:getId() == "blanket" then
+    if item:getId() == "bisicle" then
+      WorldExampleMod.flag["dummy_shop_bisicle"] = (WorldExampleMod.flag["dummy_shop_bisicle"] or 0) + 1
+    elseif item:getId() == "blanket" then
       WorldExampleMod.flag["dummy_shop_blanket"] = 1
     end
 

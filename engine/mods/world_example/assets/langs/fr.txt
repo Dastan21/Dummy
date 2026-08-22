@@ -101,3 +101,16 @@ WORLD_EXAMPLE_MOD_ITEM_BLANKET_NAME=Couverture
 WORLD_EXAMPLE_MOD_ITEM_BLANKET_SHORTNAME=Couvtur
 WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION=* "Couverture" - Armure DF 1\n* Le tissu est très doux.
 WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION_SHOP=Armure: 1DF\n({} DF)\n(Ça donne\nsommeil...)
+
+# This overrides engine content
+ITEM_BISICLE_NAME=Biscuimo SP
+ITEM_BISICLE_SHORTNAME=BscleSP
+ITEM_BISICLE_DESCRIPTION=* "Bisicle SP" - Heals 11 HP\n* It's like a regular bisicle,[wait:5]\n  but local to a mod!
+ITEM_BISICLE_DESCRIPTION_SHOP=Heals 11HP x 2\nSpecil.
+BATTLE_BISICLE_USE=* You eat one half of it.[wait:5]\n* You feel special.
+
+ITEM_BISICLE_NAME=Biscuimo SP
+ITEM_BISICLE_SHORTNAME=BscmoSP
+ITEM_BISICLE_DESCRIPTION=* "Biscuimo SP" - Soigne 11 PV\n* C'est comme un biscuimo,[wait:5]\n  mais propre à un mod.
+ITEM_BISICLE_DESCRIPTION_SHOP=Soigne 11PV x2\nSpécil.
+ITEM_BISICLE_USE=* Vous prenez une bouchée.\n* Vous vous sentez spécial.

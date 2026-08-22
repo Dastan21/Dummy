@@ -24,6 +24,7 @@
 --- @field protected can_be_spared boolean
 --- @field protected is_spared boolean
 --- @field protected spare_dust_timer Dummy.Timer.Handle|nil
+--- @field protected hurt_sound string|nil
 --- @field protected encounter Dummy.Battle.Encounter
 Enemy = {}
 
@@ -136,7 +137,7 @@ function Enemy:spare() end
 function Enemy:isKilled() end
 
 --- Gets the enemy's hurt sound
---- @return love.Source|nil
+--- @return string|nil
 function Enemy:getHurtSound() end
 
 --- Sets the enemy's hurt sound

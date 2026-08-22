@@ -1,24 +1,22 @@
---- @class Item.CrabApple : Dummy.Item.Consumable
-local CrabAppleItem = Class(ItemConsumable, "Item.CrabApple")
+--- @class Dummy.Item.CrabApple : Dummy.Item.Consumable
+local CrabAppleItem = Class(ConsumableItem, "Dummy.Item.CrabApple")
 
 --- Creates a crab apple
---- @return Item.CrabApple
+--- @return Dummy.Item.CrabApple
 function CrabAppleItem:new()
   self = Class:new(CrabAppleItem, {
-    "crab_apple",                                     -- item identifier
-    "ITEM_CRAB_APPLE_NAME",         -- item name
-    "ITEM_CRAB_APPLE_SHORTNAME",       -- item short name
-    "ITEM_CRAB_APPLE_DESCRIPTION", -- item description
+    "crab_apple",
+    "ITEM_CRAB_APPLE_NAME",
+    "ITEM_CRAB_APPLE_SHORTNAME",
+    "ITEM_CRAB_APPLE_DESCRIPTION",
     18,
     "food"
   })
 
-  -- the price the player will pay to buy the item in the shop
   self:setBuyPrice(25)
-  -- the price at which the item will be sold in the shop
   self:setSellPrice(5)
-  -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_CRAB_APPLE_DESCRIPTION_SHOP")
+  self:setUseText("ITEM_CRAB_APPLE_USE")
 
   return self
 end

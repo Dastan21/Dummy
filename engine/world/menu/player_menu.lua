@@ -39,7 +39,7 @@ function PlayerMenu:new()
 
     local width, height = _self:getWidth(), _self:getHeight()
 
-    -- Recap window
+    -- recap window
     -- outline
     love.graphics.setColor(1, 1, 1)
     love.graphics.rectangle("fill", -3, -3, width + 6, height + 6)
@@ -240,7 +240,6 @@ function PlayerMenu:open()
 
   self:setVisible(true)
   self:updatePosition()
-  self:updateTexts()
   self:updateHeartPosition()
   self.heart_sprite:setVisible(true)
 
@@ -280,7 +279,7 @@ function PlayerMenu:draw(camera)
   local x, y = 19, 87
   local width, height = 65, 68
 
-  -- Action window
+  -- action window
   -- outline
   love.graphics.setColor(1, 1, 1)
   love.graphics.rectangle("fill", x - 3, y - 3, width + 6, height + 6)
@@ -326,6 +325,8 @@ function PlayerMenu:update(dt)
       self:close()
     end
   end
+
+  self:updateTexts()
 end
 
 return PlayerMenu

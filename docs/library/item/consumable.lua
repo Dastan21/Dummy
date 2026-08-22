@@ -10,26 +10,7 @@
 ---
 --- @field protected heal number
 --- @field protected type "food" | "drink"
-ItemConsumable = {}
-
---- Gets the item's heal amount
---- @return number
-function ItemConsumable:getHeal() end
-
---- Sets the item's heal amount
---- @param heal number
-function ItemConsumable:setHeal(heal) end
-
---- Gets the item's type
---- @return "food" | "drink"
-function ItemConsumable:getType() end
-
---- Sets the item's type
---- @param type "food" | "drink"
-function ItemConsumable:setType(type) end
-
---- Uses the consumable item
-function ItemConsumable:use() end
+ConsumableItem = {}
 
 --- Creates a consumable item
 --- @param id string
@@ -39,5 +20,48 @@ function ItemConsumable:use() end
 --- @param heal number
 --- @param type "food" | "drink"
 --- @return Dummy.Item.Consumable
-function ItemConsumable:new(id, name, short_name, description, heal, type) end
+function ConsumableItem:new(id, name, short_name, description, heal, type) end
+
+--- Gets the consumable's heal amount
+--- @return number
+function ConsumableItem:getHeal() end
+
+--- Sets the consumable's heal amount
+--- @param heal number
+function ConsumableItem:setHeal(heal) end
+
+--- Gets the consumable's type
+--- @return "food" | "drink"
+function ConsumableItem:getType() end
+
+--- Sets the consumable's type
+--- @param type "food" | "drink"
+function ConsumableItem:setType(type) end
+
+--- Gets the consumable's swallow sound
+--- @return string|nil
+function ConsumableItem:getSwallowSound() end
+
+--- Sets the consumable's swallow sound
+--- @param swallow_sound string|nil
+function ConsumableItem:setSwallowSound(swallow_sound) end
+
+--- Gets the consumable's heal sound
+--- @return string|nil
+function ConsumableItem:getHealSound() end
+
+--- Sets the consumable's heal sound
+--- @param heal_sound string|nil
+function ConsumableItem:setHealSound(heal_sound) end
+
+--- Gets the consumable's heal text
+--- @return string
+function ConsumableItem:getHealText() end
+
+--- Gets the consumable's dialogue texts
+--- @return Dummy.Text.Text[]
+function ConsumableItem:getDialogueTexts() end
+
+--- Uses the consumable item
+function ConsumableItem:use() end
 

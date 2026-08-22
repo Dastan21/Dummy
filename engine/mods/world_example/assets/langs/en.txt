@@ -105,7 +105,6 @@ WORLD_EXAMPLE_MOD_ITEM_BLANKET_DESCRIPTION_SHOP=Armor: 1DF\n({} DF)\n(It makes\n
 # This overrides engine content
 ITEM_BISICLE_NAME=Bisicle SP
 ITEM_BISICLE_SHORTNAME=BscleSP
-ITEM_BISICLE_SHORTNAME2=BscleSP
 ITEM_BISICLE_DESCRIPTION=* "Bisicle SP" - Heals 11 HP\n* It's like a regular bisicle,[wait:5]\n  but local to a mod!
 ITEM_BISICLE_DESCRIPTION_SHOP=Heals 11HP x 2\nspecil
 BATTLE_BISICLE_USE=* You eat one half of it.[wait:5]\n* You feel special.

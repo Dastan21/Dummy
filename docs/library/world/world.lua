@@ -29,7 +29,7 @@ World = {}
 --- @param from_editor? boolean
 function World.load(from_editor) end
 
---- Wether the player is in an encounter
+--- Wether the player is in a battle
 --- @return boolean
 function World.isInBattle() end
 

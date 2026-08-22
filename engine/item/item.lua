@@ -3,13 +3,34 @@
 --- @field protected id string
 --- @field protected name Dummy.Text.Text
 --- @field protected short_name Dummy.Text.Text
---- @field protected description Dummy.Text.Text
+--- @field protected descriptions Dummy.Text.Text[]
 --- @field protected shop_description Dummy.Text.Text|nil
 --- @field protected use_texts Dummy.Text.Text[]
 --- @field protected drop_texts Dummy.Text.Text[]
 --- @field protected buy_price integer
 --- @field protected sell_price integer
 local Item = Class("Dummy.Item")
+
+--- Creates an item
+--- @param id string
+--- @param name Dummy.Text.Text
+--- @param short_name Dummy.Text.Text
+--- @param description Dummy.Text.Text
+--- @return Dummy.Item
+function Item:new(id, name, short_name, description)
+  self = Class:new(Item)
+
+  self.id = id
+  self.name = name
+  self.short_name = short_name
+  self.descriptions = { Utils.getOrDefault(description, "") }
+  self.use_texts = {}
+  self.drop_texts = {}
+  self.buy_price = 0
+  self.sell_price = 0
+
+  return self
+end
 
 --- Gets the item's id
 --- @return string
@@ -41,16 +62,17 @@ function Item:setShortName(short_name)
   self.short_name = short_name
 end
 
---- Gets the item's dialogue description
---- @return Dummy.Text.Text
-function Item:getDescription()
-  return self.description
+--- Gets the item's dialogue descriptions
+--- @return Dummy.Text.Text[]
+function Item:getDescriptions()
+  return self.descriptions
 end
 
---- Sets the item's dialogue description
+--- Sets the item's dialogue descriptions
 --- @param description Dummy.Text.Text
-function Item:setDescription(description)
-  self.description = description
+--- @param ... Dummy.Text.Text
+function Item:setDescriptions(description, ...)
+  self.descriptions = { description, ... }
 end
 
 --- Gets the item's shop dialogue description
@@ -91,7 +113,7 @@ function Item:setDropText(text, ...)
   self.drop_texts = { text, ... }
 end
 
---- (Override) Gets the item's final dialogue text when used
+--- Gets the item's dialogue texts
 --- @return Dummy.Text.Text[]
 function Item:getDialogueTexts()
   return self:getUseTexts()
@@ -127,7 +149,6 @@ function Item:use()
   if type(self.onBeforeUse) == "function" then
     can_use = self:onBeforeUse()
   end
-
   if not can_use then return end
 
   local dialogue_texts = self:getDialogueTexts()
@@ -164,16 +185,16 @@ function Item:drop()
   if not can_drop then return end
 
   if not World.isInBattle() then
-    local text = "WORLD_ITEM_DROP_5"
+    local text = "ITEM_ACTION_DROP_5"
     local rand = math.round(love.math.random(18))
     if rand == 0 then
-      text = "WORLD_ITEM_DROP_1"
+      text = "ITEM_ACTION_DROP_1"
     elseif rand == 1 then
-      text = "WORLD_ITEM_DROP_2"
+      text = "ITEM_ACTION_DROP_2"
     elseif rand == 2 then
-      text = "WORLD_ITEM_DROP_3"
+      text = "ITEM_ACTION_DROP_3"
     elseif rand == 3 then
-      text = "WORLD_ITEM_DROP_4"
+      text = "ITEM_ACTION_DROP_4"
     end
 
     local texts = self:getDropTexts()
@@ -200,26 +221,5 @@ function Item:onBeforeDrop() return true end
 ---
 --- Note: You can change the item dialogue text here
 function Item:onDrop() end
-
---- Creates an item
---- @param id string
---- @param name Dummy.Text.Text
---- @param short_name Dummy.Text.Text
---- @param description Dummy.Text.Text
---- @return Dummy.Item
-function Item:new(id, name, short_name, description)
-  self = Class:new(Item)
-
-  self.id = id
-  self.name = name
-  self.short_name = short_name
-  self.description = description
-  self.use_texts = {}
-  self.drop_texts = {}
-  self.buy_price = 0
-  self.sell_price = 0
-
-  return self
-end
 
 return Item

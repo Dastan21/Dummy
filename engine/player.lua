@@ -15,8 +15,8 @@
 --- @field protected gold number
 --- @field protected object Dummy.Object.Player
 --- @field protected name string
---- @field protected weapon Dummy.Item.Equipment
---- @field protected armor Dummy.Item.Equipment
+--- @field protected weapon Dummy.Item.Weapon
+--- @field protected armor Dummy.Item.Armor
 --- @field protected items Dummy.Item[]
 --- @field protected has_cellphone boolean
 --- @field protected phone_calls Dummy.Player.Phonecall[]
@@ -62,22 +62,8 @@ function Player.load()
 
   Player.name = "Frisk"
 
-  Player.weapon = ItemEquipment:new(
-    "stick",
-    "ITEM_STICK_NAME",
-    "ITEM_STICK_SHORTNAME",
-    "ITEM_STICK_DESCRIPTION",
-    0,
-    "weapon"
-  )
-  Player.armor = ItemEquipment:new(
-    "bandage",
-    "ITEM_BANDAGE_NAME",
-    "ITEM_BANDAGE_SHORTNAME",
-    "ITEM_BANDAGE_DESCRIPTION",
-    0,
-    "armor"
-  )
+  Player.weapon = require("items.stick"):new()
+  Player.armor = require("items.bandage_armor"):new()
   Player.max_items = 8
   Player.items = {}
   Player.has_cellphone = false
@@ -134,8 +120,7 @@ function Player.setLV(lv, silent)
   end
 
   Player.setHP(math.min(Player.hp, Player.max_hp))
-  Player.setAT(8 + 2 * Player.lv)
-  Player.setDF(9 + math.ceil(Player.lv / 4))
+  Player.resetATDF()
 
   if Player.exp < Player.LV_EXP[Player.lv] then
     Player.exp = Player.LV_EXP[Player.lv]
@@ -198,6 +183,13 @@ function Player.setDF(df)
   Player.df = df
 end
 
+--- Resets the player's AT and DF to their default values
+function Player.resetATDF()
+  local lv = Player.getLV()
+  Player.setAT(8 + 2 * lv)
+  Player.setDF(9 + math.ceil(lv / 4))
+end
+
 --- Gets the player's EXP
 --- @return number
 function Player.getEXP(exp)
@@ -235,25 +227,25 @@ function Player.setGold(gold)
 end
 
 --- Gets the player's weapon
---- @return Dummy.Item.Equipment
+--- @return Dummy.Item.Weapon
 function Player.getWeapon()
   return Player.weapon
 end
 
 --- Sets the player's weapon
---- @param weapon Dummy.Item.Equipment
+--- @param weapon Dummy.Item.Weapon
 function Player.setWeapon(weapon)
   Player.weapon = weapon
 end
 
 --- Gets the player's armor
---- @return Dummy.Item.Equipment
+--- @return Dummy.Item.Armor
 function Player.getArmor()
   return Player.armor
 end
 
 --- Sets the player's armor
---- @param armor Dummy.Item.Equipment
+--- @param armor Dummy.Item.Armor
 function Player.setArmor(armor)
   Player.armor = armor
 end

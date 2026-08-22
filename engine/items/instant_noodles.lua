@@ -1,63 +1,101 @@
---- @class Item.InstantNoodles : Dummy.Item.Consumable
-local InstantNoodlesItem = Class(ItemConsumable, "Item.InstantNoodles")
+--- @class Dummy.Item.InstantNoodles : Dummy.Item.Consumable
+local InstantNoodlesItem = Class(ConsumableItem, "Dummy.Item.InstantNoodles")
 
 --- Creates an instant noodles
---- @return Item.InstantNoodles
+--- @return Dummy.Item.InstantNoodles
 function InstantNoodlesItem:new()
   self = Class:new(InstantNoodlesItem, {
-    "instant_noodles",                                     -- item identifier
-    "ITEM_INSTANT_NOODLES_NAME",         -- item name
-    "ITEM_INSTANT_NOODLES_SHORTNAME",    -- item short name
-    "ITEM_INSTANT_NOODLES_DESCRIPTION", -- item description
-    15,
+    "instant_noodles",
+    "ITEM_INSTANT_NOODLES_NAME",
+    "ITEM_INSTANT_NOODLES_SHORTNAME",
+    "ITEM_INSTANT_NOODLES_DESCRIPTION",
+    4,
     "food"
   })
 
-  -- the price the player will pay to buy the item in the shop
   self:setBuyPrice(1)
-  -- the price at which the item will be sold in the shop
   self:setSellPrice(50)
-  -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_INSTANT_NOODLES_DESCRIPTION_SHOP")
-  --self:setUseText("ITEM_INSTANT_NOODLES_USE")
+
   return self
 end
 
+--- Gets the instant noodles's heal amount
+--- @return number
 function InstantNoodlesItem:getHeal()
-  if World.isInBattle() then
-    --TODO: Serious Mode Check?
-    return 4
-  else
-    return 15
-  end
+  return World.isInBattle() and 4 or 15
 end
 
+--- Gets the instant noodles's dialogue texts
+--- @return Dummy.Text.Text[]
 function InstantNoodlesItem:getDialogueTexts()
-  -- TODO: Make this accurate. Stop music and delay use sounds. Override use function?
-  local usetext = { Lang.translate(self:getUseTexts()[1], Lang.translate(self:getName())) ..
-  "\n" .. self:getHealText() }
-  local dialogue_text = usetext
-  if World.isInBattle() then
-    dialogue_text = {
-      Lang.translate("ITEM_INSTANT_NOODLES_USE"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_2"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_3"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_4"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_5"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_6"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_7"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_8"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_9"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_10"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_11"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_12"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_13"),
-      Lang.translate("ITEM_INSTANT_NOODLES_USE_14"),
-    }
-    table.insert(dialogue_text, usetext)
-  end
-  return dialogue_text
+  local texts = ConsumableItem.getDialogueTexts(self)
+  if not World.isInBattle() then return texts end
+
+  local dialogue_texts = {
+    "ITEM_INSTANT_NOODLES_USE_1",
+    "ITEM_INSTANT_NOODLES_USE_2",
+    "ITEM_INSTANT_NOODLES_USE_3",
+    "ITEM_INSTANT_NOODLES_USE_4",
+    "ITEM_INSTANT_NOODLES_USE_5",
+    "ITEM_INSTANT_NOODLES_USE_6",
+    "ITEM_INSTANT_NOODLES_USE_7",
+    "ITEM_INSTANT_NOODLES_USE_8",
+    "ITEM_INSTANT_NOODLES_USE_9",
+    "ITEM_INSTANT_NOODLES_USE_10",
+    "ITEM_INSTANT_NOODLES_USE_11",
+    "ITEM_INSTANT_NOODLES_USE_12",
+    "ITEM_INSTANT_NOODLES_USE_13",
+    "ITEM_INSTANT_NOODLES_USE_14",
+    "ITEM_INSTANT_NOODLES_USE_15",
+    "ITEM_INSTANT_NOODLES_USE_16",
+  }
+  table.insertall(dialogue_texts, texts)
+  return dialogue_texts
 end
 
+--- Uses the instant noodles item
+--- @param bypass? boolean
+function InstantNoodlesItem:use(bypass)
+  if type(self.onBeforeUse) == "function" then
+    self:onBeforeUse()
+  end
+
+  local texts = self:getDialogueTexts()
+  if World.isInBattle() and bypass ~= true then
+    local dialogue = Battle.playDialogueText(table.unpack(texts))
+    dialogue:registerCommand("instantnoodles", function(node)
+      if node.arguments[1] == "pause" then
+        Assets.getCurrentMusic():pause()
+      elseif node.arguments[1] == "use" then
+        Assets.getCurrentMusic():play()
+        dialogue:unregisterCommand("instantnoodles")
+        self:use(true)
+      end
+    end)
+    return
+  end
+
+  World.playDialogue(texts)
+  Player.removeItem(self)
+
+  local swallow_sound = self:getSwallowSound()
+  if swallow_sound ~= nil then
+    Assets.playSound(swallow_sound)
+  end
+
+  Soul.heal(self:getHeal(), true)
+
+  local heal_sound = self:getHealSound()
+  if heal_sound ~= nil then
+    Timer.after(0.5, function()
+      Assets.playSound(heal_sound)
+    end)
+  end
+
+  if type(self.onUse) == "function" then
+    self:onUse()
+  end
+end
 
 return InstantNoodlesItem

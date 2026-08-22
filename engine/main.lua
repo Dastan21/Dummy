@@ -57,8 +57,9 @@ ReadableObject = require "world.object.obj_readable"
 
 -- item
 Item = require "item.item"
-ItemConsumable = require "item.consumable"
-ItemEquipment = require "item.equipment"
+ConsumableItem = require "item.consumable"
+ArmorItem = require "item.armor"
+WeaponItem = require "item.weapon"
 
 -- battle
 Arena = require "battle.arena"

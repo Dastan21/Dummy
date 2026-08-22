@@ -37,7 +37,7 @@ function WorldExampleMod:load()
   self:loadSaveData()
 
   -- add custom portraits
-  -- Note: it is not built-in has I could not figure out how to do make it
+  -- note: it is not built-in has I could not figure out how to do make it
   -- generic and flexible without being too restrictive about the sprites
   -- location and naming. Maybe I'll try with a statemachine one day.
   WorldExampleMod.portrait = modRequire("scripts.portrait")
@@ -80,14 +80,14 @@ function WorldExampleMod:loadSaveData()
   -- equipped weapon
   if save_data.weapon ~= nil then
     if save_data.weapon ~= "stick" then
-      Player.setWeapon(tryRequire("scripts.items." .. save_data.weapon, "items." .. save_data.weapon):new())
+      Player.setWeapon(modRequire("scripts.items." .. save_data.weapon, "items." .. save_data.weapon):new())
     end
   end
 
   -- equipped armor
   if save_data.armor ~= nil then
     if save_data.armor ~= "bandage" then
-      Player.setArmor(tryRequire("scripts.items." .. save_data.armor, "items." .. save_data.armor):new())
+      Player.setArmor(modRequire("scripts.items." .. save_data.armor, "items." .. save_data.armor):new())
     end
   end
 
@@ -102,36 +102,7 @@ end
 --- @param item_id string
 --- @return Dummy.Item
 function WorldExampleMod:loadItem(item_id)
-  --- @type Dummy.Item
-  local item
-  if item_id == "stick" or item_id == "bandage" then
-    if item_id == "stick" then
-      local stick = Item:new(
-        "stick",
-        "ITEM_STICK_NAME",
-        "ITEM_STICK_SHORTNAME",
-        "ITEM_STICK_DESCRIPTION"
-      )
-      stick:setUseText("ITEM_STICK_USE")
-      stick:setSellPrice(150)
-      item = stick
-    elseif item_id == "bandage" then
-      local bandage = ItemConsumable:new(
-        "bandage",
-        "ITEM_BANDAGE_NAME",
-        "ITEM_BANDAGE_SHORTNAME",
-        "ITEM_BANDAGE_DESCRIPTION",
-        10,
-        "food"
-      )
-      bandage:setUseText("ITEM_BANDAGE_USE")
-      bandage:setSellPrice(150)
-      item = bandage
-    end
-  else
-    item = tryRequire("scripts.items." .. item_id, "items." .. item_id):new()
-  end
-  return item
+  return modRequire("scripts.items." .. item_id, "items." .. item_id):new()
 end
 
 --- Called before the game is saved

@@ -673,8 +673,8 @@ function Shop:updateBuyItemInfo()
   if item_stock.stock ~= 0 then
     local desc = item_stock.item:getShopDescription()
     if desc ~= nil then
-      if item_stock.item:is(ItemEquipment) then
-        local equipement = item_stock.item --[[@as Dummy.Item.Equipment]]
+      if item_stock.item:is(ArmorItem) then
+        local equipement = item_stock.item --[[@as Dummy.Item.Weapon]]
         --- @type number|string
         local diff = 0
         if equipement:getType() == "weapon" then

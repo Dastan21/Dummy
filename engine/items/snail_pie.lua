@@ -1,38 +1,39 @@
---- @class Item.SnailPie : Dummy.Item.Consumable
-local SnailPieItem = Class(ItemConsumable, "Item.SnailPie")
+--- @class Dummy.Item.SnailPie : Dummy.Item.Consumable
+local SnailPieItem = Class(ConsumableItem, "Dummy.Item.SnailPie")
 
 --- Creates a snail pie
---- @return Item.SnailPie
+--- @return Dummy.Item.SnailPie
 function SnailPieItem:new()
   self = Class:new(SnailPieItem, {
-    "snail_pie",                                     -- item identifier
-    "ITEM_SNAIL_PIE_NAME",         -- item name
-    "ITEM_SNAIL_PIE_SHORTNAME",    -- item short name
-    "ITEM_SNAIL_PIE_DESCRIPTION",  -- item description
+    "snail_pie",
+    "ITEM_SNAIL_PIE_NAME",
+    "ITEM_SNAIL_PIE_SHORTNAME",
+    "ITEM_SNAIL_PIE_DESCRIPTION",
     math.pi,
     "food"
   })
 
-  -- the price the player will pay to buy the item in the shop
   self:setBuyPrice(1)
-  -- the price at which the item will be sold in the shop
   self:setSellPrice(350)
-  -- the text that will appear in the shop item info at the top right on the buy menu when hovering an item
   self:setShopDescription("ITEM_SNAIL_PIE_DESCRIPTION_SHOP")
+  self:setUseText("ITEM_SNAIL_PIE_USE")
 
   return self
 end
 
+--- Gets the snail pie's heal amount
+--- @return number
 function SnailPieItem:getHeal()
-  if Player.getHP() < Player.getMaxHP() then
+  if Player.getHP() < Player.getMaxHP() - 1 then
     return (Player.getMaxHP() - Player.getHP()) - 1
-  else
-    return 0
   end
+  return 0
 end
 
+--- Gets the snail pie's heal text
+--- @return string
 function SnailPieItem:getHealText()
-  return Lang.translate("ITEM_SNAIL_PIE_HEAL")
+  return Lang.translate("ITEM_ACTION_HEAL_MAX")
 end
 
 return SnailPieItem
