@@ -165,6 +165,7 @@ BATTLE_FLEE_REWARD=   * Ran away with {} EXP\n     and {} GOLD.
 BATTLE_WIN_REWARD=* YOU WON!\n* You earned {} EXP and {} gold.
 BATTLE_WIN_LEVEL_UP=* Your LOVE increased.
 BATTLE_ITEM_HEAL=* You recovered {} HP!
+BATTLE_ITEM_HURT=* You lost {} HP!
 BATTLE_ITEM_HEAL_MAX=* Your HP was maxed out.
 BATTLE_ITEM_FOOD_USE=* You eat the {}.
 BATTLE_ITEM_DRINK_USE=* You drink the {}.
@@ -244,6 +245,229 @@ ITEM_STICK_NAME=Stick
 ITEM_STICK_SHORTNAME=Stick
 ITEM_STICK_DESCRIPTION=* "Stick" - Weapon AT 0\n* Its bark is worse than\n  its bite.
 ITEM_STICK_USE=* You threw the stick away.[wait:5]\n* Then picked it back up.
+
+ITEM_MONSTER_CANDY_NAME=Monster Candy
+ITEM_MONSTER_CANDY_SHORTNAME=MnstrCndy
+ITEM_MONSTER_CANDY_DESCRIPTION=* "Monster Candy" - Heals 10 HP\n* Has a distinct,[wait:5] \n  non-licorice flavor.
+ITEM_MONSTER_CANDY_DESCRIPTION_SHOP=Heals 10 HP\n(Licorice-\nfree\nguaranteed.)
+ITEM_MONSTER_CANDY_USE=\n* Very un-licorice-like.
+ITEM_MONSTER_CANDY_USE_2=\n* ... tastes like licorice.
+
+ITEM_SPIDER_DONUT_NAME=Spider Donut
+ITEM_SPIDER_DONUT_SHORTNAME=SpidrDont
+ITEM_SPIDER_DONUT_SHORTNAME2=SpdrDonut
+ITEM_SPIDER_DONUT_DESCRIPTION=* "Spider Donut" - Heals 12 HP\n* A donut made with Spider\n  Cider in the batter.
+ITEM_SPIDER_DONUT_DESCRIPTION_SHOP=undefined
+ITEM_SPIDER_DONUT_USE=* Don't worry,[wait:5] Spider didn't.
+
+ITEM_SPIDER_CIDER_NAME=Spider Cider
+ITEM_SPIDER_CIDER_SHORTNAME=SpidrCidr
+ITEM_SPIDER_CIDER_SHORTNAME2=SpdrCider
+ITEM_SPIDER_CIDER_DESCRIPTION=* "Spider Cider" - Heals 24 HP\n* Made with whole spiders,[wait:5]\n  not just the juice.
+ITEM_SPIDER_CIDER_DESCRIPTION_SHOP=undefined
+
+ITEM_BUTTERSCOTCH_PIE_NAME=Butterscotch Pie
+ITEM_BUTTERSCOTCH_PIE_SHORTNAME=ButtsPie
+ITEM_BUTTERSCOTCH_PIE_SHORTNAME2=Pie
+ITEM_BUTTERSCOTCH_PIE_DESCRIPTION=* "Butterscotch Pie" - All HP\n* Butterscotch-cinnamon\n  pie,[wait:5] one slice.
+ITEM_BUTTERSCOTCH_PIE_DESCRIPTION_SHOP=undefined
+
+ITEM_SNOWMAN_PIECE_NAME=Snowman Piece
+ITEM_SNOWMAN_PIECE_SHORTNAME=SnowPiece
+ITEM_SNOWMAN_PIECE_SHORTNAME2=SnowPiece
+ITEM_SNOWMAN_PIECE_DESCRIPTION=* "Snowman Piece" - Heals 45 HP\n* Please take this to the\n  ends of the earth.
+ITEM_SNOWMAN_PIECE_DESCRIPTION_SHOP=undefined
+
+ITEM_NICE_CREAM_NAME=Nice Cream
+ITEM_NICE_CREAM_SHORTNAME=NiceCream
+ITEM_NICE_CREAM_SHORTNAME2=NiceCream
+ITEM_NICE_CREAM_DESCRIPTION=* "Nice Cream" - Heals 15 HP\n* Instead of a joke,[wait:5] the\n  wrapper says something nice.
+ITEM_NICE_CREAM_DESCRIPTION_SHOP=undefined
+ITEM_NICE_CREAM_USE=* You're just great!
+ITEM_NICE_CREAM_USE_2=* You look nice today!
+ITEM_NICE_CREAM_USE_3=* Are those claws natural?
+ITEM_NICE_CREAM_USE_4=* You're super spiffy!
+ITEM_NICE_CREAM_USE_5=* Have a wonderful day!
+ITEM_NICE_CREAM_USE_6=* Is this as sweet as you?
+ITEM_NICE_CREAM_USE_7=* (An illustration of a hug.)
+ITEM_NICE_CREAM_USE_8=* Love yourself! I love you!
+
+ITEM_BISICLE_NAME=Bisicle
+ITEM_BISICLE_SHORTNAME=Bisicle
+ITEM_BISICLE_SHORTNAME2=Bisicle
+ITEM_BISICLE_DESCRIPTION=* "Bisicle" - Heals 11 HP\n* It's a two-pronged popsicle,[wait:5]\n  so you can eat it twice.
+ITEM_BISICLE_DESCRIPTION_SHOP=Heals 11HP x 2\nEat it twice!
+ITEM_BISICLE_USE=* You eat one half of\n  the Bisicle.
+
+ITEM_UNISICLE_NAME=Unisicle
+ITEM_UNISICLE_SHORTNAME=Unisicle
+ITEM_UNISICLE_SHORTNAME2=Popsicle
+ITEM_UNISICLE_DESCRIPTION=* "Unisicle" - Heals 11 HP\n* It's a SINGLE-pronged popsicle.[wait:5]\n* Wait,[wait:5] that's just normal...
+ITEM_UNISICLE_DESCRIPTION_SHOP=undefined
+
+ITEM_CINNAMON_BUNNY_NAME=Cinnamon Bunny
+ITEM_CINNAMON_BUNNY_SHORTNAME=CinnaBun
+ITEM_CINNAMON_BUNNY_SHORTNAME2=C. Bun
+ITEM_CINNAMON_BUNNY_DESCRIPTION=* "Cinnamon Bunny" - Heals 22 HP\n* A cinnamon roll in the shape\n  of a bunny.
+ITEM_CINNAMON_BUNNY_DESCRIPTION_SHOP=Heals 22HP\nIt's my own\nrecipe.
+
+ITEM_TEMMIE_FLAKES_NAME=Temmie Flakes
+ITEM_TEMMIE_FLAKES_SHORTNAME=TemFlakes
+ITEM_TEMMIE_FLAKES_SHORTNAME2=TemFlakes
+ITEM_TEMMIE_FLAKES_DESCRIPTION=* "Temmie Flakes" - Heals 2 HP\n* It's just torn up pieces\n  of colored construction paper.
+ITEM_TEMMIE_FLAKES_DESCRIPTION_SHOP=Heals 2HP\nfood of\ntem
+
+ITEM_ABANDONED_QUICHE_NAME=Abandoned Quiche
+ITEM_ABANDONED_QUICHE_SHORTNAME=Ab Quiche
+ITEM_ABANDONED_QUICHE_SHORTNAME2=Quiche
+ITEM_ABANDONED_QUICHE_DESCRIPTION=* "Abandoned Quiche" Heals 34 HP\n* A psychologically damaged\n  spinach egg pie.
+ITEM_ABANDONED_QUICHE_DESCRIPTION_SHOP=undefined
+ITEM_ABANDONED_QUICHE_DROP=* You leave the Quiche on the\n  ground and tell it you'll\n  be right back.
+ITEM_ABANDONED_QUICHE_USE=* You eat the quiche.
+
+ITEM_DOG_RESIDUE_NAME=Dog Residue
+ITEM_DOG_RESIDUE_SHORTNAME=DogResidu
+ITEM_DOG_RESIDUE_SHORTNAME2=D.Residue
+ITEM_DOG_RESIDUE_DESCRIPTION=* "Dog Residue" - Dog Item\n* Shiny trail left\n  behind by a dog.
+ITEM_DOG_RESIDUE_DESCRIPTION_2=* "Dog Residue" - Dog Item\n* Dog-shaped husk shed\n  from a dog's carapace.
+ITEM_DOG_RESIDUE_DESCRIPTION_3=* "Dog Residue" - Dog Item\n* Dirty dishes left\n  unwashed by a dog.
+ITEM_DOG_RESIDUE_DESCRIPTION_4=* "Dog Residue" - Dog Item\n* Glowing crystals secreted\n  by a dog.
+ITEM_DOG_RESIDUE_DESCRIPTION_5=* "Dog Residue" - Dog Item\n* Jigsaw puzzle left\n  unfinished by a dog.
+ITEM_DOG_RESIDUE_DESCRIPTION_6=* "Dog Residue" - Dog Item\n* Web spun by a dog\n  to ensnare prey.
+ITEM_DOG_RESIDUE_DESCRIPTION_SHOP=undefined
+ITEM_DOG_RESIDUE_USE=* You used the Dog Residue.
+ITEM_DOG_RESIDUE_USE_SUCCESS=* The rest of your inventory\n  filled up with Dog Residue.
+ITEM_DOG_RESIDUE_USE_FAIL=* ...
+ITEM_DOG_RESIDUE_USE_FAIL_2=* You finished using it.
+ITEM_DOG_RESIDUE_USE_FAIL_3=* An uneasy atmosphere fills\n  the room.
+
+ITEM_DOG_SALAD_NAME=Dog Salad
+ITEM_DOG_SALAD_SHORTNAME=Dog Salad
+ITEM_DOG_SALAD_SHORTNAME2=Dog Salad
+ITEM_DOG_SALAD_DESCRIPTION=* "Dog Salad" - Heals ?? HP\n* Recovers HP.\n* (Hit Poodles.)
+ITEM_DOG_SALAD_DESCRIPTION_SHOP=undefined
+ITEM_DOG_SALAD_USE=* Oh.[wait:5] Tastes yappy...
+ITEM_DOG_SALAD_USE_2=* Oh.[wait:5] Fried tennis ball...
+ITEM_DOG_SALAD_USE_3=* Oh.[wait:5] There are bones...
+ITEM_DOG_SALAD_USE_4=* It's literally garbage???
+
+ITEM_ASTRONAUT_FOOD_NAME=Astronaut Food
+ITEM_ASTRONAUT_FOOD_SHORTNAME=AstroFood
+ITEM_ASTRONAUT_FOOD_SHORTNAME2=Astr.Food
+ITEM_ASTRONAUT_FOOD_DESCRIPTION=* "Astronaut Food" Heals 21 HP\n* For feeding a pet\n  astronaut.
+ITEM_ASTRONAUT_FOOD_DESCRIPTION_SHOP=undefined
+
+ITEM_INSTANT_NOODLES_NAME=Instant Noodles
+ITEM_INSTANT_NOODLES_SHORTNAME=InstaNood
+ITEM_INSTANT_NOODLES_SHORTNAME2=I.Noodles
+ITEM_INSTANT_NOODLES_DESCRIPTION=* "Instant Noodles" Heals HP\n* Comes with everything you\n  need for a quick meal!
+ITEM_INSTANT_NOODLES_DESCRIPTION_SHOP=undefined
+ITEM_INSTANT_NOODLES_USE=* You remove the Instant\n  Noodles from their\n  packaging.
+ITEM_INSTANT_NOODLES_USE_1=[noskip]* You put some water in\n  the pot and place it on\n  the heat.
+ITEM_INSTANT_NOODLES_USE_2=[noskip]* You wait for the water\n  to boil...
+ITEM_INSTANT_NOODLES_USE_3=[noskip]* ...[wait:20]\n* ...[wait:20]\n* ...
+ITEM_INSTANT_NOODLES_USE_4=[noskip]* It's[wait:10] boiling.
+ITEM_INSTANT_NOODLES_USE_5=[noskip]* You place the noodles[wait:5]\n  into the pot.
+ITEM_INSTANT_NOODLES_USE_6=[noskip]* 4[wait:15] minutes left[wait:15] until\n  the noodles[wait:10] are finished.
+ITEM_INSTANT_NOODLES_USE_7=[noskip]* 3[wait:15] minutes left[wait:15] until\n  the noodles[wait:10] are finished.
+ITEM_INSTANT_NOODLES_USE_8=[noskip]* 2[wait:15] minutes left[wait:15] until\n  the noodles[wait:10] are finished.
+ITEM_INSTANT_NOODLES_USE_9=[noskip]* 1[wait:15] minute left[wait:15] until\n  the noodles[wait:10] are finished.
+ITEM_INSTANT_NOODLES_USE_10=[noskip]* The noodles[wait:15] are finished.
+ITEM_INSTANT_NOODLES_USE_11=[noskip]* ... they don't taste very\n  good.
+ITEM_INSTANT_NOODLES_USE_12=[noskip]* You add the flavor packet.
+ITEM_INSTANT_NOODLES_USE_13=[noskip]* That's better.
+ITEM_INSTANT_NOODLES_USE_14=[noskip]* Not great,[wait:5] but better.
+
+ITEM_CRAB_APPLE_NAME=Crab Apple
+ITEM_CRAB_APPLE_SHORTNAME=CrabApple
+ITEM_CRAB_APPLE_SHORTNAME2=CrabApple
+ITEM_CRAB_APPLE_DESCRIPTION=* "Crab Apple" Heals 18 HP\n* An aquatic fruit that\n  resembles a crustacean.
+ITEM_CRAB_APPLE_DESCRIPTION_SHOP=Heals 18HP\n(Looks\nlike a\ncrab.)
+
+ITEM_HOT_DOG_NAME=Hot Dog...?
+ITEM_HOT_DOG_SHORTNAME=Hot Dog
+ITEM_HOT_DOG_SHORTNAME2=Hot Dog
+ITEM_HOT_DOG_DESCRIPTION=* "Hot Dog...?" Heals 20 HP\n* The "meat" is made of something\n  called a "water sausage."
+ITEM_HOT_DOG_DESCRIPTION_SHOP=undefined
+
+ITEM_HOT_CAT_NAME=Hot Cat
+ITEM_HOT_CAT_SHORTNAME=Hot Cat
+ITEM_HOT_CAT_SHORTNAME2=Hot Cat
+ITEM_HOT_CAT_DESCRIPTION=* "Hot Cat" Heals 21 HP\n* Like a hot dog,[wait:5] but with\n  little cat ears on the end.
+ITEM_HOT_CAT_DESCRIPTION_SHOP=undefined
+
+ITEM_GLAMBURGER_NAME=Glamburger
+ITEM_GLAMBURGER_SHORTNAME=GlamBurg
+ITEM_GLAMBURGER_SHORTNAME2=G.Burger
+ITEM_GLAMBURGER_DESCRIPTION=* "Glamburger" Heals 27 HP\n* A hamburger made of edible\n  glitter and sequins.
+ITEM_GLAMBURGER_DESCRIPTION_SHOP=Heals 27HP\nVery popular\nfood.
+
+ITEM_STARFAIT_NAME=Starfait
+ITEM_STARFAIT_SHORTNAME=Starfait
+ITEM_STARFAIT_SHORTNAME2=Starfait
+ITEM_STARFAIT_DESCRIPTION=* "Starfait" Heals 14 HP\n* A sweet treat made of\n  sparkling stars.
+ITEM_STARFAIT_DESCRIPTION_SHOP=Heals 14HP\nVery popular\nfood.
+
+ITEM_SEATEA_NAME=Sea Tea
+ITEM_SEATEA_SHORTNAME=Sea Tea
+ITEM_SEATEA_SHORTNAME2=Sea Tea
+ITEM_SEATEA_DESCRIPTION=* "Sea Tea" Heals 10 HP\n* Made from glowing marshwater.\n* Increases SPEED for one battle.
+ITEM_SEATEA_DESCRIPTION_SHOP=Heals 10HP\nSPEED\nup in\nbattle.
+ITEM_SEATEA_USE=* Your SPEED boosts!
+
+ITEM_LEGENDARY_HERO_NAME=Legendary Hero
+ITEM_LEGENDARY_HERO_SHORTNAME=Leg.Hero
+ITEM_LEGENDARY_HERO_SHORTNAME2=L. Hero
+ITEM_LEGENDARY_HERO_DESCRIPTION=* "Legendary Hero" Heals 40 HP\n* Sandwich shaped like a sword.\n* Increases ATTACK when eaten.
+ITEM_LEGENDARY_HERO_DESCRIPTION_SHOP=Heals 40HP\nHero Sandwich.\nATTACK UP\nin battle.
+ITEM_LEGENDARY_HERO_USE=* ATTACK increased by 4!
+
+ITEM_FACE_STEAK_NAME=Steak in the Shape of Mettaton's Face
+ITEM_FACE_STEAK_SHORTNAME=FaceSteak
+ITEM_FACE_STEAK_SHORTNAME2=Steak
+ITEM_FACE_STEAK_DESCRIPTION=* "Face Steak" Heals 60 HP\n* Huge steak in the shape\n  of Mettaton's face.
+ITEM_FACE_STEAK_DESCRIPTION_SHOP=Heals 60HP\nDon't ask.\nPlease.
+ITEM_FACE_STEAK_USE=* You eat the Face Steak.
+
+ITEM_POPATO_CHISPS_NAME=Popato Chisps
+ITEM_POPATO_CHISPS_SHORTNAME=PT Chisps
+ITEM_POPATO_CHISPS_SHORTNAME2=Chips
+ITEM_POPATO_CHISPS_DESCRIPTION=* "Popato Chisps" Heals 13 HP\n* Regular old popato chisps.
+ITEM_POPATO_CHISPS_DESCRIPTION_SHOP=undefined
+
+ITEM_BAD_MEMORY_NAME=Bad Memory
+ITEM_BAD_MEMORY_SHORTNAME=BadMemory
+ITEM_BAD_MEMORY_SHORTNAME2=BadMemory
+ITEM_BAD_MEMORY_DESCRIPTION=* "Bad Memory" Hurts 1 HP\n* ?????
+ITEM_BAD_MEMORY_DESCRIPTION_SHOP=undefined
+ITEM_BAD_MEMORY_USE=* You consume the Bad Memory.[wait:5]
+
+ITEM_JUNK_FOOD_NAME=Junk Food
+ITEM_JUNK_FOOD_SHORTNAME=Junk Food
+ITEM_JUNK_FOOD_SHORTNAME2=Junk Food
+ITEM_JUNK_FOOD_DESCRIPTION=* "Junk Food" Heals 17 HP\n* Food that was probably\n  once thrown away.
+ITEM_JUNK_FOOD_DESCRIPTION_SHOP=Heals 17HP\nHas a big\nbite out of\nit.
+
+ITEM_HUSH_PUPPY_NAME=Hush Puppy
+ITEM_HUSH_PUPPY_SHORTNAME=HushPupe
+ITEM_HUSH_PUPPY_SHORTNAME2=HushPuppy
+ITEM_HUSH_PUPPY_DESCRIPTION=* "Hush Puppy" Heals 65 HP\n* This wonderful spell will stop\n  a dog from casting magic.
+ITEM_HUSH_PUPPY_DESCRIPTION_SHOP=undefined
+ITEM_HUSH_PUPPY_USE=\n* Dog-magic is neutralized.
+
+ITEM_SNAIL_PIE_NAME=Snail Pie
+ITEM_SNAIL_PIE_SHORTNAME=Snail Pie
+ITEM_SNAIL_PIE_SHORTNAME2=Snail Pie
+ITEM_SNAIL_PIE_DESCRIPTION=* "Snail Pie" - Heals Some HP\n* An acquired taste.
+ITEM_SNAIL_PIE_DESCRIPTION_SHOP=undefined
+ITEM_SNAIL_PIE_HEAL=* Your HP was maxed out.
+
+ITEM_LAST_DREAM_NAME=Last Dream
+ITEM_LAST_DREAM_SHORTNAME="Dream"
+ITEM_LAST_DREAM_SHORTNAME2="Dream"
+ITEM_LAST_DREAM_DESCRIPTION=* "Dream" Heals 12 HP\n* The goal of "Determination."
+ITEM_LAST_DREAM_DESCRIPTION_SHOP=undefined
+ITEM_LAST_DREAM_USE=* Through DETERMINATION,[wait:5] the\n  dream became true.
 
 # World shop
 WORLD_SHOP_ACTION_BUY=Buy

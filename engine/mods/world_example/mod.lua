@@ -80,14 +80,14 @@ function WorldExampleMod:loadSaveData()
   -- equipped weapon
   if save_data.weapon ~= nil then
     if save_data.weapon ~= "stick" then
-      Player.setWeapon(modRequire("scripts.items." .. save_data.weapon):new())
+      Player.setWeapon(tryRequire("scripts.items." .. save_data.weapon, "items." .. save_data.weapon):new())
     end
   end
 
   -- equipped armor
   if save_data.armor ~= nil then
     if save_data.armor ~= "bandage" then
-      Player.setArmor(modRequire("scripts.items." .. save_data.armor):new())
+      Player.setArmor(tryRequire("scripts.items." .. save_data.armor, "items." .. save_data.armor):new())
     end
   end
 
@@ -129,7 +129,7 @@ function WorldExampleMod:loadItem(item_id)
       item = bandage
     end
   else
-    item = modRequire("scripts.items." .. item_id):new()
+    item = tryRequire("scripts.items." .. item_id, "items." .. item_id):new()
   end
   return item
 end
@@ -188,8 +188,15 @@ function WorldExampleMod:onEncounterEnd(encounter)
   WorldExampleMod:setTitle("WORLD_EXAMPLE_MOD_TITLE")
 end
 
---- Updates the mod, called on every game update
+--- Updates the mod, called on every game updatez
 --- @param dt number
-function WorldExampleMod:update(dt) end
+function WorldExampleMod:update(dt)
+  if Input.isPressed("f1") then
+    if not World.isInBattle() then
+      local encounter = modRequire("scripts.encounters.dummy"):new()
+      World.startEncounter(encounter)
+    end
+  end
+end
 
 return WorldExampleMod

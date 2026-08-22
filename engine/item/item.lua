@@ -91,6 +91,12 @@ function Item:setDropText(text, ...)
   self.drop_texts = { text, ... }
 end
 
+--- (Override) Gets the item's final dialogue text when used
+--- @return Dummy.Text.Text[]
+function Item:getDialogueTexts()
+  return self:getUseTexts()
+end
+
 --- Gets the item's buy price
 --- @return integer
 function Item:getBuyPrice()
@@ -121,14 +127,15 @@ function Item:use()
   if type(self.onBeforeUse) == "function" then
     can_use = self:onBeforeUse()
   end
+
   if not can_use then return end
 
-  local use_texts = self:getUseTexts()
-  if #use_texts > 0 then
+  local dialogue_texts = self:getDialogueTexts()
+  if #dialogue_texts > 0 then
     if World.isInBattle() then
-      Battle.playDialogueText(table.unpack(use_texts))
+      Battle.playDialogueText(table.unpack(dialogue_texts))
     else
-      World.playDialogue(use_texts)
+      World.playDialogue(dialogue_texts)
     end
   end
 

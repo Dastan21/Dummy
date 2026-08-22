@@ -28,16 +28,22 @@ function ItemEquipment:setType(type)
   self.type = type
 end
 
+--- (Override) Gets the item's final dialogue text when used
+--- @return Dummy.Text.Text[]
+function ItemEquipment:getDialogueTexts()
+  local texts = self:getUseTexts()
+  if #texts <= 0 then
+    texts = { { "BATTLE_ITEM_EQUIPMENT_USE", Lang.translate(self:getName()) } }
+  end
+  return texts
+end
 --- Uses the equipment item
 function ItemEquipment:use()
   if type(self.onBeforeUse) == "function" then
     self:onBeforeUse()
   end
 
-  local texts = self:getUseTexts()
-  if #texts <= 0 then
-    texts = { { "BATTLE_ITEM_EQUIPMENT_USE", Lang.translate(self:getName()) } }
-  end
+  local texts = self:getDialogueTexts()
   if World.isInBattle() then
     Battle.playDialogueText(table.unpack(texts))
   else
