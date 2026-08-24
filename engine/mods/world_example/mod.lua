@@ -161,13 +161,6 @@ end
 
 --- Updates the mod, called on every game updatez
 --- @param dt number
-function WorldExampleMod:update(dt)
-  if Input.isPressed("f1") then
-    if not World.isInBattle() then
-      local encounter = modRequire("scripts.encounters.dummy"):new()
-      World.startEncounter(encounter)
-    end
-  end
-end
+function WorldExampleMod:update(dt) end
 
 return WorldExampleMod
