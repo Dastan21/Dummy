@@ -45,7 +45,7 @@ function DummyShop:prepareItems()
   -- amount `-1` for infinite stock
   self:addItem(SmallCandy, -1)
 
-  local Bisicle = modRequire("scripts.items.bisicle")
+  local Bisicle = require("items.bisicle")
   local bisicle_amount = math.max(0, 2 - (WorldExampleMod.flag["dummy_shop_bisicle"] or 0))
   self:addItem(Bisicle, bisicle_amount)
 
