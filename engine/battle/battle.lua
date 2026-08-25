@@ -18,9 +18,8 @@
 --- @field protected bubble_dialogues Dummy.DialogueBubble[]
 --- @field protected can_skip_bubble_dialogues boolean
 --- @field protected target_sprite Dummy.Sprite
---- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
---- @field protected strike_sprite Dummy.Sprite
+--- @field protected attack_weapon Dummy.Item.Weapon|nil
 --- @field protected player_name_text Dummy.Text
 --- @field protected player_lv_text Dummy.Text
 --- @field protected player_hp_sprite Dummy.Sprite
@@ -45,7 +44,6 @@
 --- @field protected action_mercy_sprite Dummy.Sprite
 --- @field protected action_mercy_hover_sprite Dummy.Sprite
 --- @field protected is_attacking boolean
---- @field protected attack_window_timer Dummy.Timer.Handle|nil
 local Battle = {}
 
 --- Loads the battle
@@ -80,9 +78,6 @@ function Battle.load()
   Battle.target_sprite:setPosition(319, 320)
   Battle.target_sprite:setLayer(Constants.LAYERS.UI)
   Battle.target_sprite:setVisible(false)
-  Battle.target_bar_sprite = Sprite:new({ "target_bar1", "target_bar2" }, 0.1, nil, false)
-  Battle.target_bar_sprite:setVisible(false)
-  Battle.target_bar_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
 
   -- miss
   Battle.miss_text = Text:new("BATTLE_ATTACK_MISS")
@@ -90,20 +85,6 @@ function Battle.load()
   Battle.miss_text:setFont("damage")
   Battle.miss_text:setColor(0.87, 0.87, 0.87)
   Battle.miss_text:setLayer(Constants.LAYERS.ABOVE_UI)
-
-  -- strike
-  Battle.strike_sprite = Sprite:new({
-    "strike1",
-    "strike2",
-    "strike3",
-    "strike4",
-    "strike5",
-    "strike6"
-  }, 4 / 30, false, false, false)
-  Battle.strike_sprite:setOrigin(0.5, 0.5)
-  Battle.strike_sprite:setScale(1.5)
-  Battle.strike_sprite:setVisible(false)
-  Battle.strike_sprite:setLayer(Constants.LAYERS.ABOVE_UI)
 
   -- player name
   Battle.player_name_text = Text:new(Player.getName())
@@ -947,6 +928,24 @@ function Battle.updateEnemyDialogue()
   end
 end
 
+--- Gets the miss text value
+--- @return Dummy.Text.Text
+function Battle.getMissText()
+  return Battle.miss_text:getText()
+end
+
+--- Sets the miss text value
+--- @param text Dummy.Text.Text
+function Battle.setMissText(text)
+  Battle.miss_text:setText(text)
+end
+
+--- Gets the attack target sprite
+--- @return Dummy.Sprite
+function Battle.getTargetSprite()
+  return Battle.target_sprite
+end
+
 --- Starts attacking
 function Battle.startAttacking()
   Battle.leaveMenu()
@@ -957,82 +956,12 @@ function Battle.startAttacking()
   Battle.target_sprite:setAlpha(1)
   Battle.target_sprite:setScale(1)
 
-  Battle.is_attacking = false
-  local attack_speed = 11
-
-  Battle.target_bar_sprite:setPosition(22, 320)
-  Battle.target_bar_sprite:setVisible(true)
-  Battle.target_bar_sprite:stop()
-  Battle.target_bar_sprite:setFrame(1)
-
-  local bar_speed = attack_speed + (love.math.random() * 2)
-  Battle.attack_window_timer = Timer.during(2, function(dt)
-    local x, y = Battle.target_bar_sprite:getPosition()
-    local target_bar_x = x + bar_speed * dt * 30
-    Battle.target_bar_sprite:setPosition(target_bar_x, y)
-
-    local target_x = Battle.target_sprite:getPosition()
-    local width = Battle.target_sprite:getWidth()
-    if target_bar_x > target_x + width / 2 then
-      Battle.attack(true)
-    end
-
-    if Input.isPressed(Input.Confirm) then
-      Battle.attack()
-    end
-  end)
-end
-
---- Attacks the enemy
---- @param miss? boolean wether the attack missed
-function Battle.attack(miss)
   if Battle.is_attacking then return end
-
   Battle.is_attacking = true
-  if Battle.attack_window_timer ~= nil then
-    Timer.cancel(Battle.attack_window_timer)
-  end
 
-  local enemy = Battle.encounter:getEnemies()[Battle.enemy_selected_index]
-  local enemy_x, enemy_y = enemy:getPosition()
-  local enemy_width, enemy_height = enemy:getWidth(), enemy:getHeight()
-  local enemy_origin_x, enemy_origin_y = enemy:getOrigin()
-  local enemy_scale_x, enemy_scale_y = enemy:getScale()
-  local enemy_center_x = enemy_x + (0.5 - enemy_origin_x) * enemy_width * enemy_scale_x
-  local enemy_center_y = enemy_y + (0.5 - enemy_origin_y) * enemy_height * enemy_scale_y
-  Battle.strike_sprite:setPosition(enemy_center_x, enemy_center_y)
-
-  if miss == true then
-    Battle.proceedAttack(enemy, 0, true)
-  else
-    if type(enemy.onBeforeAttack) == "function" then
-      enemy:onBeforeAttack()
-    end
-
-    local target_x = Battle.target_sprite:getPosition()
-    local target_width = Battle.target_sprite:getWidth()
-    local target_bar_x = Battle.target_bar_sprite:getPosition()
-    local bonus_factor = math.abs(target_x - target_bar_x)
-    local stretch = (target_width - bonus_factor) / target_width
-    local damage = math.max(0, Player.getAT() - enemy:getDF() + (love.math.random() * 2))
-    if bonus_factor <= 12 then
-      damage = math.round(damage * 2.2)
-    else
-      damage = math.round(damage * 2 * stretch)
-    end
-
-    Battle.strike_sprite:setVisible(true)
-    Battle.strike_sprite:setScale(stretch * 2 - 0.5)
-    local strike_speed_base = 0.5 - stretch / 4
-    local strike_speed = 1 / (strike_speed_base * 30)
-    Battle.strike_sprite:setSpeed(strike_speed)
-    Battle.strike_sprite:play()
-    Battle.target_bar_sprite:play()
-    Assets.playSound("strike")
-    local damage_delay = (1 / strike_speed_base * 6 + 3) / 30
-    Timer.after(damage_delay, function()
-      Battle.proceedAttack(enemy, damage, miss)
-    end)
+  Battle.attack_weapon = Player.getWeapon()
+  if Battle.attack_weapon ~= nil and type(Battle.attack_weapon.onAttackStart) == "function" then
+    Battle.attack_weapon:onAttackStart()
   end
 end
 
@@ -1040,7 +969,6 @@ end
 --- @param enemy Dummy.Battle.Enemy the attacked enemy
 --- @param damage number damage amount
 --- @param miss? boolean wether the attack missed
---- @protected
 function Battle.proceedAttack(enemy, damage, miss)
   if type(enemy.onBeforeDamage) == "function" then
     local d, m = enemy:onBeforeDamage(damage, miss or false)
@@ -1067,104 +995,105 @@ function Battle.proceedAttack(enemy, damage, miss)
     end)
 
     Battle.endAttack(enemy)
-  else
-    Assets.playSound("damage")
+    return
+  end
 
-    local stretch_factor = math.max(100, enemy_width) / enemy:getMaxHP()
-    local hp_bar_width = math.round(enemy:getMaxHP() * stretch_factor)
-    local enemy_apparent_hp = enemy:getHP()
-    local enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
-    local enemy_hp_draw_x = enemy_center_x - hp_bar_width / 2
+  Assets.playSound("damage")
 
-    local fps = love.timer.getFPS()
-    Timer.every(2 / fps, function()
-      enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - (damage / (fps / 2)))
-      enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
-    end, fps / 2)
+  local stretch_factor = math.max(100, enemy_width) / enemy:getMaxHP()
+  local hp_bar_width = math.round(enemy:getMaxHP() * stretch_factor)
+  local enemy_apparent_hp = enemy:getHP()
+  local enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
+  local enemy_hp_draw_x = enemy_center_x - hp_bar_width / 2
 
-    Battle.enemy_hp_draw:setVisible(true)
-    function Battle.enemy_hp_draw.draw(_self)
-      if not _self:isVisible() then return end
+  local fps = love.timer.getFPS()
+  Timer.every(2 / fps, function()
+    enemy_apparent_hp = math.max(enemy:getHP(), enemy_apparent_hp - (damage / (fps / 2)))
+    enemy_hp_draw_width = math.round(enemy_apparent_hp * stretch_factor)
+  end, fps / 2)
 
-      love.graphics.setColor(0, 0, 0, 1)
-      love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, hp_bar_width + 2, 15)
-      love.graphics.setColor(0.25, 0.25, 0.25, 1)
-      love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, hp_bar_width, 13)
-      love.graphics.setColor(0, 1, 0, 1)
-      love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, enemy_hp_draw_width, 13)
-    end
+  Battle.enemy_hp_draw:setVisible(true)
+  function Battle.enemy_hp_draw.draw(_self)
+    if not _self:isVisible() then return end
 
-    local enemy_hp_text_vel_y = -4
-    local enemy_hp_text_y_start = enemy_top_y - 15
-    local enemy_hp_text_y = enemy_hp_text_y_start
-    Battle.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
-    Battle.enemy_hp_text:setVisible(true)
-    Battle.enemy_hp_text:setText(tostring(damage))
-    Battle.enemy_hp_text_timer = Timer.during(1, function(dt)
-      enemy_hp_text_vel_y = enemy_hp_text_vel_y + 0.5 * dt * 30
-      enemy_hp_text_y = enemy_hp_text_y + enemy_hp_text_vel_y * dt * 30
-      Battle.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y)
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.rectangle("fill", enemy_hp_draw_x - 1, enemy_top_y - 1, hp_bar_width + 2, 15)
+    love.graphics.setColor(0.25, 0.25, 0.25, 1)
+    love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, hp_bar_width, 13)
+    love.graphics.setColor(0, 1, 0, 1)
+    love.graphics.rectangle("fill", enemy_hp_draw_x, enemy_top_y, enemy_hp_draw_width, 13)
+  end
 
-      if enemy_hp_text_y >= enemy_hp_text_y_start + 8 then
-        if Battle.enemy_hp_text_timer ~= nil then
-          Timer.cancel(Battle.enemy_hp_text_timer)
-        end
-        Battle.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
+  local enemy_hp_text_vel_y = -4
+  local enemy_hp_text_y_start = enemy_top_y - 15
+  local enemy_hp_text_y = enemy_hp_text_y_start
+  Battle.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
+  Battle.enemy_hp_text:setVisible(true)
+  Battle.enemy_hp_text:setText(tostring(damage))
+  Battle.enemy_hp_text_timer = Timer.during(1, function(dt)
+    enemy_hp_text_vel_y = enemy_hp_text_vel_y + 0.5 * dt * 30
+    enemy_hp_text_y = enemy_hp_text_y + enemy_hp_text_vel_y * dt * 30
+    Battle.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y)
+
+    if enemy_hp_text_y >= enemy_hp_text_y_start + 8 then
+      if Battle.enemy_hp_text_timer ~= nil then
+        Timer.cancel(Battle.enemy_hp_text_timer)
       end
-    end)
-
-    Timer.after(1.5, function()
-      Battle.enemy_hp_draw:setVisible(false)
-      Battle.enemy_hp_text:setVisible(false)
-    end)
-
-    if type(enemy.onDamage) == "function" then
-      enemy:onDamage(damage)
+      Battle.enemy_hp_text:setPosition(enemy_center_x, enemy_hp_text_y_start)
     end
+  end)
 
-    enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
+  Timer.after(1.5, function()
+    Battle.enemy_hp_draw:setVisible(false)
+    Battle.enemy_hp_text:setVisible(false)
+  end)
 
-    local hurt_sound = enemy:getHurtSound()
-    if hurt_sound ~= nil then
-      Timer.after(0.37, function()
-        Assets.playSound(hurt_sound)
-      end)
-    end
+  if type(enemy.onDamage) == "function" then
+    enemy:onDamage(damage)
+  end
 
-    local shudder = 16
-    Timer.every(2 / 30, function()
-      if shudder == 0 then return end
+  enemy:setHP(math.clamp(enemy:getHP() - damage, 0, enemy:getMaxHP()))
 
-      local x, y = enemy:getPosition()
-      enemy:setPosition(x + shudder, y)
-      if shudder < 0 then
-        shudder = -(shudder + 2)
-      else
-        shudder = -shudder
-      end
-
-      if shudder == 0 then
-        if enemy:isKilled() then
-          local exp_reward, gold_reward = Battle.encounter:getReward()
-          Battle.encounter:setReward(exp_reward + enemy:getEXP(), gold_reward + enemy:getGold())
-
-          if type(enemy.onKilled) == "function" then
-            enemy:onKilled()
-          end
-
-          enemy:vaporize()
-        else
-          if type(enemy.onAfterDamage) == "function" then
-            enemy:onAfterDamage()
-          end
-        end
-      end
-    end, 16)
-
-    Timer.after(1, function()
-      Battle.endAttack(enemy)
+  local hurt_sound = enemy:getHurtSound()
+  if hurt_sound ~= nil then
+    Timer.after(0.37, function()
+      Assets.playSound(hurt_sound)
     end)
   end
+
+  local shudder = 16
+  Timer.every(2 / 30, function()
+    if shudder == 0 then return end
+
+    local x, y = enemy:getPosition()
+    enemy:setPosition(x + shudder, y)
+    if shudder < 0 then
+      shudder = -(shudder + 2)
+    else
+      shudder = -shudder
+    end
+
+    if shudder == 0 then
+      if enemy:isKilled() then
+        local exp_reward, gold_reward = Battle.encounter:getReward()
+        Battle.encounter:setReward(exp_reward + enemy:getEXP(), gold_reward + enemy:getGold())
+
+        if type(enemy.onKilled) == "function" then
+          enemy:onKilled()
+        end
+
+        enemy:vaporize()
+      else
+        if type(enemy.onAfterDamage) == "function" then
+          enemy:onAfterDamage()
+        end
+      end
+    end
+  end, 16)
+
+  Timer.after(1, function()
+    Battle.endAttack(enemy)
+  end)
 end
 
 --- Ends attack on an enemy
@@ -1189,7 +1118,11 @@ function Battle.endAttack(enemy)
     end
   end)
 
-  Battle.target_bar_sprite:setVisible(false)
+  Battle.is_attacking = false
+
+  if Battle.attack_weapon ~= nil and type(Battle.attack_weapon.onAttackEnd) == "function" then
+    Battle.attack_weapon:onAttackEnd()
+  end
 
   Battle.checkEncounterEnd()
 end

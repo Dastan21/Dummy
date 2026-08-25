@@ -18,9 +18,8 @@
 --- @field protected bubble_dialogues Dummy.DialogueBubble[]
 --- @field protected can_skip_bubble_dialogues boolean
 --- @field protected target_sprite Dummy.Sprite
---- @field protected target_bar_sprite Dummy.Sprite
 --- @field protected miss_text Dummy.Text
---- @field protected strike_sprite Dummy.Sprite
+--- @field protected attack_weapon Dummy.Item.Weapon|nil
 --- @field protected player_name_text Dummy.Text
 --- @field protected player_lv_text Dummy.Text
 --- @field protected player_hp_sprite Dummy.Sprite
@@ -45,7 +44,6 @@
 --- @field protected action_mercy_sprite Dummy.Sprite
 --- @field protected action_mercy_hover_sprite Dummy.Sprite
 --- @field protected is_attacking boolean
---- @field protected attack_window_timer Dummy.Timer.Handle|nil
 Battle = {}
 
 --- @class Dummy.Battle.Data
@@ -243,18 +241,25 @@ function Battle.startEnemyDialogue() end
 --- Updates enemy dialogue
 function Battle.updateEnemyDialogue() end
 
+--- Gets the miss text value
+--- @return Dummy.Text.Text
+function Battle.getMissText() end
+
+--- Sets the miss text value
+--- @param text Dummy.Text.Text
+function Battle.setMissText(text) end
+
+--- Gets the attack target sprite
+--- @return Dummy.Sprite
+function Battle.getTargetSprite() end
+
 --- Starts attacking
 function Battle.startAttacking() end
-
---- Attacks the enemy
---- @param miss? boolean wether the attack missed
-function Battle.attack(miss) end
 
 --- Proceeds attack on an enemy
 --- @param enemy Dummy.Battle.Enemy the attacked enemy
 --- @param damage number damage amount
 --- @param miss? boolean wether the attack missed
---- @protected
 function Battle.proceedAttack(enemy, damage, miss) end
 
 --- Ends attack on an enemy
